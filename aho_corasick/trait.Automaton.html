@@ -52,7 +52,7 @@
     fn <a href='#tymethod.get_match' class='fnname'>get_match</a>(&amp;self, si: <a class='type' href='../aho_corasick/type.StateIdx.html' title='aho_corasick::StateIdx'>StateIdx</a>, outi: PatIdx, texti: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../aho_corasick/struct.Match.html' title='aho_corasick::Match'>Match</a>;
     fn <a href='#tymethod.skip_to' class='fnname'>skip_to</a>(&amp;self, si: <a class='type' href='../aho_corasick/type.StateIdx.html' title='aho_corasick::StateIdx'>StateIdx</a>, text: <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a href='http://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, at: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>;
     fn <a href='#tymethod.is_skippable' class='fnname'>is_skippable</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>;
-    fn <a href='#tymethod.patterns' class='fnname'>patterns</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>P<a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>;
+    fn <a href='#tymethod.patterns' class='fnname'>patterns</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[P]</a>;
     fn <a href='#tymethod.pattern' class='fnname'>pattern</a>(&amp;self, i: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; &amp;P;
 
     fn <a href='#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a> { ... }
@@ -79,7 +79,7 @@ be equal to <code>at</code>.)</p>
 
 <p>Finally, if no match is possible, then return <code>text.len()</code>.</p>
 </div><h3 id='tymethod.is_skippable' class='method stab '><code>fn <a href='#tymethod.is_skippable' class='fnname'>is_skippable</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Returns true if and only if this automaton can skip through the input.</p>
-</div><h3 id='tymethod.patterns' class='method stab '><code>fn <a href='#tymethod.patterns' class='fnname'>patterns</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>P<a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></h3><div class='docblock'><p>Returns all of the patterns matched by this automaton.</p>
+</div><h3 id='tymethod.patterns' class='method stab '><code>fn <a href='#tymethod.patterns' class='fnname'>patterns</a>(&amp;self) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[P]</a></code></h3><div class='docblock'><p>Returns all of the patterns matched by this automaton.</p>
 
 <p>The order of the patterns is the order in which they were added.</p>
 </div><h3 id='tymethod.pattern' class='method stab '><code>fn <a href='#tymethod.pattern' class='fnname'>pattern</a>(&amp;self, i: <a href='http://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; &amp;P</code></h3><div class='docblock'><p>Returns the pattern indexed at <code>i</code>.</p>
