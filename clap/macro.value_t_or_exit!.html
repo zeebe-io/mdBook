@@ -34,7 +34,7 @@
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
                        type="search">
             </div>
         </form>
@@ -106,7 +106,8 @@
             }
         }
     };
-}</pre>
+}
+</pre>
 <div class='docblock'><p>Convenience macro getting a typed value <code>T</code> where <code>T</code> implements <code>std::str::FromStr</code>
 This macro returns a <code>T</code> or <code>Vec&lt;T&gt;</code> or exits with a usage string upon failure. This
 removes some of the boiler plate to handle failures from value_t! above.</p>
@@ -120,66 +121,61 @@ why they are getting error messages when it appears they&#39;re entering all req
 standard syntax.</p>
 
 <h1 id="example-single-value" class='section-header'><a
-                           href="#example-single-value">Example single value</a></h1><pre class='rust rust-example-rendered'>
+                           href="#example-single-value">Example single value</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>let</span> <span class='ident'>matches</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myapp&quot;</span>)
               .<span class='ident'>arg_from_usage</span>(<span class='string'>&quot;[length] &#39;Set the length to use as a pos whole num, i.e. 20&#39;&quot;</span>)
               .<span class='ident'>get_matches</span>();
 <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='macro'>value_t_or_exit</span><span class='macro'>!</span>(<span class='ident'>matches</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;length&quot;</span>), <span class='ident'>u32</span>);
 
-<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} + 2: {}&quot;</span>, <span class='ident'>len</span>, <span class='ident'>len</span> <span class='op'>+</span> <span class='number'>2</span>);</pre>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} + 2: {}&quot;</span>, <span class='ident'>len</span>, <span class='ident'>len</span> <span class='op'>+</span> <span class='number'>2</span>);
+</pre>
 
 <h1 id="example-multiple-values" class='section-header'><a
-                           href="#example-multiple-values">Example multiple values</a></h1><pre class='rust rust-example-rendered'>
+                           href="#example-multiple-values">Example multiple values</a></h1><pre id='rust-example-rendered' class='rust '>
 <span class='kw'>let</span> <span class='ident'>matches</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myapp&quot;</span>)
                   .<span class='ident'>arg_from_usage</span>(<span class='string'>&quot;[seq]... &#39;A sequence of pos whole nums, i.e. 20 45&#39;&quot;</span>)
                   .<span class='ident'>get_matches</span>();
 <span class='kw'>for</span> <span class='ident'>v</span> <span class='kw'>in</span> <span class='macro'>value_t_or_exit</span><span class='macro'>!</span>(<span class='ident'>matches</span>.<span class='ident'>values_of</span>(<span class='string'>&quot;seq&quot;</span>), <span class='ident'>u32</span>) {
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{} + 2: {}&quot;</span>, <span class='ident'>v</span>, <span class='ident'>v</span> <span class='op'>+</span> <span class='number'>2</span>);
-}</pre>
+}
+</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
 
     <div id="help" class="hidden">
-        <div>
-            <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h1>Search Tricks</h1>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
-                </p>
-            </div>
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+            <p>
+                Search functions by type signature (e.g.
+                <code>vec -> usize</code>)
+            </p>
         </div>
     </div>
 
