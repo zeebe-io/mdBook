@@ -135,7 +135,7 @@
 <p>The following two examples show a quick example of some of the very basic functionality of <code>clap</code>. For more advanced usage, such as requirements, exclusions, groups, multiple values and occurrences see the <a href="https://www.youtube.com/playlist?list=PLza5oFLQGTl0Bc_EU_pBNcX-rhVqDTRxv">video tutorials</a>, <a href="http://kbknapp.github.io/clap-rs/clap/index.html">documentation</a>, or <code>examples/</code> directory of this repository.</p>
 
 <p><em>NOTE:</em> Both examples are functionally the same, but show two different styles in which to use <code>clap</code></p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='comment'>// (Full example with detailed comments in examples/01a_QuickExample.rs)</span>
 <span class='comment'>//</span>
 <span class='comment'>// This example demonstrates clap&#39;s &quot;usage strings&quot; method of creating arguments which is less</span>
@@ -191,7 +191,7 @@
 </pre>
 
 <p>The following example is functionally the same as the one above, but this method allows more advanced configuration options (not shown in this small example), or even dynamically generating arguments when desired. Both methods can be used together to get the best of both worlds (see the documentation, examples, or video tutorials).</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='comment'>// (Full example with detailed comments in examples/01b_QuickExample.rs)</span>
 <span class='comment'>//</span>
 <span class='comment'>// This example demonstrates clap&#39;s full &#39;builder pattern&#39; style of creating arguments which is</span>
@@ -259,7 +259,7 @@
 </pre>
 
 <p>If you were to compile either of the above programs and run them with the flag <code>--help</code> or <code>-h</code> (or <code>help</code> subcommand, since we defined <code>test</code> as a subcommand) the following would be output</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 $ <span class='ident'>myapp</span> <span class='op'>-</span><span class='op'>-</span><span class='ident'>help</span>
 <span class='ident'>myapp</span> <span class='number'>1.0</span>
 <span class='ident'>Kevin</span> <span class='ident'>K</span>. <span class='op'>&lt;</span><span class='ident'>kbknapp</span><span class='kw-2'>@</span><span class='ident'>gmail</span>.<span class='ident'>com</span><span class='op'>&gt;</span>
@@ -310,7 +310,7 @@ $ <span class='ident'>myapp</span> <span class='op'>-</span><span class='op'>-</
 <ul>
 <li>Add the following to your <code>src/main.rs</code></li>
 </ul>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>clap</span>;
 <span class='kw'>use</span> <span class='ident'>clap</span>::<span class='ident'>App</span>;
 
@@ -327,13 +327,13 @@ $ <span class='ident'>myapp</span> <span class='op'>-</span><span class='op'>-</
 <h2 id="usage" class='section-header'><a
                            href="#usage">Usage</a></h2>
 <p>For full usage, add <code>clap</code> as a dependecy in your <code>Cargo.toml</code> file to use from crates.io:</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
  [<span class='ident'>dependencies</span>]
  <span class='ident'>clap</span> <span class='op'>=</span> <span class='string'>&quot;*&quot;</span>
 </pre>
 
 <p>Or track the latest on the master branch at github:</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 [<span class='ident'>dependencies</span>.<span class='ident'>clap</span>]
 <span class='ident'>git</span> <span class='op'>=</span> <span class='string'>&quot;https://github.com/kbknapp/clap-rs.git&quot;</span>
 </pre>
@@ -347,14 +347,14 @@ $ <span class='ident'>myapp</span> <span class='op'>-</span><span class='op'>-</
 <h3 id="optional-dependencies-/-features" class='section-header'><a
                            href="#optional-dependencies-/-features">Optional Dependencies / Features</a></h3>
 <p>If you&#39;d like to keep your dependency list to <strong>only</strong> <code>clap</code>, you can disable any features that require an additional dependency. To do this, add this to your <code>Cargo.toml</code>:</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 [<span class='ident'>dependencies</span>.<span class='ident'>clap</span>]
 <span class='ident'>version</span> <span class='op'>=</span> <span class='string'>&quot;*&quot;</span>
 <span class='ident'>default</span><span class='op'>-</span><span class='ident'>features</span> <span class='op'>=</span> <span class='boolval'>false</span>
 </pre>
 
 <p>You can also selectively enable only the features you&#39;d like to include, by adding:</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 [<span class='ident'>dependencies</span>.<span class='ident'>clap</span>]
 <span class='ident'>version</span> <span class='op'>=</span> <span class='string'>&quot;*&quot;</span>
 <span class='ident'>default</span><span class='op'>-</span><span class='ident'>features</span> <span class='op'>=</span> <span class='boolval'>false</span>
@@ -402,7 +402,7 @@ $ <span class='ident'>myapp</span> <span class='op'>-</span><span class='op'>-</
 <h3 id="running-the-tests" class='section-header'><a
                            href="#running-the-tests">Running the tests</a></h3>
 <p>If contributing, you can run the tests as follows (assuming you&#39;re in the <code>clap-rs/</code> directory)</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='ident'>cargo</span> <span class='ident'>test</span> <span class='op'>&amp;&amp;</span> <span class='ident'>make</span> <span class='op'>-</span><span class='ident'>C</span> <span class='ident'>clap</span><span class='op'>-</span><span class='ident'>tests</span> <span class='ident'>test</span>
 </pre>
 
@@ -447,7 +447,7 @@ $ <span class='ident'>myapp</span> <span class='op'>-</span><span class='op'>-</
 <li>No longer take a <code>Vec&lt;&amp;str&gt;</code>, instead they take a generic <code>IntoIterator&lt;Item=AsRef&lt;str&gt;&gt;</code> which means you cannot use an inline <code>vec![]</code> but it means the methods are now far more flexible, especially for dynamic value generation.</li>
 <li>Instead use something that conforms to the <code>IntoIterator</code> trait, or something like:</li>
 </ul>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>my_vals</span> <span class='op'>=</span> [<span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;value2&quot;</span>, <span class='string'>&quot;value3&quot;</span>];
 ...
 .<span class='ident'>possible_values</span>(<span class='kw-2'>&amp;</span><span class='ident'>my_vals</span>)

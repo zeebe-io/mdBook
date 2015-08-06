@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["create_file",""],["create_path",""],["path_to_root",""]]});

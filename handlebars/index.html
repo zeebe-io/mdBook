@@ -82,7 +82,7 @@
 <h3 id="template-creation-and-registration" class='section-header'><a
                            href="#template-creation-and-registration">Template Creation and Registration</a></h3>
 <p>Templates are created from String and registered to <code>Handlebars</code> with a name.</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>handlebars</span>;
 
@@ -105,7 +105,7 @@
 <p>That means, if you want to render something, you have to ensure that it implements the <code>serialize::json::ToJson</code> trait. Luckily, most built-in types already have trait. However, if you want to render your custom struct, you need to implement this trait manually, or use <a href="https://github.com/sunng87/tojson_macros">tojson_macros</a> to generate default <code>ToJson</code> implementation.</p>
 
 <p>You can use default <code>render</code> function to render a template into <code>String</code>. From 0.9, there&#39;s <code>renderw</code> to render text into anything of <code>std::io::Write</code>.</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>handlebars</span>;
 
@@ -146,7 +146,7 @@
 <h3 id="custom-helper" class='section-header'><a
                            href="#custom-helper">Custom Helper</a></h3>
 <p>Handlebars is nothing without helpers. You can also create your own helpers with rust. Helpers in handlebars-rust are custom struct implements the <code>HelperDef</code> trait, concretely, the <code>call</code> function. For your convenience, most of stateless helpers can be implemented as bare functions.</p>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>handlebars</span>;
 
