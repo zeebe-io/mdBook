@@ -48,7 +48,7 @@
         </span><a id='src-0' class='srclink' href='../src/ansi_term/lib.rs.html#1-709' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This is a library for controlling colours and formatting, such as
 red bold text or blue underlined text, on ANSI terminals.</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ansi_term</span>;
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::{<span class='ident'>Black</span>, <span class='ident'>Red</span>, <span class='ident'>Green</span>, <span class='ident'>Yellow</span>, <span class='ident'>Blue</span>, <span class='ident'>Purple</span>, <span class='ident'>Cyan</span>, <span class='ident'>Fixed</span>};
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Style</span>;
@@ -59,7 +59,7 @@ red bold text or blue underlined text, on ANSI terminals.</p>
 <p>You can format strings by calling the <code>paint</code> method on a Colour
 or a Style object, passing in the string you want to format. For
 example, to get some red text, call the <code>paint</code> method on <code>Red</code>:</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;This is in red: {}!&quot;</span>, <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;a red string&quot;</span>));
 </pre>
 
@@ -69,7 +69,7 @@ used in a <code>println!</code> or <code>format!</code> macro, or anything else 
 supports using the <code>Show</code> trait. This means that if you just want a
 string of the escape codes without anything else, you can still use
 the <code>to_string</code> method:</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='kw'>let</span> <span class='ident'>red_string</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;another red string&quot;</span>).<span class='ident'>to_string</span>();
 </pre>
 
@@ -79,7 +79,7 @@ the <code>to_string</code> method:</p>
 to use Style objects. Calling the <code>bold</code> or <code>underline</code> method on
 a Colour returns a Style that has the appropriate property set on
 it:</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Demonstrating {} and {}!&quot;</span>,
          <span class='ident'>Blue</span>.<span class='ident'>bold</span>().<span class='ident'>paint</span>(<span class='string'>&quot;blue bold&quot;</span>),
          <span class='ident'>Yellow</span>.<span class='ident'>underline</span>().<span class='ident'>paint</span>(<span class='string'>&quot;yellow underline&quot;</span>));
@@ -87,13 +87,13 @@ it:</p>
 
 <p>These methods chain, so you can call them on existing Style
 objects to set more than one particular properly, like so:</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='ident'>Blue</span>.<span class='ident'>underline</span>().<span class='ident'>bold</span>().<span class='ident'>paint</span>(<span class='string'>&quot;Blue underline bold!&quot;</span>)
 </pre>
 
 <p>You can set the background colour of a Style by using the <code>on</code>
 method:</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='ident'>Blue</span>.<span class='ident'>on</span>(<span class='ident'>Yellow</span>).<span class='ident'>paint</span>(<span class='string'>&quot;Blue on yellow!&quot;</span>)
 </pre>
 
@@ -102,7 +102,7 @@ method, though it&#39;ll produce the exact same string if you just use
 the Colour. It&#39;s only useful if you&#39;re writing a method that can
 return either normal or bold (or underline) styles, and need to
 return a Style object from it.</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='ident'>Red</span>.<span class='ident'>normal</span>().<span class='ident'>paint</span>(<span class='string'>&quot;yet another red string&quot;</span>)
 </pre>
 
@@ -111,12 +111,12 @@ return a Style object from it.</p>
 <p>You can access the extended range of 256 colours by using the
 Fixed constructor, which takes an argument of the colour number to
 use. This can be used wherever you would use a Colour:</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='ident'>Fixed</span>(<span class='number'>134</span>).<span class='ident'>paint</span>(<span class='string'>&quot;A sort of light purple.&quot;</span>)
 </pre>
 
 <p>This even works for background colours:</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='ident'>Fixed</span>(<span class='number'>221</span>).<span class='ident'>on</span>(<span class='ident'>Fixed</span>(<span class='number'>124</span>)).<span class='ident'>paint</span>(<span class='string'>&quot;Mustard in the ketchup.&quot;</span>)
 </pre>
 
@@ -124,7 +124,7 @@ use. This can be used wherever you would use a Colour:</p>
                            href="#no-formatting">No Formatting</a></h2>
 <p>Finally, for the sake of completeness, the default style provides
 neither colours nor formatting.</p>
-<pre class='rust rust-example-rendered'>
+<pre id='rust-example-rendered' class='rust '>
 <span class='ident'>Style</span>::<span class='ident'>default</span>().<span class='ident'>paint</span>(<span class='string'>&quot;No colours here.&quot;</span>)
 </pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
