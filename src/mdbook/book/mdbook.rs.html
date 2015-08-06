@@ -34,7 +34,7 @@
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
-                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
                        type="search">
             </div>
         </form>
@@ -208,6 +208,90 @@
 <span id="166">166</span>
 <span id="167">167</span>
 <span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>PathBuf</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::{<span class='self'>self</span>, <span class='ident'>File</span>, <span class='ident'>metadata</span>};
@@ -229,10 +313,17 @@
 
 <span class='kw'>impl</span> <span class='ident'>MDBook</span> {
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>path</span>: <span class='kw-2'>&amp;</span><span class='ident'>Path</span>) <span class='op'>-&gt;</span> <span class='ident'>MDBook</span> {
+    <span class='doccomment'>/// Create a new `MDBook` struct with root directory `root`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// - The default source directory is set to `root/src`</span>
+    <span class='doccomment'>/// - The default output directory is set to `root/book`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// They can both be changed by using [`set_src()`](#method.set_src) and [`set_dest()`](#method.set_dest)</span>
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>root</span>: <span class='kw-2'>&amp;</span><span class='ident'>Path</span>) <span class='op'>-&gt;</span> <span class='ident'>MDBook</span> {
 
         <span class='comment'>// Hacky way to check if the path exists... Until PathExt moves to stable</span>
-        <span class='kw'>match</span> <span class='ident'>metadata</span>(<span class='ident'>path</span>) {
+        <span class='kw'>match</span> <span class='ident'>metadata</span>(<span class='ident'>root</span>) {
             <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Directory does not exist&quot;</span>),
             <span class='prelude-val'>Ok</span>(<span class='ident'>f</span>) <span class='op'>=&gt;</span> {
                 <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>f</span>.<span class='ident'>is_dir</span>() {
@@ -242,15 +333,38 @@
         }
 
         <span class='ident'>MDBook</span> {
-            <span class='ident'>root</span>: <span class='ident'>path</span>.<span class='ident'>to_path_buf</span>(),
+            <span class='ident'>root</span>: <span class='ident'>root</span>.<span class='ident'>to_path_buf</span>(),
             <span class='ident'>content</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
             <span class='ident'>config</span>: <span class='ident'>BookConfig</span>::<span class='ident'>new</span>()
-                        .<span class='ident'>set_src</span>(<span class='kw-2'>&amp;</span><span class='ident'>path</span>.<span class='ident'>join</span>(<span class='string'>&quot;src&quot;</span>))
-                        .<span class='ident'>set_dest</span>(<span class='kw-2'>&amp;</span><span class='ident'>path</span>.<span class='ident'>join</span>(<span class='string'>&quot;book&quot;</span>))
+                        .<span class='ident'>set_src</span>(<span class='kw-2'>&amp;</span><span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;src&quot;</span>))
+                        .<span class='ident'>set_dest</span>(<span class='kw-2'>&amp;</span><span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;book&quot;</span>))
                         .<span class='ident'>to_owned</span>(),
             <span class='ident'>renderer</span>: <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>HtmlHandlebars</span>::<span class='ident'>new</span>()),
         }
     }
+
+    <span class='doccomment'>/// Returns a flat depth-first iterator over the elements of the book in the form of a tuple:</span>
+    <span class='doccomment'>/// `(section: String, bookitem: &amp;BookItem)`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # extern crate mdbook;</span>
+    <span class='doccomment'>/// # use mdbook::MDBook;</span>
+    <span class='doccomment'>/// # use std::path::Path;</span>
+    <span class='doccomment'>/// # fn main() {</span>
+    <span class='doccomment'>/// # let mut book = MDBook::new(Path::new(&quot;mybook&quot;));</span>
+    <span class='doccomment'>/// for (section, element) in book.iter() {</span>
+    <span class='doccomment'>///     println!(&quot;{} {}&quot;, section, element.name);</span>
+    <span class='doccomment'>/// }</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// // would print something like this:</span>
+    <span class='doccomment'>/// // 1. Chapter 1</span>
+    <span class='doccomment'>/// // 1.1 Sub Chapter</span>
+    <span class='doccomment'>/// // 1.2 Sub Chapter</span>
+    <span class='doccomment'>/// // 2. Chapter 2</span>
+    <span class='doccomment'>/// //</span>
+    <span class='doccomment'>/// // etc.</span>
+    <span class='doccomment'>/// # }</span>
+    <span class='doccomment'>/// ```</span>
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>BookItems</span> {
         <span class='ident'>BookItems</span> {
@@ -259,6 +373,19 @@
             <span class='ident'>stack</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
         }
     }
+
+    <span class='doccomment'>/// `init()` creates some boilerplate files and directories to get you started with your book.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```text</span>
+    <span class='doccomment'>/// book-test/</span>
+    <span class='doccomment'>/// ├── book</span>
+    <span class='doccomment'>/// └── src</span>
+    <span class='doccomment'>///     ├── chapter_1.md</span>
+    <span class='doccomment'>///     └── SUMMARY.md</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// It uses the paths given as source and output directories and adds a `SUMMARY.md` and a</span>
+    <span class='doccomment'>/// `chapter_1.md` to the source directory.</span>
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
 
@@ -317,6 +444,12 @@
         <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(());
     }
 
+    <span class='doccomment'>/// The `build()` method is the one where everything happens. First it parses `SUMMARY.md` to</span>
+    <span class='doccomment'>/// construct the book&#39;s structure in the form of a `Vec&lt;BookItem&gt;` and then calls `render()`</span>
+    <span class='doccomment'>/// method of the current renderer.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// It is the renderer who generates all the output files.</span>
+
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[fn]: build&quot;</span>);
 
@@ -331,11 +464,46 @@
     }
 
 
-    <span class='comment'>// Builder functions</span>
+    <span class='doccomment'>/// Parses the `book.json` file (if it exists) to extract the configuration parameters.</span>
+    <span class='doccomment'>/// The `book.json` file should be in the root directory of the book.</span>
+    <span class='doccomment'>/// The root directory is the one specified when creating a new `MDBook`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # extern crate mdbook;</span>
+    <span class='doccomment'>/// # use mdbook::MDBook;</span>
+    <span class='doccomment'>/// # use std::path::Path;</span>
+    <span class='doccomment'>/// # fn main() {</span>
+    <span class='doccomment'>/// let mut book = MDBook::new(Path::new(&quot;root_dir&quot;));</span>
+    <span class='doccomment'>/// # }</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// In this example, `root_dir` will be the root directory of our book and is specified in function</span>
+    <span class='doccomment'>/// of the current working directory by using a relative path instead of an absolute path.</span>
+
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read_config</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>read_config</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>root</span>);
         <span class='self'>self</span>
     }
+
+    <span class='doccomment'>/// You can change the default renderer to another one by using this method. The only requirement</span>
+    <span class='doccomment'>/// is for your renderer to implement the [Renderer trait](../../renderer/renderer/trait.Renderer.html)</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// extern crate mdbook;</span>
+    <span class='doccomment'>/// use mdbook::MDBook;</span>
+    <span class='doccomment'>/// use mdbook::renderer::HtmlHandlebars;</span>
+    <span class='doccomment'>/// # use std::path::Path;</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// fn main() {</span>
+    <span class='doccomment'>///     let mut book = MDBook::new(Path::new(&quot;mybook&quot;))</span>
+    <span class='doccomment'>///                         .set_renderer(Box::new(HtmlHandlebars::new()));</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>///     // In this example we replace the default renderer by the default renderer...</span>
+    <span class='doccomment'>///     // Don&#39;t forget to put your renderer in a Box</span>
+    <span class='doccomment'>/// }</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **note:** Don&#39;t forget to put your renderer in a `Box` before passing it to `set_renderer()`</span>
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_renderer</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>renderer</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Renderer</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>renderer</span> <span class='op'>=</span> <span class='ident'>renderer</span>;
@@ -384,37 +552,44 @@
     <section class="footer"></section>
 
     <div id="help" class="hidden">
-        <div class="shortcuts">
-            <h1>Keyboard shortcuts</h1>
-            <dl>
-                <dt>?</dt>
-                <dd>Show this help dialog</dd>
-                <dt>S</dt>
-                <dd>Focus the search field</dd>
-                <dt>&larrb;</dt>
-                <dd>Move up in search results</dd>
-                <dt>&rarrb;</dt>
-                <dd>Move down in search results</dd>
-                <dt>&#9166;</dt>
-                <dd>Go to active search result</dd>
-            </dl>
-        </div>
-        <div class="infos">
-            <h1>Search tricks</h1>
-            <p>
-                Prefix searches with a type followed by a colon (e.g.
-                <code>fn:</code>) to restrict the search to a given type.
-            </p>
-            <p>
-                Accepted types are: <code>fn</code>, <code>mod</code>,
-                <code>struct</code>, <code>enum</code>,
-                <code>trait</code>, <code>typedef</code> (or
-                <code>tdef</code>).
-            </p>
-            <p>
-                Search functions by type signature (e.g.
-                <code>vec -> usize</code>)
-            </p>
+        <div>
+            <div class="shortcuts">
+                <h1>Keyboard Shortcuts</h1>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h1>Search Tricks</h1>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
         </div>
     </div>
 
