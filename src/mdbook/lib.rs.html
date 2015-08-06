@@ -100,6 +100,20 @@
 <span id="58">58</span>
 <span id="59">59</span>
 <span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # mdBook</span>
 <span class='doccomment'>//!</span>
@@ -120,7 +134,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ## Example</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
+<span class='doccomment'>//! ```no_run</span>
 <span class='doccomment'>//! extern crate mdbook;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! use mdbook::MDBook;</span>
@@ -144,9 +158,23 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! And then you can swap in your renderer like this:</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! let book =  MDBook::new(&quot;my-book&quot;).set_renderer(your_renderer)</span>
+<span class='doccomment'>//! ```no_run</span>
+<span class='doccomment'>//! # extern crate mdbook;</span>
+<span class='doccomment'>//! #</span>
+<span class='doccomment'>//! # use mdbook::MDBook;</span>
+<span class='doccomment'>//! # use mdbook::renderer::HtmlHandlebars;</span>
+<span class='doccomment'>//! # use std::path::Path;</span>
+<span class='doccomment'>//! #</span>
+<span class='doccomment'>//! # fn main() {</span>
+<span class='doccomment'>//! #   let your_renderer = HtmlHandlebars::new();</span>
+<span class='doccomment'>//! #</span>
+<span class='doccomment'>//!     let book =  MDBook::new(Path::new(&quot;my-book&quot;)).set_renderer(Box::new(your_renderer));</span>
+<span class='doccomment'>//! # }</span>
 <span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! If you make a renderer, you get the book constructed in form of `Vec&lt;BookItems&gt;` and you get</span>
+<span class='doccomment'>//! the book config in a `BookConfig` struct.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! It&#39;s your responsability to create the necessary files in the correct directories.</span>
 
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
