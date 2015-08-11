@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Theme",""]]});
+initSidebarItems({"static":[["CSS",""],["HIGHLIGHT_CSS",""],["HIGHLIGHT_JS",""],["INDEX",""],["JS",""]],"struct":[["Theme","The `Theme` struct should be used instead of the static variables because the `new()` method will look if the user has a theme directory in his source folder and use the users theme instead of the default."]]});
