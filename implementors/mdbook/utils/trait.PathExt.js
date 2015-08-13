@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['regex_syntax'] = [];
+implementors['mdbook'] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
