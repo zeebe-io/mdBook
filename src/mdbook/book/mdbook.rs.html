@@ -334,13 +334,29 @@
 <span id="292">292</span>
 <span id="293">293</span>
 <span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
 </pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>PathBuf</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::{<span class='self'>self</span>, <span class='ident'>File</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
 
-<span class='kw'>use</span> {<span class='ident'>BookConfig</span>, <span class='ident'>BookItem</span>, <span class='ident'>theme</span>, <span class='ident'>parse</span>};
+<span class='kw'>use</span> {<span class='ident'>BookConfig</span>, <span class='ident'>BookItem</span>, <span class='ident'>theme</span>, <span class='ident'>parse</span>, <span class='ident'>utils</span>};
 <span class='kw'>use</span> <span class='ident'>book</span>::<span class='ident'>BookItems</span>;
 <span class='kw'>use</span> <span class='ident'>renderer</span>::{<span class='ident'>Renderer</span>, <span class='ident'>HtmlHandlebars</span>};
 <span class='kw'>use</span> <span class='ident'>utils</span>::{<span class='ident'>PathExt</span>, <span class='ident'>create_path</span>};
@@ -420,7 +436,7 @@
     <span class='doccomment'>/// It uses the paths given as source and output directories and adds a `SUMMARY.md` and a</span>
     <span class='doccomment'>/// `chapter_1.md` to the source directory.</span>
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
 
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[fn]: init&quot;</span>);
 
@@ -429,40 +445,53 @@
             <span class='macro'>output</span><span class='macro'>!</span>(<span class='string'>&quot;{:?} created&quot;</span>, <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_root</span>());
         }
 
-        <span class='kw'>let</span> <span class='ident'>dest</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_dest</span>();
-        <span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>();
+        {
+            <span class='kw'>let</span> <span class='ident'>dest</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_dest</span>();
+            <span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>();
 
-        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>dest</span>.<span class='ident'>exists</span>() {
-            <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class='ident'>dest</span>);
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>create_dir</span>(<span class='kw-2'>&amp;</span><span class='ident'>dest</span>));
+            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>dest</span>.<span class='ident'>exists</span>() {
+                <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class='ident'>dest</span>);
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>create_dir</span>(<span class='kw-2'>&amp;</span><span class='ident'>dest</span>));
+            }
+
+            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>src</span>.<span class='ident'>exists</span>() {
+                <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class='ident'>src</span>);
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>create_dir</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>));
+            }
+
+            <span class='kw'>let</span> <span class='ident'>summary</span> <span class='op'>=</span> <span class='ident'>src</span>.<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>);
+
+            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>summary</span>.<span class='ident'>exists</span>() {
+
+                <span class='comment'>// Summary does not exist, create it</span>
+
+                <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create SUMMARY.md&quot;</span>, <span class='ident'>src</span>.<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>));
+                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>create</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>.<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>)));
+
+                <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Writing to SUMMARY.md&quot;</span>);
+
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;# Summary&quot;</span>));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;&quot;</span>));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;- [Chapter 1](./chapter_1.md)&quot;</span>));
+            }
         }
 
-        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>src</span>.<span class='ident'>exists</span>() {
-            <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class='ident'>src</span>);
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>create_dir</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>));
-        }
+        <span class='comment'>// parse SUMMARY.md, and create the missing item related file</span>
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_summary</span>());
 
-        <span class='kw'>let</span> <span class='ident'>summary</span> <span class='op'>=</span> <span class='ident'>src</span>.<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>);
+        <span class='kw'>for</span> (_, <span class='ident'>item</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
+            <span class='kw'>if</span> <span class='ident'>item</span>.<span class='ident'>path</span> <span class='op'>!=</span> <span class='ident'>PathBuf</span>::<span class='ident'>new</span>() {
+                <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>().<span class='ident'>join</span>(<span class='kw-2'>&amp;</span><span class='ident'>item</span>.<span class='ident'>path</span>);
 
-        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>summary</span>.<span class='ident'>exists</span>() {
+                <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>path</span>.<span class='ident'>exists</span>() {
+                    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create file&quot;</span>, <span class='ident'>path</span>);
+                    ::<span class='ident'>std</span>::<span class='ident'>fs</span>::<span class='ident'>create_dir_all</span>(<span class='ident'>path</span>.<span class='ident'>parent</span>().<span class='ident'>unwrap</span>());
+                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>create</span>(<span class='ident'>path</span>));
 
-            <span class='comment'>// Summary does not exist, create it and populate it</span>
-
-            <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create SUMMARY.md&quot;</span>, <span class='ident'>src</span>.<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>));
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>create</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>.<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>)));
-
-            <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Writing to SUMMARY.md&quot;</span>);
-
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;# Summary&quot;</span>));
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;&quot;</span>));
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;- [Chapter 1](./chapter_1.md)&quot;</span>));
-
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>chapter_1</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>create</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>.<span class='ident'>join</span>(<span class='string'>&quot;chapter_1.md&quot;</span>)));
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>chapter_1</span>, <span class='string'>&quot;# Chapter 1&quot;</span>));
-        } <span class='kw'>else</span> {
-
-            <span class='comment'>// Summary does exist, read it and create the missing files</span>
-
+                    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Writing to {:?}&quot;</span>, <span class='ident'>path</span>);
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;# {}&quot;</span>, <span class='ident'>item</span>.<span class='ident'>name</span>));
+                }
+            }
         }
 
         <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(());
@@ -477,7 +506,10 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[fn]: build&quot;</span>);
 
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_summary</span>());
+        <span class='self'>self</span>.<span class='ident'>init</span>();
+
+        <span class='comment'>// Clean output directory</span>
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>utils</span>::<span class='ident'>remove_dir_content</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_dest</span>()));
 
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>renderer</span>.<span class='ident'>render</span>(
             <span class='self'>self</span>.<span class='ident'>iter</span>(),
@@ -665,8 +697,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>

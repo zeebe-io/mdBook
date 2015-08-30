@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.1.6/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.2.5/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -1310,461 +1310,25 @@
 <span id="1268">1268</span>
 <span id="1269">1269</span>
 <span id="1270">1270</span>
-<span id="1271">1271</span>
-<span id="1272">1272</span>
-<span id="1273">1273</span>
-<span id="1274">1274</span>
-<span id="1275">1275</span>
-<span id="1276">1276</span>
-<span id="1277">1277</span>
-<span id="1278">1278</span>
-<span id="1279">1279</span>
-<span id="1280">1280</span>
-<span id="1281">1281</span>
-<span id="1282">1282</span>
-<span id="1283">1283</span>
-<span id="1284">1284</span>
-<span id="1285">1285</span>
-<span id="1286">1286</span>
-<span id="1287">1287</span>
-<span id="1288">1288</span>
-<span id="1289">1289</span>
-<span id="1290">1290</span>
-<span id="1291">1291</span>
-<span id="1292">1292</span>
-<span id="1293">1293</span>
-<span id="1294">1294</span>
-<span id="1295">1295</span>
-<span id="1296">1296</span>
-<span id="1297">1297</span>
-<span id="1298">1298</span>
-<span id="1299">1299</span>
-<span id="1300">1300</span>
-<span id="1301">1301</span>
-<span id="1302">1302</span>
-<span id="1303">1303</span>
-<span id="1304">1304</span>
-<span id="1305">1305</span>
-<span id="1306">1306</span>
-<span id="1307">1307</span>
-<span id="1308">1308</span>
-<span id="1309">1309</span>
-<span id="1310">1310</span>
-<span id="1311">1311</span>
-<span id="1312">1312</span>
-<span id="1313">1313</span>
-<span id="1314">1314</span>
-<span id="1315">1315</span>
-<span id="1316">1316</span>
-<span id="1317">1317</span>
-<span id="1318">1318</span>
-<span id="1319">1319</span>
-<span id="1320">1320</span>
-<span id="1321">1321</span>
-<span id="1322">1322</span>
-<span id="1323">1323</span>
-<span id="1324">1324</span>
-<span id="1325">1325</span>
-<span id="1326">1326</span>
-<span id="1327">1327</span>
-<span id="1328">1328</span>
-<span id="1329">1329</span>
-<span id="1330">1330</span>
-<span id="1331">1331</span>
-<span id="1332">1332</span>
-<span id="1333">1333</span>
-<span id="1334">1334</span>
-<span id="1335">1335</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span><span class='op'>=</span> <span class='string'>&quot;lib&quot;</span>]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;nightly&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>plugin</span>))]</span>
+<span class='comment'>//#![cfg_attr(feature = &quot;lints&quot;, plugin(clippy))]</span>
+<span class='comment'>//#![cfg_attr(feature = &quot;lints&quot;, allow(option_unwrap_used))]</span>
+<span class='comment'>//#![cfg_attr(feature = &quot;lints&quot;, allow(explicit_iter_loop))]</span>
+<span class='comment'>//#![cfg_attr(feature = &quot;lints&quot;, deny(warnings))]</span>
+<span class='comment'>// Fix until clippy on crates.io is updated to include needless_lifetimes lint</span>
+<span class='comment'>//#![cfg_attr(feature = &quot;lints&quot;, allow(unknown_lints))]</span>
 
 <span class='comment'>// DOCS</span>
-<span class='doccomment'>//! # clap</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ![Travis-CI](https://travis-ci.org/kbknapp/clap-rs.svg?branch=master) [![Crates.io](https://img.shields.io/crates/v/clap.svg)]() [![Crates.io](https://img.shields.io/crates/l/clap.svg)]() [![Join the chat at https://gitter.im/kbknapp/clap-rs](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kbknapp/clap-rs?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Command Line Argument Parser for Rust</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! It is a simple to use, efficient, and full featured library for parsing command line arguments and subcommands when writing console, or terminal applications.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## About</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `clap` is used to parse *and validate* the string of command line arguments provided by the user at runtime. You provide the list of valid possibilities, and `clap` handles the rest. This means you focus on your *applications* functionality, and less on the parsing and validating of arguments.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `clap` also provides the traditional version and help switches (or flags) &#39;for free&#39; meaning automatically with no configuration. It does this by checking list of valid possibilities you supplied and if you haven&#39;t them already (or only defined some of them), `clap` will auto-generate the applicable ones. If you are using subcommands, `clap` will also auto-generate a `help` subcommand for you in addition to the traditional flags.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Once `clap` parses the user provided string of arguments, it returns the matches along with any applicable values. If the user made an error or typo, `clap` informs them of the mistake and exits gracefully. Because of this, you can make reasonable assumptions in your code about the validity of the arguments.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Features</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Below are a few of the features which `clap` supports, full descriptions and usage can be found in the [documentation](http://kbknapp.github.io/clap-rs/clap/index.html) and `examples/` directory</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * **Auto-generated Help, Version, and Usage information**</span>
-<span class='doccomment'>//!   - Can optionally be fully, or partially overridden if you want a custom help, version, or usag</span>
-<span class='doccomment'>//! * **Flags / Switches** (i.e. bool fields)</span>
-<span class='doccomment'>//!   - Both short and long versions supported (i.e. `-f` and `--flag` respectively)</span>
-<span class='doccomment'>//!   - Supports combining short versions (i.e. `-fBgoZ` is the same as `-f -B -g -o -Z`)</span>
-<span class='doccomment'>//!   - Optionally supports multiple occurrences (i.e. `-vvv` or `-v -v -v`)</span>
-<span class='doccomment'>//! * **Positional Arguments** (i.e. those which are based off an index from the program name)</span>
-<span class='doccomment'>//!   - Optionally supports multiple values (i.e. `myprog &lt;file&gt;...` such as `myprog file1.txt file2.txt` being two values for the same &quot;file&quot; argument)</span>
-<span class='doccomment'>//!   - Optionally supports Specific Value Sets (See below)</span>
-<span class='doccomment'>//!   - Supports the unix `--` meaning, only positional arguments follow</span>
-<span class='doccomment'>//!   - Optionally sets value parameters (such as the minimum number of values, the maximum number of values, or the exact number of values)</span>
-<span class='doccomment'>//! * **Option Arguments** (i.e. those that take values as options)</span>
-<span class='doccomment'>//!   - Both short and long versions supported (i.e. `-o value` and `--option value` or `--option=value` respectively)</span>
-<span class='doccomment'>//!   - Optionally supports multiple values (i.e. `-o &lt;value&gt; -o &lt;other_value&gt;` or the shorthand `-o &lt;value&gt; &lt;other_value&gt;`)</span>
-<span class='doccomment'>//!   - Optionally supports Specific Value Sets (See below)</span>
-<span class='doccomment'>//!   - Optionally supports named values so that the usage/help info appears as `-o &lt;name&gt; &lt;other_name&gt;` etc. for when you require specific multiple values</span>
-<span class='doccomment'>//!   - Optionally sets value parameters (such as the minimum number of values, the maximum number of values, or the exact number of values)</span>
-<span class='doccomment'>//! * **Sub-Commands** (i.e. `git add &lt;file&gt;` where `add` is a sub-command of `git`)</span>
-<span class='doccomment'>//!   - Support their own sub-arguments, and sub-sub-commands independent of the parent</span>
-<span class='doccomment'>//!   - Get their own auto-generated Help, Version, and Usage independent of parent</span>
-<span class='doccomment'>//! * **Requirement Rules**: Arguments can optionally define the following types of requirement rules</span>
-<span class='doccomment'>//!   - Required by default</span>
-<span class='doccomment'>//!   - Required only if certain arguments are present</span>
-<span class='doccomment'>//!   - Can require other arguments to be present</span>
-<span class='doccomment'>//! * **Exclusion/Confliction Rules**: Arguments can optionally define the following types of exclusion rules</span>
-<span class='doccomment'>//!   - Can be disallowed when certain arguments are present</span>
-<span class='doccomment'>//!   - Can disallow use of other arguments when present</span>
-<span class='doccomment'>//! * **Groups**: Arguments can optionally be made part of a group which means one, and only one argument from this &quot;group&quot; may be present at runtime</span>
-<span class='doccomment'>//!   - Fully compatible with other relational rules (requirements and exclusions) which allows things like requiring the use of a group, or denying the use of a group conditionally</span>
-<span class='doccomment'>//! * **Specific Value Sets**: Positional or Option Arguments can optionally define a specific set of allowed values (i.e. imagine a `--mode` option which may *only* have one of two values `fast` or `slow` such as `--mode fast` or `--mode slow`)</span>
-<span class='doccomment'>//! * **Default Values**: Although not specifically provided by `clap` you can achieve this exact functionality from Rust&#39;s `Option&lt;&amp;str&gt;.unwrap_or(&quot;some default&quot;)` method (or `Result&lt;T,String&gt;.unwrap_or(T)` when using typed values)</span>
-<span class='doccomment'>//! * **Automatic Version from Cargo.toml**: `clap` is fully compatible with Rust&#39;s `env!()` macro for automatically setting the version of your application to the version in your Cargo.toml. See `examples/09_AutoVersion.rs` for how to do this (Thanks to [jhelwig](https://github.com/jhelwig) for pointing this out)</span>
-<span class='doccomment'>//! * **Typed Values**: You can use several convenience macros provided by `clap` to get typed values (i.e. `i32`, `u8`, etc.) from positional or option arguments so long as the type you request implements `std::str::FromStr` See the `examples/12_TypedValues.rs`. You can also use `clap`s `simple_enum!` or `arg_enum!` macro to create an enum with variants that automatically implements `std::str::FromStr`. See `examples/13a_EnumValuesAutomatic.rs` for details and performs an ascii case insensitive parse from a `string`-&gt;`enum`.</span>
-<span class='doccomment'>//! * **Suggestions**: Suggests corrections when the user enter&#39;s a typo. For example, if you defined a `--myoption &lt;value&gt;` argument, and the user mistakenly typed `--moyption value` (notice `y` and `o` switched), they would receive a `Did you mean &#39;--myoption&#39; ?` error and exit gracefully. This also works for subcommands and flags. (Thanks to [Byron](https://github.com/Byron) for the implementation) (This feature can optionally be disabled, see &#39;Optional Dependencies / Features&#39;)</span>
-<span class='doccomment'>//! * **Colorized (Red) Errors**: Error message are printed in red text (this feature can optionally be disabled, see &#39;Optional Dependencies / Features&#39;).</span>
-<span class='doccomment'>//! * **Global Arguments**: Arguments can optionally be defined once, and be available to all child subcommands.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Quick Example</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The following two examples show a quick example of some of the very basic functionality of `clap`. For more advanced usage, such as requirements, exclusions, groups, multiple values and occurrences see the [video tutorials](https://www.youtube.com/playlist?list=PLza5oFLQGTl0Bc_EU_pBNcX-rhVqDTRxv), [documentation](http://kbknapp.github.io/clap-rs/clap/index.html), or `examples/` directory of this repository.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!  *NOTE:* Both examples are functionally the same, but show two different styles in which to use `clap`</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```no_run</span>
-<span class='doccomment'>//! // (Full example with detailed comments in examples/01a_QuickExample.rs)</span>
-<span class='doccomment'>//! //</span>
-<span class='doccomment'>//! // This example demonstrates clap&#39;s &quot;usage strings&quot; method of creating arguments which is less</span>
-<span class='doccomment'>//! // less verbose</span>
-<span class='doccomment'>//! extern crate clap;</span>
-<span class='doccomment'>//! use clap::{Arg, App, SubCommand};</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!     let matches = App::new(&quot;myapp&quot;)</span>
-<span class='doccomment'>//!                           .version(&quot;1.0&quot;)</span>
-<span class='doccomment'>//!                           .author(&quot;Kevin K. &lt;kbknapp@gmail.com&gt;&quot;)</span>
-<span class='doccomment'>//!                           .about(&quot;Does awesome things&quot;)</span>
-<span class='doccomment'>//!                           .args_from_usage(</span>
-<span class='doccomment'>//!                               &quot;-c --config=[CONFIG] &#39;Sets a custom config file&#39;</span>
-<span class='doccomment'>//!                               &lt;INPUT&gt; &#39;Sets the input file to use&#39;</span>
-<span class='doccomment'>//!                               [debug]... -d &#39;Sets the level of debugging information&#39;&quot;)</span>
-<span class='doccomment'>//!                           .subcommand(SubCommand::with_name(&quot;test&quot;)</span>
-<span class='doccomment'>//!                                       .about(&quot;controls testing features&quot;)</span>
-<span class='doccomment'>//!                                       .version(&quot;1.3&quot;)</span>
-<span class='doccomment'>//!                                       .author(&quot;Someone E. &lt;someone_else@other.com&gt;&quot;)</span>
-<span class='doccomment'>//!                                       .arg_from_usage(&quot;-v --verbose &#39;Print test information verbosely&#39;&quot;))</span>
-<span class='doccomment'>//!                           .get_matches();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Calling .unwrap() is safe here because &quot;INPUT&quot; is required (if &quot;INPUT&quot; wasn&#39;t</span>
-<span class='doccomment'>//!     // required we could have used an &#39;if let&#39; to conditionally get the value)</span>
-<span class='doccomment'>//!     println!(&quot;Using input file: {}&quot;, matches.value_of(&quot;INPUT&quot;).unwrap());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Gets a value for config if supplied by user, or defaults to &quot;default.conf&quot;</span>
-<span class='doccomment'>//!     let config = matches.value_of(&quot;CONFIG&quot;).unwrap_or(&quot;default.conf&quot;);</span>
-<span class='doccomment'>//!     println!(&quot;Value for config: {}&quot;, config);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Vary the output based on how many times the user used the &quot;debug&quot; flag</span>
-<span class='doccomment'>//!     // (i.e. &#39;myapp -d -d -d&#39; or &#39;myapp -ddd&#39; vs &#39;myapp -d&#39;</span>
-<span class='doccomment'>//!     match matches.occurrences_of(&quot;debug&quot;) {</span>
-<span class='doccomment'>//!         0 =&gt; println!(&quot;Debug mode is off&quot;),</span>
-<span class='doccomment'>//!         1 =&gt; println!(&quot;Debug mode is kind of on&quot;),</span>
-<span class='doccomment'>//!         2 =&gt; println!(&quot;Debug mode is on&quot;),</span>
-<span class='doccomment'>//!         3 | _ =&gt; println!(&quot;Don&#39;t be crazy&quot;),</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // You can information about subcommands by requesting their matches by name</span>
-<span class='doccomment'>//!     // (as below), requesting just the name used, or both at the same time</span>
-<span class='doccomment'>//!     if let Some(matches) = matches.subcommand_matches(&quot;test&quot;) {</span>
-<span class='doccomment'>//!         if matches.is_present(&quot;verbose&quot;) {</span>
-<span class='doccomment'>//!             println!(&quot;Printing verbosely...&quot;);</span>
-<span class='doccomment'>//!         } else {</span>
-<span class='doccomment'>//!             println!(&quot;Printing normally...&quot;);</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // more porgram logic goes here...</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The following example is functionally the same as the one above, but this method allows more advanced configuration options (not shown in this small example), or even dynamically generating arguments when desired. Both methods can be used together to get the best of both worlds (see the documentation, examples, or video tutorials).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```no_run</span>
-<span class='doccomment'>//! // (Full example with detailed comments in examples/01b_QuickExample.rs)</span>
-<span class='doccomment'>//! //</span>
-<span class='doccomment'>//! // This example demonstrates clap&#39;s full &#39;builder pattern&#39; style of creating arguments which is</span>
-<span class='doccomment'>//! // more verbose, but allows easier editting, and at times more advanced options, or the possibility</span>
-<span class='doccomment'>//! // to generate arguments dynamically.</span>
-<span class='doccomment'>//! extern crate clap;</span>
-<span class='doccomment'>//! use clap::{Arg, App, SubCommand};</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!     let matches = App::new(&quot;myapp&quot;)</span>
-<span class='doccomment'>//!                           .version(&quot;1.0&quot;)</span>
-<span class='doccomment'>//!                           .author(&quot;Kevin K. &lt;kbknapp@gmail.com&gt;&quot;)</span>
-<span class='doccomment'>//!                           .about(&quot;Does awesome things&quot;)</span>
-<span class='doccomment'>//!                           .arg(Arg::with_name(&quot;CONFIG&quot;)</span>
-<span class='doccomment'>//!                                .short(&quot;c&quot;)</span>
-<span class='doccomment'>//!                                .long(&quot;config&quot;)</span>
-<span class='doccomment'>//!                                .help(&quot;Sets a custom config file&quot;)</span>
-<span class='doccomment'>//!                                .takes_value(true))</span>
-<span class='doccomment'>//!                           .arg(Arg::with_name(&quot;INPUT&quot;)</span>
-<span class='doccomment'>//!                                .help(&quot;Sets the input file to use&quot;)</span>
-<span class='doccomment'>//!                                .required(true)</span>
-<span class='doccomment'>//!                                .index(1))</span>
-<span class='doccomment'>//!                           .arg(Arg::with_name(&quot;debug&quot;)</span>
-<span class='doccomment'>//!                                .short(&quot;d&quot;)</span>
-<span class='doccomment'>//!                                .multiple(true)</span>
-<span class='doccomment'>//!                                .help(&quot;Sets the level of debugging information&quot;))</span>
-<span class='doccomment'>//!                           .subcommand(SubCommand::with_name(&quot;test&quot;)</span>
-<span class='doccomment'>//!                                       .about(&quot;controls testing features&quot;)</span>
-<span class='doccomment'>//!                                       .version(&quot;1.3&quot;)</span>
-<span class='doccomment'>//!                                       .author(&quot;Someone E. &lt;someone_else@other.com&gt;&quot;)</span>
-<span class='doccomment'>//!                                       .arg(Arg::with_name(&quot;verbose&quot;)</span>
-<span class='doccomment'>//!                                           .short(&quot;v&quot;)</span>
-<span class='doccomment'>//!                                           .help(&quot;print test information verbosely&quot;)))</span>
-<span class='doccomment'>//!                           .get_matches();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Calling .unwrap() is safe here because &quot;INPUT&quot; is required (if &quot;INPUT&quot; wasn&#39;t</span>
-<span class='doccomment'>//!     // required we could have used an &#39;if let&#39; to conditionally get the value)</span>
-<span class='doccomment'>//!     println!(&quot;Using input file: {}&quot;, matches.value_of(&quot;INPUT&quot;).unwrap());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Gets a value for config if supplied by user, or defaults to &quot;default.conf&quot;</span>
-<span class='doccomment'>//!     let config = matches.value_of(&quot;CONFIG&quot;).unwrap_or(&quot;default.conf&quot;);</span>
-<span class='doccomment'>//!     println!(&quot;Value for config: {}&quot;, config);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Vary the output based on how many times the user used the &quot;debug&quot; flag</span>
-<span class='doccomment'>//!     // (i.e. &#39;myapp -d -d -d&#39; or &#39;myapp -ddd&#39; vs &#39;myapp -d&#39;</span>
-<span class='doccomment'>//!     match matches.occurrences_of(&quot;debug&quot;) {</span>
-<span class='doccomment'>//!         0 =&gt; println!(&quot;Debug mode is off&quot;),</span>
-<span class='doccomment'>//!         1 =&gt; println!(&quot;Debug mode is kind of on&quot;),</span>
-<span class='doccomment'>//!         2 =&gt; println!(&quot;Debug mode is on&quot;),</span>
-<span class='doccomment'>//!         3 | _ =&gt; println!(&quot;Don&#39;t be crazy&quot;),</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // You can information about subcommands by requesting their matches by name</span>
-<span class='doccomment'>//!     // (as below), requesting just the name used, or both at the same time</span>
-<span class='doccomment'>//!     if let Some(matches) = matches.subcommand_matches(&quot;test&quot;) {</span>
-<span class='doccomment'>//!         if matches.is_present(&quot;verbose&quot;) {</span>
-<span class='doccomment'>//!             println!(&quot;Printing verbosely...&quot;);</span>
-<span class='doccomment'>//!         } else {</span>
-<span class='doccomment'>//!             println!(&quot;Printing normally...&quot;);</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // more porgram logic goes here...</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! If you were to compile either of the above programs and run them with the flag `--help` or `-h` (or `help` subcommand, since we defined `test` as a subcommand) the following would be output</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! $ myapp --help</span>
-<span class='doccomment'>//! myapp 1.0</span>
-<span class='doccomment'>//! Kevin K. &lt;kbknapp@gmail.com&gt;</span>
-<span class='doccomment'>//! Does awesome things</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! USAGE:</span>
-<span class='doccomment'>//!     MyApp [FLAGS] [OPTIONS] &lt;INPUT&gt; [SUBCOMMANDS]</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! FLAGS:</span>
-<span class='doccomment'>//!     -d               Turn debugging information on</span>
-<span class='doccomment'>//!     -h, --help       Prints this message</span>
-<span class='doccomment'>//!     -v, --version    Prints version information</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! OPTIONS:</span>
-<span class='doccomment'>//!     -c, --config &lt;CONFIG&gt;    Sets a custom config file</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! POSITIONAL ARGUMENTS:</span>
-<span class='doccomment'>//!     INPUT    The input file to use</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! SUBCOMMANDS:</span>
-<span class='doccomment'>//!     help    Prints this message</span>
-<span class='doccomment'>//!     test    Controls testing features</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! *NOTE:* You could also run `myapp test --help` to see similar output and options for the `test` subcommand.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Try it!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Pre-Built Test</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! To try out the pre-built example use the following stes:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Clone the repostiory `$ git clone https://github.com/kbknapp/clap-rs &amp;&amp; cd clap-rs/clap-tests`</span>
-<span class='doccomment'>//! * Compile the example `$ cargo build --release`</span>
-<span class='doccomment'>//! * Run the help info `$ ./target/release/claptests --help`</span>
-<span class='doccomment'>//! * Play with the arguments!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### BYOB (Build Your Own Binary)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! To test out `clap`&#39;s default auto-generated help/version follow these steps:</span>
-<span class='doccomment'>//! * Create a new cargo project `$ cargo new fake --bin &amp;&amp; cd fake`</span>
-<span class='doccomment'>//! * Add `clap` to your `Cargo.toml`</span>
-<span class='doccomment'>//! *</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! [dependencies]</span>
-<span class='doccomment'>//! clap = &quot;*&quot;</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Add the following to your `src/main.rs`</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```no_run</span>
-<span class='doccomment'>//! extern crate clap;</span>
-<span class='doccomment'>//! use clap::App;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!   let _ = App::new(&quot;fake&quot;).version(&quot;v1.0-beta&quot;).get_matches();</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Build your program `$ cargo build --release`</span>
-<span class='doccomment'>//! * Run with help or version `$ ./target/release/fake --help` or `$ ./target/release/fake --version`</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Usage</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! For full usage, add `clap` as a dependecy in your `Cargo.toml` file to use from crates.io:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!  ```ignore</span>
-<span class='doccomment'>//!  [dependencies]</span>
-<span class='doccomment'>//!  clap = &quot;*&quot;</span>
-<span class='doccomment'>//!  ```</span>
-<span class='doccomment'>//!  Or track the latest on the master branch at github:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! [dependencies.clap]</span>
-<span class='doccomment'>//! git = &quot;https://github.com/kbknapp/clap-rs.git&quot;</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Add `extern crate clap;` to your crate root.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Define a list of valid arguments for your program (see the [documentation](https://kbknapp.github.io/clap-rs/index.html) or `examples/` directory of this repo)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Then run `cargo build` or `cargo update &amp;&amp; cargo build` for your project.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Optional Dependencies / Features</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! If you&#39;d like to keep your dependency list to **only** `clap`, you can disable any features that require an additional dependency. To do this, add this to your `Cargo.toml`:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! [dependencies.clap]</span>
-<span class='doccomment'>//! version = &quot;*&quot;</span>
-<span class='doccomment'>//! default-features = false</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can also selectively enable only the features you&#39;d like to include, by adding:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! [dependencies.clap]</span>
-<span class='doccomment'>//! version = &quot;*&quot;</span>
-<span class='doccomment'>//! default-features = false</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Cherry-pick the features you&#39;d like to use</span>
-<span class='doccomment'>//! features = [ &quot;suggestions&quot;, &quot;color&quot; ]</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The following is a list of optional `clap` features:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * **&quot;suggestions&quot;**: Turns on the `Did you mean &#39;--myoption&#39; ?` feature for when users make typos.</span>
-<span class='doccomment'>//! * **&quot;color&quot;**: Turns on red error messages.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### More Information</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can find complete documentation on the [github-pages site](http://kbknapp.github.io/clap-rs/clap/index.html) for this project.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can also find usage examples in the `examples/` directory of this repo.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Video Tutorials</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There&#39;s also the video tutorial series [Argument Parsing with Rust](https://www.youtube.com/playlist?list=PLza5oFLQGTl0Bc_EU_pBNcX-rhVqDTRxv) that I&#39;ve been working on.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! *Note*: Two new videos have just been added ([08 From Usage](https://youtu.be/xc6VdedFrG0), and [09 Typed Values](https://youtu.be/mZn3C1DnD90)), if you&#39;re already familiar with `clap` but want to know more about these two details you can check out those videos without watching the previous few.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! *Note*: Apologies for the resolution of the first video, it will be updated to a better resolution soon. The other videos have a proper resolution.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## How to Contribute</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Contributions are always welcome! And there is a multitude of ways in which you can help depending on what you like to do, or are good at. Anything from documentation, code cleanup, issue completion, new features, you name it, even filing issues is contributing and greatly appreciated!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! 1. Fork the project</span>
-<span class='doccomment'>//! 2. Clone your fork (`git clone https://github.com/$YOUR_USERNAME/clap-rs &amp;&amp; cd clap-rs`)</span>
-<span class='doccomment'>//! 3. Create new branch (`git checkout -b new-branch`)</span>
-<span class='doccomment'>//! 4. Make your changes, and commit (`git commit -am &quot;your message&quot;`) (I try to use a [conventional](https://github.com/ajoslin/conventional-changelog/blob/master/CONVENTIONS.md) changelog format so I can update it using [clog](https://github.com/thoughtram/clog))</span>
-<span class='doccomment'>//! 5. If applicable, run the tests (See below)</span>
-<span class='doccomment'>//! 6. Push your changes back to your fork (`git push origin your-branch`)</span>
-<span class='doccomment'>//! 7. Create a pull request! (You can also create the pull request right away, and we&#39;ll merge when ready. This a good way to discuss proposed changes.)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Another really great way to help is if you find an interesting, or helpful way in which to use `clap`. You can either add it to the `examples/` directory, or file an issue and tell me. I&#39;m all about giving credit where credit is due :)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Running the tests</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! If contributing, you can run the tests as follows (assuming you&#39;re in the `clap-rs/` directory)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! cargo test &amp;&amp; make -C clap-tests test</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Goals</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There are a few goals of `clap` that I&#39;d like to maintain throughout contributions. If your proposed changes break, or go against any of these goals we&#39;ll discuss the changes further before merging (but will *not* be ignored, all contributes are welcome!). These are by no means hard-and-fast rules, as I&#39;m no expert and break them myself from time to time (even if by mistake or ignorance :P).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Remain backwards compatible when possible</span>
-<span class='doccomment'>//!   - If backwards compatibility *must* be broken, use deprecation warnings if at all possible before removing legacy code</span>
-<span class='doccomment'>//!   - This does not apply for security concerns</span>
-<span class='doccomment'>//! * Parse arguments quickly</span>
-<span class='doccomment'>//!   - Parsing of arguments shouldn&#39;t slow down usage of the main program</span>
-<span class='doccomment'>//!   - This is also true of generating help and usage information (although *slightly* less stringent, as the program is about to exit)</span>
-<span class='doccomment'>//! * Try to be cognizant of memory usage</span>
-<span class='doccomment'>//!   - Once parsing is complete, the memory footprint of `clap` should be low since the  main program is the star of the show</span>
-<span class='doccomment'>//! * `panic!` on *developer* error, exit gracefully on *end-user* error</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## License</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `clap` is licensed under the MIT license. Please the LICENSE-MIT file in this repository for more information.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Recent Breaking Changes</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Although I do my best to keep breaking changes to a minimum, being that this a sub 1.0 library, there are breaking changes from time to time in order to support better features or implementation. For the full details see the changelog.md</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * As of 0.7.0</span>
-<span class='doccomment'>//!   - `Arg::possible_values()`, `Arg::value_names()`, `Arg::requires_all()`, `Arg::mutually_excludes_all()` [deprecated], `Arg::conflicts_with_all()`</span>
-<span class='doccomment'>//!     + No longer take a `Vec&lt;&amp;str&gt;`, instead they take a generic `IntoIterator&lt;Item=AsRef&lt;str&gt;&gt;` which means you cannot use an inline `vec![]` but it means the methods are now far more flexible, especially for dynamic value generation.</span>
-<span class='doccomment'>//!     + Instead use something that conforms to the `IntoIterator` trait, or something like:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     ```ignore</span>
-<span class='doccomment'>//!     let my_vals = [&quot;value1&quot;, &quot;value2&quot;, &quot;value3&quot;];</span>
-<span class='doccomment'>//!     ...</span>
-<span class='doccomment'>//!     .possible_values(&amp;my_vals)</span>
-<span class='doccomment'>//!     ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Deprecations</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Old method names will be left around for some time.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * As of 0.10.0</span>
-<span class='doccomment'>//!  - `SubCommand::with_name()` -&gt; `SubCommand::with_name()`</span>
-<span class='doccomment'>//!  - `App::error_on_no_subcommand()` -&gt; `App::subcommand_required()`</span>
-<span class='doccomment'>//! * As of 0.6.8</span>
-<span class='doccomment'>//!   - `Arg::with_name()` -&gt; `Arg::with_name()`</span>
-<span class='doccomment'>//!   - `Arg::mutually_excludes()` -&gt; `Arg::conflicts_with()`</span>
-<span class='doccomment'>//!   - `Arg::mutually_excludes_all()` -&gt; `Arg::conflicts_with_all()`</span>
+
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;suggestions&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>strsim</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;color&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ansi_term</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>args</span>::{<span class='ident'>Arg</span>, <span class='ident'>SubCommand</span>, <span class='ident'>ArgMatches</span>, <span class='ident'>ArgGroup</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>app</span>::<span class='ident'>App</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>app</span>::{<span class='ident'>App</span>, <span class='ident'>AppSettings</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>fmt</span>::<span class='ident'>Format</span>;
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
@@ -1776,8 +1340,9 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>App</span>, <span class='ident'>Arg</span>, <span class='ident'>SubCommand</span>};
+    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>App</span>, <span class='ident'>Arg</span>, <span class='ident'>SubCommand</span>, <span class='ident'>AppSettings</span>};
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashSet</span>;
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>vec</span>::<span class='ident'>Vec</span>;
 
     <span class='macro'>arg_enum</span><span class='macro'>!</span>{
         <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
@@ -1807,6 +1372,7 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;lints&quot;</span>, <span class='ident'>allow</span>(<span class='ident'>single_match</span>))]</span>
     <span class='kw'>fn</span> <span class='ident'>test_enums</span>() {
         <span class='kw'>let</span> <span class='ident'>v1_lower</span> <span class='op'>=</span> <span class='string'>&quot;valone&quot;</span>;
         <span class='kw'>let</span> <span class='ident'>v1_camel</span> <span class='op'>=</span> <span class='string'>&quot;ValOne&quot;</span>;
@@ -2710,6 +2276,310 @@
 	        <span class='ident'>Arg</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;arg2&quot;</span>).<span class='ident'>long</span>(<span class='string'>&quot;long&quot;</span>)
 	    ]);
     }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>multiple_occurrences_of_flags_long</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;multiple_occurrences&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--multflag &#39;allowed multiple flag&#39;&quot;</span>)
+                        .<span class='ident'>multiple</span>(<span class='boolval'>true</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag &#39;disallowed multiple flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                        <span class='string'>&quot;&quot;</span>,
+                        <span class='string'>&quot;--multflag&quot;</span>,
+                        <span class='string'>&quot;--flag&quot;</span>,
+                        <span class='string'>&quot;--multflag&quot;</span>
+                        ]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;multflag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>occurrences_of</span>(<span class='string'>&quot;multflag&quot;</span>), <span class='number'>2</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>occurrences_of</span>(<span class='string'>&quot;flag&quot;</span>), <span class='number'>1</span>)
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>multiple_occurrences_of_flags_short</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;multiple_occurrences&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-m --multflag &#39;allowed multiple flag&#39;&quot;</span>)
+                        .<span class='ident'>multiple</span>(<span class='boolval'>true</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f --flag &#39;disallowed multiple flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                        <span class='string'>&quot;&quot;</span>,
+                        <span class='string'>&quot;-m&quot;</span>,
+                        <span class='string'>&quot;-f&quot;</span>,
+                        <span class='string'>&quot;-m&quot;</span>
+                        ]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;multflag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>occurrences_of</span>(<span class='string'>&quot;multflag&quot;</span>), <span class='number'>2</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>occurrences_of</span>(<span class='string'>&quot;flag&quot;</span>), <span class='number'>1</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>multiple_occurrences_of_flags_mixed</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;multiple_occurrences&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-m, --multflag1 &#39;allowed multiple flag&#39;&quot;</span>)
+                        .<span class='ident'>multiple</span>(<span class='boolval'>true</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-n, --multflag2 &#39;another allowed multiple flag&#39;&quot;</span>)
+                        .<span class='ident'>multiple</span>(<span class='boolval'>true</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag &#39;disallowed multiple flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                        <span class='string'>&quot;&quot;</span>,
+                        <span class='string'>&quot;-m&quot;</span>,
+                        <span class='string'>&quot;-f&quot;</span>,
+                        <span class='string'>&quot;-n&quot;</span>,
+                        <span class='string'>&quot;--multflag1&quot;</span>,
+                        <span class='string'>&quot;-m&quot;</span>,
+                        <span class='string'>&quot;--multflag2&quot;</span>
+                        ]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;multflag1&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>occurrences_of</span>(<span class='string'>&quot;multflag1&quot;</span>), <span class='number'>3</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;multflag2&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>occurrences_of</span>(<span class='string'>&quot;multflag2&quot;</span>), <span class='number'>2</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>occurrences_of</span>(<span class='string'>&quot;flag&quot;</span>), <span class='number'>1</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>posix_compatible_flags_long</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag  &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag&quot;</span>, <span class='string'>&quot;--color&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag  &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--color&quot;</span>, <span class='string'>&quot;--flag&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>posix_compatible_flags_short</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag  &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-f&quot;</span>, <span class='string'>&quot;-c&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag  &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-c&quot;</span>, <span class='string'>&quot;-f&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>posix_compatible_opts_long</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag [flag] &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color [color] &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag&quot;</span>, <span class='string'>&quot;some&quot;</span> ,<span class='string'>&quot;--color&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag [flag] &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color [color] &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--color&quot;</span>, <span class='string'>&quot;some&quot;</span> ,<span class='string'>&quot;--flag&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>posix_compatible_opts_long_equals</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag [flag] &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color [color] &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag=some&quot;</span> ,<span class='string'>&quot;--color=other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag [flag] &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color [color] &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--color=some&quot;</span> ,<span class='string'>&quot;--flag=other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>posix_compatible_opts_short</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f [flag]  &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c [color] &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-f&quot;</span>, <span class='string'>&quot;some&quot;</span>, <span class='string'>&quot;-c&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;posix&quot;</span>)
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f [flag]  &#39;some flag&#39;&quot;</span>).<span class='ident'>mutually_overrides_with</span>(<span class='string'>&quot;color&quot;</span>))
+                    .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c [color] &#39;some other flag&#39;&quot;</span>))
+                    .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-c&quot;</span>, <span class='string'>&quot;some&quot;</span>, <span class='string'>&quot;-f&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>opts_using_short</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;opts&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f [flag] &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c [color] &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-f&quot;</span>, <span class='string'>&quot;some&quot;</span>, <span class='string'>&quot;-c&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;some&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>opts_using_long_space</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;opts&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag [flag] &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color [color] &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag&quot;</span>, <span class='string'>&quot;some&quot;</span>, <span class='string'>&quot;--color&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;some&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>opts_using_long_equals</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;opts&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag [flag] &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color [color] &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag=some&quot;</span>, <span class='string'>&quot;--color=other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;some&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>opts_using_mixed</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;opts&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag [flag] &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color [color] &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-f&quot;</span>, <span class='string'>&quot;some&quot;</span>, <span class='string'>&quot;--color&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;some&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;opts&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag [flag] &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color [color] &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag=some&quot;</span>, <span class='string'>&quot;-c&quot;</span>, <span class='string'>&quot;other&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;flag&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;some&quot;</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>value_of</span>(<span class='string'>&quot;color&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;other&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>flag_using_short</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;flag&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-f&quot;</span>, <span class='string'>&quot;-c&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>flag_using_long</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;flag&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--flag &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;--color &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag&quot;</span>, <span class='string'>&quot;--color&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>flag_using_mixed</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;flag&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-f&quot;</span>, <span class='string'>&quot;--color&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;flag&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color &#39;some other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;--flag&quot;</span>, <span class='string'>&quot;-c&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>multiple_flags_in_single</span>() {
+        <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;multe_flags&quot;</span>)
+            .<span class='ident'>args</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f, --flag &#39;some flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-c, --color &#39;some other flag&#39;&quot;</span>),
+                <span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-d, --debug &#39;another other flag&#39;&quot;</span>)
+                ])
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;-fcd&quot;</span>]);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;flag&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;color&quot;</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;debug&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='attribute'>#[<span class='ident'>should_panic</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>short_flag_misspel</span>() {
+        <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;short_flag&quot;</span>)
+            .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f1, --flag &#39;some flag&#39;&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='attribute'>#[<span class='ident'>should_panic</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>short_flag_name_missing</span>() {
+        <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;short_flag&quot;</span>)
+            .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f &#39;some flag&#39;&quot;</span>));
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>sub_command_negate_requred</span>() {
+        <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;sub_command_negate&quot;</span>)
+            .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>SubcommandsNegateReqs</span>)
+            .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;test&quot;</span>)
+                   .<span class='ident'>required</span>(<span class='boolval'>true</span>)
+                   .<span class='ident'>index</span>(<span class='number'>1</span>))
+            .<span class='ident'>subcommand</span>(<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;sub1&quot;</span>))
+            .<span class='ident'>subcommand</span>(<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;sub1&quot;</span>))
+            .<span class='ident'>get_matches_from</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;sub1&quot;</span>]);
+    }
 }
 </pre>
 </section>
@@ -2747,8 +2617,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
