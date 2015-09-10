@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.3.1/src/macros.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.0/src/macros.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>macros.rs.html -- source</title>
@@ -781,6 +781,128 @@
 <span id="739">739</span>
 <span id="740">740</span>
 <span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
 </pre><pre class='rust '>
 <span class='comment'>// Convenience for writing to stderr thanks to https://github.com/BurntSushi</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>wlnerr</span>(
@@ -904,28 +1026,28 @@
 
 <span class='comment'>// De-duplication macro used in src/app.rs</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>print_opt_help</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>opt</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>opt</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>h</span>) <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>opt</span>.<span class='ident'>help</span> {
             <span class='kw'>if</span> <span class='ident'>h</span>.<span class='ident'>contains</span>(<span class='string'>&quot;{n}&quot;</span>) {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hel</span> <span class='op'>=</span> <span class='ident'>h</span>.<span class='ident'>split</span>(<span class='string'>&quot;{n}&quot;</span>);
                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>part</span>) <span class='op'>=</span> <span class='ident'>hel</span>.<span class='ident'>next</span>() {
-                    <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>part</span>);
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>part</span>));
                 }
                 <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>part</span>) <span class='op'>=</span> <span class='ident'>hel</span>.<span class='ident'>next</span>() {
-                    <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;\n&quot;</span>);
-                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>.<span class='ident'>print_spaces</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>);
-                    <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>part</span>);
-                    <span class='comment'>// print!(&quot;{}&quot;, hel.next().unwrap_or(&quot;&quot;));</span>
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;\n&quot;</span>));
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>.<span class='ident'>print_spaces</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>));
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>part</span>));
+                    <span class='comment'>// try!(write!($w, &quot;{}&quot;, hel.next().unwrap_or(&quot;&quot;)));</span>
                 }
             } <span class='kw'>else</span> {
-                <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>h</span>);
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>h</span>));
             }
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>pv</span>) <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>opt</span>.<span class='ident'>possible_vals</span> {
-                <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot; [values:&quot;</span>);
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot; [values:&quot;</span>));
                 <span class='kw'>for</span> <span class='ident'>pv_s</span> <span class='kw'>in</span> <span class='ident'>pv</span>.<span class='ident'>iter</span>() {
-                    <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot; {}&quot;</span>, <span class='ident'>pv_s</span>);
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot; {}&quot;</span>, <span class='ident'>pv_s</span>));
                 }
-                <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;]&quot;</span>);
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;]&quot;</span>));
             }
         }
     };
@@ -1522,6 +1644,128 @@
             <span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION_PATCH&quot;</span>),
             <span class='macro'>option_env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION_PRE&quot;</span>).<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>))
     }
+}
+
+<span class='doccomment'>/// App, Arg, SubCommand and Group builder macro (Usage-string like input)</span>
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>clap_app</span> {
+    (<span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>)) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span> };
+    (<span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>) (<span class='kw-2'>@</span><span class='ident'>arg</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>: $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span>
+            (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>.<span class='ident'>arg</span>(<span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Arg</span>::<span class='ident'>with_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>))) (<span class='op'>-</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }))
+            $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span>
+        }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>) (<span class='kw-2'>@</span><span class='ident'>setting</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>setting</span>:<span class='ident'>ident</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span>
+            (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>.<span class='ident'>setting</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>AppSettings</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>setting</span>))
+            $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span>
+        }
+    };
+    <span class='comment'>// Treat the application builder as an argument to set it&#39;s attributes</span>
+    (<span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>) (<span class='kw-2'>@</span><span class='ident'>attributes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>)<span class='op'>*</span> }) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>) (<span class='kw-2'>@</span><span class='ident'>group</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=&gt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span>
+            (<span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>group</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>ArgGroup</span>::<span class='ident'>with_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>))) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> })
+            $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span>
+        }
+    };
+    <span class='comment'>// Handle subcommand creation</span>
+    (<span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>) (<span class='kw-2'>@</span><span class='ident'>subcommand</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=&gt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span>
+            (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>.<span class='ident'>subcommand</span>(
+                <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>))) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+            ))
+            $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span>
+        }
+    };
+    <span class='comment'>// Yaml like function calls - used for setting varous meta directly against the app</span>
+    (<span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>) (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>:<span class='ident'>ident</span>: $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='comment'>// clap_app!{ @app ($builder.$ident($($v),*)) $($tt)* }</span>
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span>
+            (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),<span class='op'>*</span>))
+            $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span>
+        }
+    };
+
+    <span class='comment'>// Add members to group and continue argument handling with the parent builder</span>
+    (<span class='kw-2'>@</span><span class='ident'>group</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>group</span>:<span class='ident'>expr</span>)) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>.<span class='ident'>arg_group</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>group</span>) };
+    (<span class='kw-2'>@</span><span class='ident'>group</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>group</span>:<span class='ident'>expr</span>) (<span class='kw-2'>@</span><span class='ident'>attributes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>group</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>, <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>group</span>) (<span class='op'>-</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attr</span>)<span class='op'>*</span> }) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>group</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>group</span>:<span class='ident'>expr</span>) (<span class='kw-2'>@</span><span class='ident'>arg</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>: $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>group</span>
+            (<span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>builder</span>) (<span class='kw-2'>@</span><span class='ident'>arg</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>) },
+             <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>group</span>.<span class='ident'>add</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>)))
+            $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tt</span>)<span class='op'>*</span>
+        }
+    };
+
+    <span class='comment'>// No more tokens to munch</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span> };
+    <span class='comment'>// Shorthand tokens influenced by the usage_string</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='op'>-</span><span class='op'>-</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>long</span>:<span class='ident'>ident</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>long</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>long</span>))) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='op'>-</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>short</span>:<span class='ident'>ident</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>short</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>short</span>))) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) (<span class='op'>-</span>) <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span><span class='op'>&gt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>value_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>))) (<span class='op'>+</span>) <span class='op'>+</span><span class='ident'>takes_value</span> <span class='op'>+</span><span class='ident'>required</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) (<span class='op'>+</span>) <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span><span class='op'>&gt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>value_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>))) (<span class='op'>+</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) (<span class='op'>-</span>) [<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>] $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>value_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>))) <span class='op'>+</span><span class='ident'>takes_value</span> (<span class='op'>+</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) (<span class='op'>+</span>) [<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>] $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>value_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>))) (<span class='op'>+</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> ... $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> <span class='op'>+</span><span class='ident'>multiple</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    <span class='comment'>// Shorthand magic</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='attribute'>#{<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>n</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>m</span>:<span class='ident'>expr</span>} $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> <span class='ident'>min_values</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>n</span>) <span class='ident'>max_values</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>m</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='op'>*</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> <span class='op'>+</span><span class='ident'>required</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    <span class='comment'>// !foo -&gt; .foo(false)</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='op'>!</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>(<span class='boolval'>false</span>)) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    <span class='comment'>// foo -&gt; .foo(true)</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='op'>+</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>:<span class='ident'>ident</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>(<span class='boolval'>true</span>)) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    <span class='comment'>// Validator</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> {<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fn_</span>:<span class='ident'>expr</span>} $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>validator</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fn_</span>)) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    (<span class='kw-2'>@</span><span class='ident'>as_expr</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span> };
+    <span class='comment'>// Help</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>desc</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='ident'>help</span>(<span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>as_expr</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>desc</span> }) };
+    <span class='comment'>// Handle functions that need to be called multiple times for each argument</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>:<span class='ident'>ident</span>[$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>target</span>:<span class='ident'>ident</span>)<span class='op'>*</span>]</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span> $( .<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>target</span>)) )<span class='op'>*</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    <span class='comment'>// Inherit builder&#39;s functions</span>
+    (<span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>:<span class='ident'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>arg</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>)<span class='op'>*</span>)) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modes</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+
+    <span class='comment'>// Build a subcommand outside of an app.</span>
+    (<span class='kw-2'>@</span><span class='ident'>subcommand</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=&gt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>))) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> }
+    };
+    <span class='comment'>// Start the magic</span>
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=&gt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {{
+        <span class='macro'>clap_app</span><span class='macro'>!</span>{ <span class='kw-2'>@</span><span class='ident'>app</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>App</span>::<span class='ident'>new</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>))) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>}
+    }};
 }
 </pre>
 </section>

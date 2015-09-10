@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-27699' class='srclink' href='../src/clap/args/arg.rs.html#40-105' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-29756' class='srclink' href='../src/clap/args/arg.rs.html#40-107' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Arg&lt;'n, 'l, 'h, 'g, 'p, 'r&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>The abstract representation of a command line argument used by the consumer of the library.
@@ -292,6 +292,14 @@ command line with an explicit <code>&quot;&quot;</code>, or <code>&#39;&#39;</co
 <h1 id="example" class='section-header'><a
                            href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
 .<span class='ident'>empty_values</span>(<span class='boolval'>true</span>)</pre>
+</div><h4 id='method.hidden' class='method'><code>fn <a href='#method.hidden' class='fnname'>hidden</a>(self, h: <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; Self</code></h4>
+<div class='docblock'><p>Hides an argument from help message output.</p>
+
+<p><strong>NOTE:</strong> This does <strong>not</strong> hide the argument from usage strings on error</p>
+
+<h1 id="example" class='section-header'><a
+                           href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
+.<span class='ident'>hidden</span>(<span class='boolval'>true</span>)</pre>
 </div><h4 id='method.possible_values' class='method'><code>fn <a href='#method.possible_values' class='fnname'>possible_values</a>&lt;T, I&gt;(self, names: I) -&gt; Self <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt; + 'p, I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.IntoIterator.html' title='core::iter::IntoIterator'>IntoIterator</a>&lt;Item=&amp;'p T&gt;</span></code></h4>
 <div class='docblock'><p>Specifies a list of possible values for this argument. At runtime, clap verifies that only
 one of the specified values was used, or fails with a usage string.</p>
