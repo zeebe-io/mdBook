@@ -354,6 +354,13 @@
 <span id="312">312</span>
 <span id="313">313</span>
 <span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>PathBuf</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::{<span class='self'>self</span>, <span class='ident'>File</span>};
@@ -396,17 +403,22 @@
         }
     }
 
-    <span class='doccomment'>/// Returns a flat depth-first iterator over the elements of the book in the form of a tuple:</span>
+    <span class='doccomment'>/// Returns a flat depth-first iterator over the elements of the book, it returns an [BookItem enum](bookitem.html):</span>
     <span class='doccomment'>/// `(section: String, bookitem: &amp;BookItem)`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # extern crate mdbook;</span>
     <span class='doccomment'>/// # use mdbook::MDBook;</span>
+    <span class='doccomment'>/// # use mdbook::BookItem;</span>
     <span class='doccomment'>/// # use std::path::Path;</span>
     <span class='doccomment'>/// # fn main() {</span>
     <span class='doccomment'>/// # let mut book = MDBook::new(Path::new(&quot;mybook&quot;));</span>
-    <span class='doccomment'>/// for (section, element) in book.iter() {</span>
-    <span class='doccomment'>///     println!(&quot;{} {}&quot;, section, element.name);</span>
+    <span class='doccomment'>/// for item in book.iter() {</span>
+    <span class='doccomment'>///     match item {</span>
+    <span class='doccomment'>///         &amp;BookItem::Chapter(ref section, ref chapter) =&gt; {},</span>
+    <span class='doccomment'>///         &amp;BookItem::Affix(ref chapter) =&gt; {},</span>
+    <span class='doccomment'>///         &amp;BookItem::Spacer =&gt; {},</span>
+    <span class='doccomment'>///     }</span>
     <span class='doccomment'>/// }</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// // would print something like this:</span>
@@ -483,21 +495,29 @@
         <span class='comment'>// parse SUMMARY.md, and create the missing item related file</span>
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_summary</span>());
 
-        <span class='kw'>for</span> (_, <span class='ident'>item</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
-            <span class='kw'>if</span> <span class='ident'>item</span>.<span class='ident'>path</span> <span class='op'>!=</span> <span class='ident'>PathBuf</span>::<span class='ident'>new</span>() {
-                <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>().<span class='ident'>join</span>(<span class='kw-2'>&amp;</span><span class='ident'>item</span>.<span class='ident'>path</span>);
+        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: constructing paths for missing files&quot;</span>);
+        <span class='kw'>for</span> <span class='ident'>item</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
+            <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: item: {:?}&quot;</span>, <span class='ident'>item</span>);
+            <span class='kw'>match</span> <span class='ident'>item</span> {
+                <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Spacer</span> <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
+                <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(_, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
+                    <span class='kw'>if</span> <span class='ident'>ch</span>.<span class='ident'>path</span> <span class='op'>!=</span> <span class='ident'>PathBuf</span>::<span class='ident'>new</span>() {
+                        <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>().<span class='ident'>join</span>(<span class='kw-2'>&amp;</span><span class='ident'>ch</span>.<span class='ident'>path</span>);
 
-                <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>path</span>.<span class='ident'>exists</span>() {
-                    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create file&quot;</span>, <span class='ident'>path</span>);
-                    <span class='macro'>try</span><span class='macro'>!</span>(::<span class='ident'>std</span>::<span class='ident'>fs</span>::<span class='ident'>create_dir_all</span>(<span class='ident'>path</span>.<span class='ident'>parent</span>().<span class='ident'>unwrap</span>()));
-                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>create</span>(<span class='ident'>path</span>));
+                        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>path</span>.<span class='ident'>exists</span>() {
+                            <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: {:?} does not exist, trying to create file&quot;</span>, <span class='ident'>path</span>);
+                            <span class='macro'>try</span><span class='macro'>!</span>(::<span class='ident'>std</span>::<span class='ident'>fs</span>::<span class='ident'>create_dir_all</span>(<span class='ident'>path</span>.<span class='ident'>parent</span>().<span class='ident'>unwrap</span>()));
+                            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>create</span>(<span class='ident'>path</span>));
 
-                    <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Writing to {:?}&quot;</span>, <span class='ident'>path</span>);
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;# {}&quot;</span>, <span class='ident'>item</span>.<span class='ident'>name</span>));
+                            <span class='comment'>//debug!(&quot;[*]: Writing to {:?}&quot;, path);</span>
+                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;# {}&quot;</span>, <span class='ident'>ch</span>.<span class='ident'>name</span>));
+                        }
+                    }
                 }
             }
         }
 
+        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: init done&quot;</span>);
         <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(());
     }
 
@@ -657,14 +677,8 @@
 
     <span class='comment'>// Construct book</span>
     <span class='kw'>fn</span> <span class='ident'>parse_summary</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
-
         <span class='comment'>// When append becomes stable, use self.content.append() ...</span>
-        <span class='kw'>let</span> <span class='ident'>book_items</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse</span>::<span class='ident'>construct_bookitems</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>().<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>)));
-
-        <span class='kw'>for</span> <span class='ident'>item</span> <span class='kw'>in</span> <span class='ident'>book_items</span> {
-            <span class='self'>self</span>.<span class='ident'>content</span>.<span class='ident'>push</span>(<span class='ident'>item</span>)
-        }
-
+        <span class='self'>self</span>.<span class='ident'>content</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse</span>::<span class='ident'>construct_bookitems</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>().<span class='ident'>join</span>(<span class='string'>&quot;SUMMARY.md&quot;</span>)));
         <span class='prelude-val'>Ok</span>(())
     }
 
