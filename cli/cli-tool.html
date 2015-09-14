@@ -20,8 +20,22 @@
 
         <!-- MathJax -->
         <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Fetch JQuery from CDN but have a local fallback -->
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            if (typeof jQuery == 'undefined') {
+                document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
+            }
+        </script>
     </head>
     <body>
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme = localStorage.getItem('theme');
+            if (theme == null) { theme = 'light'; }
+            $('body').removeClass().addClass(theme);
+        </script>
 
         <div id="sidebar" class="sidebar">
             <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html" class="active"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.2.</strong> init</a></li><li><a href="cli/build.html"><strong>2.3.</strong> build</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.2.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.3.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.4.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.4.2.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.4.3.</strong> Syntax highlighting</a></li></ul></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
@@ -79,13 +93,6 @@ Let's focus on the command line tool capabilities first.</p>
 
         </div>
 
-        <!-- Fetch JQuery from CDN but have a local fallback -->
-        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script>
-            if (typeof jQuery == 'undefined') {
-                document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
-            }
-        </script>
 
         <!-- Local fallback for Font Awesome -->
         <script>
