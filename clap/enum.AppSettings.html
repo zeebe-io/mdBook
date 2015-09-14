@@ -24,17 +24,17 @@
 
     
 
-    <nav class="sidebar">
+    <section class="sidebar">
         
         <p class='location'><a href='index.html'>clap</a></p><script>window.sidebarCurrent = {name: 'AppSettings', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
-    </nav>
+    </section>
 
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
                        type="search">
             </div>
         </form>
@@ -66,7 +66,8 @@ are only required as long as there is no subcommand present.</p>
 <h1 id="example" class='section-header'><a
                            href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
 <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>)
-    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>SubcommandsNegateReqs</span>)</pre>
+    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>SubcommandsNegateReqs</span>)
+</pre>
 </div></td></tr><tr><td id='variant.SubcommandRequired'><code>SubcommandRequired</code></td><td><div class='docblock'><p>Allows specifying that if no subcommand is present at runtime, error and exit gracefully</p>
 
 <p><strong>NOTE:</strong> This defaults to false (subcommands do <em>not</em> need to be present)</p>
@@ -74,7 +75,8 @@ are only required as long as there is no subcommand present.</p>
 <h1 id="example" class='section-header'><a
                            href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
 <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>)
-    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>SubcommandRequired</span>)</pre>
+    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>SubcommandRequired</span>)
+</pre>
 </div></td></tr><tr><td id='variant.ArgRequiredElseHelp'><code>ArgRequiredElseHelp</code></td><td><div class='docblock'><p>Specifies that the help text sould be displayed (and then exit gracefully), if no
 arguments are present at runtime (i.e. an empty run such as, <code>$ myprog</code>.</p>
 
@@ -83,7 +85,8 @@ arguments are present at runtime (i.e. an empty run such as, <code>$ myprog</cod
 <h1 id="example" class='section-header'><a
                            href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
 <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>)
-    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>ArgRequiredElseHelp</span>)</pre>
+    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>ArgRequiredElseHelp</span>)
+</pre>
 </div></td></tr><tr><td id='variant.GlobalVersion'><code>GlobalVersion</code></td><td><div class='docblock'><p>Uses version of the current command for all subcommands. (Defaults to false; subcommands
 have independant version strings)</p>
 
@@ -98,7 +101,8 @@ adding any subcommands</p>
     .<span class='ident'>subcommand</span>(<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;test&quot;</span>))
     .<span class='ident'>get_matches</span>();
 <span class='comment'>// running `myprog test --version` will display</span>
-<span class='comment'>// &quot;myprog-test v1.1&quot;</span></pre>
+<span class='comment'>// &quot;myprog-test v1.1&quot;</span>
+</pre>
 </div></td></tr><tr><td id='variant.VersionlessSubcommands'><code>VersionlessSubcommands</code></td><td><div class='docblock'><p>Disables <code>-V</code> and <code>--version</code> for all subcommands (Defaults to false; subcommands have
 version flags)</p>
 
@@ -113,7 +117,8 @@ version flags)</p>
     .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>VersionlessSubcommands</span>)
     .<span class='ident'>subcommand</span>(<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;test&quot;</span>))
     .<span class='ident'>get_matches</span>();
-<span class='comment'>// running `myprog test --version` will display unknown argument error</span></pre>
+<span class='comment'>// running `myprog test --version` will display unknown argument error</span>
+</pre>
 </div></td></tr><tr><td id='variant.UnifiedHelpMessage'><code>UnifiedHelpMessage</code></td><td><div class='docblock'><p>By default the auto-generated help message groups flags, options, and positional arguments
 separately. This setting disable that and groups flags and options together presenting a
 more unified help message (a la getopts or docopt style).</p>
@@ -125,7 +130,8 @@ more unified help message (a la getopts or docopt style).</p>
 <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>)
     .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>UnifiedHelpMessage</span>)
     .<span class='ident'>get_matches</span>();
-<span class='comment'>// running `myprog --help` will display a unified &quot;docopt&quot; or &quot;getopts&quot; style help message</span></pre>
+<span class='comment'>// running `myprog --help` will display a unified &quot;docopt&quot; or &quot;getopts&quot; style help message</span>
+</pre>
 </div></td></tr><tr><td id='variant.WaitOnError'><code>WaitOnError</code></td><td><div class='docblock'><p>Will display a message &quot;Press [ENTER]/[RETURN] to continue...&quot; and wait user before
 exiting</p>
 
@@ -141,7 +147,8 @@ rare)</p>
 <h1 id="example" class='section-header'><a
                            href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
 <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>)
-    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>WaitOnError</span>)</pre>
+    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>WaitOnError</span>)
+</pre>
 </div></td></tr><tr><td id='variant.SubcommandRequiredElseHelp'><code>SubcommandRequiredElseHelp</code></td><td><div class='docblock'><p>Specifies that the help text sould be displayed (and then exit gracefully), if no
 subcommands are present at runtime (i.e. an empty run such as, <code>$ myprog</code>.</p>
 
@@ -155,60 +162,52 @@ still be displayed and exit. If this is <em>not</em> the desired result, conside
 <h1 id="example" class='section-header'><a
                            href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
 <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>)
-    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>SubcommandRequiredElseHelp</span>)</pre>
-</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html' title='core::str::FromStr'>FromStr</a> for <a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a></code></h3><div class='impl-items'><h4 id='assoc_type.Err' class='type'><code>type Err = <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
-<h4 id='method.from_str' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html#method.from_str' class='fnname'>from_str</a>(s: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, Self::Err&gt;</code></h4>
-</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a>) -&gt; <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a>) -&gt; <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+    .<span class='ident'>setting</span>(<span class='ident'>AppSettings</span>::<span class='ident'>SubcommandRequiredElseHelp</span>)
+</pre>
+</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/nightly/core/str/trait.FromStr.html' title='core::str::FromStr'>FromStr</a> for <a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a></code></h3><div class='impl-items'><h4 id='assoc_type.Err' class='type'><code>type Err = <a class='struct' href='http://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<h4 id='method.from_str' class='method'><code>fn <a href='http://doc.rust-lang.org/nightly/core/str/trait.FromStr.html#method.from_str' class='fnname'>from_str</a>(s: &amp;<a href='http://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, Self::Err&gt;</code></h4>
+</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<h4 id='method.ne' class='method'><code>fn <a href='http://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../clap/enum.AppSettings.html' title='clap::AppSettings'>AppSettings</a>) -&gt; <a href='http://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
 
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
-                </p>
-            </div>
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
         </div>
-    </aside>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+            <p>
+                Search functions by type signature (e.g.
+                <code>vec -> usize</code>)
+            </p>
+        </div>
+    </div>
 
     
 
