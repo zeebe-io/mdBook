@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/handlebars-0.9.3/src/render.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/handlebars-0.9.4/src/render.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>render.rs.html -- source</title>
@@ -503,6 +503,15 @@
 <span id="461">461</span>
 <span id="462">462</span>
 <span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>HashMap</span>, <span class='ident'>BTreeMap</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
@@ -540,15 +549,22 @@
     }
 }
 
+<span class='doccomment'>/// The context of a render call</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// this context stores information of a render and a writer where generated</span>
+<span class='doccomment'>/// content is written to.</span>
+<span class='doccomment'>///</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RenderContext</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>partials</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Template</span><span class='op'>&gt;</span>,
     <span class='ident'>path</span>: <span class='ident'>String</span>,
     <span class='ident'>local_variables</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Json</span><span class='op'>&gt;</span>,
     <span class='ident'>default_var</span>: <span class='ident'>Json</span>,
+    <span class='doccomment'>/// the `Write` where page is generated</span>
     <span class='kw'>pub</span> <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Write</span>
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>RenderContext</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Create a render context from a `Write`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>w</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>RenderContext</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
         <span class='ident'>RenderContext</span> {
             <span class='ident'>partials</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>(),
@@ -559,6 +575,7 @@
         }
     }
 
+    <span class='doccomment'>/// Create a new `RenderContext` with a different `Write`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>with_writer</span><span class='op'>&lt;</span><span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>w</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>RenderContext</span><span class='op'>&lt;</span><span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> {
         <span class='ident'>RenderContext</span> {
             <span class='ident'>partials</span>: <span class='self'>self</span>.<span class='ident'>partials</span>.<span class='ident'>clone</span>(),
@@ -656,7 +673,8 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>evaluated_hash</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
         <span class='kw'>for</span> (<span class='ident'>k</span>, <span class='ident'>p</span>) <span class='kw'>in</span> <span class='ident'>ht</span>.<span class='ident'>hash</span>.<span class='ident'>iter</span>() {
             <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>p</span>.<span class='ident'>renders</span>(<span class='ident'>ctx</span>, <span class='ident'>registry</span>, <span class='ident'>rc</span>));
-            <span class='comment'>// subexpress in hash values are all treated as json string for now</span>
+            <span class='comment'>// subexpression in hash values are all treated as json string for now</span>
+            <span class='comment'>// FIXME: allow different types evaluated as hash value</span>
             <span class='ident'>evaluated_hash</span>.<span class='ident'>insert</span>(<span class='ident'>k</span>.<span class='ident'>clone</span>(), <span class='ident'>Json</span>::<span class='ident'>String</span>(<span class='ident'>r</span>));
         }
 

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Helper",""],["RenderContext",""],["RenderError",""]],"trait":[["Renderable",""]]});
+initSidebarItems({"struct":[["Helper",""],["RenderContext","The context of a render call"],["RenderError",""]],"trait":[["Renderable",""]]});
