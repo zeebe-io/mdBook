@@ -498,9 +498,9 @@
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: constructing paths for missing files&quot;</span>);
         <span class='kw'>for</span> <span class='ident'>item</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>() {
             <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: item: {:?}&quot;</span>, <span class='ident'>item</span>);
-            <span class='kw'>match</span> <span class='ident'>item</span> {
-                <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Spacer</span> <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
-                <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(_, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
+            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>item</span> {
+                <span class='ident'>BookItem</span>::<span class='ident'>Spacer</span> <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
+                <span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(_, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>|</span> <span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
                     <span class='kw'>if</span> <span class='ident'>ch</span>.<span class='ident'>path</span> <span class='op'>!=</span> <span class='ident'>PathBuf</span>::<span class='ident'>new</span>() {
                         <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>config</span>.<span class='ident'>get_src</span>().<span class='ident'>join</span>(<span class='kw-2'>&amp;</span><span class='ident'>ch</span>.<span class='ident'>path</span>);
 
@@ -518,7 +518,7 @@
         }
 
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: init done&quot;</span>);
-        <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(());
+        <span class='prelude-val'>Ok</span>(())
     }
 
     <span class='doccomment'>/// The `build()` method is the one where everything happens. First it parses `SUMMARY.md` to</span>

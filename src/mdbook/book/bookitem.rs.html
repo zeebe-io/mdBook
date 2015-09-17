@@ -175,8 +175,8 @@
 
     <span class='kw'>fn</span> <span class='ident'>to_json</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Json</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span>: <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Json</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_string</span>(), <span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>to_json</span>());
-        <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_string</span>(),<span class='self'>self</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>()
+        <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>to_json</span>());
+        <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(),<span class='self'>self</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>()
             .<span class='ident'>expect</span>(<span class='string'>&quot;Json conversion failed for path&quot;</span>).<span class='ident'>to_json</span>()
         );
         <span class='ident'>m</span>.<span class='ident'>to_json</span>()
@@ -203,13 +203,13 @@
             } <span class='kw'>else</span> {
                 <span class='kw'>let</span> <span class='ident'>cur</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>items</span>.<span class='ident'>get</span>(<span class='self'>self</span>.<span class='ident'>current_index</span>).<span class='ident'>unwrap</span>();
 
-                <span class='kw'>match</span> <span class='ident'>cur</span> {
-                    <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(_, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
+                <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>cur</span> {
+                    <span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(_, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>|</span> <span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
                         <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>push</span>((<span class='self'>self</span>.<span class='ident'>items</span>, <span class='self'>self</span>.<span class='ident'>current_index</span>));
                         <span class='self'>self</span>.<span class='ident'>items</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>ch</span>.<span class='ident'>sub_items</span>[..];
                         <span class='self'>self</span>.<span class='ident'>current_index</span> <span class='op'>=</span> <span class='number'>0</span>;
                     },
-                    <span class='kw-2'>&amp;</span><span class='ident'>BookItem</span>::<span class='ident'>Spacer</span> <span class='op'>=&gt;</span> {
+                    <span class='ident'>BookItem</span>::<span class='ident'>Spacer</span> <span class='op'>=&gt;</span> {
                         <span class='self'>self</span>.<span class='ident'>current_index</span> <span class='op'>+=</span> <span class='number'>1</span>;
                     }
                 }
