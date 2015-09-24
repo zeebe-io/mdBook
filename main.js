@@ -54,8 +54,7 @@
     }
 
     function browserSupportsHistoryApi() {
-        return document.location.protocol != "file:" &&
-          window.history && typeof window.history.pushState === "function";
+        return window.history && typeof window.history.pushState === "function";
     }
 
     function highlightSourceLines(ev) {
@@ -231,28 +230,6 @@
                 }
             }
 
-            function typePassesFilter(filter, type) {
-                // No filter
-                if (filter < 0) return true;
-
-                // Exact match
-                if (filter === type) return true;
-
-                // Match related items
-                var name = itemTypes[type];
-                switch (itemTypes[filter]) {
-                    case "constant":
-                        return (name == "associatedconstant");
-                    case "fn":
-                        return (name == "method" || name == "tymethod");
-                    case "type":
-                        return (name == "primitive");
-                }
-
-                // No match
-                return false;
-            }
-
             // quoted values mean literal search
             var nSearchWords = searchWords.length;
             if ((val.charAt(0) === "\"" || val.charAt(0) === "'") &&
@@ -262,7 +239,7 @@
                 for (var i = 0; i < nSearchWords; ++i) {
                     if (searchWords[i] === val) {
                         // filter type: ... queries
-                        if (typePassesFilter(typeFilter, searchIndex[i].ty)) {
+                        if (typeFilter < 0 || typeFilter === searchIndex[i].ty) {
                             results.push({id: i, index: -1});
                         }
                     }
@@ -308,7 +285,7 @@
                             searchWords[j].replace(/_/g, "").indexOf(val) > -1)
                         {
                             // filter type: ... queries
-                            if (typePassesFilter(typeFilter, searchIndex[j].ty)) {
+                            if (typeFilter < 0 || typeFilter === searchIndex[j].ty) {
                                 results.push({
                                     id: j,
                                     index: searchWords[j].replace(/_/g, "").indexOf(val),
@@ -318,7 +295,7 @@
                         } else if (
                             (lev_distance = levenshtein(searchWords[j], val)) <=
                                 MAX_LEV_DISTANCE) {
-                            if (typePassesFilter(typeFilter, searchIndex[j].ty)) {
+                            if (typeFilter < 0 || typeFilter === searchIndex[j].ty) {
                                 results.push({
                                     id: j,
                                     index: 0,
@@ -474,9 +451,11 @@
             var matches, type, query, raw = $('.search-input').val();
             query = raw;
 
-            matches = query.match(/^(fn|mod|struct|enum|trait|type|const|macro)\s*:\s*/i);
+            matches = query.match(/^(fn|mod|struct|enum|trait|t(ype)?d(ef)?)\s*:\s*/i);
             if (matches) {
-                type = matches[1].replace(/^const$/, 'constant');
+                type = matches[1].replace(/^td$/, 'typedef')
+                                 .replace(/^tdef$/, 'typedef')
+                                 .replace(/^typed$/, 'typedef');
                 query = query.substring(matches[0].length);
             }
 
@@ -774,8 +753,7 @@
         if (rootPath === '../') {
             var sidebar = $('.sidebar');
             var div = $('<div>').attr('class', 'block crate');
-            div.append($('<h3>').text('Crates'));
-            var ul = $('<ul>').appendTo(div);
+            div.append($('<h2>').text('Crates'));
 
             var crates = [];
             for (var crate in rawSearchIndex) {
@@ -790,10 +768,9 @@
                 }
                 if (rawSearchIndex[crates[i]].items[0]) {
                     var desc = rawSearchIndex[crates[i]].items[0][3];
-                    var link = $('<a>', {'href': '../' + crates[i] + '/index.html',
+                    div.append($('<a>', {'href': '../' + crates[i] + '/index.html',
                                          'title': plainSummaryLine(desc),
-                                         'class': klass}).text(crates[i]);
-                    ul.append($('<li>').append(link));
+                                         'class': klass}).text(crates[i]));
                 }
             }
             sidebar.append(div);
@@ -812,8 +789,7 @@
             if (!filtered) { return; }
 
             var div = $('<div>').attr('class', 'block ' + shortty);
-            div.append($('<h3>').text(longty));
-            var ul = $('<ul>').appendTo(div);
+            div.append($('<h2>').text(longty));
 
             for (var i = 0; i < filtered.length; ++i) {
                 var item = filtered[i];
@@ -830,10 +806,9 @@
                 } else {
                     path = shortty + '.' + name + '.html';
                 }
-                var link = $('<a>', {'href': current.relpath + path,
+                div.append($('<a>', {'href': current.relpath + path,
                                      'title': desc,
-                                     'class': klass}).text(name);
-                ul.append($('<li>').append(link));
+                                     'class': klass}).text(name));
             }
             sidebar.append(div);
         }
