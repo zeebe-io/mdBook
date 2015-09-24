@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.0/src/app/settings.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/app/settings.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>settings.rs.html -- source</title>
@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -213,7 +213,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This defaults to false (using subcommand does *not* negate requirements)</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, AppSettings};</span>
@@ -226,7 +226,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This defaults to false (subcommands do *not* need to be present)</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, AppSettings};</span>
@@ -240,7 +240,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** Subcommands count as arguments</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, AppSettings};</span>
@@ -255,7 +255,7 @@
     <span class='doccomment'>/// **NOTE:** The version for the current command and this setting must be set **prior** to</span>
     <span class='doccomment'>/// adding any subcommands</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand, AppSettings};</span>
@@ -275,7 +275,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** Do not set this value to false, it will have undesired results!</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand, AppSettings};</span>
@@ -293,7 +293,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This setting is cosmetic only and does not affect any functionality.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand, AppSettings};</span>
@@ -315,7 +315,7 @@
     <span class='doccomment'>/// behavior for all subcommands, you must set this on each command (needing this is extremely</span>
     <span class='doccomment'>/// rare)</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, AppSettings};</span>
@@ -334,7 +334,7 @@
     <span class='doccomment'>/// still be displayed and exit. If this is *not* the desired result, consider using</span>
     <span class='doccomment'>/// `.arg_required_else_help()`</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, AppSettings};</span>
@@ -367,10 +367,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -387,7 +389,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -397,8 +399,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
@@ -407,7 +409,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

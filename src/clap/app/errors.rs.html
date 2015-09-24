@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.0/src/app/errors.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/app/errors.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>errors.rs.html -- source</title>
@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -252,6 +252,24 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>process</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
@@ -263,7 +281,7 @@
     <span class='doccomment'>/// Error occurs when some possible values were set, but clap found unexpected value</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -277,7 +295,7 @@
     <span class='doccomment'>/// Error occurs when clap found unexpected flag or option</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -289,7 +307,7 @@
     <span class='doccomment'>/// Error occurs when clap found unexpected subcommand</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand};</span>
@@ -305,7 +323,7 @@
     <span class='doccomment'>/// Error occurs when option does not allow empty values but some was found</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -325,7 +343,7 @@
     <span class='doccomment'>/// Error occurs when argument got more values then were expected</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -338,7 +356,7 @@
     <span class='doccomment'>/// Error occurs when argument got less values then were expected</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -351,7 +369,7 @@
     <span class='doccomment'>/// Error occurs when clap find two ore more conflicting arguments</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -364,7 +382,7 @@
     <span class='doccomment'>/// Error occurs when one or more required arguments missing</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -377,7 +395,7 @@
     <span class='doccomment'>/// Error occurs when required subcommand missing</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, AppSettings, SubCommand};</span>
@@ -395,7 +413,7 @@
     <span class='doccomment'>/// `AppSettings::ArgRequiredElseHelp` was used</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, AppSettings, SubCommand};</span>
@@ -412,7 +430,7 @@
     <span class='doccomment'>/// Error occurs when clap find argument while is was not expecting any</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App};</span>
@@ -423,7 +441,7 @@
     <span class='doccomment'>/// Error occurs when argument was used multiple times and was not set as multiple.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -433,6 +451,24 @@
     <span class='doccomment'>///     .get_matches_from_safe(vec![&quot;&quot;, &quot;--debug&quot;, &quot;--debug&quot;]);</span>
     <span class='doccomment'>/// ```</span>
     <span class='ident'>UnexpectedMultipleUsage</span>,
+    <span class='doccomment'>/// Error occurs when argument contains invalid unicode characters</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// # use std::os::unix::ffi::OsStringExt;</span>
+    <span class='doccomment'>/// # use std::ffi::OsString;</span>
+    <span class='doccomment'>/// let result = App::new(&quot;myprog&quot;)</span>
+    <span class='doccomment'>///     .arg(Arg::with_name(&quot;debug&quot;)</span>
+    <span class='doccomment'>///         .short(&quot;u&quot;)</span>
+    <span class='doccomment'>///         .takes_value(true))</span>
+    <span class='doccomment'>///     .get_matches_from_safe(vec![OsString::from_vec(vec![0x20]), </span>
+    <span class='doccomment'>///                                 OsString::from_vec(vec![0xE9])]);</span>
+    <span class='doccomment'>/// assert!(result.is_err());</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='ident'>InvalidUnicode</span>
 }
 
 <span class='doccomment'>/// Command line argument parser error</span>
@@ -471,10 +507,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -491,7 +529,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -501,8 +539,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
@@ -511,7 +549,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

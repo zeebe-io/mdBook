@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.0/src/args/arg.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/args/arg.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>arg.rs.html -- source</title>
@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -1122,15 +1122,6 @@
 <span id="1080">1080</span>
 <span id="1081">1081</span>
 <span id="1082">1082</span>
-<span id="1083">1083</span>
-<span id="1084">1084</span>
-<span id="1085">1085</span>
-<span id="1086">1086</span>
-<span id="1087">1087</span>
-<span id="1088">1088</span>
-<span id="1089">1089</span>
-<span id="1090">1090</span>
-<span id="1091">1091</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>IntoIterator</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;yaml&quot;</span>)]</span>
@@ -1154,8 +1145,10 @@
 <span class='doccomment'>/// manually, or using a usage string which is far less verbose. You can also use a combination</span>
 <span class='doccomment'>/// of the two methods to achieve the best of both worlds.</span>
 <span class='doccomment'>///</span>
+<span class='doccomment'>/// **NOTE*: Fields of this struct are **not** meant to be used directly unless absolutely</span>
+<span class='doccomment'>/// required. 99.9% of the tasks can be performed without accessing these fields directly.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// # Example</span>
+<span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```no_run</span>
 <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1172,71 +1165,60 @@
 <span class='doccomment'>/// Arg::from_usage(&quot;-i --input=[input] &#39;Provides an input file to the program&#39;&quot;)</span>
 <span class='doccomment'>/// # ).get_matches();</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Arg</span><span class='op'>&lt;</span><span class='lifetime'>&#39;n</span>, <span class='lifetime'>&#39;l</span>, <span class='lifetime'>&#39;h</span>, <span class='lifetime'>&#39;g</span>, <span class='lifetime'>&#39;p</span>, <span class='lifetime'>&#39;r</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// The unique name of the argument, required</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// The unique name of the argument </span>
     <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;n</span> <span class='ident'>str</span>,
     <span class='doccomment'>/// The short version (i.e. single character) of the argument, no preceding `-`</span>
     <span class='doccomment'>/// **NOTE:** `short` is mutually exclusive with `index`</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>short</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// The long version of the flag (i.e. word) without the preceding `--`</span>
     <span class='doccomment'>/// **NOTE:** `long` is mutually exclusive with `index`</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>long</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>str</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// The string of text that will displayed to the user when the application&#39;s</span>
     <span class='doccomment'>/// `help` text is displayed</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>help</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;h</span> <span class='ident'>str</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// If this is a required by default when using the command line program</span>
     <span class='doccomment'>/// i.e. a configuration file that&#39;s required for the program to function</span>
     <span class='doccomment'>/// **NOTE:** required by default means, it is required *until* mutually</span>
     <span class='doccomment'>/// exclusive arguments are evaluated.</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>required</span>: <span class='ident'>bool</span>,
     <span class='doccomment'>/// Determines if this argument is an option, vice a flag or positional and</span>
     <span class='doccomment'>/// is mutually exclusive with `index` and `multiple`</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>takes_value</span>: <span class='ident'>bool</span>,
     <span class='doccomment'>/// The index of the argument. `index` is mutually exclusive with `takes_value`</span>
     <span class='doccomment'>/// and `multiple`</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>index</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// Determines if multiple instances of the same flag are allowed. `multiple`</span>
     <span class='doccomment'>/// is mutually exclusive with `index` and `takes_value`.</span>
     <span class='doccomment'>/// I.e. `-v -v -v` or `-vvv`</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>multiple</span>: <span class='ident'>bool</span>,
     <span class='doccomment'>/// A list of names for other arguments that *may not* be used with this flag</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>blacklist</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>,
     <span class='doccomment'>/// A list of possible values for an option or positional argument</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>possible_vals</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;p</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>,
     <span class='doccomment'>/// A list of names of other arguments that are *required* to be used when</span>
     <span class='doccomment'>/// this flag is used</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>requires</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>,
     <span class='doccomment'>/// A name of the group the argument belongs to</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>group</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;g</span> <span class='ident'>str</span><span class='op'>&gt;</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// A set of names (ordered) for the values to be displayed with the help message</span>
     <span class='kw'>pub</span> <span class='ident'>val_names</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>BTreeSet</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;n</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// The exact number of values to satisfy this argument</span>
     <span class='kw'>pub</span> <span class='ident'>num_vals</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// The maximum number of values possible for this argument</span>
     <span class='kw'>pub</span> <span class='ident'>max_vals</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// The minimum number of values possible to satisfy this argument</span>
     <span class='kw'>pub</span> <span class='ident'>min_vals</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// Specifies whether or not this argument accepts explicit empty values such as `--option &quot;&quot;`</span>
     <span class='kw'>pub</span> <span class='ident'>empty_vals</span>: <span class='ident'>bool</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// Specifies whether or not this argument is global and should be propogated through all </span>
+    <span class='doccomment'>/// child subcommands</span>
     <span class='kw'>pub</span> <span class='ident'>global</span>: <span class='ident'>bool</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// A function used to check the validity of an argument value. Failing this validation results</span>
+    <span class='doccomment'>/// in failed argument parsing.</span>
     <span class='kw'>pub</span> <span class='ident'>validator</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>Fn</span>(<span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>String</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// A list of names for other arguments that *mutually override* this flag</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='ident'>overrides</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+    <span class='doccomment'>/// Specifies whether the argument should show up in the help message</span>
     <span class='kw'>pub</span> <span class='ident'>hidden</span>: <span class='ident'>bool</span>
 }
 
@@ -1250,7 +1232,7 @@
     <span class='doccomment'>/// be displayed when the user prints the usage/help information of the program.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1287,7 +1269,7 @@
 
     <span class='doccomment'>/// Creates a new instace of `Arg` from a .yml (YAML) file.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// # use clap::Arg;</span>
@@ -1395,7 +1377,7 @@
     <span class='doccomment'>///    as the value names (i.e. `--opt &lt;file&gt; &lt;mode&gt;`). In this case, if no name was specified</span>
     <span class='doccomment'>///    prior to the value names, the long is used as the name by which to access the argument.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1547,7 +1529,7 @@
     <span class='doccomment'>/// non `-` chacter will be used as the `short` version</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1573,7 +1555,7 @@
     <span class='doccomment'>/// **NOTE:** Any leading `-` characters will be stripped</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1593,7 +1575,7 @@
     <span class='doccomment'>/// when they print the usage/help information.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1643,7 +1625,7 @@
     <span class='doccomment'>/// arguments, they do not need to be set for each.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1669,7 +1651,7 @@
     <span class='doccomment'>/// arguments, they do not need to be set for each.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1694,7 +1676,7 @@
     <span class='doccomment'>/// Sets a mutually overridable argument by name. I.e. this argument and</span>
     <span class='doccomment'>/// the following argument will override each other in POSIX style</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1715,7 +1697,7 @@
     <span class='doccomment'>/// Sets a mutually overridable arguments by name. I.e. this argument and</span>
     <span class='doccomment'>/// the following argument will override each other in POSIX style</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1743,7 +1725,7 @@
     <span class='doccomment'>/// **NOTE:** Mutually exclusive and override rules take precedence over being required</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1768,7 +1750,7 @@
     <span class='doccomment'>/// by default.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1796,7 +1778,7 @@
     <span class='doccomment'>/// will be used when printing the help/usage information to the user.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1820,7 +1802,7 @@
     <span class='doccomment'>/// to the user.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1845,7 +1827,7 @@
     <span class='doccomment'>/// are ignored as flags cannot have a values or an `index`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1872,7 +1854,7 @@
     <span class='doccomment'>/// parent command, but the user supplied the arguments `top cmd1 cmd2 --flag` *only* `cmd2`&#39;s</span>
     <span class='doccomment'>/// `ArgMatches` would return `true` if tested for `.is_present(&quot;flag&quot;)`.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1894,7 +1876,7 @@
     <span class='doccomment'>/// **NOTE:** Defaults to `true` (Explicit empty values are allowed)</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1914,7 +1896,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This does **not** hide the argument from usage strings on error</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1936,7 +1918,7 @@
     <span class='doccomment'>/// **NOTE:** This setting only applies to options and positional arguments</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1966,7 +1948,7 @@
     <span class='doccomment'>/// **NOTE:** This setting only applies to options and positional arguments</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -1990,7 +1972,7 @@
     <span class='doccomment'>/// Specifies the name of the group the argument belongs to.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -2015,7 +1997,7 @@
     <span class='doccomment'>/// allow `-f &lt;file&gt; &lt;file&gt; &lt;file&gt; -f &lt;file&gt; &lt;file&gt; &lt;file&gt;` where as *not* setting</span>
     <span class='doccomment'>/// `.multiple(true)` would only allow one occurrence of this argument.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -2042,7 +2024,7 @@
     <span class='doccomment'>/// with `Rc` pointers. And the value to be checked will be allocated an extra time in order to</span>
     <span class='doccomment'>/// to be passed to the closure.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -2075,7 +2057,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This implicity sets `.multiple(true)`</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -2109,7 +2091,7 @@
     <span class='doccomment'>/// **NOTE:** `qty` *must* be &gt; 0. If you wish to have an argument with 0 or more values prefer</span>
     <span class='doccomment'>/// two separate arguments (a flag, and an option with multiple values).</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -2143,7 +2125,7 @@
     <span class='doccomment'>/// allow `-f &lt;file&gt; &lt;file&gt; &lt;file&gt; -f &lt;file&gt; &lt;file&gt; &lt;file&gt;` where as *not* setting</span>
     <span class='doccomment'>/// `.multiple(true)` would only allow one occurrence of this argument.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -2171,7 +2153,7 @@
     <span class='doccomment'>/// Specifies the name for value of option or positional arguments. This name is cosmetic only,</span>
     <span class='doccomment'>/// used for help and usage strings. The name is **not** used to access arguments.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -2229,10 +2211,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -2249,7 +2233,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -2259,8 +2243,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
@@ -2269,7 +2253,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

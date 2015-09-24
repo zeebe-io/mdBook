@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.0/src/app/app.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/app/app.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>app.rs.html -- source</title>
@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -3594,6 +3594,192 @@
 <span id="3552">3552</span>
 <span id="3553">3553</span>
 <span id="3554">3554</span>
+<span id="3555">3555</span>
+<span id="3556">3556</span>
+<span id="3557">3557</span>
+<span id="3558">3558</span>
+<span id="3559">3559</span>
+<span id="3560">3560</span>
+<span id="3561">3561</span>
+<span id="3562">3562</span>
+<span id="3563">3563</span>
+<span id="3564">3564</span>
+<span id="3565">3565</span>
+<span id="3566">3566</span>
+<span id="3567">3567</span>
+<span id="3568">3568</span>
+<span id="3569">3569</span>
+<span id="3570">3570</span>
+<span id="3571">3571</span>
+<span id="3572">3572</span>
+<span id="3573">3573</span>
+<span id="3574">3574</span>
+<span id="3575">3575</span>
+<span id="3576">3576</span>
+<span id="3577">3577</span>
+<span id="3578">3578</span>
+<span id="3579">3579</span>
+<span id="3580">3580</span>
+<span id="3581">3581</span>
+<span id="3582">3582</span>
+<span id="3583">3583</span>
+<span id="3584">3584</span>
+<span id="3585">3585</span>
+<span id="3586">3586</span>
+<span id="3587">3587</span>
+<span id="3588">3588</span>
+<span id="3589">3589</span>
+<span id="3590">3590</span>
+<span id="3591">3591</span>
+<span id="3592">3592</span>
+<span id="3593">3593</span>
+<span id="3594">3594</span>
+<span id="3595">3595</span>
+<span id="3596">3596</span>
+<span id="3597">3597</span>
+<span id="3598">3598</span>
+<span id="3599">3599</span>
+<span id="3600">3600</span>
+<span id="3601">3601</span>
+<span id="3602">3602</span>
+<span id="3603">3603</span>
+<span id="3604">3604</span>
+<span id="3605">3605</span>
+<span id="3606">3606</span>
+<span id="3607">3607</span>
+<span id="3608">3608</span>
+<span id="3609">3609</span>
+<span id="3610">3610</span>
+<span id="3611">3611</span>
+<span id="3612">3612</span>
+<span id="3613">3613</span>
+<span id="3614">3614</span>
+<span id="3615">3615</span>
+<span id="3616">3616</span>
+<span id="3617">3617</span>
+<span id="3618">3618</span>
+<span id="3619">3619</span>
+<span id="3620">3620</span>
+<span id="3621">3621</span>
+<span id="3622">3622</span>
+<span id="3623">3623</span>
+<span id="3624">3624</span>
+<span id="3625">3625</span>
+<span id="3626">3626</span>
+<span id="3627">3627</span>
+<span id="3628">3628</span>
+<span id="3629">3629</span>
+<span id="3630">3630</span>
+<span id="3631">3631</span>
+<span id="3632">3632</span>
+<span id="3633">3633</span>
+<span id="3634">3634</span>
+<span id="3635">3635</span>
+<span id="3636">3636</span>
+<span id="3637">3637</span>
+<span id="3638">3638</span>
+<span id="3639">3639</span>
+<span id="3640">3640</span>
+<span id="3641">3641</span>
+<span id="3642">3642</span>
+<span id="3643">3643</span>
+<span id="3644">3644</span>
+<span id="3645">3645</span>
+<span id="3646">3646</span>
+<span id="3647">3647</span>
+<span id="3648">3648</span>
+<span id="3649">3649</span>
+<span id="3650">3650</span>
+<span id="3651">3651</span>
+<span id="3652">3652</span>
+<span id="3653">3653</span>
+<span id="3654">3654</span>
+<span id="3655">3655</span>
+<span id="3656">3656</span>
+<span id="3657">3657</span>
+<span id="3658">3658</span>
+<span id="3659">3659</span>
+<span id="3660">3660</span>
+<span id="3661">3661</span>
+<span id="3662">3662</span>
+<span id="3663">3663</span>
+<span id="3664">3664</span>
+<span id="3665">3665</span>
+<span id="3666">3666</span>
+<span id="3667">3667</span>
+<span id="3668">3668</span>
+<span id="3669">3669</span>
+<span id="3670">3670</span>
+<span id="3671">3671</span>
+<span id="3672">3672</span>
+<span id="3673">3673</span>
+<span id="3674">3674</span>
+<span id="3675">3675</span>
+<span id="3676">3676</span>
+<span id="3677">3677</span>
+<span id="3678">3678</span>
+<span id="3679">3679</span>
+<span id="3680">3680</span>
+<span id="3681">3681</span>
+<span id="3682">3682</span>
+<span id="3683">3683</span>
+<span id="3684">3684</span>
+<span id="3685">3685</span>
+<span id="3686">3686</span>
+<span id="3687">3687</span>
+<span id="3688">3688</span>
+<span id="3689">3689</span>
+<span id="3690">3690</span>
+<span id="3691">3691</span>
+<span id="3692">3692</span>
+<span id="3693">3693</span>
+<span id="3694">3694</span>
+<span id="3695">3695</span>
+<span id="3696">3696</span>
+<span id="3697">3697</span>
+<span id="3698">3698</span>
+<span id="3699">3699</span>
+<span id="3700">3700</span>
+<span id="3701">3701</span>
+<span id="3702">3702</span>
+<span id="3703">3703</span>
+<span id="3704">3704</span>
+<span id="3705">3705</span>
+<span id="3706">3706</span>
+<span id="3707">3707</span>
+<span id="3708">3708</span>
+<span id="3709">3709</span>
+<span id="3710">3710</span>
+<span id="3711">3711</span>
+<span id="3712">3712</span>
+<span id="3713">3713</span>
+<span id="3714">3714</span>
+<span id="3715">3715</span>
+<span id="3716">3716</span>
+<span id="3717">3717</span>
+<span id="3718">3718</span>
+<span id="3719">3719</span>
+<span id="3720">3720</span>
+<span id="3721">3721</span>
+<span id="3722">3722</span>
+<span id="3723">3723</span>
+<span id="3724">3724</span>
+<span id="3725">3725</span>
+<span id="3726">3726</span>
+<span id="3727">3727</span>
+<span id="3728">3728</span>
+<span id="3729">3729</span>
+<span id="3730">3730</span>
+<span id="3731">3731</span>
+<span id="3732">3732</span>
+<span id="3733">3733</span>
+<span id="3734">3734</span>
+<span id="3735">3735</span>
+<span id="3736">3736</span>
+<span id="3737">3737</span>
+<span id="3738">3738</span>
+<span id="3739">3739</span>
+<span id="3740">3740</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>BTreeMap</span>, <span class='ident'>HashMap</span>, <span class='ident'>VecDeque</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>env</span>;
@@ -3601,6 +3787,8 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>process</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>OsStr</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Borrow</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;yaml&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>yaml_rust</span>::<span class='ident'>Yaml</span>;
@@ -3629,7 +3817,7 @@
 <span class='doccomment'>/// order (so long as `.get_matches()` is the last method called).</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// # Example</span>
+<span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```no_run</span>
 <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -3703,7 +3891,7 @@
     <span class='doccomment'>/// information. The name should not contain spaces (hyphens &#39;-&#39; are ok).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -3762,7 +3950,7 @@
     <span class='doccomment'>/// YAML file (relative to the current file, like modules work). That YAML object can then be</span>
     <span class='doccomment'>/// passed to this function.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// # use clap::App;</span>
@@ -3842,7 +4030,7 @@
     <span class='doccomment'>/// Sets a string of author(s) and will be displayed to the user when they request the help</span>
     <span class='doccomment'>/// information with `--help` or `-h`.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -3863,7 +4051,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This command **should not** be used for SubCommands.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -3881,7 +4069,7 @@
     <span class='doccomment'>/// Sets a string briefly describing what the program does and will be displayed when</span>
     <span class='doccomment'>/// displaying help information.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -3901,7 +4089,7 @@
     <span class='doccomment'>/// information. This additional help is often used to describe how to use the arguments,</span>
     <span class='doccomment'>/// or caveats to be noted.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::App;</span>
@@ -3925,7 +4113,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This defaults to false (using subcommand does *not* negate requirements)</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::App;</span>
@@ -3947,7 +4135,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This defaults to false (subcommands do *not* need to be present)</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::App;</span>
@@ -3965,7 +4153,7 @@
     <span class='doccomment'>/// Sets a string of the version number to be displayed when displaying version or help</span>
     <span class='doccomment'>/// information.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -3993,7 +4181,7 @@
     <span class='doccomment'>/// showing the usage.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4020,7 +4208,7 @@
     <span class='doccomment'>/// specify a `.help()` for them as well.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4057,7 +4245,7 @@
     <span class='doccomment'>/// non `-` chacter will be used as the `short` version</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4082,7 +4270,7 @@
     <span class='doccomment'>/// non `-` chacter will be used as the `short` version</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4107,7 +4295,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** Subcommands count as arguments</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4126,7 +4314,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This does **not** hide the subcommand from usage strings on error</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, SubCommand};</span>
@@ -4151,7 +4339,7 @@
     <span class='doccomment'>/// **NOTE:** The version for the current command and this setting must be set **prior** to</span>
     <span class='doccomment'>/// adding any subcommands</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand};</span>
@@ -4180,7 +4368,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** Do not set this value to false, it will have undesired results!</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand};</span>
@@ -4207,7 +4395,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This setting is cosmetic only and does not affect any functionality.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand};</span>
@@ -4238,7 +4426,7 @@
     <span class='doccomment'>/// behavior for all subcommands, you must set this on each command (needing this is extremely</span>
     <span class='doccomment'>/// rare)</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4266,7 +4454,7 @@
     <span class='doccomment'>/// still be displayed and exit. If this is *not* the desired result, consider using</span>
     <span class='doccomment'>/// `.arg_required_else_help()`</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4283,7 +4471,7 @@
 
     <span class='doccomment'>/// Enables Application level settings, passed as argument</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, AppSettings};</span>
@@ -4316,7 +4504,7 @@
 
     <span class='doccomment'>/// Enables multiple Application level settings, passed as argument</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, AppSettings};</span>
@@ -4343,7 +4531,7 @@
     <span class='doccomment'>/// one at a time. Using `Arg::from_usage` helps with the verbosity, and still allows full</span>
     <span class='doccomment'>/// control over the advanced configuration options.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4663,7 +4851,7 @@
     <span class='doccomment'>/// Adds multiple arguments to the list of valid possibilties by iterating over a Vec of Args</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4691,7 +4879,7 @@
     <span class='doccomment'>/// `Arg` other than what `Arg::from_usage()` supports.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4715,7 +4903,7 @@
     <span class='doccomment'>/// options.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -4755,7 +4943,7 @@
     <span class='doccomment'>/// group</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -4819,7 +5007,7 @@
     <span class='doccomment'>/// group</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -4847,7 +5035,7 @@
     <span class='doccomment'>/// usage.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand};</span>
@@ -4877,7 +5065,7 @@
     <span class='doccomment'>/// Adds multiple subcommands to the list of valid possibilties by iterating over a Vec of</span>
     <span class='doccomment'>/// `SubCommand`s</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg, SubCommand};</span>
@@ -4927,6 +5115,7 @@
                 }
             }
         }
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>args</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span>, <span class='string'>&quot;ArgGroup &#39;{}&#39; doesn&#39;t contain any args&quot;</span>, <span class='ident'>group</span>);
         <span class='ident'>args</span>.<span class='ident'>dedup</span>();
         <span class='ident'>args</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='ident'>ToOwned</span>::<span class='ident'>to_owned</span>).<span class='ident'>collect</span>()
     }
@@ -4959,6 +5148,7 @@
                 }
             }
         }
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>args</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span>, <span class='string'>&quot;ArgGroup &#39;{}&#39; doesn&#39;t contain any args&quot;</span>, <span class='ident'>group</span>);
         <span class='ident'>args</span>.<span class='ident'>dedup</span>();
         <span class='ident'>args</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>s</span>).<span class='ident'>collect</span>()
     }
@@ -5168,7 +5358,7 @@
 
     <span class='doccomment'>/// Prints the full help message to `io::stdout()` using a `BufWriter`</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>/// # Exampless</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::App;</span>
     <span class='doccomment'>/// # use std::io;</span>
@@ -5442,10 +5632,12 @@
                                <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='comment'>// Print the binary name if existing, but replace all spaces with hyphens in case we&#39;re</span>
         <span class='comment'>// dealing with subcommands i.e. git mv is translated to git-mv</span>
-        <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>w</span>, <span class='string'>&quot;{} {}&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>bin_name</span>.<span class='ident'>clone</span>().<span class='ident'>unwrap_or</span>(
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>w</span>, <span class='string'>&quot;{} {}&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>bin_name</span>.<span class='ident'>clone</span>().<span class='ident'>unwrap_or</span>(
             <span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>clone</span>())[..].<span class='ident'>replace</span>(<span class='string'>&quot; &quot;</span>, <span class='string'>&quot;-&quot;</span>),
             <span class='self'>self</span>.<span class='ident'>version</span>.<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>)
-        )
+        ));
+
+        <span class='ident'>w</span>.<span class='ident'>flush</span>()
     }
 
     <span class='comment'>// Reports and error to stderr along with an optional usage statement and optionally quits</span>
@@ -5472,8 +5664,12 @@
     <span class='doccomment'>/// Starts the parsing process. Called on top level parent app **ONLY** then recursively calls</span>
     <span class='doccomment'>/// the real parsing function for all subcommands</span>
     <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Panics</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// If any arguments contain invalid unicode characters. If this is not desired it is</span>
+    <span class='doccomment'>/// recommended to use the `*_safe()` or `*_lossy()` versions of this method.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -5487,13 +5683,30 @@
     }
 
     <span class='doccomment'>/// Starts the parsing process. Called on top level parent app **ONLY** then recursively calls</span>
+    <span class='doccomment'>/// the real parsing function for all subcommands. Invalid unicode characters are replaced with</span>
+    <span class='doccomment'>/// `U+FFFD REPLACEMENT CHARACTER`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Exampless</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// let matches = App::new(&quot;myprog&quot;)</span>
+    <span class='doccomment'>///     // Args and options go here...</span>
+    <span class='doccomment'>///     .get_matches();</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_lossy</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span> {
+        <span class='comment'>// Start the parsing</span>
+        <span class='self'>self</span>.<span class='ident'>get_matches_from_lossy</span>(<span class='ident'>env</span>::<span class='ident'>args_os</span>())
+    }
+
+    <span class='doccomment'>/// Starts the parsing process. Called on top level parent app **ONLY** then recursively calls</span>
     <span class='doccomment'>/// the real parsing function for all subcommands</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** This method should only be used when is absolutely necessary to handle errors </span>
     <span class='doccomment'>/// manually.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -5504,7 +5717,29 @@
     <span class='doccomment'>/// ```</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_safe</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>, <span class='ident'>ClapError</span><span class='op'>&gt;</span> {
         <span class='comment'>// Start the parsing</span>
-        <span class='self'>self</span>.<span class='ident'>get_matches_from_safe</span>(<span class='ident'>env</span>::<span class='ident'>args</span>())
+        <span class='self'>self</span>.<span class='ident'>get_matches_from_safe</span>(<span class='ident'>env</span>::<span class='ident'>args_os</span>())
+    }
+
+    <span class='doccomment'>/// Starts the parsing process. Called on top level parent app **ONLY** then recursively calls</span>
+    <span class='doccomment'>/// the real parsing function for all subcommands. Invalid unicode characters are replaced with</span>
+    <span class='doccomment'>/// `U+FFFD REPLACEMENT CHARACTER`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** This method should only be used when is absolutely necessary to handle errors </span>
+    <span class='doccomment'>/// manually.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// let matches = App::new(&quot;myprog&quot;)</span>
+    <span class='doccomment'>///     // Args and options go here...</span>
+    <span class='doccomment'>///     .get_matches_safe()</span>
+    <span class='doccomment'>///     .unwrap_or_else( |e| { panic!(&quot;An error occurs: {}&quot;, e) });</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_safe_lossy</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>, <span class='ident'>ClapError</span><span class='op'>&gt;</span> {
+        <span class='comment'>// Start the parsing</span>
+        <span class='self'>self</span>.<span class='ident'>get_matches_from_safe_lossy</span>(<span class='ident'>env</span>::<span class='ident'>args_os</span>())
     }
 
     <span class='doccomment'>/// Starts the parsing process. Called on top level parent app **ONLY** then recursively calls</span>
@@ -5517,7 +5752,7 @@
     <span class='doccomment'>/// `App::get_matches()`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -5531,9 +5766,49 @@
                                   <span class='ident'>itr</span>: <span class='ident'>I</span>) 
                                   <span class='op'>-&gt;</span> <span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
-              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span>
-    {
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>get_matches_from_safe_borrow</span>(<span class='ident'>itr</span>) {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>m</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='ident'>m</span>,
+            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> {
+                <span class='macro'>wlnerr</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>e</span>.<span class='ident'>error</span>);
+                <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>wait_on_error</span> {
+                    <span class='macro'>wlnerr</span><span class='macro'>!</span>(<span class='string'>&quot;\nPress [ENTER] / [RETURN] to continue...&quot;</span>);
+                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
+                    <span class='kw'>let</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>stdin</span>();
+                    <span class='ident'>i</span>.<span class='ident'>lock</span>().<span class='ident'>read_line</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>s</span>).<span class='ident'>unwrap</span>();
+                }
+                <span class='ident'>process</span>::<span class='ident'>exit</span>(<span class='number'>1</span>);
+            }
+        }
+    }
+
+    <span class='doccomment'>/// Starts the parsing process. Called on top level parent app **ONLY** then recursively calls</span>
+    <span class='doccomment'>/// the real parsing function for all subcommands. Invalid unicode characters are replaced with</span>
+    <span class='doccomment'>/// `U+FFFD REPLACEMENT CHARACTER`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** The first argument will be parsed as the binary name.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** This method should only be used when absolutely necessary, such as needing to</span>
+    <span class='doccomment'>/// parse arguments from something other than `std::env::args()`. If you are unsure, use</span>
+    <span class='doccomment'>/// `App::get_matches()`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// let arg_vec = vec![&quot;my_prog&quot;, &quot;some&quot;, &quot;args&quot;, &quot;to&quot;, &quot;parse&quot;];</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// let matches = App::new(&quot;myprog&quot;)</span>
+    <span class='doccomment'>///     // Args and options go here...</span>
+    <span class='doccomment'>///     .get_matches_from(arg_vec);</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_from_lossy</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
+                                  <span class='ident'>itr</span>: <span class='ident'>I</span>) 
+                                  <span class='op'>-&gt;</span> <span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
+        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>get_matches_from_safe_borrow_lossy</span>(<span class='ident'>itr</span>) {
             <span class='prelude-val'>Ok</span>(<span class='ident'>m</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='ident'>m</span>,
             <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> {
                 <span class='macro'>wlnerr</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>e</span>.<span class='ident'>error</span>);
@@ -5560,8 +5835,11 @@
     <span class='doccomment'>/// **NOTE:** This method should only be used when is absolutely necessary to handle errors </span>
     <span class='doccomment'>/// manually.</span>
     <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** Invalid unicode characters will result in an `Err` with type </span>
+    <span class='doccomment'>/// `ClapErrorType::InvalidUnicode`</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
@@ -5576,14 +5854,13 @@
                                        <span class='ident'>itr</span>: <span class='ident'>I</span>) 
                                        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>, <span class='ident'>ClapError</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
-              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span>
-    {
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>get_matches_from_safe_borrow</span>(<span class='ident'>itr</span>)
     }
 
-    <span class='doccomment'>/// Starts the parsing process without consuming the `App` struct `self`. This is normally not</span>
-    <span class='doccomment'>/// the desired functionality, instead prefer `App::get_matches_from_safe` which *does*</span>
-    <span class='doccomment'>/// consume `self`. </span>
+    <span class='doccomment'>/// Starts the parsing process. Called on top level parent app **ONLY** then recursively calls</span>
+    <span class='doccomment'>/// the real parsing function for all subcommands. Invalid unicode characters are replaced with</span>
+    <span class='doccomment'>/// `U+FFFD REPLACEMENT CHARACTER`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// **NOTE:** The first argument will be parsed as the binary name.</span>
     <span class='doccomment'>///</span>
@@ -5594,23 +5871,32 @@
     <span class='doccomment'>/// **NOTE:** This method should only be used when is absolutely necessary to handle errors </span>
     <span class='doccomment'>/// manually.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
     <span class='doccomment'>/// let arg_vec = vec![&quot;my_prog&quot;, &quot;some&quot;, &quot;args&quot;, &quot;to&quot;, &quot;parse&quot;];</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut app = App::new(&quot;myprog&quot;);</span>
+    <span class='doccomment'>/// let matches = App::new(&quot;myprog&quot;)</span>
     <span class='doccomment'>///     // Args and options go here...</span>
-    <span class='doccomment'>/// let matches = app.get_matches_from_safe_borrow(arg_vec)</span>
+    <span class='doccomment'>///     .get_matches_from_safe(arg_vec)</span>
     <span class='doccomment'>///     .unwrap_or_else( |e| { panic!(&quot;An error occurs: {}&quot;, e) });</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_from_safe_borrow</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                              <span class='ident'>itr</span>: <span class='ident'>I</span>) 
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_from_safe_lossy</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
+                                       <span class='ident'>itr</span>: <span class='ident'>I</span>) 
+                                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>, <span class='ident'>ClapError</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>_get_matches_from_safe_borrow</span>(<span class='ident'>itr</span>, <span class='boolval'>true</span>)
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>_get_matches_from_safe_borrow</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
+                                              <span class='ident'>itr</span>: <span class='ident'>I</span>,
+                                              <span class='ident'>lossy</span>: <span class='ident'>bool</span>) 
                                               <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>, <span class='ident'>ClapError</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
-              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span>
-    {
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
         <span class='comment'>// Verify all positional assertions pass</span>
         <span class='self'>self</span>.<span class='ident'>verify_positionals</span>();
         <span class='comment'>// If there are global arguments, we need to propgate them down to subcommands before</span>
@@ -5637,11 +5923,81 @@
         }
 
         <span class='comment'>// do the real parsing</span>
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>get_matches_with</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>matches</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>it</span>) {
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>get_matches_with</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>matches</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>it</span>, <span class='ident'>lossy</span>) {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>);
         }
 
         <span class='prelude-val'>Ok</span>(<span class='ident'>matches</span>)
+    }
+
+    <span class='doccomment'>/// Starts the parsing process without consuming the `App` struct `self`. This is normally not</span>
+    <span class='doccomment'>/// the desired functionality, instead prefer `App::get_matches_from_safe` which *does*</span>
+    <span class='doccomment'>/// consume `self`. </span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** The first argument will be parsed as the binary name.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** This method should only be used when absolutely necessary, such as needing to</span>
+    <span class='doccomment'>/// parse arguments from something other than `std::env::args()`. If you are unsure, use</span>
+    <span class='doccomment'>/// `App::get_matches_safe()`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** This method should only be used when is absolutely necessary to handle errors </span>
+    <span class='doccomment'>/// manually.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** Invalid unicode characters will result in an `Err` with type </span>
+    <span class='doccomment'>/// `ClapErrorType::InvalidUnicode`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// let arg_vec = vec![&quot;my_prog&quot;, &quot;some&quot;, &quot;args&quot;, &quot;to&quot;, &quot;parse&quot;];</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// let mut app = App::new(&quot;myprog&quot;);</span>
+    <span class='doccomment'>///     // Args and options go here...</span>
+    <span class='doccomment'>/// let matches = app.get_matches_from_safe_borrow(arg_vec)</span>
+    <span class='doccomment'>///     .unwrap_or_else( |e| { panic!(&quot;An error occurs: {}&quot;, e) });</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_from_safe_borrow</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
+                                              <span class='ident'>itr</span>: <span class='ident'>I</span>) 
+                                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>, <span class='ident'>ClapError</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>_get_matches_from_safe_borrow</span>(<span class='ident'>itr</span>, <span class='boolval'>false</span>)
+    }
+
+    <span class='doccomment'>/// Starts the parsing process without consuming the `App` struct `self`. This is normally not</span>
+    <span class='doccomment'>/// the desired functionality, instead prefer `App::get_matches_from_safe` which *does*</span>
+    <span class='doccomment'>/// consume `self`. Invalid unicode characters are replaced with `U+FFFD REPLACEMENT CHARACTER`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** The first argument will be parsed as the binary name.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** This method should only be used when absolutely necessary, such as needing to</span>
+    <span class='doccomment'>/// parse arguments from something other than `std::env::args()`. If you are unsure, use</span>
+    <span class='doccomment'>/// `App::get_matches_safe()`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** This method should only be used when is absolutely necessary to handle errors </span>
+    <span class='doccomment'>/// manually.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// **NOTE:** Invalid unicode characters will result in an `Err` with type </span>
+    <span class='doccomment'>/// `ClapErrorType::InvalidUnicode`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// let arg_vec = vec![&quot;my_prog&quot;, &quot;some&quot;, &quot;args&quot;, &quot;to&quot;, &quot;parse&quot;];</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// let mut app = App::new(&quot;myprog&quot;);</span>
+    <span class='doccomment'>///     // Args and options go here...</span>
+    <span class='doccomment'>/// let matches = app.get_matches_from_safe_borrow(arg_vec)</span>
+    <span class='doccomment'>///     .unwrap_or_else( |e| { panic!(&quot;An error occurs: {}&quot;, e) });</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_matches_from_safe_borrow_lossy</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
+                                              <span class='ident'>itr</span>: <span class='ident'>I</span>) 
+                                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>, <span class='ident'>ClapError</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>_get_matches_from_safe_borrow</span>(<span class='ident'>itr</span>, <span class='boolval'>true</span>)
     }
 
 
@@ -5730,11 +6086,11 @@
     <span class='comment'>// The actual parsing function</span>
     <span class='kw'>fn</span> <span class='ident'>get_matches_with</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                               <span class='ident'>matches</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ArgMatches</span><span class='op'>&lt;</span><span class='lifetime'>&#39;ar</span>, <span class='lifetime'>&#39;ar</span><span class='op'>&gt;</span>,
-                              <span class='ident'>it</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>I</span>)
+                              <span class='ident'>it</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>I</span>,
+                              <span class='ident'>lossy</span>: <span class='ident'>bool</span>)
                               <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ClapError</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span><span class='op'>&gt;</span>,
-              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span>
-    {
+              <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>OsStr</span><span class='op'>&gt;</span> {
         <span class='comment'>// First we create the `--help` and `--version` arguments and add them if necessary</span>
         <span class='self'>self</span>.<span class='ident'>create_help_and_version</span>();
 
@@ -5744,7 +6100,20 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>pos_counter</span> <span class='op'>=</span> <span class='number'>1</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>val_counter</span> <span class='op'>=</span> <span class='number'>0</span>;
         <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>arg</span>) <span class='op'>=</span> <span class='ident'>it</span>.<span class='ident'>next</span>() {
-            <span class='kw'>let</span> <span class='ident'>arg_slice</span> <span class='op'>=</span> <span class='ident'>arg</span>.<span class='ident'>as_ref</span>();
+            <span class='kw'>let</span> <span class='ident'>arg_cow</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>arg</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_str</span>() {
+                <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='ident'>s</span>.<span class='ident'>into</span>(),
+                <span class='prelude-val'>None</span>    <span class='op'>=&gt;</span> {
+                    <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>lossy</span> {
+                        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>ClapError</span>{
+                            <span class='ident'>error</span>: <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{} Invalid unicode character in one or more arguments&quot;</span>,
+                                <span class='ident'>Format</span>::<span class='ident'>Error</span>(<span class='string'>&quot;error:&quot;</span>)),
+                            <span class='ident'>error_type</span>: <span class='ident'>ClapErrorType</span>::<span class='ident'>InvalidUnicode</span>
+                        });
+                    }
+                    <span class='ident'>arg</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_string_lossy</span>()
+               }
+            };
+            <span class='kw'>let</span> <span class='ident'>arg_slice</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span> <span class='op'>=</span> <span class='ident'>arg_cow</span>.<span class='ident'>borrow</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>skip</span> <span class='op'>=</span> <span class='boolval'>false</span>;
 
             <span class='comment'>// we need to know if we&#39;re parsing a new argument, or the value of previous argument,</span>
@@ -5779,7 +6148,7 @@
                                     <span class='kw'>if</span> <span class='ident'>num</span> <span class='op'>==</span> <span class='ident'>vals</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u8</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ident'>opt</span>.<span class='ident'>multiple</span> {
                                         <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>report_error</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The argument &#39;{}&#39; \
                                             was found, but &#39;{}&#39; only expects {} values&quot;</span>,
-                                                <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg</span>.<span class='ident'>as_ref</span>()),
+                                                <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg_slice</span>),
                                                 <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>opt</span>.<span class='ident'>to_string</span>()),
                                                 <span class='ident'>Format</span>::<span class='ident'>Good</span>(<span class='ident'>vals</span>.<span class='ident'>len</span>().<span class='ident'>to_string</span>())),
                                             <span class='ident'>ClapErrorType</span>::<span class='ident'>InvalidValue</span>,
@@ -5928,7 +6297,7 @@
                             <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The subcommand &#39;{}&#39; isn&#39;t valid\n\tDid you mean &#39;{}&#39; ?\n\n\
                             If you received this message in error, try \
                             re-running with &#39;{} {} {}&#39;&quot;</span>,
-                                <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg</span>.<span class='ident'>as_ref</span>()),
+                                <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg_slice</span>),
                                 <span class='ident'>Format</span>::<span class='ident'>Good</span>(<span class='ident'>candidate_subcommand</span>),
                                 <span class='self'>self</span>.<span class='ident'>bin_name</span>.<span class='ident'>clone</span>().<span class='ident'>unwrap_or</span>(<span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>clone</span>()),
                                 <span class='ident'>Format</span>::<span class='ident'>Good</span>(<span class='string'>&quot;--&quot;</span>),
@@ -5943,7 +6312,7 @@
                 <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>positionals_idx</span>.<span class='ident'>is_empty</span>() {
                     <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>report_error</span>(
                         <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Found argument &#39;{}&#39;, but {} wasn&#39;t expecting any&quot;</span>,
-                            <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg</span>.<span class='ident'>as_ref</span>()),
+                            <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg_slice</span>),
                             <span class='self'>self</span>.<span class='ident'>bin_name</span>.<span class='ident'>clone</span>().<span class='ident'>unwrap_or</span>(<span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>clone</span>())),
                         <span class='ident'>ClapErrorType</span>::<span class='ident'>UnexpectedArgument</span>,
                         <span class='ident'>App</span>::<span class='ident'>get_args</span>(<span class='ident'>matches</span>)));
@@ -5984,7 +6353,7 @@
                                     <span class='kw'>if</span> <span class='ident'>vals</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u8</span> <span class='op'>==</span> <span class='ident'>num</span> {
                                         <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>report_error</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The argument &#39;{}&#39; \
                                             was found, but &#39;{}&#39; wasn&#39;t expecting any more values&quot;</span>,
-                                                <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg</span>.<span class='ident'>as_ref</span>()),
+                                                <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg_slice</span>),
                                                 <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>p</span>.<span class='ident'>to_string</span>())),
                                             <span class='ident'>ClapErrorType</span>::<span class='ident'>TooMuchValues</span>,
                                             <span class='ident'>App</span>::<span class='ident'>get_args</span>(<span class='ident'>matches</span>)));
@@ -6074,7 +6443,7 @@
                     }
                 } <span class='kw'>else</span> {
                     <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>report_error</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;The argument &#39;{}&#39; was found, but &#39;{}&#39; \
-                        wasn&#39;t expecting any&quot;</span>, <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg</span>.<span class='ident'>as_ref</span>()),
+                        wasn&#39;t expecting any&quot;</span>, <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='ident'>arg_slice</span>),
                             <span class='self'>self</span>.<span class='ident'>bin_name</span>.<span class='ident'>clone</span>().<span class='ident'>unwrap_or</span>(<span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>clone</span>())),
                         <span class='ident'>ClapErrorType</span>::<span class='ident'>UnexpectedArgument</span>,
                         <span class='ident'>App</span>::<span class='ident'>get_args</span>(<span class='ident'>matches</span>)));
@@ -6168,7 +6537,7 @@
                         <span class='string'>&quot;&quot;</span>
                     },
                     <span class='ident'>sc</span>.<span class='ident'>name</span>.<span class='ident'>clone</span>()));
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=</span> <span class='ident'>sc</span>.<span class='ident'>get_matches_with</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>new_matches</span>, <span class='ident'>it</span>) {
+                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=</span> <span class='ident'>sc</span>.<span class='ident'>get_matches_with</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>new_matches</span>, <span class='ident'>it</span>, <span class='ident'>lossy</span>) {
                     <span class='ident'>e</span>.<span class='ident'>exit</span>();
                 }
                 <span class='ident'>matches</span>.<span class='ident'>subcommand</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>SubCommand</span> {
@@ -6492,6 +6861,7 @@
                 <span class='kw'>for</span> <span class='ident'>name</span> <span class='kw'>in</span> <span class='ident'>bl</span> {
                     <span class='self'>self</span>.<span class='ident'>blacklist</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
                     <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>overrides</span>, <span class='ident'>name</span>);
+                    <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>required</span>, <span class='ident'>name</span>);
                 }
             }
 
@@ -6592,6 +6962,7 @@
                 <span class='kw'>for</span> <span class='ident'>name</span> <span class='kw'>in</span> <span class='ident'>bl</span> {
                     <span class='self'>self</span>.<span class='ident'>blacklist</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
                     <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>overrides</span>, <span class='ident'>name</span>);
+                    <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>required</span>, <span class='ident'>name</span>);
                 }
             }
 
@@ -6782,6 +7153,7 @@
                 <span class='kw'>for</span> <span class='ident'>name</span> <span class='kw'>in</span> <span class='ident'>bl</span> {
                     <span class='self'>self</span>.<span class='ident'>blacklist</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
                     <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>overrides</span>, <span class='ident'>name</span>);
+                    <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>required</span>, <span class='ident'>name</span>);
                 }
             }
 
@@ -6879,6 +7251,7 @@
                 <span class='kw'>for</span> <span class='ident'>name</span> <span class='kw'>in</span> <span class='ident'>bl</span> {
                     <span class='self'>self</span>.<span class='ident'>blacklist</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
                     <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>overrides</span>, <span class='ident'>name</span>);
+                    <span class='macro'>vec_remove</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>required</span>, <span class='ident'>name</span>);
                 }
             }
 
@@ -7147,7 +7520,6 @@
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> (<span class='ident'>String</span>::<span class='ident'>new</span>(), <span class='prelude-val'>None</span>),
         }
     }
-
 }
 </pre>
 </section>
@@ -7155,10 +7527,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -7175,7 +7549,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -7185,8 +7559,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
@@ -7195,7 +7569,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

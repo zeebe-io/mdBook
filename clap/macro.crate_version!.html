@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         <p class='location'><a href='index.html'>clap</a></p><script>window.sidebarCurrent = {name: 'crate_version!', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -45,21 +45,17 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-33679' class='srclink' href='../src/clap/macros.rs.html#733-741' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-34447' class='srclink' href='../src/clap/macros.rs.html#733-737' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>crate_version</span> {
     () <span class='op'>=&gt;</span> {
-        <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}.{}.{}{}&quot;</span>,
-            <span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION_MAJOR&quot;</span>),
-            <span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION_MINOR&quot;</span>),
-            <span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION_PATCH&quot;</span>),
-            <span class='macro'>option_env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION_PRE&quot;</span>).<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>))
+        <span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION&quot;</span>).<span class='ident'>to_owned</span>()
     }
 }</pre>
 <div class='docblock'><p>Allows you pull the version for an from your Cargo.toml as MAJOR.MINOR.PATCH_PKGVERSION_PRE</p>
 
-<h1 id="example" class='section-header'><a
-                           href="#example">Example</a></h1><pre class='rust rust-example-rendered'>
+<h1 id="examples" class='section-header'><a
+                           href="#examples">Examples</a></h1><pre class='rust rust-example-rendered'>
     <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;app&quot;</span>)
                 .<span class='ident'>version</span>(<span class='kw-2'>&amp;</span><span class='macro'>crate_version</span><span class='macro'>!</span>()[..])
                 .<span class='ident'>get_matches</span>();</pre>
@@ -68,10 +64,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -88,7 +86,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -98,8 +96,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
@@ -108,7 +106,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

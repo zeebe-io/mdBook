@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.0/src/args/group.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/args/group.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>group.rs.html -- source</title>
@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -379,6 +379,7 @@
 <span id="337">337</span>
 <span id="338">338</span>
 <span id="339">339</span>
+<span id="340">340</span>
 </pre><pre class='rust '>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;yaml&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
@@ -410,7 +411,7 @@
 <span class='doccomment'>/// `--minor`, and `--patch`. All of these arguments shouldn&#39;t be used at one time but you want to</span>
 <span class='doccomment'>/// specify that *at least one* of them is used. For this, you can create a group.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// # Example</span>
+<span class='doccomment'>/// # Examples</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```no_run</span>
 <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -440,7 +441,7 @@
     <span class='doccomment'>/// Creates a new instace of `ArgGroup` using a unique string name.</span>
     <span class='doccomment'>/// The name will only be used by the library consumer and not displayed to the use.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -460,7 +461,7 @@
 
     <span class='doccomment'>/// Creates a new instace of `ArgGroup` from a .yml (YAML) file.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// # use clap::ArgGroup;</span>
@@ -513,7 +514,7 @@
     <span class='doccomment'>/// Adds an argument to this group by name</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -525,6 +526,7 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
                <span class='ident'>n</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;ar</span> <span class='ident'>str</span>)
                <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>name</span> <span class='op'>!=</span> <span class='ident'>n</span>, <span class='string'>&quot;ArgGroup &#39;{}&#39; can not have same name as arg inside it&quot;</span>, <span class='self'>self</span>.<span class='ident'>name</span>);
         <span class='self'>self</span>.<span class='ident'>args</span>.<span class='ident'>push</span>(<span class='ident'>n</span>);
         <span class='self'>self</span>
     }
@@ -532,7 +534,7 @@
     <span class='doccomment'>/// Adds multiple arguments to this group by name</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -556,7 +558,7 @@
     <span class='doccomment'>/// conflicting with another argument).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -579,7 +581,7 @@
     <span class='doccomment'>/// **NOTE:** The name provided may be an argument, or group name</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -606,7 +608,7 @@
     <span class='doccomment'>/// **NOTE:** The names provided may be an argument, or group name</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -631,7 +633,7 @@
     <span class='doccomment'>/// **NOTE:** The name provided may be an argument, or group name</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -658,7 +660,7 @@
     <span class='doccomment'>/// **NOTE:** The names provided may be an argument, or group name</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
+    <span class='doccomment'>/// # Examples</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```no_run</span>
     <span class='doccomment'>/// # use clap::{App, ArgGroup};</span>
@@ -725,10 +727,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -745,7 +749,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -755,8 +759,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
@@ -765,7 +769,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 
