@@ -54,8 +54,7 @@
     }
 
     function browserSupportsHistoryApi() {
-        return document.location.protocol != "file:" &&
-          window.history && typeof window.history.pushState === "function";
+        return window.history && typeof window.history.pushState === "function";
     }
 
     function highlightSourceLines(ev) {
