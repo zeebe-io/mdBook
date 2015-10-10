@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/args/arg.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.5/src/args/arg.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>arg.rs.html -- source</title>
@@ -1165,7 +1165,7 @@
 <span class='doccomment'>/// Arg::from_usage(&quot;-i --input=[input] &#39;Provides an input file to the program&#39;&quot;)</span>
 <span class='doccomment'>/// # ).get_matches();</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Arg</span><span class='op'>&lt;</span><span class='lifetime'>&#39;n</span>, <span class='lifetime'>&#39;l</span>, <span class='lifetime'>&#39;h</span>, <span class='lifetime'>&#39;g</span>, <span class='lifetime'>&#39;p</span>, <span class='lifetime'>&#39;r</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// The unique name of the argument </span>
+    <span class='doccomment'>/// The unique name of the argument</span>
     <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;n</span> <span class='ident'>str</span>,
     <span class='doccomment'>/// The short version (i.e. single character) of the argument, no preceding `-`</span>
     <span class='doccomment'>/// **NOTE:** `short` is mutually exclusive with `index`</span>
@@ -1210,7 +1210,7 @@
     <span class='kw'>pub</span> <span class='ident'>min_vals</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// Specifies whether or not this argument accepts explicit empty values such as `--option &quot;&quot;`</span>
     <span class='kw'>pub</span> <span class='ident'>empty_vals</span>: <span class='ident'>bool</span>,
-    <span class='doccomment'>/// Specifies whether or not this argument is global and should be propogated through all </span>
+    <span class='doccomment'>/// Specifies whether or not this argument is global and should be propagated through all</span>
     <span class='doccomment'>/// child subcommands</span>
     <span class='kw'>pub</span> <span class='ident'>global</span>: <span class='ident'>bool</span>,
     <span class='doccomment'>/// A function used to check the validity of an argument value. Failing this validation results</span>
@@ -1565,7 +1565,7 @@
     <span class='doccomment'>/// .long(&quot;config&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>long</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                <span class='ident'>l</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>str</span>) 
+                <span class='ident'>l</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>str</span>)
                 <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>long</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>l</span>.<span class='ident'>trim_left_matches</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='ident'>c</span> <span class='op'>==</span> <span class='string'>&#39;-&#39;</span>));
         <span class='self'>self</span>
@@ -1585,7 +1585,7 @@
     <span class='doccomment'>/// .help(&quot;The config file used by the myprog&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>help</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                <span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;h</span> <span class='ident'>str</span>) 
+                <span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;h</span> <span class='ident'>str</span>)
                 <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>help</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>h</span>);
         <span class='self'>self</span>
@@ -1611,7 +1611,7 @@
     <span class='doccomment'>/// .required(true)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>required</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                    <span class='ident'>r</span>: <span class='ident'>bool</span>) 
+                    <span class='ident'>r</span>: <span class='ident'>bool</span>)
                     <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>required</span> <span class='op'>=</span> <span class='ident'>r</span>;
         <span class='self'>self</span>
@@ -1633,7 +1633,7 @@
     <span class='doccomment'>/// .conflicts_with(&quot;debug&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>conflicts_with</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                          <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span>) 
+                          <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span>)
                           <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>blacklist</span> {
             <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
@@ -1660,7 +1660,7 @@
     <span class='doccomment'>/// .conflicts_with_all(&amp;config_conflicts)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>conflicts_with_all</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                    <span class='ident'>names</span>: <span class='ident'>I</span>) 
+                                    <span class='ident'>names</span>: <span class='ident'>I</span>)
                                     <span class='op'>-&gt;</span> <span class='kw'>Self</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;r</span>,
               <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span><span class='op'>&gt;</span>
@@ -1684,7 +1684,7 @@
     <span class='doccomment'>/// .mutually_overrides_with(&quot;debug&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mutually_overrides_with</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                   <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span>) 
+                                   <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span>)
                                    <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>overrides</span> {
             <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
@@ -1706,7 +1706,7 @@
     <span class='doccomment'>/// .mutually_overrides_with_all(&amp;config_overrides)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mutually_overrides_with_all</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                             <span class='ident'>names</span>: <span class='ident'>I</span>) 
+                                             <span class='ident'>names</span>: <span class='ident'>I</span>)
                                              <span class='op'>-&gt;</span> <span class='kw'>Self</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;r</span>,
               <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span><span class='op'>&gt;</span>
@@ -1733,7 +1733,7 @@
     <span class='doccomment'>/// .requires(&quot;debug&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>requires</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                    <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span>) 
+                    <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>str</span>)
                     <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>requires</span> {
             <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
@@ -1759,7 +1759,7 @@
     <span class='doccomment'>/// .requires_all(&amp;config_reqs)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>requires_all</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                              <span class='ident'>names</span>: <span class='ident'>I</span>) 
+                              <span class='ident'>names</span>: <span class='ident'>I</span>)
                               <span class='op'>-&gt;</span> <span class='kw'>Self</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;r</span>,
               <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;r</span> <span class='ident'>T</span><span class='op'>&gt;</span>
@@ -1788,7 +1788,7 @@
     <span class='doccomment'>/// .takes_value(true)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>takes_value</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                       <span class='ident'>tv</span>: <span class='ident'>bool</span>) 
+                       <span class='ident'>tv</span>: <span class='ident'>bool</span>)
                        <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>takes_value</span> <span class='op'>=</span> <span class='ident'>tv</span>;
         <span class='self'>self</span>
@@ -1812,7 +1812,7 @@
     <span class='doccomment'>/// .index(1)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>index</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                 <span class='ident'>idx</span>: <span class='ident'>u8</span>) 
+                 <span class='ident'>idx</span>: <span class='ident'>u8</span>)
                  <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>idx</span>);
         <span class='self'>self</span>
@@ -1837,7 +1837,7 @@
     <span class='doccomment'>/// .multiple(true)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>multiple</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                    <span class='ident'>multi</span>: <span class='ident'>bool</span>) 
+                    <span class='ident'>multi</span>: <span class='ident'>bool</span>)
                     <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>multiple</span> <span class='op'>=</span> <span class='ident'>multi</span>;
         <span class='self'>self</span>
@@ -1864,7 +1864,7 @@
     <span class='doccomment'>/// .global(true)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>global</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                  <span class='ident'>g</span>: <span class='ident'>bool</span>) 
+                  <span class='ident'>g</span>: <span class='ident'>bool</span>)
                   <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>global</span> <span class='op'>=</span> <span class='ident'>g</span>;
         <span class='self'>self</span>
@@ -1886,7 +1886,7 @@
     <span class='doccomment'>/// .empty_values(true)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>empty_values</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                        <span class='ident'>ev</span>: <span class='ident'>bool</span>) 
+                        <span class='ident'>ev</span>: <span class='ident'>bool</span>)
                         <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>empty_vals</span> <span class='op'>=</span> <span class='ident'>ev</span>;
         <span class='self'>self</span>
@@ -1906,7 +1906,7 @@
     <span class='doccomment'>/// .hidden(true)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>hidden</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                  <span class='ident'>h</span>: <span class='ident'>bool</span>) 
+                  <span class='ident'>h</span>: <span class='ident'>bool</span>)
                   <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>hidden</span> <span class='op'>=</span> <span class='ident'>h</span>;
         <span class='self'>self</span>
@@ -1929,7 +1929,7 @@
     <span class='doccomment'>/// .possible_values(&amp;mode_vals)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>possible_values</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                 <span class='ident'>names</span>: <span class='ident'>I</span>) 
+                                 <span class='ident'>names</span>: <span class='ident'>I</span>)
                                  <span class='op'>-&gt;</span> <span class='kw'>Self</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;p</span>,
               <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;p</span> <span class='ident'>T</span><span class='op'>&gt;</span>
@@ -1959,7 +1959,7 @@
     <span class='doccomment'>/// .possible_value(&quot;slow&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>possible_value</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                          <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;p</span> <span class='ident'>str</span>) 
+                          <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;p</span> <span class='ident'>str</span>)
                           <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>possible_vals</span> {
             <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>name</span>);
@@ -1982,7 +1982,7 @@
     <span class='doccomment'>/// .group(&quot;mode&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>group</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                 <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;g</span> <span class='ident'>str</span>) 
+                 <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;g</span> <span class='ident'>str</span>)
                  <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>group</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>name</span>);
         <span class='self'>self</span>
@@ -2007,7 +2007,7 @@
     <span class='doccomment'>/// .number_of_values(3)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>number_of_values</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                            <span class='ident'>qty</span>: <span class='ident'>u8</span>) 
+                            <span class='ident'>qty</span>: <span class='ident'>u8</span>)
                             <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>num_vals</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>qty</span>);
         <span class='self'>self</span>
@@ -2040,7 +2040,7 @@
     <span class='doccomment'>/// })</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>validator</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                        <span class='ident'>f</span>: <span class='ident'>F</span>) 
+                        <span class='ident'>f</span>: <span class='ident'>F</span>)
                         <span class='op'>-&gt;</span> <span class='kw'>Self</span>
         <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Fn</span>(<span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span>
     {
@@ -2067,7 +2067,7 @@
     <span class='doccomment'>/// .max_values(3)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>max_values</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                      <span class='ident'>qty</span>: <span class='ident'>u8</span>) 
+                      <span class='ident'>qty</span>: <span class='ident'>u8</span>)
                       <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='kw'>if</span> <span class='ident'>qty</span> <span class='op'>&lt;</span> <span class='number'>2</span> {
             <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Arguments with max_values(qty) qty must be &gt; 1. Prefer \
@@ -2101,7 +2101,7 @@
     <span class='doccomment'>/// .min_values(2)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>min_values</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                      <span class='ident'>qty</span>: <span class='ident'>u8</span>) 
+                      <span class='ident'>qty</span>: <span class='ident'>u8</span>)
                       <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='kw'>if</span> <span class='ident'>qty</span> <span class='op'>&lt;</span> <span class='number'>1</span> {
             <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Arguments with min_values(qty) qty must be &gt; 0. Prefer flags for arguments \
@@ -2137,7 +2137,7 @@
     <span class='doccomment'>/// .value_names(&amp;val_names)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>value_names</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                             <span class='ident'>names</span>: <span class='ident'>I</span>) 
+                             <span class='ident'>names</span>: <span class='ident'>I</span>)
                              <span class='op'>-&gt;</span> <span class='kw'>Self</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;n</span>,
               <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;n</span> <span class='ident'>T</span><span class='op'>&gt;</span>
@@ -2164,7 +2164,7 @@
     <span class='doccomment'>///     .value_name(&quot;file&quot;)</span>
     <span class='doccomment'>/// # ).get_matches();</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>value_name</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>,
-                      <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;n</span> <span class='ident'>str</span>) 
+                      <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;n</span> <span class='ident'>str</span>)
                       <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>val_names</span> {
             <span class='ident'>vec</span>.<span class='ident'>insert</span>(<span class='ident'>name</span>);

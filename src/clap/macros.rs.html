@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/macros.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.5/src/macros.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>macros.rs.html -- source</title>
@@ -899,6 +899,14 @@
 <span id="857">857</span>
 <span id="858">858</span>
 <span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
 </pre><pre class='rust '>
 <span class='comment'>// Convenience for writing to stderr thanks to https://github.com/BurntSushi</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>wlnerr</span>(
@@ -946,6 +954,14 @@
     );
 }
 
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>write_spaces</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>num</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> ({
+        <span class='kw'>for</span> _ <span class='kw'>in</span> (<span class='number'>0</span>..<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>num</span>) {
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot; &quot;</span>));
+        }
+    })
+}
+
 <span class='comment'>// convienience macro for remove an item from a vec</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>vec_remove</span> {
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>vec</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>to_rem</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
@@ -958,6 +974,7 @@
                 }
             }
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>i</span>) <span class='op'>=</span> <span class='ident'>ix</span> {
+                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>vec</span>.<span class='ident'>dedup</span>();
                 <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>vec</span>.<span class='ident'>remove</span>(<span class='ident'>i</span>);
             }
         }
@@ -1022,7 +1039,7 @@
 
 <span class='comment'>// De-duplication macro used in src/app.rs</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>print_opt_help</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>opt</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>opt</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>h</span>) <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>opt</span>.<span class='ident'>help</span> {
             <span class='kw'>if</span> <span class='ident'>h</span>.<span class='ident'>contains</span>(<span class='string'>&quot;{n}&quot;</span>) {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hel</span> <span class='op'>=</span> <span class='ident'>h</span>.<span class='ident'>split</span>(<span class='string'>&quot;{n}&quot;</span>);
@@ -1031,9 +1048,8 @@
                 }
                 <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>part</span>) <span class='op'>=</span> <span class='ident'>hel</span>.<span class='ident'>next</span>() {
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;\n&quot;</span>));
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>.<span class='ident'>print_spaces</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>));
+                    <span class='macro'>write_spaces</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>spc</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>);
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>part</span>));
-                    <span class='comment'>// try!(write!($w, &quot;{}&quot;, hel.next().unwrap_or(&quot;&quot;)));</span>
                 }
             } <span class='kw'>else</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>w</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>h</span>));

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.2/src/app/errors.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.5/src/app/errors.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>errors.rs.html -- source</title>
@@ -270,6 +270,30 @@
 <span id="228">228</span>
 <span id="229">229</span>
 <span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>process</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
@@ -334,12 +358,23 @@
     <span class='doccomment'>///     .get_matches_from_safe(vec![&quot;&quot;, &quot;--debug&quot;, &quot;--color&quot;]);</span>
     <span class='doccomment'>/// ```</span>
     <span class='ident'>EmptyValue</span>,
-    <span class='doccomment'>/// Parser inner error</span>
-    <span class='ident'>OptionError</span>,
+    <span class='doccomment'>/// Option fails validation of a custom validator</span>
+    <span class='ident'>ValueValidationError</span>,
     <span class='doccomment'>/// Parser inner error</span>
     <span class='ident'>ArgumentError</span>,
-    <span class='doccomment'>/// Parser inner error</span>
-    <span class='ident'>ValueError</span>,
+    <span class='doccomment'>/// Error occurs when an application got more arguments then were expected</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// let result = App::new(&quot;myprog&quot;)</span>
+    <span class='doccomment'>///     .arg(Arg::with_name(&quot;debug&quot;).index(1)</span>
+    <span class='doccomment'>///         .max_values(2))</span>
+    <span class='doccomment'>///     .get_matches_from_safe(vec![&quot;&quot;, &quot;too&quot;, &quot;much&quot;, &quot;values&quot;]);</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='ident'>TooManyArgs</span>,
     <span class='doccomment'>/// Error occurs when argument got more values then were expected</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
@@ -352,7 +387,7 @@
     <span class='doccomment'>///         .max_values(2))</span>
     <span class='doccomment'>///     .get_matches_from_safe(vec![&quot;&quot;, &quot;too&quot;, &quot;much&quot;, &quot;values&quot;]);</span>
     <span class='doccomment'>/// ```</span>
-    <span class='ident'>TooMuchValues</span>,
+    <span class='ident'>TooManyValues</span>,
     <span class='doccomment'>/// Error occurs when argument got less values then were expected</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
@@ -366,6 +401,19 @@
     <span class='doccomment'>///     .get_matches_from_safe(vec![&quot;&quot;, &quot;too&quot;, &quot;few&quot;]);</span>
     <span class='doccomment'>/// ```</span>
     <span class='ident'>TooFewValues</span>,
+    <span class='doccomment'>/// Error occurs when argument got a different number of values then were expected</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # use clap::{App, Arg};</span>
+    <span class='doccomment'>/// let result = App::new(&quot;myprog&quot;)</span>
+    <span class='doccomment'>///     .arg(Arg::with_name(&quot;debug&quot;).index(1)</span>
+    <span class='doccomment'>///         .max_values(2))</span>
+    <span class='doccomment'>///     .get_matches_from_safe(vec![&quot;&quot;, &quot;too&quot;, &quot;much&quot;, &quot;values&quot;]);</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='ident'>WrongNumValues</span>,
     <span class='doccomment'>/// Error occurs when clap find two ore more conflicting arguments</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
@@ -409,7 +457,7 @@
     <span class='doccomment'>///     .get_matches_from_safe(vec![&quot;&quot;]);</span>
     <span class='doccomment'>/// ```</span>
     <span class='ident'>MissingSubcommand</span>,
-    <span class='doccomment'>/// Occurs when no argument or subcommand has been supplied and </span>
+    <span class='doccomment'>/// Occurs when no argument or subcommand has been supplied and</span>
     <span class='doccomment'>/// `AppSettings::ArgRequiredElseHelp` was used</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>///</span>
@@ -464,7 +512,7 @@
     <span class='doccomment'>///     .arg(Arg::with_name(&quot;debug&quot;)</span>
     <span class='doccomment'>///         .short(&quot;u&quot;)</span>
     <span class='doccomment'>///         .takes_value(true))</span>
-    <span class='doccomment'>///     .get_matches_from_safe(vec![OsString::from_vec(vec![0x20]), </span>
+    <span class='doccomment'>///     .get_matches_from_safe(vec![OsString::from_vec(vec![0x20]),</span>
     <span class='doccomment'>///                                 OsString::from_vec(vec![0xE9])]);</span>
     <span class='doccomment'>/// assert!(result.is_err());</span>
     <span class='doccomment'>/// ```</span>
@@ -496,7 +544,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>ClapError</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) 
+           <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>)
            <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>error</span>)
     }
