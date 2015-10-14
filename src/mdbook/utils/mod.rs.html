@@ -24,10 +24,10 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
@@ -268,26 +268,10 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>PathBuf</span>, <span class='ident'>Component</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::{<span class='self'>self</span>, <span class='ident'>metadata</span>, <span class='ident'>File</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
 
 <span class='doccomment'>/// This is copied from the rust source code until Path_ Ext stabilizes.</span>
 <span class='doccomment'>/// You can use it, but be aware that it will be removed when those features go to rust stable</span>
@@ -308,20 +292,6 @@
 
     <span class='kw'>fn</span> <span class='ident'>is_dir</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
        <span class='ident'>metadata</span>(<span class='self'>self</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>is_dir</span>()).<span class='ident'>unwrap_or</span>(<span class='boolval'>false</span>)
-    }
-}
-
-<span class='doccomment'>/// File manipulations directly from Path</span>
-
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>FileManipulation</span> {
-    <span class='kw'>fn</span> <span class='ident'>create_write</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span>;
-}
-
-<span class='kw'>impl</span> <span class='ident'>FileManipulation</span> <span class='kw'>for</span> <span class='ident'>Path</span> {
-    <span class='kw'>fn</span> <span class='ident'>create_write</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>create</span>(<span class='self'>self</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>file</span>.<span class='ident'>write_all</span>(<span class='ident'>bytes</span>));
-        <span class='prelude-val'>Ok</span>(())
     }
 }
 
@@ -533,10 +503,12 @@
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
+    <aside id="help" class="hidden">
         <div>
+            <h1 class="hidden">Help</h1>
+
             <div class="shortcuts">
-                <h1>Keyboard Shortcuts</h1>
+                <h2>Keyboard Shortcuts</h2>
 
                 <dl>
                     <dt>?</dt>
@@ -553,7 +525,7 @@
             </div>
 
             <div class="infos">
-                <h1>Search Tricks</h1>
+                <h2>Search Tricks</h2>
 
                 <p>
                     Prefix searches with a type followed by a colon (e.g.
@@ -563,8 +535,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>
@@ -573,7 +545,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </aside>
 
     
 

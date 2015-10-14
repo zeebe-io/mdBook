@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["book",""],["renderer",""],["utils",""]]});
+initSidebarItems({"mod":[["book",""],["renderer",""],["theme",""],["utils",""]]});
