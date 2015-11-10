@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.5/src/fmt.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/clap-1.4.7/src/fmt.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>fmt.rs.html -- source</title>
@@ -108,18 +108,29 @@
 <span id="66">66</span>
 <span id="67">67</span>
 <span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;color&quot;</span>, <span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;windows&quot;</span>)))]</span>
-<span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::{<span class='ident'>Red</span>, <span class='ident'>Green</span>, <span class='ident'>Yellow</span>};
+<span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::{<span class='ident'>Green</span>, <span class='ident'>Red</span>, <span class='ident'>Yellow</span>};
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;color&quot;</span>, <span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;windows&quot;</span>)))]</span>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>ANSIString</span>;
 
 
+<span class='doccomment'>/// Defines styles for different types of error messages. Defaults to Error=Red, Warning=Yellow,</span>
+<span class='doccomment'>/// and Good=Green</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Format</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Defines the style used for errors, defaults to Red</span>
     <span class='ident'>Error</span>(<span class='ident'>T</span>),
+    <span class='doccomment'>/// Defines the style used for warnings, defaults to Yellow</span>
     <span class='ident'>Warning</span>(<span class='ident'>T</span>),
+    <span class='doccomment'>/// Defines the style used for good values, defaults to Green</span>
     <span class='ident'>Good</span>(<span class='ident'>T</span>),
 }
 
@@ -137,8 +148,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;color&quot;</span>, <span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;windows&quot;</span>)))]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Format</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>format</span>())
     }
 }
@@ -156,8 +166,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;color&quot;</span>), <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;windows&quot;</span>))]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>fmt</span>::<span class='ident'>Display</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Format</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>format</span>())
     }
 }
@@ -165,12 +174,13 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Format</span>;
-    <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::{<span class='ident'>Red</span>, <span class='ident'>Green</span>, <span class='ident'>Yellow</span>};
+    <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::{<span class='ident'>Green</span>, <span class='ident'>Red</span>, <span class='ident'>Yellow</span>};
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>colored_output</span>() {
         <span class='kw'>let</span> <span class='ident'>err</span> <span class='op'>=</span> <span class='ident'>Format</span>::<span class='ident'>Error</span>(<span class='string'>&quot;error&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>err</span>), <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>Red</span>.<span class='ident'>bold</span>().<span class='ident'>paint</span>(<span class='string'>&quot;error&quot;</span>)));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>err</span>),
+                   <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>Red</span>.<span class='ident'>bold</span>().<span class='ident'>paint</span>(<span class='string'>&quot;error&quot;</span>)));
         <span class='kw'>let</span> <span class='ident'>good</span> <span class='op'>=</span> <span class='ident'>Format</span>::<span class='ident'>Good</span>(<span class='string'>&quot;good&quot;</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>good</span>), <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>Green</span>.<span class='ident'>paint</span>(<span class='string'>&quot;good&quot;</span>)));
         <span class='kw'>let</span> <span class='ident'>warn</span> <span class='op'>=</span> <span class='ident'>Format</span>::<span class='ident'>Warning</span>(<span class='string'>&quot;warn&quot;</span>);
