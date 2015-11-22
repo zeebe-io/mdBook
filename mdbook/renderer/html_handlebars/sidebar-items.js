@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["HtmlHandlebars",""]]});
+initSidebarItems({});

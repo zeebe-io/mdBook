@@ -47,13 +47,16 @@
             </a>
         </span><a id='src-0' class='srclink' href='../src/handlebars/lib.rs.html#1-200' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
-<h1 id='handlebars' class='section-header'><a href='#handlebars'>Handlebars</a></h1>
+<h1 id="handlebars" class='section-header'><a
+                           href="#handlebars">Handlebars</a></h1>
 <p>Handlebars is a modern and extensible templating solution originally created in the JavaScript world. It&#39;s used by many popular frameworks like <a href="http://emberjs.com">Ember.js</a> and Chaplin. It&#39;s also ported to some other platforms such as <a href="https://github.com/jknack/handlebars.java">Java</a>.</p>
 
 <p>And this is handlebars Rust implementation, designed for server-side page generation. It&#39;s a general-purpose library so you use it for any kind of text generation.</p>
 
-<h2 id='handlebars-spec' class='section-header'><a href='#handlebars-spec'>Handlebars spec</a></h2>
-<h3 id='base' class='section-header'><a href='#base'>Base</a></h3>
+<h2 id="handlebars-spec" class='section-header'><a
+                           href="#handlebars-spec">Handlebars spec</a></h2>
+<h3 id="base" class='section-header'><a
+                           href="#base">Base</a></h3>
 <p>You can go to <a href="http://handlebarsjs.com/">Handlebars.js</a> website for its syntax. This implementation should be compatible with most parts of the spec, except:</p>
 
 <ul>
@@ -61,7 +64,8 @@
 <li>configurable logging (hard-coded to rust native logging, with fixed level <code>INFO</code>)</li>
 </ul>
 
-<h3 id='extensions' class='section-header'><a href='#extensions'>Extensions</a></h3>
+<h3 id="extensions" class='section-header'><a
+                           href="#extensions">Extensions</a></h3>
 <p>We have template reuse facilities supported via built-in helpers <code>&gt;</code>, <code>partial</code> and <code>block</code>.</p>
 
 <p>There are two ways to reuse a template:</p>
@@ -73,8 +77,10 @@
 
 <p>Consult <a href="http://jknack.github.io/handlebars.java/reuse.html">Handlebar.java document about template inheritance</a>.</p>
 
-<h2 id='usage' class='section-header'><a href='#usage'>Usage</a></h2>
-<h3 id='template-creation-and-registration' class='section-header'><a href='#template-creation-and-registration'>Template Creation and Registration</a></h3>
+<h2 id="usage" class='section-header'><a
+                           href="#usage">Usage</a></h2>
+<h3 id="template-creation-and-registration" class='section-header'><a
+                           href="#template-creation-and-registration">Template Creation and Registration</a></h3>
 <p>Templates are created from String and registered to <code>Handlebars</code> with a name.</p>
 <pre class='rust rust-example-rendered'>
 
@@ -91,7 +97,8 @@
           .<span class='ident'>ok</span>().<span class='ident'>unwrap</span>();
 }</pre>
 
-<h3 id='rendering-something' class='section-header'><a href='#rendering-something'>Rendering Something</a></h3>
+<h3 id="rendering-something" class='section-header'><a
+                           href="#rendering-something">Rendering Something</a></h3>
 <p>I should say that rendering is a little tricky. Since handlebars is originally a JavaScript templating framework. It supports dynamic features like duck-typing, truthy/falsey values. But for a static language like Rust, this is a little difficult. As a solution, I&#39;m using the <code>serialize::json::Json</code> internally for data rendering, which seems good by far.</p>
 
 <p>That means, if you want to render something, you have to ensure that it implements the <code>serialize::json::ToJson</code> trait. Luckily, most built-in types already have trait. However, if you want to render your custom struct, you need to implement this trait manually, or use <a href="https://github.com/sunng87/tojson_macros">tojson_macros</a> to generate default <code>ToJson</code> implementation.</p>
@@ -134,7 +141,8 @@
   <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;hello&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>);
 }</pre>
 
-<h3 id='custom-helper' class='section-header'><a href='#custom-helper'>Custom Helper</a></h3>
+<h3 id="custom-helper" class='section-header'><a
+                           href="#custom-helper">Custom Helper</a></h3>
 <p>Handlebars is nothing without helpers. You can also create your own helpers with rust. Helpers in handlebars-rust are custom struct implements the <code>HelperDef</code> trait, concretely, the <code>call</code> function. For your convenience, most of stateless helpers can be implemented as bare functions.</p>
 <pre class='rust rust-example-rendered'>
 
@@ -189,7 +197,8 @@
   <span class='comment'>//...</span>
 }</pre>
 
-<h4 id='arguments-of-helpdef' class='section-header'><a href='#arguments-of-helpdef'>Arguments of HelpDef</a></h4>
+<h4 id="arguments-of-helpdef" class='section-header'><a
+                           href="#arguments-of-helpdef">Arguments of HelpDef</a></h4>
 <p>You can get data from the <code>Helper</code> argument about the template information:</p>
 
 <ul>
@@ -202,7 +211,8 @@
 
 <p>You can learn more about helpers by looking into source code of built-in helpers.</p>
 
-<h4 id='built-in-helpers' class='section-header'><a href='#built-in-helpers'>Built-in Helpers</a></h4>
+<h4 id="built-in-helpers" class='section-header'><a
+                           href="#built-in-helpers">Built-in Helpers</a></h4>
 <ul>
 <li><code>{{#raw}} ... {{/raw}}</code> escape handlebars expression within the block</li>
 <li><code>{{#if ...}} ... {{else}} ... {{/if}}</code> if-else block</li>
