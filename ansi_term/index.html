@@ -49,8 +49,7 @@
 <div class='docblock'><p>This is a library for controlling colours and formatting, such as
 red bold text or blue underlined text, on ANSI terminals.</p>
 
-<h2 id="basic-usage" class='section-header'><a
-                           href="#basic-usage">Basic usage</a></h2>
+<h2 id='basic-usage' class='section-header'><a href='#basic-usage'>Basic usage</a></h2>
 <p>There are two main data structures in this crate that you need to be
 concerned with: <code>ANSIString</code> and <code>Style</code>. A <code>Style</code> holds stylistic
 information: colours, whether the text should be bold, or blinking, or
@@ -80,8 +79,7 @@ minimum of <code>String</code> allocations being performed behind the scenes.</p
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>string</span>::<span class='ident'>ToString</span>;
 <span class='kw'>let</span> <span class='ident'>red_string</span> <span class='op'>=</span> <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;a red string&quot;</span>).<span class='ident'>to_string</span>();</pre>
 
-<h2 id="bold,-underline,-background,-and-other-styles" class='section-header'><a
-                           href="#bold,-underline,-background,-and-other-styles">Bold, underline, background, and other styles</a></h2>
+<h2 id='bold-underline-background-and-other-styles' class='section-header'><a href='#bold-underline-background-and-other-styles'>Bold, underline, background, and other styles</a></h2>
 <p>For anything more complex than plain foreground colour changes, you need to
 construct <code>Style</code> objects themselves, rather than beginning with a <code>Colour</code>.
 You can do this by chaining methods based on a new <code>Style</code>, created with
@@ -119,8 +117,7 @@ want to have a style with <em>nothing</em> set.</p>
 <span class='ident'>Red</span>.<span class='ident'>normal</span>().<span class='ident'>paint</span>(<span class='string'>&quot;yet another red string&quot;</span>);
 <span class='ident'>Style</span>::<span class='ident'>default</span>().<span class='ident'>paint</span>(<span class='string'>&quot;a completely regular string&quot;</span>);</pre>
 
-<h2 id="extended-colours" class='section-header'><a
-                           href="#extended-colours">Extended colours</a></h2>
+<h2 id='extended-colours' class='section-header'><a href='#extended-colours'>Extended colours</a></h2>
 <p>You can access the extended range of 256 colours by using the <code>Fixed</code> colour
 variant, which takes an argument of the colour number to use. This can be
 included wherever you would use a <code>Colour</code>:</p>
@@ -134,8 +131,7 @@ standard colour variants. There’s nothing stopping you from using these as
 <code>Fixed</code> colours instead, but there’s nothing to be gained by doing so
 either.</p>
 
-<h2 id="combining-successive-coloured-strings" class='section-header'><a
-                           href="#combining-successive-coloured-strings">Combining successive coloured strings</a></h2>
+<h2 id='combining-successive-coloured-strings' class='section-header'><a href='#combining-successive-coloured-strings'>Combining successive coloured strings</a></h2>
 <p>The benefit of writing ANSI escape codes to the terminal is that they
 <em>stack</em>: you do not need to end every coloured string with a reset code if
 the text that follows it is of a similar style. For example, if you want to
