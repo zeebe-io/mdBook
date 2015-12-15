@@ -4,12 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/handlebars-0.11.2/src/template.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/handlebars-0.12.0/src/template.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>template.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -664,23 +663,44 @@
 <span id="621">621</span>
 <span id="622">622</span>
 <span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>min</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>BitOr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::{<span class='self'>self</span>, <span class='ident'>Display</span>, <span class='ident'>Formatter</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>BTreeMap</span>, <span class='ident'>VecDeque</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>string</span>::<span class='ident'>ToString</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>num</span>::<span class='ident'>FromPrimitive</span>;
 <span class='kw'>use</span> <span class='ident'>regex</span>::<span class='ident'>Regex</span>;
 
 <span class='kw'>use</span> <span class='ident'>support</span>::<span class='ident'>str</span>::<span class='ident'>SliceChars</span>;
 <span class='kw'>use</span> <span class='ident'>TemplateError</span>;
+<span class='kw'>use</span> <span class='ident'>TemplateError</span>::<span class='op'>*</span>;
 
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>TemplateElement</span>::{<span class='ident'>RawString</span>, <span class='ident'>Expression</span>, <span class='ident'>HelperExpression</span>,
                             <span class='ident'>HTMLExpression</span>, <span class='ident'>HelperBlock</span>, <span class='ident'>Comment</span>};
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Template</span> {
+    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
     <span class='kw'>pub</span> <span class='ident'>elements</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>TemplateElement</span><span class='op'>&gt;</span>
 }
 
@@ -746,7 +766,7 @@
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>find_tokens</span>(<span class='ident'>source</span>: <span class='kw-2'>&amp;</span><span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>find_tokens</span>(<span class='ident'>source</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='ident'>tokenizer</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;[^\s\(\)]+|\([^\)]*\)&quot;</span>).<span class='ident'>unwrap</span>();
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hash_key</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
@@ -772,7 +792,8 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>HelperTemplate</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>source</span>: <span class='ident'>String</span>, <span class='ident'>block</span>: <span class='ident'>bool</span>, <span class='ident'>line_no</span>: <span class='ident'>usize</span>, <span class='ident'>col_no</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>HelperTemplate</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>source</span>: <span class='ident'>S</span>, <span class='ident'>block</span>: <span class='ident'>bool</span>, <span class='ident'>line_no</span>: <span class='ident'>usize</span>, <span class='ident'>col_no</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>HelperTemplate</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='ident'>source</span>.<span class='ident'>as_ref</span>();
         <span class='comment'>// FIXME, cache this regex</span>
         <span class='kw'>let</span> <span class='ident'>tokens_vec</span> <span class='op'>=</span> <span class='ident'>find_tokens</span>(<span class='kw-2'>&amp;</span><span class='ident'>source</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tokens</span> <span class='op'>=</span> <span class='ident'>tokens_vec</span>.<span class='ident'>iter</span>();
@@ -811,7 +832,8 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Parameter</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>source</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Parameter</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>source</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Parameter</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='ident'>source</span>.<span class='ident'>as_ref</span>();
         <span class='comment'>// move this to static scope when regex! is stable</span>
         <span class='kw'>let</span> <span class='ident'>subexpr_regex</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;\(([^\)]+)\)&quot;</span>).<span class='ident'>unwrap</span>();
 
@@ -826,7 +848,7 @@
             <span class='kw'>let</span> <span class='ident'>sub_template</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='ident'>temp</span>));
             <span class='prelude-val'>Ok</span>(<span class='ident'>Parameter</span>::<span class='ident'>Subexpression</span>(<span class='ident'>sub_template</span>))
         } <span class='kw'>else</span> {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='ident'>source</span>.<span class='ident'>clone</span>()))
+            <span class='prelude-val'>Ok</span>(<span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='ident'>source</span>.<span class='ident'>to_owned</span>()))
         }
     }
 }
@@ -885,7 +907,7 @@
 }
 
 
-<span class='kw'>fn</span> <span class='ident'>process_whitespace</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='ident'>String</span>, <span class='ident'>wso</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>WhiteSpaceOmit</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+<span class='kw'>fn</span> <span class='ident'>process_whitespace</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>wso</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>WhiteSpaceOmit</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
     <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>wso</span> {
         <span class='ident'>WhiteSpaceOmit</span>::<span class='ident'>Left</span> <span class='op'>=&gt;</span> {
             <span class='ident'>buf</span>.<span class='ident'>trim_left</span>().<span class='ident'>to_string</span>()
@@ -897,7 +919,7 @@
             <span class='ident'>buf</span>.<span class='ident'>trim</span>().<span class='ident'>to_string</span>()
         },
         <span class='ident'>WhiteSpaceOmit</span>::<span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-            <span class='ident'>buf</span>.<span class='ident'>clone</span>()
+            <span class='ident'>buf</span>.<span class='ident'>to_string</span>()
         }
     };
     <span class='op'>*</span><span class='ident'>wso</span> <span class='op'>=</span> <span class='ident'>WhiteSpaceOmit</span>::<span class='prelude-val'>None</span>;
@@ -905,11 +927,18 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Template</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>compile</span>(<span class='ident'>source</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Template</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
-        <span class='kw'>use</span> <span class='ident'>TemplateError</span>::<span class='op'>*</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Template</span> {
+        <span class='ident'>Template</span> {
+            <span class='ident'>elements</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
+            <span class='ident'>name</span>: <span class='prelude-val'>None</span>
+        }
+    }
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>compile</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>source</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Template</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='ident'>source</span>.<span class='ident'>as_ref</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>helper_stack</span>: <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>HelperTemplate</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>VecDeque</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>template_stack</span>: <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>Template</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>VecDeque</span>::<span class='ident'>new</span>();
-        <span class='ident'>template_stack</span>.<span class='ident'>push_front</span>(<span class='ident'>Template</span>{ <span class='ident'>elements</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>() });
+        <span class='ident'>template_stack</span>.<span class='ident'>push_front</span>(<span class='ident'>Template</span>::<span class='ident'>new</span>());
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buffer</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>ParserState</span>::<span class='ident'>Text</span>;
@@ -997,7 +1026,7 @@
                                             <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>template_stack</span>.<span class='ident'>pop_front</span>().<span class='ident'>unwrap</span>();
                                             <span class='kw'>let</span> <span class='ident'>h</span> <span class='op'>=</span> <span class='ident'>helper_stack</span>.<span class='ident'>front_mut</span>().<span class='ident'>unwrap</span>();
                                             <span class='ident'>h</span>.<span class='ident'>template</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>t</span>);
-                                            <span class='ident'>template_stack</span>.<span class='ident'>push_front</span>(<span class='ident'>Template</span>{ <span class='ident'>elements</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>() });
+                                            <span class='ident'>template_stack</span>.<span class='ident'>push_front</span>(<span class='ident'>Template</span>::<span class='ident'>new</span>());
                                             <span class='ident'>ParserState</span>::<span class='ident'>Text</span>
                                         } <span class='kw'>else</span> {
                                             <span class='kw'>if</span> <span class='ident'>find_tokens</span>(<span class='kw-2'>&amp;</span><span class='ident'>buffer</span>).<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>1</span> {
@@ -1028,7 +1057,7 @@
                                 <span class='ident'>ParserState</span>::<span class='ident'>HelperStart</span> <span class='op'>=&gt;</span> {
                                     <span class='kw'>let</span> <span class='ident'>helper</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>HelperTemplate</span>::<span class='ident'>parse</span>(<span class='ident'>buffer</span>.<span class='ident'>clone</span>(), <span class='boolval'>true</span>, <span class='ident'>line_no</span>, <span class='ident'>col_no</span>));
                                     <span class='ident'>helper_stack</span>.<span class='ident'>push_front</span>(<span class='ident'>helper</span>);
-                                    <span class='ident'>template_stack</span>.<span class='ident'>push_front</span>(<span class='ident'>Template</span>{ <span class='ident'>elements</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>() });
+                                    <span class='ident'>template_stack</span>.<span class='ident'>push_front</span>(<span class='ident'>Template</span>::<span class='ident'>new</span>());
 
                                     <span class='ident'>buffer</span>.<span class='ident'>clear</span>();
                                     <span class='ident'>ParserState</span>::<span class='ident'>Text</span>
@@ -1072,6 +1101,12 @@
         }
 
         <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>template_stack</span>.<span class='ident'>pop_front</span>().<span class='ident'>unwrap</span>());
+    }
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>compile_with_name</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>source</span>: <span class='ident'>S</span>, <span class='ident'>name</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Template</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='ident'>source</span>));
+        <span class='ident'>t</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>new</span>(<span class='ident'>name</span>));
+        <span class='prelude-val'>Ok</span>(<span class='ident'>t</span>)
     }
 }
 
@@ -1278,7 +1313,7 @@
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_find_tokens</span>() {
     <span class='kw'>let</span> <span class='ident'>source</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='string'>&quot;hello   good (nice) (hello world)\n\t\t world hello=world hello=(world) hello=(world 0)&quot;</span>.<span class='ident'>into</span>();
-    <span class='kw'>let</span> <span class='ident'>tokens</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>find_tokens</span>(<span class='kw-2'>&amp;</span><span class='ident'>source</span>);
+    <span class='kw'>let</span> <span class='ident'>tokens</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>find_tokens</span>(<span class='kw-2'>&amp;</span><span class='ident'>source</span>[..]);
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>tokens</span>, <span class='ident'>vec</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span><span class='op'>!</span>[<span class='string'>&quot;hello&quot;</span>.<span class='ident'>to_string</span>(),
                                       <span class='string'>&quot;good&quot;</span>.<span class='ident'>to_string</span>(),
                                       <span class='string'>&quot;(nice)&quot;</span>.<span class='ident'>to_string</span>(),
@@ -1348,6 +1383,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script async src="../../search-index.js"></script>
 </body>
 </html>

@@ -9,7 +9,6 @@
 
     <title>handlebars::RenderContext - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -46,9 +45,11 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-636' class='srclink' href='../src/handlebars/render.rs.html#42-49' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-644' class='srclink' href='../src/handlebars/render.rs.html#51-62' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct RenderContext&lt;'a&gt; {
     pub writer: &amp;'a mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>,
+    pub current_template: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/rc/struct.Rc.html' title='alloc::rc::Rc'>Rc</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;,
+    pub root_template: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/rc/struct.Rc.html' title='alloc::rc::Rc'>Rc</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;,
     // some fields omitted
 }</pre><div class='docblock'><p>The context of a render call</p>
 
@@ -57,6 +58,10 @@ content is written to.</p>
 </div><h2 class='fields'>Fields</h2>
 <table><tr class='stab '>
                                   <td id='structfield.writer'><code>writer</code></td><td><div class='docblock'><p>the <code>Write</code> where page is generated</p>
+</div></td></tr><tr class='stab '>
+                                  <td id='structfield.current_template'><code>current_template</code></td><td><div class='docblock'><p>current template name</p>
+</div></td></tr><tr class='stab '>
+                                  <td id='structfield.root_template'><code>root_template</code></td><td><div class='docblock'><p>root template name</p>
 </div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='struct' href='../handlebars/struct.RenderContext.html' title='handlebars::RenderContext'>RenderContext</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(w: &amp;'a mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>) -&gt; <a class='struct' href='../handlebars/struct.RenderContext.html' title='handlebars::RenderContext'>RenderContext</a>&lt;'a&gt;</code></h4>
 <div class='docblock'><p>Create a render context from a <code>Write</code></p>
 </div><h4 id='method.with_writer' class='method'><code>fn <a href='#method.with_writer' class='fnname'>with_writer</a>&lt;'b&gt;(&amp;self, w: &amp;'b mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>) -&gt; <a class='struct' href='../handlebars/struct.RenderContext.html' title='handlebars::RenderContext'>RenderContext</a>&lt;'b&gt;</code></h4>
@@ -65,12 +70,13 @@ content is written to.</p>
 <h4 id='method.set_partial' class='method'><code>fn <a href='#method.set_partial' class='fnname'>set_partial</a>(&amp;mut self, name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, result: <a class='struct' href='../handlebars/struct.Template.html' title='handlebars::Template'>Template</a>)</code></h4>
 <h4 id='method.get_path' class='method'><code>fn <a href='#method.get_path' class='fnname'>get_path</a>(&amp;self) -&gt; &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
 <h4 id='method.set_path' class='method'><code>fn <a href='#method.set_path' class='fnname'>set_path</a>(&amp;mut self, path: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>)</code></h4>
-<h4 id='method.set_local_var' class='method'><code>fn <a href='#method.set_local_var' class='fnname'>set_local_var</a>(&amp;mut self, name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, value: <a class='enum' href='../rustc_serialize/json/enum.Json.html' title='rustc_serialize::json::Json'>Json</a>)</code></h4>
+<h4 id='method.set_local_var' class='method'><code>fn <a href='#method.set_local_var' class='fnname'>set_local_var</a>(&amp;mut self, name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, value: <a class='enum' href='../serialize/json/enum.Json.html' title='serialize::json::Json'>Json</a>)</code></h4>
 <h4 id='method.clear_local_vars' class='method'><code>fn <a href='#method.clear_local_vars' class='fnname'>clear_local_vars</a>(&amp;mut self)</code></h4>
 <h4 id='method.promote_local_vars' class='method'><code>fn <a href='#method.promote_local_vars' class='fnname'>promote_local_vars</a>(&amp;mut self)</code></h4>
 <h4 id='method.demote_local_vars' class='method'><code>fn <a href='#method.demote_local_vars' class='fnname'>demote_local_vars</a>(&amp;mut self)</code></h4>
-<h4 id='method.get_local_var' class='method'><code>fn <a href='#method.get_local_var' class='fnname'>get_local_var</a>(&amp;self, name: &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>) -&gt; &amp;<a class='enum' href='../rustc_serialize/json/enum.Json.html' title='rustc_serialize::json::Json'>Json</a></code></h4>
+<h4 id='method.get_local_var' class='method'><code>fn <a href='#method.get_local_var' class='fnname'>get_local_var</a>(&amp;self, name: &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>) -&gt; &amp;<a class='enum' href='../serialize/json/enum.Json.html' title='serialize::json::Json'>Json</a></code></h4>
 <h4 id='method.writer' class='method'><code>fn <a href='#method.writer' class='fnname'>writer</a>(&amp;mut self) -&gt; &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a></code></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../handlebars/struct.RenderContext.html' title='handlebars::RenderContext'>RenderContext</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html' title='core::fmt::Error'>Error</a>&gt;</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -130,6 +136,6 @@ content is written to.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script defer src="../search-index.js"></script>
+    <script async src="../search-index.js"></script>
 </body>
 </html>

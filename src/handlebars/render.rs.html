@@ -4,12 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/handlebars-0.11.2/src/render.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/handlebars-0.12.0/src/render.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>render.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
@@ -513,12 +512,35 @@
 <span id="470">470</span>
 <span id="471">471</span>
 <span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>HashMap</span>, <span class='ident'>BTreeMap</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>IOError</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>json</span>::<span class='ident'>Json</span>;
 
 <span class='kw'>use</span> <span class='ident'>template</span>::{<span class='ident'>Template</span>, <span class='ident'>TemplateElement</span>, <span class='ident'>Parameter</span>, <span class='ident'>HelperTemplate</span>};
@@ -527,9 +549,9 @@
 <span class='kw'>use</span> <span class='ident'>context</span>::{<span class='ident'>Context</span>, <span class='ident'>JsonRender</span>};
 <span class='kw'>use</span> <span class='ident'>support</span>::<span class='ident'>str</span>::<span class='ident'>StringWriter</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RenderError</span> {
-    <span class='kw'>pub</span> <span class='ident'>desc</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>
+    <span class='kw'>pub</span> <span class='ident'>desc</span>: <span class='ident'>String</span>
 }
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>RenderError</span> {
@@ -540,13 +562,21 @@
 
 <span class='kw'>impl</span> <span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>RenderError</span> {
     <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='self'>self</span>.<span class='ident'>desc</span>
+        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>desc</span>[..]
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>IOError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>RenderError</span> {
     <span class='kw'>fn</span> <span class='ident'>from</span>(_: <span class='ident'>IOError</span>) <span class='op'>-&gt;</span> <span class='ident'>RenderError</span> {
-        <span class='ident'>render_error</span>(<span class='string'>&quot;IO Error&quot;</span>)
+        <span class='ident'>RenderError</span>::<span class='ident'>new</span>(<span class='string'>&quot;IO Error&quot;</span>)
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>RenderError</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>desc</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>RenderError</span> {
+        <span class='ident'>RenderError</span> {
+            <span class='ident'>desc</span>: <span class='ident'>desc</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_owned</span>()
+        }
     }
 }
 
@@ -561,7 +591,11 @@
     <span class='ident'>local_variables</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Json</span><span class='op'>&gt;</span>,
     <span class='ident'>default_var</span>: <span class='ident'>Json</span>,
     <span class='doccomment'>/// the `Write` where page is generated</span>
-    <span class='kw'>pub</span> <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Write</span>
+    <span class='kw'>pub</span> <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Write</span>,
+    <span class='doccomment'>/// current template name</span>
+    <span class='kw'>pub</span> <span class='ident'>current_template</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
+    <span class='doccomment'>/// root template name</span>
+    <span class='kw'>pub</span> <span class='ident'>root_template</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>RenderContext</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
@@ -572,7 +606,9 @@
             <span class='ident'>path</span>: <span class='string'>&quot;.&quot;</span>.<span class='ident'>to_string</span>(),
             <span class='ident'>local_variables</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>(),
             <span class='ident'>default_var</span>: <span class='ident'>Json</span>::<span class='ident'>Null</span>,
-            <span class='ident'>writer</span>: <span class='ident'>w</span>
+            <span class='ident'>writer</span>: <span class='ident'>w</span>,
+            <span class='ident'>current_template</span>: <span class='prelude-val'>None</span>,
+            <span class='ident'>root_template</span>: <span class='prelude-val'>None</span>
         }
     }
 
@@ -583,7 +619,9 @@
             <span class='ident'>path</span>: <span class='self'>self</span>.<span class='ident'>path</span>.<span class='ident'>clone</span>(),
             <span class='ident'>local_variables</span>: <span class='self'>self</span>.<span class='ident'>local_variables</span>.<span class='ident'>clone</span>(),
             <span class='ident'>default_var</span>: <span class='self'>self</span>.<span class='ident'>default_var</span>.<span class='ident'>clone</span>(),
-            <span class='ident'>writer</span>: <span class='ident'>w</span>
+            <span class='ident'>writer</span>: <span class='ident'>w</span>,
+            <span class='ident'>current_template</span>: <span class='self'>self</span>.<span class='ident'>current_template</span>.<span class='ident'>clone</span>(),
+            <span class='ident'>root_template</span>: <span class='self'>self</span>.<span class='ident'>root_template</span>.<span class='ident'>clone</span>()
         }
     }
 
@@ -653,6 +691,14 @@
         <span class='self'>self</span>.<span class='ident'>writer</span>
     }
 }
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>RenderContext</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>fmt</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;partials: {:?}, path: {:?}, local_variables: {:?}, current_template: {:?}, root_template: {:?}&quot;</span>,
+               <span class='self'>self</span>.<span class='ident'>partials</span>, <span class='self'>self</span>.<span class='ident'>path</span>, <span class='self'>self</span>.<span class='ident'>local_variables</span>, <span class='self'>self</span>.<span class='ident'>current_template</span>, <span class='self'>self</span>.<span class='ident'>root_template</span>)
+    }
+}
+
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Helper</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>String</span>,
@@ -765,18 +811,13 @@
 
 <span class='kw'>impl</span> <span class='ident'>Renderable</span> <span class='kw'>for</span> <span class='ident'>Template</span> {
     <span class='kw'>fn</span> <span class='ident'>render</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='ident'>Context</span>, <span class='ident'>registry</span>: <span class='kw-2'>&amp;</span><span class='ident'>Registry</span>, <span class='ident'>rc</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>RenderContext</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>RenderError</span><span class='op'>&gt;</span> {
+        <span class='ident'>rc</span>.<span class='ident'>current_template</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>clone</span>();
         <span class='kw'>let</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>elements</span>.<span class='ident'>iter</span>();
         <span class='kw'>for</span> <span class='ident'>t</span> <span class='kw'>in</span> <span class='ident'>iter</span> {
             <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>ctx</span>;
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>render</span>(<span class='ident'>c</span>, <span class='ident'>registry</span>, <span class='ident'>rc</span>))
         }
         <span class='prelude-val'>Ok</span>(())
-    }
-}
-
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>render_error</span>(<span class='ident'>desc</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>RenderError</span> {
-    <span class='ident'>RenderError</span> {
-        <span class='ident'>desc</span>: <span class='ident'>desc</span>
     }
 }
 
@@ -835,7 +876,7 @@
                             }
                             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
                                 <span class='prelude-val'>Err</span>(<span class='ident'>RenderError</span>{
-                                    <span class='ident'>desc</span>: <span class='string'>&quot;Helper not defined.&quot;</span>
+                                    <span class='ident'>desc</span>: <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Helper not defined: {:?}&quot;</span>, <span class='ident'>ht</span>.<span class='ident'>name</span>)
                                 })
                             }
                         }
@@ -922,7 +963,8 @@
         <span class='ident'>elements</span>.<span class='ident'>push</span>(<span class='ident'>e4</span>);
 
         <span class='kw'>let</span> <span class='ident'>template</span> <span class='op'>=</span> <span class='ident'>Template</span> {
-            <span class='ident'>elements</span>: <span class='ident'>elements</span>
+            <span class='ident'>elements</span>: <span class='ident'>elements</span>,
+            <span class='ident'>name</span>: <span class='prelude-val'>None</span>
         };
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
@@ -966,14 +1008,15 @@
         <span class='kw'>let</span> <span class='ident'>e1</span> <span class='op'>=</span> <span class='ident'>RawString</span>(<span class='string'>&quot;&lt;h1&gt;&quot;</span>.<span class='ident'>to_string</span>());
         <span class='ident'>elements</span>.<span class='ident'>push</span>(<span class='ident'>e1</span>);
 
-        <span class='kw'>let</span> <span class='ident'>e2</span> <span class='op'>=</span> <span class='ident'>Expression</span>(<span class='ident'>Parameter</span>::<span class='ident'>parse</span>(<span class='string'>&quot;(hello)&quot;</span>.<span class='ident'>into</span>()).<span class='ident'>ok</span>().<span class='ident'>unwrap</span>());
+        <span class='kw'>let</span> <span class='ident'>e2</span> <span class='op'>=</span> <span class='ident'>Expression</span>(<span class='ident'>Parameter</span>::<span class='ident'>parse</span>(<span class='string'>&quot;(hello)&quot;</span>).<span class='ident'>ok</span>().<span class='ident'>unwrap</span>());
         <span class='ident'>elements</span>.<span class='ident'>push</span>(<span class='ident'>e2</span>);
 
         <span class='kw'>let</span> <span class='ident'>e3</span> <span class='op'>=</span> <span class='ident'>RawString</span>(<span class='string'>&quot;&lt;/h1&gt;&quot;</span>.<span class='ident'>to_string</span>());
         <span class='ident'>elements</span>.<span class='ident'>push</span>(<span class='ident'>e3</span>);
 
         <span class='kw'>let</span> <span class='ident'>template</span> <span class='op'>=</span> <span class='ident'>Template</span> {
-            <span class='ident'>elements</span>: <span class='ident'>elements</span>
+            <span class='ident'>elements</span>: <span class='ident'>elements</span>,
+            <span class='ident'>name</span>: <span class='prelude-val'>None</span>
         };
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
@@ -1046,6 +1089,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script async src="../../search-index.js"></script>
 </body>
 </html>
