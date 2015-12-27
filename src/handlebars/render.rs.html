@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/handlebars-0.12.0/src/render.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/handlebars-0.12.1/src/render.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>render.rs.html -- source</title>
@@ -534,14 +534,12 @@
 <span id="491">491</span>
 <span id="492">492</span>
 <span id="493">493</span>
-<span id="494">494</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>HashMap</span>, <span class='ident'>BTreeMap</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>IOError</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>json</span>::<span class='ident'>Json</span>;
 
 <span class='kw'>use</span> <span class='ident'>template</span>::{<span class='ident'>Template</span>, <span class='ident'>TemplateElement</span>, <span class='ident'>Parameter</span>, <span class='ident'>HelperTemplate</span>};
@@ -594,9 +592,9 @@
     <span class='doccomment'>/// the `Write` where page is generated</span>
     <span class='kw'>pub</span> <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Write</span>,
     <span class='doccomment'>/// current template name</span>
-    <span class='kw'>pub</span> <span class='ident'>current_template</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>current_template</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// root template name</span>
-    <span class='kw'>pub</span> <span class='ident'>root_template</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>
+    <span class='kw'>pub</span> <span class='ident'>root_template</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>RenderContext</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {

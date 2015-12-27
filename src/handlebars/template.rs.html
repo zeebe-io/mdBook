@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/handlebars-0.12.0/src/template.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/handlebars-0.12.1/src/template.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>template.rs.html -- source</title>
@@ -681,14 +681,12 @@
 <span id="638">638</span>
 <span id="639">639</span>
 <span id="640">640</span>
-<span id="641">641</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>min</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>BitOr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::{<span class='self'>self</span>, <span class='ident'>Display</span>, <span class='ident'>Formatter</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>BTreeMap</span>, <span class='ident'>VecDeque</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>string</span>::<span class='ident'>ToString</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>num</span>::<span class='ident'>FromPrimitive</span>;
 <span class='kw'>use</span> <span class='ident'>regex</span>::<span class='ident'>Regex</span>;
 
@@ -701,7 +699,7 @@
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Template</span> {
-    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
     <span class='kw'>pub</span> <span class='ident'>elements</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>TemplateElement</span><span class='op'>&gt;</span>
 }
 
@@ -1106,7 +1104,7 @@
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>compile_with_name</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>source</span>: <span class='ident'>S</span>, <span class='ident'>name</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Template</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='ident'>source</span>));
-        <span class='ident'>t</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>new</span>(<span class='ident'>name</span>));
+        <span class='ident'>t</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>name</span>);
         <span class='prelude-val'>Ok</span>(<span class='ident'>t</span>)
     }
 }
