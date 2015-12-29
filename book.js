@@ -8,7 +8,7 @@ $( document ).ready(function() {
 
     // Set theme
     var theme = localStorage.getItem('theme');
-    if (theme == null) { theme = 'light'; }
+    if (theme === null) { theme = 'light'; }
 
     set_theme(theme);
 
@@ -93,7 +93,7 @@ $( document ).ready(function() {
             $('.theme').click(function(){
                 var theme = $(this).attr('id');
 
-                set_theme(theme)
+                set_theme(theme);
             });
         }
 
@@ -112,4 +112,54 @@ $( document ).ready(function() {
 
         $('body').removeClass().addClass(theme);
     }
+
+
+    // Hide Rust code lines prepended with a specific character
+    var hiding_character = "#";
+
+    $("code.language-rust").each(function(i, block){
+
+        // hide lines
+        var lines = $(this).html().split("\n");
+        var first_non_hidden_line = false;
+        var lines_hidden = false;
+
+        for(var n = 0; n < lines.length; n++){
+            if($.trim(lines[n])[0] == hiding_character){
+                if(first_non_hidden_line){
+                    lines[n] = "<span class=\"hidden\">" + "\n" + lines[n].substr(1) + "</span>";
+                }
+                else {
+                    lines[n] = "<span class=\"hidden\">" + lines[n].substr(1) + "\n"  +  "</span>";
+                }
+                lines_hidden = true;
+            }
+            else if(first_non_hidden_line) {
+                lines[n] = "\n" + lines[n];
+            }
+            else {
+                first_non_hidden_line = true;
+            }
+        }
+        $(this).html(lines.join(""));
+
+        // If no lines were hidden, return
+        if(!lines_hidden) { return; }
+
+        // add expand button
+        $(this).parent().prepend("<i class=\"fa fa-expand\"></i>");
+
+        $(this).parent().find("i").click(function(e){
+            if( $(this).hasClass("fa-expand") ) {
+                $(this).removeClass("fa-expand").addClass("fa-compress");
+                $(this).parent().find("span.hidden").removeClass("hidden").addClass("unhidden");
+            }
+            else {
+                $(this).removeClass("fa-compress").addClass("fa-expand");
+                $(this).parent().find("span.unhidden").removeClass("unhidden").addClass("hidden");
+            }
+        });
+    });
+
+
 });
