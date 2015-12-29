@@ -269,10 +269,30 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
 </pre><pre class='rust '>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pulldown_cmark</span>;
+
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>PathBuf</span>, <span class='ident'>Component</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::{<span class='self'>self</span>, <span class='ident'>metadata</span>, <span class='ident'>File</span>};
+
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>pulldown_cmark</span>::{<span class='ident'>Parser</span>, <span class='ident'>html</span>};
 
 <span class='doccomment'>/// This is copied from the rust source code until Path_ Ext stabilizes.</span>
 <span class='doccomment'>/// You can use it, but be aware that it will be removed when those features go to rust stable</span>
@@ -403,7 +423,7 @@
     <span class='prelude-val'>Ok</span>(())
 }
 
-<span class='doccomment'>/// **Untested!**</span>
+<span class='doccomment'>///</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Copies all files of a directory to another one except the files with the extensions given in the</span>
 <span class='doccomment'>/// `ext_blacklist` array</span>
@@ -447,6 +467,18 @@
         }
     }
     <span class='prelude-val'>Ok</span>(())
+}
+
+
+<span class='doccomment'>///</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Wrapper around the pulldown-cmark parser and renderer to render markdown</span>
+
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>render_markdown</span>(<span class='ident'>text</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>with_capacity</span>(<span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>*</span> <span class='number'>3</span> <span class='op'>/</span> <span class='number'>2</span>);
+    <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>text</span>);
+    <span class='ident'>html</span>::<span class='ident'>push_html</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>s</span>, <span class='ident'>p</span>);
+    <span class='ident'>s</span>
 }
 
 
