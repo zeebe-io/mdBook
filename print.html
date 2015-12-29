@@ -45,7 +45,7 @@
         </script>
 
         <div id="sidebar" class="sidebar">
-            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
+            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
         </div>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -82,19 +82,19 @@ Let's focus on the command line tool capabilities first.</p>
 this is made very easy with Cargo.</p>
 <p>If you haven't already, you should begin by installing <a href="https://www.rust-lang.org/install.html">Rust</a> and <a href="https://git-scm.com/downloads">Git</a></p>
 <p>Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
-<pre><code>git clone --depth=1 https://github.com/azerupi/mdBook.git
+<pre><code class="language-bash">git clone --depth=1 https://github.com/azerupi/mdBook.git
 cd mdBook
 cargo build --release
 </code></pre>
 <p>The executable <code>mdbook</code> will be in the <code>./target/release</code> folder, this should be added to the path.</p>
 <h1>The init command</h1>
 <p>The <code>init</code> command is used like this:</p>
-<pre><code>mdbook init
+<pre><code class="language-bash">mdbook init
 </code></pre>
 <p>It will create a couple of files and directories in the working directory so that you can
 spend more time writing your book and less setting it up.</p>
 <p>The files set up for you are the following:</p>
-<pre><code>book-test/
+<pre><code class="language-text">book-test/
 ├── book
 └── src
     ├── chapter_1.md
@@ -109,7 +109,7 @@ to a server to be seen by the internet.</p>
 <h4>Specify a directory</h4>
 <p>When using the <code>init</code> command, you can also specify a directory, instead of using the current working directory,
 by appending a path to the command:</p>
-<pre><code>mdbook init path/to/book
+<pre><code class="language-bash">mdbook init path/to/book
 </code></pre>
 <h2>--theme</h2>
 <p>When you use the <code>--theme</code> argument, the default theme will be copied into a directory
@@ -118,7 +118,7 @@ called <code>theme</code> in your source directory so that you can modify it.</p
 specific file, just delete it and the default file will be used.</p>
 <h1>The build command</h1>
 <p>The build command is used to render your book:</p>
-<pre><code>mdbook build
+<pre><code class="language-bash">mdbook build
 </code></pre>
 <p>It will try to parse your <code>SUMMARY.md</code> file to understand the structure of your book
 and fetch the corresponding files.</p>
@@ -127,7 +127,7 @@ convenience. Large books will therefore remain structured when rendered.</p>
 <h4>Specify a directory</h4>
 <p>Like <code>init</code>, the <code>build</code> command can take a directory as argument to use instead of the
 current working directory.</p>
-<pre><code>mdbook build path/to/book
+<pre><code class="language-bash">mdbook build path/to/book
 </code></pre>
 <hr />
 <p><strong><em>note:</em></strong> <em>make sure to run the build command in the root directory and not in the source directory</em></p>
@@ -137,7 +137,13 @@ You could issue <code>mdbook build</code> everytime you change a file. But using
 <h4>Specify a directory</h4>
 <p>Like <code>init</code> and <code>build</code>, <code>watch</code> can take a directory as argument to use instead of the
 current working directory.</p>
-<pre><code>mdbook watch path/to/book
+<pre><code class="language-bash">mdbook watch path/to/book
+</code></pre>
+<h1>The test command</h1>
+<p>It’s nice to be able to ensure that examples in documentation are current.
+mdBook supports a ‘test’ command, which will use Rustdoc to test out examples:</p>
+<pre><code class="language-bash">$ mdbook test
+[*]: Testing file: &quot;/mdBook/book-example/src/README.md”
 </code></pre>
 <h1>Format</h1>
 <p>In this section you will learn how to:</p>
@@ -315,7 +321,7 @@ rename it to <code>highlight.css</code> and put it in <code>src/theme</code> (or
 <h1>Rust Library</h1>
 <p>mdBook is not only a command line tool, it can be used as a crate. You can extend it,
 integrate it in current projects. Here is a short example:</p>
-<pre><code class="language-rust">extern crate mdbook;
+<pre><code class="language-rust,ignore">extern crate mdbook;
 
 use mdbook::MDBook;
 use std::path::Path;
