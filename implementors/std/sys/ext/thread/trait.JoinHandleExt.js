@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['handlebars'] = [];
+implementors['mio'] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
