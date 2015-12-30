@@ -45,7 +45,7 @@
         </script>
 
         <div id="sidebar" class="sidebar">
-            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html" class="active"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
+            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html" class="active"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
         </div>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -66,24 +66,32 @@
 
                 <div id="content" class="content">
                     <h1>The init command</h1>
+<p>There is some minimal boilerplate that is the same for every new book. It's for this purpose that mdBook includes an <code>init</code> command.</p>
 <p>The <code>init</code> command is used like this:</p>
 <pre><code class="language-bash">mdbook init
 </code></pre>
-<p>It will create a couple of files and directories in the working directory so that you can
-spend more time writing your book and less setting it up.</p>
-<p>The files set up for you are the following:</p>
-<pre><code class="language-text">book-test/
+<p>When using the <code>init</code> command for the first time, a couple of files will be set up for you:</p>
+<pre><code class="language-bash">book-test/
 ├── book
 └── src
     ├── chapter_1.md
     └── SUMMARY.md
 </code></pre>
+<ul>
+<li>
 <p>The <code>src</code> directory is were you write your book in markdown. It contains all the source files,
 configuration files, etc.</p>
+</li>
+<li>
 <p>The <code>book</code> directory is where your book is rendered. All the output is ready to be uploaded
-to a server to be seen by the internet.</p>
+to a server to be seen by your audience.</p>
+</li>
+<li>
 <p>The <code>SUMMARY.md</code> file is the most important file, it's the skeleton of your book and is discussed in more detail in another  <a href="../format/summary.html">chapter</a>.</p>
-<p>When a <code>SUMMARY.md</code> file already exists, the <code>init</code> command will generate the files according to the paths used in the <code>SUMMARY.md</code></p>
+</li>
+</ul>
+<h4>Tip &amp; Trick: Hidden Feature</h4>
+<p>When a <code>SUMMARY.md</code> file already exists, the <code>init</code> command will first parse it and generate the missing files according to the paths used in the <code>SUMMARY.md</code>. This allows you to think and create the whole structure of your book and then let mdBook generate it for you.</p>
 <h4>Specify a directory</h4>
 <p>When using the <code>init</code> command, you can also specify a directory, instead of using the current working directory,
 by appending a path to the command:</p>

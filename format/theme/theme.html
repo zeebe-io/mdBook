@@ -45,7 +45,7 @@
         </script>
 
         <div id="sidebar" class="sidebar">
-            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html" class="active"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
+            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html" class="active"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
         </div>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -66,12 +66,12 @@
 
                 <div id="content" class="content">
                     <h1>Theme</h1>
-<p>The default renderer uses a <a href="http://handlebarsjs.com/">handlebars</a> template to render your markdown files in and comes with a default theme
+<p>The default renderer uses a <a href="http://handlebarsjs.com/">handlebars</a> template to render your markdown files and comes with a default theme
 included in the mdBook binary.</p>
-<p>But the theme is totally customizable, you can replace every file from the theme by your own by adding a
-<code>theme</code> directory in your source folder. Create a new file with the name of the file you want to overwrite
+<p>The theme is totally customizable, you can selectively replace every file from the theme by your own by adding a
+<code>theme</code> directory in your source folder. Create a new file with the name of the file you want to override
 and now that file will be used instead of the default file.</p>
-<p>Here are the files you can overwrite:</p>
+<p>Here are the files you can override:</p>
 <ul>
 <li><strong><em>index.hbs</em></strong> is the handlebars template.</li>
 <li><strong><em>book.css</em></strong> is the style used in the output. If you want to change the design of your book, this is probably the file you want to modify. Sometimes in conjunction with <code>index.hbs</code> when you want to radically change the layout.</li>
@@ -79,7 +79,9 @@ and now that file will be used instead of the default file.</p>
 <li><strong><em>highlight.js</em></strong> is the JavaScript that is used to highlight code snippets, you should not need to modify this.</li>
 <li><strong><em>highlight.css</em></strong> is the theme used for the code highlighting</li>
 </ul>
-<p><strong><em>Note:</em></strong> <em>When you overwrite a file, it is possible that you break some functionality. Therefore I recommend to use the file from the default theme as template and only add / modify what you need. You can copy the default theme into your source directory automatically by using <code>mdbook init --theme</code>.</em></p>
+<p>Generally, when you want to tweak the theme, you don't need to override all the files. If you only need changes in the stylesheet,
+there is no point in overriding all the other files. Because custom files take precedence over built-in ones, they will not get updated with new fixes / features.</p>
+<p><strong>Note:</strong> When you override a file, it is possible that you break some functionality. Therefore I recommend to use the file from the default theme as template and only add / modify what you need. You can copy the default theme into your source directory automatically by using <code>mdbook init --theme</code> just remove the files you don't want to override.</p>
 
                 </div>
 

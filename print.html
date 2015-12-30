@@ -45,7 +45,7 @@
         </script>
 
         <div id="sidebar" class="sidebar">
-            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
+            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
         </div>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -78,34 +78,48 @@ to use mdBook as a crate or write a new renderer and need a more low-level overv
 <p>mdBook can be used either as a command line tool or a <a href="https://crates.io/crates/mdbook">Rust crate</a>.
 Let's focus on the command line tool capabilities first.</p>
 <h2>Install</h2>
-<p>At the moment, the only way to install mdBook is by downloading the source code from Github and building it yourself. Fortunately
-this is made very easy with Cargo.</p>
-<p>If you haven't already, you should begin by installing <a href="https://www.rust-lang.org/install.html">Rust</a> and <a href="https://git-scm.com/downloads">Git</a></p>
-<p>Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
+<h3>Pre-requisite</h3>
+<p>mdBook is written in <strong><a href="https://www.rust-lang.org/">Rust</a></strong> and therefore needs to be compiled with <strong>Cargo</strong>, because we don't yet offer ready-to-go binaries. If you haven't already installed Rust, please go ahead and <a href="https://www.rust-lang.org/downloads.html">install it</a> now.</p>
+<h3>Install Crates.io version</h3>
+<p>Installing mdBook is relatively easy if you already have Rust and Cargo installed. You just have to type this snippet in your terminal:</p>
+<pre><code class="language-bash">cargo install mdbook
+</code></pre>
+<p>This will fetch the source code from <a href="https://crates.io/">Crates.io</a> and compile it. You will have to add Cargo's <code>bin</code> directory to your <code>PATH</code>.</p>
+<p>Run <code>mdbook help</code> in your terminal to verify if it works. Congratulations, you have installed mdBook!</p>
+<h3>Install Git version</h3>
+<p>The <strong><a href="https://github.com/azerupi/mdBook">git version</a></strong> contains all the latest bug-fixes and features, that will be released in the next version on <strong>Crates.io</strong>, if you can't wait until the next release. You can build the git version yourself. Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
 <pre><code class="language-bash">git clone --depth=1 https://github.com/azerupi/mdBook.git
 cd mdBook
 cargo build --release
 </code></pre>
 <p>The executable <code>mdbook</code> will be in the <code>./target/release</code> folder, this should be added to the path.</p>
 <h1>The init command</h1>
+<p>There is some minimal boilerplate that is the same for every new book. It's for this purpose that mdBook includes an <code>init</code> command.</p>
 <p>The <code>init</code> command is used like this:</p>
 <pre><code class="language-bash">mdbook init
 </code></pre>
-<p>It will create a couple of files and directories in the working directory so that you can
-spend more time writing your book and less setting it up.</p>
-<p>The files set up for you are the following:</p>
-<pre><code class="language-text">book-test/
+<p>When using the <code>init</code> command for the first time, a couple of files will be set up for you:</p>
+<pre><code class="language-bash">book-test/
 ├── book
 └── src
     ├── chapter_1.md
     └── SUMMARY.md
 </code></pre>
+<ul>
+<li>
 <p>The <code>src</code> directory is were you write your book in markdown. It contains all the source files,
 configuration files, etc.</p>
+</li>
+<li>
 <p>The <code>book</code> directory is where your book is rendered. All the output is ready to be uploaded
-to a server to be seen by the internet.</p>
+to a server to be seen by your audience.</p>
+</li>
+<li>
 <p>The <code>SUMMARY.md</code> file is the most important file, it's the skeleton of your book and is discussed in more detail in another  <a href="../format/summary.html">chapter</a>.</p>
-<p>When a <code>SUMMARY.md</code> file already exists, the <code>init</code> command will generate the files according to the paths used in the <code>SUMMARY.md</code></p>
+</li>
+</ul>
+<h4>Tip &amp; Trick: Hidden Feature</h4>
+<p>When a <code>SUMMARY.md</code> file already exists, the <code>init</code> command will first parse it and generate the missing files according to the paths used in the <code>SUMMARY.md</code>. This allows you to think and create the whole structure of your book and then let mdBook generate it for you.</p>
 <h4>Specify a directory</h4>
 <p>When using the <code>init</code> command, you can also specify a directory, instead of using the current working directory,
 by appending a path to the command:</p>
@@ -132,16 +146,27 @@ current working directory.</p>
 <hr />
 <p><strong><em>note:</em></strong> <em>make sure to run the build command in the root directory and not in the source directory</em></p>
 <h1>The watch command</h1>
-<p>The watch command is useful when you want your book to be rendered on every file change.
-You could issue <code>mdbook build</code> everytime you change a file. But using <code>mdbook watch</code> once will watch your files and will trigger a build whenever you modify a file.</p>
+<p>The <code>watch</code> command is useful when you want your book to be rendered on every file change.
+You could repeatedly issue <code>mdbook build</code> every time a file is changed. But using <code>mdbook watch</code> once will watch your files and will trigger a build automatically whenever you modify a file.</p>
 <h4>Specify a directory</h4>
 <p>Like <code>init</code> and <code>build</code>, <code>watch</code> can take a directory as argument to use instead of the
 current working directory.</p>
 <pre><code class="language-bash">mdbook watch path/to/book
 </code></pre>
+<hr />
+<p><strong><em>note:</em></strong> <em>the <code>watch</code> command has not gotten a lot of testing yet, there could be some rough edges. If you discover a problem, please report it <a href="https://github.com/azerupi/mdBook/issues">on Github</a></em></p>
 <h1>The test command</h1>
-<p>It’s nice to be able to ensure that examples in documentation are current.
-mdBook supports a ‘test’ command, which will use Rustdoc to test out examples:</p>
+<p>When writing a book, you sometimes need to automate some tests. For example, <a href="https://doc.rust-lang.org/stable/book/">The Rust Programming Book</a> uses a lot of code examples that could get outdated.
+Therefore it is very important for them to be able to automatically test these code examples.</p>
+<p>mdBook supports a <code>test</code> command that will run all available tests in mdBook. At the moment, only one test is available:
+<em>&quot;Test Rust code examples using Rustdoc&quot;</em>, but I hope this will be expanded in the future to include more tests like:</p>
+<ul>
+<li>checking for broken links</li>
+<li>checking for unused files</li>
+<li>...</li>
+</ul>
+<p>In the future I would like the user to be able to enable / disable test from the <code>book.json</code> configuration file and support custom tests.</p>
+<p><strong>How to use it:</strong></p>
 <pre><code class="language-bash">$ mdbook test
 [*]: Testing file: &quot;/mdBook/book-example/src/README.md”
 </code></pre>
@@ -202,12 +227,12 @@ resulting in a nice hierarchy (chapters, sub-chapters, etc.)</p>
 </ul>
 <p><strong><em>note:</em></strong> <em>the supported configurable parameters are scarce at the moment, but more will be added in the future</em></p>
 <h1>Theme</h1>
-<p>The default renderer uses a <a href="http://handlebarsjs.com/">handlebars</a> template to render your markdown files in and comes with a default theme
+<p>The default renderer uses a <a href="http://handlebarsjs.com/">handlebars</a> template to render your markdown files and comes with a default theme
 included in the mdBook binary.</p>
-<p>But the theme is totally customizable, you can replace every file from the theme by your own by adding a
-<code>theme</code> directory in your source folder. Create a new file with the name of the file you want to overwrite
+<p>The theme is totally customizable, you can selectively replace every file from the theme by your own by adding a
+<code>theme</code> directory in your source folder. Create a new file with the name of the file you want to override
 and now that file will be used instead of the default file.</p>
-<p>Here are the files you can overwrite:</p>
+<p>Here are the files you can override:</p>
 <ul>
 <li><strong><em>index.hbs</em></strong> is the handlebars template.</li>
 <li><strong><em>book.css</em></strong> is the style used in the output. If you want to change the design of your book, this is probably the file you want to modify. Sometimes in conjunction with <code>index.hbs</code> when you want to radically change the layout.</li>
@@ -215,7 +240,9 @@ and now that file will be used instead of the default file.</p>
 <li><strong><em>highlight.js</em></strong> is the JavaScript that is used to highlight code snippets, you should not need to modify this.</li>
 <li><strong><em>highlight.css</em></strong> is the theme used for the code highlighting</li>
 </ul>
-<p><strong><em>Note:</em></strong> <em>When you overwrite a file, it is possible that you break some functionality. Therefore I recommend to use the file from the default theme as template and only add / modify what you need. You can copy the default theme into your source directory automatically by using <code>mdbook init --theme</code>.</em></p>
+<p>Generally, when you want to tweak the theme, you don't need to override all the files. If you only need changes in the stylesheet,
+there is no point in overriding all the other files. Because custom files take precedence over built-in ones, they will not get updated with new fixes / features.</p>
+<p><strong>Note:</strong> When you override a file, it is possible that you break some functionality. Therefore I recommend to use the file from the default theme as template and only add / modify what you need. You can copy the default theme into your source directory automatically by using <code>mdbook init --theme</code> just remove the files you don't want to override.</p>
 <h1>index.hbs</h1>
 <p><code>index.hbs</code> is the handlebars template that is used to render the book.
 The markdown files are processed to html and then injected in that template.</p>
@@ -299,25 +326,54 @@ and I will consider it.</em></p>
 <p>For syntax highlighting I use <a href="https://highlightjs.org">Highlight.js</a> with a custom theme.</p>
 <p>Automatic language detection has been turned off, so you will probably want to
 specify the programming language you use like this</p>
-<pre class="language-markdown"><code class="language-markdown">```rust
+<pre><code class="language-markdown">```rust
 fn main() {
     // Some code
 }
 ```</code></pre>
-<h2>Improve default theme</h2>
-<p>If you think the default theme doesn't look quite right for a specific language, or could be improved.
-Feel free to <a href="https://github.com/azerupi/mdBook/issues">submit a new issue</a> explaining what you have in mind and I will take a look at it.</p>
-<p>You could also create a pull-request with the proposed improvements.</p>
-<p>Overall the theme should be light and sober, without to many flashy colors.</p>
 <h2>Custom theme</h2>
-<p>Like the rest of the theme, the files used for syntax highlighting can be overwritten with your own.</p>
+<p>Like the rest of the theme, the files used for syntax highlighting can be overridden with your own.</p>
 <ul>
-<li><strong><em>highlight.js</em></strong> normally you shouldn't have to overwrite this file. But if you need to, you can.</li>
+<li><strong><em>highlight.js</em></strong> normally you shouldn't have to overwrite this file, unless you want to use a more recent version.</li>
 <li><strong><em>highlight.css</em></strong> theme used by highlight.js for syntax highlighting.</li>
 </ul>
 <p>If you want to use another theme for <code>highlight.js</code> download it from their website, or make it yourself,
 rename it to <code>highlight.css</code> and put it in <code>src/theme</code> (or the equivalent if you changed your source folder)</p>
 <p>Now your theme will be used instead of the default theme.</p>
+<h2>Hiding code lines</h2>
+<p>There is a feature in mdBook that let's you hide code lines by prepending them with a <code>#</code>.</p>
+<pre><code class="language-bash">#fn main() {
+    let x = 5;
+    let y = 6;
+
+    println!(&quot;{}&quot;, x + y);
+#}
+</code></pre>
+<p>Will render as</p>
+<pre><code class="language-rust">#fn main() {
+    let x = 5;
+    let y = 7;
+
+    println!(&quot;{}&quot;, x + y);
+#}
+</code></pre>
+<p><strong>At the moment, this only works for code examples that are annotated with <code>rust</code>. Because it would collide with semantics of some programming languages. In the future, we want to make this configurable through the <code>book.json</code> so that everyone can benefit from it.</strong></p>
+<h2>Improve default theme</h2>
+<p>If you think the default theme doesn't look quite right for a specific language, or could be improved.
+Feel free to <a href="https://github.com/azerupi/mdBook/issues">submit a new issue</a> explaining what you have in mind and I will take a look at it.</p>
+<p>You could also create a pull-request with the proposed improvements.</p>
+<p>Overall the theme should be light and sober, without to many flashy colors.</p>
+<h1>MathJax Support</h1>
+<p>mdBook supports math equations through <a href="https://www.mathjax.org/">MathJax</a>.</p>
+<p><strong>However the normal method for indication math equations with <code>$$</code> does not work (yet?).</strong></p>
+<p>To indicate an inline equation \( \int x = \frac{x^2}{2} \) use</p>
+<pre><code>\\( \int x = \frac{x^2}{2} \\)
+</code></pre>
+<p>To indicate a block equation</p>
+<p>\[ \mu = \frac{1}{N} \sum_{i=0} x_i \]</p>
+<p>use</p>
+<pre><code>\\[ \mu = \frac{1}{N} \sum_{i=0} x_i \\]
+</code></pre>
 <h1>Rust Library</h1>
 <p>mdBook is not only a command line tool, it can be used as a crate. You can extend it,
 integrate it in current projects. Here is a short example:</p>

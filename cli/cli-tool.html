@@ -45,7 +45,7 @@
         </script>
 
         <div id="sidebar" class="sidebar">
-            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html" class="active"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
+            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html" class="active"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
         </div>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -69,10 +69,16 @@
 <p>mdBook can be used either as a command line tool or a <a href="https://crates.io/crates/mdbook">Rust crate</a>.
 Let's focus on the command line tool capabilities first.</p>
 <h2>Install</h2>
-<p>At the moment, the only way to install mdBook is by downloading the source code from Github and building it yourself. Fortunately
-this is made very easy with Cargo.</p>
-<p>If you haven't already, you should begin by installing <a href="https://www.rust-lang.org/install.html">Rust</a> and <a href="https://git-scm.com/downloads">Git</a></p>
-<p>Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
+<h3>Pre-requisite</h3>
+<p>mdBook is written in <strong><a href="https://www.rust-lang.org/">Rust</a></strong> and therefore needs to be compiled with <strong>Cargo</strong>, because we don't yet offer ready-to-go binaries. If you haven't already installed Rust, please go ahead and <a href="https://www.rust-lang.org/downloads.html">install it</a> now.</p>
+<h3>Install Crates.io version</h3>
+<p>Installing mdBook is relatively easy if you already have Rust and Cargo installed. You just have to type this snippet in your terminal:</p>
+<pre><code class="language-bash">cargo install mdbook
+</code></pre>
+<p>This will fetch the source code from <a href="https://crates.io/">Crates.io</a> and compile it. You will have to add Cargo's <code>bin</code> directory to your <code>PATH</code>.</p>
+<p>Run <code>mdbook help</code> in your terminal to verify if it works. Congratulations, you have installed mdBook!</p>
+<h3>Install Git version</h3>
+<p>The <strong><a href="https://github.com/azerupi/mdBook">git version</a></strong> contains all the latest bug-fixes and features, that will be released in the next version on <strong>Crates.io</strong>, if you can't wait until the next release. You can build the git version yourself. Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
 <pre><code class="language-bash">git clone --depth=1 https://github.com/azerupi/mdBook.git
 cd mdBook
 cargo build --release
