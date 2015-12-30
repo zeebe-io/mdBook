@@ -9,6 +9,7 @@
 
     <title>quick_error::quick_error! - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
 
     
@@ -50,43 +51,10 @@
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>quick_error</span> {
     (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
         <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>]</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [] <span class='ident'>items</span> [] <span class='ident'>buf</span> []
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>)<span class='op'>*</span> ]);
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
         <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>]</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [] <span class='ident'>items</span> [] <span class='ident'>buf</span> []
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>)<span class='op'>*</span> ]);
-    };
-<span class='comment'>/*
-macro_rules! sort {
-    ({ $( $(#[$meta:meta])* =&gt; $item:ident )* }
-     { $(#[$bufmeta:meta])* }
-     { #[$nextmeta:meta] $($tail:tt)* }) =&gt; {
-     sort!({ $( $(#[$meta])* =&gt; $item )* } { $(#[$bufmeta])* #[$nextmeta] } { $($tail)* });
-    };
-    ({ $( $(#[$meta:meta])* =&gt; $item:ident )* }
-     { $(#[$bufmeta:meta])* }
-     { $name:ident $($tail:tt)* }) =&gt; {
-     sort!({ $( $(#[$meta])* =&gt; $item )* $(#[$bufmeta])* =&gt; $name } {} { $($tail)* });
-    };
-    ({ $( $(#[$meta:meta])* =&gt; $item:ident )* } {} {}) =&gt; {
-        #[derive(Debug)]
-        pub enum Test {
-            $(
-                $(#[$meta])*
-                $item,
-            )*
-        }
-    };
-}
-*/</span>
-
-    <span class='comment'>// Queue is empty, can do the work</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span> ]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ) )<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -94,21 +62,7 @@ macro_rules! sort {
                                 { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>:<span class='ident'>tt</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
         <span class='ident'>buf</span> [ ]
         <span class='ident'>queue</span> [ ]
-    ) <span class='op'>=&gt;</span> {
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>]</span>)<span class='op'>*</span>
-        <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-           $(
-               $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span>
-               <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span>,
-           )<span class='op'>*</span>
-        }
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>IMPLEMENTATIONS</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> { $(
-           <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> }
-           )<span class='op'>*</span> });
-        $(
-            <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span>);
-        )<span class='op'>*</span>
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span> ]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ) )<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -116,22 +70,7 @@ macro_rules! sort {
                                 { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>:<span class='ident'>tt</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
         <span class='ident'>buf</span> [ ]
         <span class='ident'>queue</span> [ ]
-    ) <span class='op'>=&gt;</span> {
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>]</span>)<span class='op'>*</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-           $(
-               $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span>
-               <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span>,
-           )<span class='op'>*</span>
-        }
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>IMPLEMENTATIONS</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> { $(
-           <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> }
-           )<span class='op'>*</span> });
-        $(
-            <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span>);
-        )<span class='op'>*</span>
-    };
-    <span class='comment'>// Add meta to buffer</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>:<span class='ident'>tt</span>)<span class='op'>*</span>]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -139,14 +78,7 @@ macro_rules! sort {
                                 { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>:<span class='ident'>tt</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
         <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span> ]
         <span class='ident'>queue</span> [ <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qmeta</span>:<span class='ident'>meta</span>]</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ]
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [$( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span>]
-            <span class='ident'>items</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
-            <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>]</span> )<span class='op'>*</span> <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qmeta</span>]</span> ]
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> ]);
-    };
-    <span class='comment'>// Add ident to buffer</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>:<span class='ident'>tt</span>)<span class='op'>*</span>]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -154,14 +86,7 @@ macro_rules! sort {
                                 { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>:<span class='ident'>tt</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
         <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span> ]
         <span class='ident'>queue</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qitem</span>:<span class='ident'>ident</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ]
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
-            <span class='ident'>items</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
-            <span class='ident'>buf</span> [ $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qitem</span> ]
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> ]);
-    };
-    <span class='comment'>// Flush buffer on meta after ident</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>:<span class='ident'>tt</span>)<span class='op'>*</span>]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -170,16 +95,7 @@ macro_rules! sort {
         <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span>
             <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> ]
         <span class='ident'>queue</span> [ <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qmeta</span>:<span class='ident'>meta</span>]</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ]
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [$( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span>
-                     $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span>]
-            <span class='ident'>items</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> } )<span class='op'>*</span>
-                     <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> {} ]
-            <span class='ident'>buf</span> [ <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qmeta</span>]</span> ]
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> ]);
-    };
-    <span class='comment'>// Add parenthesis</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>:<span class='ident'>tt</span>)<span class='op'>*</span>]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -187,14 +103,7 @@ macro_rules! sort {
                                 { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>:<span class='ident'>tt</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
         <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span>:<span class='ident'>ident</span> ]
         <span class='ident'>queue</span> [ ( $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qtyp</span>:<span class='ident'>ty</span> ),<span class='op'>*</span> ) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ]
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [$( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span>]
-            <span class='ident'>items</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> } )<span class='op'>*</span> ]
-            <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>]</span> )<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> ( $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qvar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qtyp</span> ),<span class='op'>*</span> ) ]
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> ]);
-    };
-    <span class='comment'>// Add braces and flush always on braces</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>:<span class='ident'>tt</span>)<span class='op'>*</span>]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -203,16 +112,7 @@ macro_rules! sort {
         <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span>
                  <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> ]
         <span class='ident'>queue</span> [ { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qfuncs</span>:<span class='ident'>tt</span>)<span class='op'>*</span> } $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ]
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [$( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span>
-                     $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> ]
-            <span class='ident'>items</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> } )<span class='op'>*</span>
-                     <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qfuncs</span>)<span class='op'>*</span> } ]
-            <span class='ident'>buf</span> [ ]
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> ]);
-    };
-    <span class='comment'>// Flush buffer on double ident</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>:<span class='ident'>tt</span>)<span class='op'>*</span>]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -221,16 +121,7 @@ macro_rules! sort {
         <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span>
                  <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> ]
         <span class='ident'>queue</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qitem</span>:<span class='ident'>ident</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ]
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [$( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span>
-                     $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span>]
-            <span class='ident'>items</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> } )<span class='op'>*</span>
-                     <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> {} ]
-            <span class='ident'>buf</span> [ <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>qitem</span> ]
-            <span class='ident'>queue</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> ]);
-    };
-    <span class='comment'>// Flush buffer on end</span>
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>:<span class='ident'>tt</span>)<span class='op'>*</span>]
         <span class='kw'>enum</span> [ $( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
                   <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span> ]
@@ -239,200 +130,77 @@ macro_rules! sort {
         <span class='ident'>buf</span> [ $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span>
             <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span>:<span class='ident'>ident</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ))<span class='op'>*</span> ]
         <span class='ident'>queue</span> [ ]
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>SORT</span> [$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>def</span>)<span class='op'>*</span> ]
-            <span class='kw'>enum</span> [$( $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>emeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>eitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>etyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> )<span class='op'>*</span>
-                     $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bmeta</span>]</span>)<span class='op'>*</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> ]
-            <span class='ident'>items</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>iitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ivar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ityp</span>),<span class='op'>*</span> ))<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ifuncs</span>)<span class='op'>*</span> } )<span class='op'>*</span>
-                     <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bitem</span> $(( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bvar</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>btyp</span>),<span class='op'>*</span> ))<span class='op'>*</span> {} ]
-            <span class='ident'>buf</span> [ ]
-            <span class='ident'>queue</span> [ ]);
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>IMPLEMENTATIONS</span>
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> {
             $(
                 <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span> $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>:<span class='ident'>ty</span>),<span class='op'>*</span> ) )<span class='op'>*</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>funcs</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
             )<span class='op'>*</span>
         }
-    ) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused</span>)]</span>
-        <span class='kw'>impl</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-            <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>)
-                <span class='op'>-&gt;</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span>
-            {
-                <span class='kw'>match</span> <span class='self'>self</span> {
-                    $(
-                        <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> $( ( $(<span class='kw-2'>ref</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>),<span class='op'>*</span> ) )<span class='op'>*</span> <span class='op'>=&gt;</span> {
-                            <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_DISPLAY_IMPL</span>
-                                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> <span class='self'>self</span> <span class='ident'>fmt</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-                                { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>funcs</span>)<span class='op'>*</span> })
-                        }
-                    )<span class='op'>*</span>
-                }
-            }
-        }
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused</span>)]</span>
-        <span class='kw'>impl</span> ::<span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-            <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-                <span class='kw'>match</span> <span class='self'>self</span> {
-                    $(
-                        <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> $( ( $(<span class='kw-2'>ref</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>),<span class='op'>*</span> ) )<span class='op'>*</span> <span class='op'>=&gt;</span> {
-                            <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_DESCRIPTION_IMPL</span>
-                                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> <span class='self'>self</span> <span class='ident'>fmt</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-                                { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>funcs</span>)<span class='op'>*</span> })
-                        }
-                    )<span class='op'>*</span>
-                }
-            }
-            <span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>::<span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-                <span class='kw'>match</span> <span class='self'>self</span> {
-                    $(
-                        <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> $( ( $(<span class='kw-2'>ref</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>),<span class='op'>*</span> ) )<span class='op'>*</span> <span class='op'>=&gt;</span> {
-                            <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_CAUSE_IMPL</span>
-                                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-                                { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>funcs</span>)<span class='op'>*</span> })
-                        }
-                    )<span class='op'>*</span>
-                }
-            }
-        }
-        $(
-            <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_FROM_IMPL</span>
-                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-                { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>funcs</span>)<span class='op'>*</span> });
-        )<span class='op'>*</span>
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_DISPLAY_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='ident'>display</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>exprs</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>exprs</span>)<span class='op'>*</span>)
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_DISPLAY_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>tt</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_DISPLAY_IMPL</span>
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-            { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> })
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_DISPLAY_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>, <span class='string'>&quot;{}&quot;</span>, ::<span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>::<span class='ident'>description</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>))
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_DESCRIPTION_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='ident'>description</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_DESCRIPTION_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>tt</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_DESCRIPTION_IMPL</span>
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-            { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> })
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_DESCRIPTION_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>me</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>)
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_CAUSE_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='ident'>cause</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>)
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_CAUSE_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>tt</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_CAUSE_IMPL</span>
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-            { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> })
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_CAUSE_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { }
-    ) <span class='op'>=&gt;</span> {
-        <span class='prelude-val'>None</span>
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_FROM_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>:<span class='ident'>ty</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='ident'>from</span>() $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        $( $(
-            <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-                <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>)
-                }
-            }
-        )<span class='op'>*</span> )<span class='op'>*</span>
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_FROM_IMPL</span>
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-            { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> });
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_FROM_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ ]
         { <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>:<span class='ident'>ty</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-            <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>_discarded_error</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>
-            }
-        }
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_FROM_IMPL</span>
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> [  ]
-            { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> });
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_FROM_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>:<span class='ident'>ty</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>:<span class='ident'>ty</span>) <span class='op'>-&gt;</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-            <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fvar</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> {
-                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>),<span class='op'>*</span>)
-            }
-        }
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_FROM_IMPL</span>
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span> [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-            { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> });
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_FROM_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>:<span class='ident'>ty</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>tt</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
-    ) <span class='op'>=&gt;</span> {
-        <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>FIND_FROM_IMPL</span>
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>[ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
-            { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span> });
-    };
+    ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_FROM_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>
         [ $( ( $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>:<span class='ident'>ty</span>)<span class='op'>*</span> ) )<span class='op'>*</span> ]
         { }
-    ) <span class='op'>=&gt;</span> {
-    };
-    <span class='comment'>// This one should match all allowed sequences in &quot;funcs&quot; but not match</span>
-    <span class='comment'>// anything else.</span>
-    <span class='comment'>// This is to contrast FIND_* clauses which just find stuff they need and</span>
-    <span class='comment'>// skip everything else completely</span>
-    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>display</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>exprs</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>)
-    <span class='op'>=&gt;</span> { <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>); };
-    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>description</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>)
-    <span class='op'>=&gt;</span> { <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>); };
-    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>cause</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>)
-    <span class='op'>=&gt;</span> { <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>); };
-    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>from</span>() $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>)
-    <span class='op'>=&gt;</span> { <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>); };
-    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>:<span class='ident'>ty</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>)
-    <span class='op'>=&gt;</span> { <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>); };
-    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>:<span class='ident'>ty</span>) <span class='op'>-&gt;</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>)
-    <span class='op'>=&gt;</span> { <span class='macro'>quick_error</span><span class='macro'>!</span>(<span class='ident'>ERROR_CHECK</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>)<span class='op'>*</span>); };
-    (<span class='ident'>ERROR_CHECK</span>) <span class='op'>=&gt;</span> {};
+    ) <span class='op'>=&gt;</span> { ... };
+    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>display</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>exprs</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>description</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>cause</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>expr</span>:<span class='ident'>expr</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>from</span>() $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>:<span class='ident'>ty</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='ident'>ERROR_CHECK</span> <span class='ident'>from</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fvar</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ftyp</span>:<span class='ident'>ty</span>) <span class='op'>-&gt;</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='ident'>ERROR_CHECK</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>Main macro that does all the work</p>
 </div></section>
@@ -494,6 +262,6 @@ macro_rules! sort {
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>
