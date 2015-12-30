@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['handlebars'] = [];
+implementors['libc'] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
