@@ -5,14 +5,18 @@ use std::fs::File;
 use std::io::Read;
 
 
-pub fn render_playpen(s: &str, path: &Path) -> String {
+pub fn render_playpen(s: &str, path: &Path) -> (String, bool) {
     // When replacing one thing in a string by something with a different length, the indices
     // after that will not correspond, we therefore have to store the difference to correct this
     let mut previous_end_index = 0;
     let mut replaced = String::new();
 
+    // This varriable is changed to true if the js / css files of the editor have to be included in the template
+    let mut editor = false;
+
     for playpen in find_playpens(s, path) {
 
+        // If the playpen is escaped, remove the slash but leave the rest
         if playpen.escaped {
             replaced.push_str(&s[previous_end_index..playpen.start_index-1]);
             replaced.push_str(&s[playpen.start_index..playpen.end_index]);
@@ -31,7 +35,16 @@ pub fn render_playpen(s: &str, path: &Path) -> String {
         let mut file_content = String::new();
         if let Err(_) = file.read_to_string(&mut file_content) { continue };
 
-        let replacement = String::new() + "<pre class=\"playpen\"><code class=\"language-rust\">" + &file_content + "</code></pre>";
+        let replacement;
+        // If the playpen is editable, insert it in an Ace editor div (https://ace.c9.io/#nav=embedding)
+        // Else insert in normal code blocks like the markdown generates with a playpen class
+        if playpen.editable {
+            replacement = String::new() + "<div id=\"editor\">" + &file_content + "</div>";
+            editor = true;
+        } else {
+            replacement = String::new() + "<pre class=\"playpen\"><code class=\"language-rust\">" + &file_content + "</code></pre>";
+        }
+
 
         replaced.push_str(&s[previous_end_index..playpen.start_index]);
         replaced.push_str(&replacement);
@@ -41,7 +54,7 @@ pub fn render_playpen(s: &str, path: &Path) -> String {
 
     replaced.push_str(&s[previous_end_index..]);
 
-    replaced
+    (replaced, editor)
 }
 
 #[derive(PartialOrd, PartialEq, Debug)]

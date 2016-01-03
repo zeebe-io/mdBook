@@ -71,9 +71,15 @@ impl Renderer for HtmlHandlebars {
                         debug!("[*]: Reading file");
                         try!(f.read_to_string(&mut content));
 
+                        data.remove("ace_editor");
                         // Parse for playpen links
                         if let Some(p) = path.parent() {
-                            content = helpers::playpen::render_playpen(&content, p);
+                            let (c, editor) = helpers::playpen::render_playpen(&content, p);
+                            content = c;
+
+                            if editor {
+                                data.insert("ace_editor".to_owned(), true.to_json());
+                            }
                         }
 
                         // Render markdown using the pulldown-cmark crate
