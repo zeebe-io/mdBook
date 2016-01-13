@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["EventedFd",""],["Io",""],["Selector",""]]});
+initSidebarItems({"struct":[["EventedFd",""],["Io",""],["Selector",""]],"trait":[["Socket",""]]});
