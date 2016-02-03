@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-3323' class='srclink' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html?gotosrc=3323' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-3329' class='srclink' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html?gotosrc=3329' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct String {
     // some fields omitted
 }</pre><div class='docblock'><p>A UTF-8 encoded, growable string.</p>
@@ -254,7 +254,7 @@ sake.</p>
 <p>If you need a <code>&amp;str</code> instead of a <code>String</code>, consider
 <a href="../str/fn.from_utf8.html"><code>str::from_utf8()</code></a>.</p>
 
-<h1 id='failure' class='section-header'><a href='#failure'>Failure</a></h1>
+<h1 id='errors' class='section-header'><a href='#errors'>Errors</a></h1>
 <p>Returns <code>Err</code> if the slice is not UTF-8 with a description as to why the
 provided bytes are not UTF-8. The vector you moved in is also included.</p>
 
@@ -315,7 +315,7 @@ but skips the checks.</p>
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;Hello �World&quot;</span>, <span class='ident'>output</span>);</pre>
 </div><h4 id='method.from_utf16' class='method'><code>fn <a href='#method.from_utf16' class='fnname'>from_utf16</a>(v: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u16.html'>u16</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>]</a>) -&gt; <a class='enum' href='../../../bitflags/__core/result/enum.Result.html' title='bitflags::__core::result::Result'>Result</a>&lt;<a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a>, <a class='struct' href='../../../bitflags/__core/string/struct.FromUtf16Error.html' title='bitflags::__core::string::FromUtf16Error'>FromUtf16Error</a>&gt;</code></h4>
-<div class='docblock'><p>Decode a UTF-16 encoded vector <code>v</code> into a <code>String</code>, returning <code>None</code>
+<div class='docblock'><p>Decode a UTF-16 encoded vector <code>v</code> into a <code>String</code>, returning <code>Err</code>
 if <code>v</code> contains any invalid data.</p>
 
 <h1 id='examples-5' class='section-header'><a href='#examples-5'>Examples</a></h1>
@@ -345,7 +345,7 @@ invalid data with the replacement character (U+FFFD).</p>
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;𝄞mus\u{FFFD}ic\u{FFFD}&quot;</span>),
            <span class='ident'>String</span>::<span class='ident'>from_utf16_lossy</span>(<span class='ident'>v</span>));</pre>
-</div><h4 id='method.from_raw_parts' class='method'><code>unsafe fn <a href='#method.from_raw_parts' class='fnname'>from_raw_parts</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*mut <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a></a>, length: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>, capacity: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h4>
+</div><h4 id='method.from_raw_parts' class='method'><code>unsafe fn <a href='#method.from_raw_parts' class='fnname'>from_raw_parts</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*mut </a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a>, length: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>, capacity: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h4>
 <div class='docblock'><p>Creates a new <code>String</code> from a length, capacity, and pointer.</p>
 
 <h1 id='safety' class='section-header'><a href='#safety'>Safety</a></h1>
@@ -765,7 +765,7 @@ boundaries.</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='string'>&quot;bors&quot;</span>.<span class='ident'>as_bytes</span>();
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>b&quot;bors&quot;</span>, <span class='ident'>bytes</span>);</pre>
-</div><h4 id='method.as_ptr' class='method'><code>fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*const <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a></a></code></h4>
+</div><h4 id='method.as_ptr' class='method'><code>fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*const </a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a></code></h4>
 <div class='docblock'><p>Converts a string slice to a raw pointer.</p>
 
 <p>As string slices are a slice of bytes, the raw pointer points to a
@@ -946,7 +946,7 @@ If <code>i</code> is not an index following a valid UTF-8 sequence.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>char_at_reverse</span>(<span class='number'>1</span>), <span class='string'>&#39;a&#39;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>char_at_reverse</span>(<span class='number'>2</span>), <span class='string'>&#39;b&#39;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>char_at_reverse</span>(<span class='number'>3</span>), <span class='string'>&#39;π&#39;</span>);</pre>
-</div><h4 id='method.slice_shift_char' class='method'><code>fn <a href='#method.slice_shift_char' class='fnname'>slice_shift_char</a>(&amp;self) -&gt; <a class='enum' href='../../../bitflags/__core/option/enum.Option.html' title='bitflags::__core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>(<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.char.html'>char</a>, &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>)</a>&gt;</code></h4>
+</div><h4 id='method.slice_shift_char' class='method'><code>fn <a href='#method.slice_shift_char' class='fnname'>slice_shift_char</a>(&amp;self) -&gt; <a class='enum' href='../../../bitflags/__core/option/enum.Option.html' title='bitflags::__core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.char.html'>char</a>, &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>)</a>&gt;</code></h4>
 <div class='stability'><em class='stab unstable'>Unstable (<code>str_char</code>)<p>: awaiting conventions about shifting and slices and may not be warranted with the existence of the chars and/or char_indices iterators</p>
 </em></div><div class='docblock'><p>Retrieves the first <code>char</code> from a <code>&amp;str</code> and returns it.</p>
 
@@ -971,7 +971,7 @@ points one code point beyond the code point that was shifted.</p>
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>c</span>, <span class='string'>&#39;o&#39;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s2</span>, <span class='string'>&quot;\u{301}dz\u{301}&quot;</span>);</pre>
-</div><h4 id='method.split_at' class='method'><code>fn <a href='#method.split_at' class='fnname'>split_at</a>(&amp;self, mid: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>(&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>, &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>)</a></code></h4>
+</div><h4 id='method.split_at' class='method'><code>fn <a href='#method.split_at' class='fnname'>split_at</a>(&amp;self, mid: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>(</a>&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>, &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>)</a></code></h4>
 <div class='docblock'><p>Divide one string slice into two at an index.</p>
 
 <p>The argument, <code>mid</code>, should be a byte offset from the start of the
@@ -996,7 +996,7 @@ beyond the last code point of the string slice.</p>
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;Per&quot;</span>, <span class='ident'>first</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot; Martin-Löf&quot;</span>, <span class='ident'>last</span>);</pre>
-</div><h4 id='method.split_at_mut' class='method'><code>fn <a href='#method.split_at_mut' class='fnname'>split_at_mut</a>(&amp;mut self, mid: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>(&amp;mut <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>, &amp;mut <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>)</a></code></h4>
+</div><h4 id='method.split_at_mut' class='method'><code>fn <a href='#method.split_at_mut' class='fnname'>split_at_mut</a>(&amp;mut self, mid: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>(</a>&amp;mut <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>, &amp;mut <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.tuple.html'>)</a></code></h4>
 <div class='docblock'><p>Divide one mutable string slice into two at an index.</p>
 
 <p>The argument, <code>mid</code>, should be a byte offset from the start of the
@@ -1628,17 +1628,37 @@ Core Property <code>White_Space</code>.</p>
 <p>&#39;Whitespace&#39; is defined according to the terms of the Unicode Derived
 Core Property <code>White_Space</code>.</p>
 
+<h1 id='text-directionality' class='section-header'><a href='#text-directionality'>Text directionality</a></h1>
+<p>A string is a sequence of bytes. &#39;Left&#39; in this context means the first
+position of that byte string; for a language like Arabic or Hebrew
+which are &#39;right to left&#39; rather than &#39;left to right&#39;, this will be
+the <em>right</em> side, not the left.</p>
+
 <h1 id='examples-61' class='section-header'><a href='#examples-61'>Examples</a></h1>
 <p>Basic usage:</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot; Hello\tworld\t&quot;</span>;
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;Hello\tworld\t&quot;</span>, <span class='ident'>s</span>.<span class='ident'>trim_left</span>());</pre>
+
+<p>Directionality:</p>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;  English&quot;</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&#39;E&#39;</span>) <span class='op'>==</span> <span class='ident'>s</span>.<span class='ident'>trim_left</span>().<span class='ident'>chars</span>().<span class='ident'>next</span>());
+
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;  עברית&quot;</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&#39;ע&#39;</span>) <span class='op'>==</span> <span class='ident'>s</span>.<span class='ident'>trim_left</span>().<span class='ident'>chars</span>().<span class='ident'>next</span>());</pre>
 </div><h4 id='method.trim_right' class='method'><code>fn <a href='#method.trim_right' class='fnname'>trim_right</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a></code></h4>
 <div class='docblock'><p>Returns a string slice with trailing whitespace removed.</p>
 
 <p>&#39;Whitespace&#39; is defined according to the terms of the Unicode Derived
 Core Property <code>White_Space</code>.</p>
+
+<h1 id='text-directionality-1' class='section-header'><a href='#text-directionality-1'>Text directionality</a></h1>
+<p>A string is a sequence of bytes. &#39;Right&#39; in this context means the last
+position of that byte string; for a language like Arabic or Hebrew
+which are &#39;right to left&#39; rather than &#39;left to right&#39;, this will be
+the <em>left</em> side, not the right.</p>
 
 <h1 id='examples-62' class='section-header'><a href='#examples-62'>Examples</a></h1>
 <p>Basic usage:</p>
@@ -1646,6 +1666,14 @@ Core Property <code>White_Space</code>.</p>
 <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot; Hello\tworld\t&quot;</span>;
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot; Hello\tworld&quot;</span>, <span class='ident'>s</span>.<span class='ident'>trim_right</span>());</pre>
+
+<p>Directionality:</p>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;English  &quot;</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&#39;h&#39;</span>) <span class='op'>==</span> <span class='ident'>s</span>.<span class='ident'>trim_right</span>().<span class='ident'>chars</span>().<span class='ident'>rev</span>().<span class='ident'>next</span>());
+
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;עברית  &quot;</span>;
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&#39;ת&#39;</span>) <span class='op'>==</span> <span class='ident'>s</span>.<span class='ident'>trim_right</span>().<span class='ident'>chars</span>().<span class='ident'>rev</span>().<span class='ident'>next</span>());</pre>
 </div><h4 id='method.trim_matches' class='method'><code>fn <a href='#method.trim_matches' class='fnname'>trim_matches</a>&lt;'a, P&gt;(&amp;'a self, pat: P) -&gt; &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a> <span class='where'>where P: <a class='trait' href='../../../bitflags/__core/str/pattern/trait.Pattern.html' title='bitflags::__core::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;, P::<a class='trait' href='../../../bitflags/__core/str/pattern/trait.Pattern.html' title='bitflags::__core::str::pattern::Pattern'>Searcher</a>: <a class='trait' href='../../../bitflags/__core/str/pattern/trait.DoubleEndedSearcher.html' title='bitflags::__core::str::pattern::DoubleEndedSearcher'>DoubleEndedSearcher</a>&lt;'a&gt;</span></code></h4>
 <div class='docblock'><p>Returns a string slice with all prefixes and suffixes that match a
 pattern repeatedly removed.</p>
@@ -1672,6 +1700,12 @@ repeatedly removed.</p>
 <p>The pattern can be a <code>&amp;str</code>, <a href="primitive.char.html"><code>char</code></a>, or a closure that determines if
 a character matches.</p>
 
+<h1 id='text-directionality-2' class='section-header'><a href='#text-directionality-2'>Text directionality</a></h1>
+<p>A string is a sequence of bytes. &#39;Left&#39; in this context means the first
+position of that byte string; for a language like Arabic or Hebrew
+which are &#39;right to left&#39; rather than &#39;left to right&#39;, this will be
+the <em>right</em> side, not the left.</p>
+
 <h1 id='examples-64' class='section-header'><a href='#examples-64'>Examples</a></h1>
 <p>Basic usage:</p>
 <pre class='rust rust-example-rendered'>
@@ -1686,6 +1720,12 @@ repeatedly removed.</p>
 
 <p>The pattern can be a <code>&amp;str</code>, <a href="primitive.char.html"><code>char</code></a>, or a closure that
 determines if a character matches.</p>
+
+<h1 id='text-directionality-3' class='section-header'><a href='#text-directionality-3'>Text directionality</a></h1>
+<p>A string is a sequence of bytes. &#39;Right&#39; in this context means the last
+position of that byte string; for a language like Arabic or Hebrew
+which are &#39;right to left&#39; rather than &#39;left to right&#39;, this will be
+the <em>left</em> side, not the right.</p>
 
 <h1 id='examples-65' class='section-header'><a href='#examples-65'>Examples</a></h1>
 <p>Simple patterns:</p>
@@ -1710,7 +1750,7 @@ you&#39;re trying to parse into.</p>
 
 <p><code>parse()</code> can parse any type that implements the <a href="str/trait.FromStr.html"><code>FromStr</code></a> trait.</p>
 
-<h1 id='failure-1' class='section-header'><a href='#failure-1'>Failure</a></h1>
+<h1 id='errors-1' class='section-header'><a href='#errors-1'>Errors</a></h1>
 <p>Will return <code>Err</code> if it&#39;s not possible to parse this string slice into
 the desired type.</p>
 
@@ -1862,7 +1902,7 @@ replaces them with the replacement string slice.</p>
 </div><h3 class='impl'><code>impl <a class='trait' href='../../../bitflags/__core/str/trait.FromStr.html' title='bitflags::__core::str::FromStr'>FromStr</a> for <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h3><div class='impl-items'><h4 id='assoc_type.Err' class='type'><code>type Err = <a class='enum' href='../../../bitflags/__core/string/enum.ParseError.html' title='bitflags::__core::string::ParseError'>ParseError</a></code></h4>
 <h4 id='method.from_str' class='method'><code>fn <a href='../../../bitflags/__core/str/trait.FromStr.html#method.from_str' class='fnname'>from_str</a>(s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>) -&gt; <a class='enum' href='../../../bitflags/__core/result/enum.Result.html' title='bitflags::__core::result::Result'>Result</a>&lt;<a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a>, <a class='enum' href='../../../bitflags/__core/string/enum.ParseError.html' title='bitflags::__core::string::ParseError'>ParseError</a>&gt;</code></h4>
 </div><h3 class='impl'><code>impl <a class='trait' href='../../../bitflags/__core/convert/trait.AsRef.html' title='bitflags::__core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>&gt; for <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h3><div class='impl-items'><h4 id='method.as_ref' class='method'><code>fn <a href='../../../bitflags/__core/convert/trait.AsRef.html#method.as_ref' class='fnname'>as_ref</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='../../../bitflags/__core/convert/trait.AsRef.html' title='bitflags::__core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>[<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a>]</a>&gt; for <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h3><div class='impl-items'><h4 id='method.as_ref-1' class='method'><code>fn <a href='../../../bitflags/__core/convert/trait.AsRef.html#method.as_ref' class='fnname'>as_ref</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>]</a></code></h4>
+</div><h3 class='impl'><code>impl <a class='trait' href='../../../bitflags/__core/convert/trait.AsRef.html' title='bitflags::__core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>]</a>&gt; for <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h3><div class='impl-items'><h4 id='method.as_ref-1' class='method'><code>fn <a href='../../../bitflags/__core/convert/trait.AsRef.html#method.as_ref' class='fnname'>as_ref</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>]</a></code></h4>
 </div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='../../../bitflags/__core/convert/trait.From.html' title='bitflags::__core::convert::From'>From</a>&lt;&amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>&gt; for <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h3><div class='impl-items'><h4 id='method.from' class='method'><code>fn <a href='../../../bitflags/__core/convert/trait.From.html#method.from' class='fnname'>from</a>(s: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h4>
 </div><h3 class='impl'><code>impl <a class='trait' href='../../../bitflags/__core/convert/trait.Into.html' title='bitflags::__core::convert::Into'>Into</a>&lt;<a class='struct' href='../../../bitflags/__core/vec/struct.Vec.html' title='bitflags::__core::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a>&gt;&gt; for <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h3><div class='impl-items'><h4 id='method.into' class='method'><code>fn <a href='../../../bitflags/__core/convert/trait.Into.html#method.into' class='fnname'>into</a>(self) -&gt; <a class='struct' href='../../../bitflags/__core/vec/struct.Vec.html' title='bitflags::__core::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a>&gt;</code></h4>
 </div><h3 class='impl'><code>impl <a class='trait' href='../../../bitflags/__core/borrow/trait.IntoCow.html' title='bitflags::__core::borrow::IntoCow'>IntoCow</a>&lt;'static, <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>&gt; for <a class='struct' href='../../../bitflags/__core/string/struct.String.html' title='bitflags::__core::string::String'>String</a></code></h3><div class='impl-items'><h4 id='method.into_cow' class='method'><code>fn <a href='../../../bitflags/__core/borrow/trait.IntoCow.html#method.into_cow' class='fnname'>into_cow</a>(self) -&gt; <a class='enum' href='../../../bitflags/__core/borrow/enum.Cow.html' title='bitflags::__core::borrow::Cow'>Cow</a>&lt;'static, <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.str.html'>str</a>&gt;</code></h4>
