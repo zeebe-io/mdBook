@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-3058' class='srclink' href='https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CString.html?gotosrc=3058' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-3077' class='srclink' href='https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CString.html?gotosrc=3077' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct CString {
     // some fields omitted
 }</pre><div class='docblock'><p>A type representing an owned C-compatible string</p>
@@ -75,6 +75,16 @@ do <em>not</em> contain the trailing nul terminator unless otherwise specified.<
 <span class='kw'>unsafe</span> {
     <span class='ident'>my_printer</span>(<span class='ident'>c_to_print</span>.<span class='ident'>as_ptr</span>());
 }</pre>
+
+<h1 id='safety' class='section-header'><a href='#safety'>Safety</a></h1>
+<p><code>CString</code> is intended for working with traditional C-style strings
+(a sequence of non-null bytes terminated by a single null byte); the
+primary use case for these kinds of strings is interoperating with C-like
+code. Often you will need to transfer ownership to/from that external
+code. It is strongly recommended that you thoroughly read through the
+documentation of <code>CString</code> before use, as improper ownership management
+of <code>CString</code> instances can lead to invalid memory accesses, memory leaks,
+and other memory errors.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../../../bitflags/__core/ffi/struct.CString.html' title='bitflags::__core::ffi::CString'>CString</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;T&gt;(t: T) -&gt; <a class='enum' href='../../../bitflags/__core/result/enum.Result.html' title='bitflags::__core::result::Result'>Result</a>&lt;<a class='struct' href='../../../bitflags/__core/ffi/struct.CString.html' title='bitflags::__core::ffi::CString'>CString</a>, <a class='struct' href='../../../bitflags/__core/ffi/struct.NulError.html' title='bitflags::__core::ffi::NulError'>NulError</a>&gt; <span class='where'>where T: <a class='trait' href='../../../bitflags/__core/convert/trait.Into.html' title='bitflags::__core::convert::Into'>Into</a>&lt;<a class='struct' href='../../../bitflags/__core/vec/struct.Vec.html' title='bitflags::__core::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a>&gt;&gt;</span></code></h4>
 <div class='docblock'><p>Creates a new C-compatible string from a container of bytes.</p>
 
@@ -105,13 +115,13 @@ interior 0 bytes.</p>
 <p>This method is equivalent to <code>new</code> except that no runtime assertion
 is made that <code>v</code> contains no 0 bytes, and it requires an actual
 byte vector, not anything that can be converted to one with Into.</p>
-</div><h4 id='method.from_raw' class='method'><code>unsafe fn <a href='#method.from_raw' class='fnname'>from_raw</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*mut <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.i8.html'>i8</a></a>) -&gt; <a class='struct' href='../../../bitflags/__core/ffi/struct.CString.html' title='bitflags::__core::ffi::CString'>CString</a></code></h4>
-<div class='docblock'><p>Retakes ownership of a CString that was transferred to C.</p>
+</div><h4 id='method.from_raw' class='method'><code>unsafe fn <a href='#method.from_raw' class='fnname'>from_raw</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*mut </a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.i8.html'>i8</a>) -&gt; <a class='struct' href='../../../bitflags/__core/ffi/struct.CString.html' title='bitflags::__core::ffi::CString'>CString</a></code></h4>
+<div class='docblock'><p>Retakes ownership of a <code>CString</code> that was transferred to C.</p>
 
-<p>The only appropriate argument is a pointer obtained by calling
-<code>into_raw</code>. The length of the string will be recalculated
-using the pointer.</p>
-</div><h4 id='method.into_raw' class='method'><code>fn <a href='#method.into_raw' class='fnname'>into_raw</a>(self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*mut <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.i8.html'>i8</a></a></code></h4>
+<p>This should only ever be called with a pointer that was earlier
+obtained by calling <code>into_raw</code> on a <code>CString</code>. Additionally, the length
+of the string will be recalculated from the pointer.</p>
+</div><h4 id='method.into_raw' class='method'><code>fn <a href='#method.into_raw' class='fnname'>into_raw</a>(self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*mut </a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.i8.html'>i8</a></code></h4>
 <div class='docblock'><p>Transfers ownership of the string to a C caller.</p>
 
 <p>The pointer must be returned to Rust and reconstituted using
@@ -140,7 +150,7 @@ it is guaranteed to not have any interior nul bytes.</p>
 </div><h4 id='method.as_bytes_with_nul' class='method'><code>fn <a href='#method.as_bytes_with_nul' class='fnname'>as_bytes_with_nul</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>]</a></code></h4>
 <div class='docblock'><p>Equivalent to the <code>as_bytes</code> function except that the returned slice
 includes the trailing nul byte.</p>
-</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='../../../bitflags/__core/ops/trait.Deref.html' title='bitflags::__core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../../../bitflags/__core/ffi/struct.CStr.html' title='bitflags::__core::ffi::CStr'>CStr</a>&gt;</h2><div class='impl-items'><h4 id='method.as_ptr' class='method'><code>fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*const <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.i8.html'>i8</a></a></code></h4>
+</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='../../../bitflags/__core/ops/trait.Deref.html' title='bitflags::__core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../../../bitflags/__core/ffi/struct.CStr.html' title='bitflags::__core::ffi::CStr'>CStr</a>&gt;</h2><div class='impl-items'><h4 id='method.as_ptr' class='method'><code>fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.pointer.html'>*const </a><a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.i8.html'>i8</a></code></h4>
 <div class='docblock'><p>Returns the inner pointer to this C string.</p>
 
 <p>The returned pointer will be valid for as long as <code>self</code> is and points
