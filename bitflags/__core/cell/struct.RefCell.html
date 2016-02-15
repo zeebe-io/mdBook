@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-28126' class='srclink' href='https://doc.rust-lang.org/nightly/core/cell/struct.RefCell.html?gotosrc=28126' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-27267' class='srclink' href='https://doc.rust-lang.org/nightly/core/cell/struct.RefCell.html?gotosrc=27267' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct RefCell&lt;T&gt; <span class='where'>where T: ?<a class='trait' href='../../../bitflags/__core/marker/trait.Sized.html' title='bitflags::__core::marker::Sized'>Sized</a></span> {
     // some fields omitted
 }</pre><div class='docblock'><p>A mutable memory location with dynamically checked borrow rules</p>
@@ -117,9 +117,7 @@ cannot be borrowed while this borrow is active.</p>
 
 <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='number'>5</span>);
 
-<span class='op'>*</span><span class='ident'>c</span>.<span class='ident'>borrow_mut</span>() <span class='op'>=</span> <span class='number'>7</span>;
-
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>c</span>.<span class='ident'>borrow</span>(), <span class='number'>7</span>);</pre>
+<span class='kw'>let</span> <span class='ident'>borrowed_five</span> <span class='op'>=</span> <span class='ident'>c</span>.<span class='ident'>borrow_mut</span>();</pre>
 
 <p>An example of panic:</p>
 <pre class='rust rust-example-rendered'>
