@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["CharInput","An input reader over characters.(This is the only implementation of `Input` at the moment.)"],["InputAt","Represents a location in the input."]],"trait":[["Input","An abstraction over input used in the matching engines."]]});
+initSidebarItems({"struct":[["CharInput","An input reader over characters."],["InputAt","Represents a location in the input."]],"trait":[["Input","An abstraction over input used in the matching engines."]]});

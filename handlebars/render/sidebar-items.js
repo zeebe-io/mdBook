@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Helper",""],["RenderContext","The context of a render callthis context stores information of a render and a writer where generated content is written to."],["RenderError",""]],"trait":[["Renderable",""]]});
+initSidebarItems({"struct":[["Helper",""],["RenderContext","The context of a render call"],["RenderError",""]],"trait":[["Renderable",""]]});
