@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["MsQueue","A Michael-Scott lock-free queue, with support for blocking `pop`s.Usable with any number of producers and consumers."]]});
+initSidebarItems({"struct":[["MsQueue","A Michael-Scott lock-free queue, with support for blocking `pop`s."]]});
