@@ -280,7 +280,7 @@
                 var parts = val.split("->").map(trimmer);
                 var input = parts[0];
                 // sort inputs so that order does not matter
-                var inputs = input.split(",").map(trimmer).sort().toString();
+                var inputs = input.split(",").map(trimmer).sort();
                 var output = parts[1];
 
                 for (var i = 0; i < nSearchWords; ++i) {
@@ -296,8 +296,8 @@
 
                     // allow searching for void (no output) functions as well
                     var typeOutput = type.output ? type.output.name : "";
-                    if ((inputs === "*" || inputs === typeInputs.toString()) &&
-                        (output === "*" || output == typeOutput)) {
+                    if (inputs.toString() === typeInputs.toString() &&
+                        output == typeOutput) {
                         results.push({id: i, index: -1, dontValidate: true});
                     }
                 }
