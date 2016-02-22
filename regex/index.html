@@ -26,7 +26,7 @@
     
 
     <nav class="sidebar">
-        <a href='../regex/index.html'><img src='https://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
+        <a href='../regex/index.html'><img src='https://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png' alt='' width='100'></a>
         <p class='location'></p><script>window.sidebarCurrent = {name: 'regex', ty: 'mod', relpath: '../'};</script>
     </nav>
 
@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/regex/lib.rs.html#11-486' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-0' class='srclink' href='../src/regex/lib.rs.html#11-518' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This crate provides a native implementation of regular expressions that is
 heavily based on RE2 both in syntax and in implementation. Notably,
 backreferences and arbitrary lookahead/lookbehind assertions are not
@@ -217,6 +217,31 @@ enable insigificant whitespace mode, which also lets you write comments:</p>
 <span class='kw'>let</span> <span class='ident'>before</span> <span class='op'>=</span> <span class='string'>&quot;2012-03-14, 2013-01-01 and 2014-07-05&quot;</span>;
 <span class='kw'>let</span> <span class='ident'>after</span> <span class='op'>=</span> <span class='ident'>re</span>.<span class='ident'>replace_all</span>(<span class='ident'>before</span>, <span class='string'>&quot;$m/$d/$y&quot;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>after</span>, <span class='string'>&quot;03/14/2012, 01/01/2013 and 07/05/2014&quot;</span>);</pre>
+
+<h1 id='example-match-multiple-regular-expressions-simultaneously' class='section-header'><a href='#example-match-multiple-regular-expressions-simultaneously'>Example: match multiple regular expressions simultaneously</a></h1>
+<p>This demonstrates how to use a <code>RegexSet</code> to match multiple (possibly
+overlapping) regular expressions in a single scan of the search text:</p>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>regex</span>::<span class='ident'>RegexSet</span>;
+
+<span class='kw'>let</span> <span class='ident'>set</span> <span class='op'>=</span> <span class='ident'>RegexSet</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span>[
+    <span class='string'>r&quot;\w+&quot;</span>,
+    <span class='string'>r&quot;\d+&quot;</span>,
+    <span class='string'>r&quot;\pL+&quot;</span>,
+    <span class='string'>r&quot;foo&quot;</span>,
+    <span class='string'>r&quot;bar&quot;</span>,
+    <span class='string'>r&quot;barfoo&quot;</span>,
+    <span class='string'>r&quot;foobar&quot;</span>,
+]).<span class='ident'>unwrap</span>();
+
+<span class='comment'>// Iterate over and collect all of the matches.</span>
+<span class='kw'>let</span> <span class='ident'>matches</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>matches</span>(<span class='string'>&quot;foobar&quot;</span>).<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>matches</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>6</span>]);
+
+<span class='comment'>// You can also test whether a particular regex matched:</span>
+<span class='kw'>let</span> <span class='ident'>matches</span> <span class='op'>=</span> <span class='ident'>set</span>.<span class='ident'>matches</span>(<span class='string'>&quot;foobar&quot;</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>matches</span>.<span class='ident'>matched</span>(<span class='number'>5</span>));
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>matches</span>.<span class='ident'>matched</span>(<span class='number'>6</span>));</pre>
 
 <h1 id='pay-for-what-you-use' class='section-header'><a href='#pay-for-what-you-use'>Pay for what you use</a></h1>
 <p>With respect to searching text with a regular expression, there are three
@@ -426,6 +451,7 @@ states are wiped and continues on, possibly duplicating previous work.)</p>
                                title='regex::Captures'>Captures</a></td>
                         <td class='docblock short'>
                              <p>Captures represents a group of captured strings for a single match.</p>
+
                         </td>
                     </tr>
                 
@@ -435,6 +461,7 @@ states are wiped and continues on, possibly duplicating previous work.)</p>
                         <td class='docblock short'>
                              <p>An iterator that yields all non-overlapping capture groups matching a
 particular regular expression.</p>
+
                         </td>
                     </tr>
                 
@@ -443,6 +470,7 @@ particular regular expression.</p>
                                title='regex::FindMatches'>FindMatches</a></td>
                         <td class='docblock short'>
                              <p>An iterator over all non-overlapping matches for a particular string.</p>
+
                         </td>
                     </tr>
                 
@@ -451,6 +479,16 @@ particular regular expression.</p>
                                title='regex::NoExpand'>NoExpand</a></td>
                         <td class='docblock short'>
                              <p>NoExpand indicates literal string replacement.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.RegexSet.html'
+                               title='regex::RegexSet'>RegexSet</a></td>
+                        <td class='docblock short'>
+                             <p>Match multiple (possibly overlapping) regular expressions in a single scan.</p>
+
                         </td>
                     </tr>
                 
@@ -459,6 +497,7 @@ particular regular expression.</p>
                                title='regex::RegexSplits'>RegexSplits</a></td>
                         <td class='docblock short'>
                              <p>Yields all substrings delimited by a regular expression match.</p>
+
                         </td>
                     </tr>
                 
@@ -467,6 +506,34 @@ particular regular expression.</p>
                                title='regex::RegexSplitsN'>RegexSplitsN</a></td>
                         <td class='docblock short'>
                              <p>Yields at most <code>N</code> substrings delimited by a regular expression match.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SetMatches.html'
+                               title='regex::SetMatches'>SetMatches</a></td>
+                        <td class='docblock short'>
+                             <p>A set of matches returned by a regex set.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SetMatchesIntoIter.html'
+                               title='regex::SetMatchesIntoIter'>SetMatchesIntoIter</a></td>
+                        <td class='docblock short'>
+                             <p>An owned iterator over the set of matches from a regex set.</p>
+
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.SetMatchesIter.html'
+                               title='regex::SetMatchesIter'>SetMatchesIter</a></td>
+                        <td class='docblock short'>
+                             <p>A borrowed iterator over the set of matches from a regex set.</p>
+
                         </td>
                     </tr>
                 
@@ -476,6 +543,7 @@ particular regular expression.</p>
                         <td class='docblock short'>
                              <p>An iterator over capture groups for a particular match of a regular
 expression.</p>
+
                         </td>
                     </tr>
                 
@@ -485,6 +553,7 @@ expression.</p>
                         <td class='docblock short'>
                              <p>An Iterator over named capture groups as a tuple with the group
 name and the value.</p>
+
                         </td>
                     </tr>
                 
@@ -494,6 +563,7 @@ name and the value.</p>
                         <td class='docblock short'>
                              <p>An iterator over capture group positions for a particular match of a
 regular expression.</p>
+
                         </td>
                     </tr>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -505,6 +575,7 @@ regular expression.</p>
                              <p>Yields the names of all possible captures.
 <code>None</code> indicates an unnamed capture; the first element
 (capture 0, the whole matched region) is always unnamed.</p>
+
                         </td>
                     </tr>
                 
@@ -513,6 +584,7 @@ regular expression.</p>
                                title='regex::Error'>Error</a></td>
                         <td class='docblock short'>
                              <p>An error that occurred during parsing or compiling a regular expression.</p>
+
                         </td>
                     </tr>
                 
@@ -521,6 +593,7 @@ regular expression.</p>
                                title='regex::Regex'>Regex</a></td>
                         <td class='docblock short'>
                              <p>A compiled regular expression</p>
+
                         </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
@@ -530,6 +603,7 @@ regular expression.</p>
                                title='regex::Replacer'>Replacer</a></td>
                         <td class='docblock short'>
                              <p>Replacer describes types that can be used to replace matches in a string.</p>
+
                         </td>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -539,6 +613,7 @@ regular expression.</p>
                                title='regex::is_match'>is_match</a></td>
                         <td class='docblock short'>
                              <p>Tests if the given regular expression matches somewhere in the text given.</p>
+
                         </td>
                     </tr>
                 
@@ -547,6 +622,7 @@ regular expression.</p>
                                title='regex::quote'>quote</a></td>
                         <td class='docblock short'>
                              <p>Escapes all regular expression meta characters in <code>text</code>.</p>
+
                         </td>
                     </tr>
                 </table></section>
