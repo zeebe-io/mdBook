@@ -147,6 +147,9 @@
 <span id="104">104</span>
 <span id="105">105</span>
 <span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>::<span class='ident'>Json</span>;
@@ -158,6 +161,7 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BookConfig</span> {
     <span class='kw'>pub</span> <span class='ident'>title</span>: <span class='ident'>String</span>,
     <span class='kw'>pub</span> <span class='ident'>author</span>: <span class='ident'>String</span>,
+    <span class='kw'>pub</span> <span class='ident'>description</span>: <span class='ident'>String</span>,
     <span class='ident'>root</span>: <span class='ident'>PathBuf</span>,
     <span class='ident'>dest</span>: <span class='ident'>PathBuf</span>,
     <span class='ident'>src</span>: <span class='ident'>PathBuf</span>,
@@ -171,6 +175,7 @@
         <span class='ident'>BookConfig</span> {
             <span class='ident'>title</span>: <span class='ident'>String</span>::<span class='ident'>new</span>(),
             <span class='ident'>author</span>: <span class='ident'>String</span>::<span class='ident'>new</span>(),
+            <span class='ident'>description</span>: <span class='ident'>String</span>::<span class='ident'>new</span>(),
             <span class='ident'>root</span>: <span class='ident'>root</span>.<span class='ident'>to_owned</span>(),
             <span class='ident'>dest</span>: <span class='ident'>PathBuf</span>::<span class='ident'>from</span>(<span class='string'>&quot;book&quot;</span>),
             <span class='ident'>src</span>: <span class='ident'>PathBuf</span>::<span class='ident'>from</span>(<span class='string'>&quot;src&quot;</span>),
@@ -204,9 +209,10 @@
             <span class='comment'>// Extract data</span>
 
             <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Extracting data from config&quot;</span>);
-            <span class='comment'>// Title &amp; author</span>
+            <span class='comment'>// Title, author, description</span>
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>a</span>) <span class='op'>=</span> <span class='ident'>config</span>.<span class='ident'>find_path</span>(<span class='kw-2'>&amp;</span>[<span class='string'>&quot;title&quot;</span>]) { <span class='self'>self</span>.<span class='ident'>title</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>to_string</span>().<span class='ident'>replace</span>(<span class='string'>&quot;\&quot;&quot;</span>, <span class='string'>&quot;&quot;</span>) }
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>a</span>) <span class='op'>=</span> <span class='ident'>config</span>.<span class='ident'>find_path</span>(<span class='kw-2'>&amp;</span>[<span class='string'>&quot;author&quot;</span>]) { <span class='self'>self</span>.<span class='ident'>author</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>to_string</span>().<span class='ident'>replace</span>(<span class='string'>&quot;\&quot;&quot;</span>, <span class='string'>&quot;&quot;</span>) }
+            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>a</span>) <span class='op'>=</span> <span class='ident'>config</span>.<span class='ident'>find_path</span>(<span class='kw-2'>&amp;</span>[<span class='string'>&quot;description&quot;</span>]) { <span class='self'>self</span>.<span class='ident'>description</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>to_string</span>().<span class='ident'>replace</span>(<span class='string'>&quot;\&quot;&quot;</span>, <span class='string'>&quot;&quot;</span>) }
 
             <span class='comment'>// Destination</span>
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>a</span>) <span class='op'>=</span> <span class='ident'>config</span>.<span class='ident'>find_path</span>(<span class='kw-2'>&amp;</span>[<span class='string'>&quot;dest&quot;</span>]) {
