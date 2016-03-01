@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `mut_ref_slice` fn in crate `bitflags`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, mut_ref_slice">
+    <meta name="description" content="API documentation for the Rust `propagate` fn in crate `bitflags`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, propagate">
 
-    <title>bitflags::__core::slice::mut_ref_slice - Rust</title>
+    <title>bitflags::__core::panic::propagate - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
@@ -27,7 +27,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../../index.html'>bitflags</a>::<wbr><a href='../index.html'>__core</a>::<wbr><a href='index.html'>slice</a></p><script>window.sidebarCurrent = {name: 'mut_ref_slice', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='../../index.html'>bitflags</a>::<wbr><a href='../index.html'>__core</a>::<wbr><a href='index.html'>panic</a></p><script>window.sidebarCurrent = {name: 'propagate', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,13 +42,29 @@
     </nav>
 
     <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../../index.html'>bitflags</a>::<wbr><a href='../index.html'>__core</a>::<wbr><a href='index.html'>slice</a>::<wbr><a class='fn' href=''>mut_ref_slice</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Function <a href='../../index.html'>bitflags</a>::<wbr><a href='../index.html'>__core</a>::<wbr><a href='index.html'>panic</a>::<wbr><a class='fn' href=''>propagate</a></span><span class='out-of-band'><span id='render-detail'>
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-31274' class='srclink' href='https://doc.rust-lang.org/nightly/core/slice/fn.mut_ref_slice.html?gotosrc=31274' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn mut_ref_slice&lt;A&gt;(s: &amp;mut A) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/bitflags/primitive.slice.html'>&amp;mut [A]</a></pre><div class='stability'><em class='stab unstable deprecated'>Deprecated since 1.5.0<p>: unclear whether belongs in libstd</p>
-</em></div><div class='docblock'><p>Converts a reference to A into a slice of length 1 (without copying).</p>
+        </span><a id='src-6522' class='srclink' href='https://doc.rust-lang.org/nightly/std/panic/fn.propagate.html?gotosrc=6522' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn propagate(payload: <a class='struct' href='../../../bitflags/__core/boxed/struct.Box.html' title='bitflags::__core::boxed::Box'>Box</a>&lt;<a class='trait' href='../../../bitflags/__core/any/trait.Any.html' title='bitflags::__core::any::Any'>Any</a> + 'static + <a class='trait' href='../../../bitflags/__core/marker/trait.Send.html' title='bitflags::__core::marker::Send'>Send</a>&gt;) -&gt; !</pre><div class='stability'><em class='stab unstable'>Unstable (<code>panic_propagate</code>)<p>: awaiting feedback</p>
+</em></div><div class='docblock'><p>Triggers a panic without invoking the panic handler.</p>
+
+<p>This is designed to be used in conjunction with <code>recover</code> to, for example,
+carry a panic across a layer of C code.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1><pre class='rust rust-example-rendered'>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>feature</span>(<span class='ident'>std_panic</span>, <span class='ident'>recover</span>, <span class='ident'>panic_propagate</span>)]</span>
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>panic</span>;
+
+<span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>panic</span>::<span class='ident'>recover</span>(<span class='op'>||</span> {
+    <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;oh no!&quot;</span>);
+});
+
+<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=</span> <span class='ident'>result</span> {
+    <span class='ident'>panic</span>::<span class='ident'>propagate</span>(<span class='ident'>err</span>);
+}</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 
