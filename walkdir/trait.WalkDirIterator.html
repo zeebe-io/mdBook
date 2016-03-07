@@ -65,6 +65,7 @@ directory will be skipped (including sub-directories).</p>
 borrows the iterator mutably. Namely, you must write out the looping
 condition manually. For example, to skip hidden entries efficiently on
 unix systems:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>walkdir</span>::{<span class='ident'>DirEntry</span>, <span class='ident'>WalkDir</span>, <span class='ident'>WalkDirIterator</span>};
 
@@ -107,6 +108,7 @@ entry is ignored and if it is a directory, it is not descended into.</p>
 <p>This is often more convenient to use than <code>skip_current_dir</code>. For
 example, to skip hidden files and directories efficiently on unix
 systems:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>walkdir</span>::{<span class='ident'>DirEntry</span>, <span class='ident'>WalkDir</span>, <span class='ident'>WalkDirIterator</span>};
 
@@ -179,7 +181,7 @@ passed to this predicate.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
