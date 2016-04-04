@@ -77,7 +77,7 @@ extern crate toml;
 #[macro_use] pub mod macros;
 pub mod book;
 pub mod config;
-mod parse;
+pub mod markdown;
 pub mod renderer;
 pub mod theme;
 pub mod utils;

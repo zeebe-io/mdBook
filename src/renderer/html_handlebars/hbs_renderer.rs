@@ -2,7 +2,7 @@ use renderer::html_handlebars::helpers;
 use renderer::Renderer;
 use book::MDBook;
 use book::bookitem::BookItem;
-use {utils, theme};
+use {utils, theme, markdown};
 
 use std::path::{Path, PathBuf};
 use std::fs::{self, File};
@@ -75,7 +75,7 @@ impl Renderer for HtmlHandlebars {
                         }
 
                         // Render markdown using the pulldown-cmark crate
-                        content = utils::render_markdown(&content);
+                        content = markdown::render(&content);
                         print_content.push_str(&content);
 
                         // Remove content from previous file and render content for this one
