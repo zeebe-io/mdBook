@@ -6,6 +6,7 @@ pub mod book;
 pub use self::bookitem::{BookItem, BookItems};
 pub use self::bookconfig::BookConfig;
 
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::fs::{self, File};
 use std::error::Error;
@@ -23,9 +24,12 @@ pub struct MDBook {
     dest: PathBuf,
     src: PathBuf,
 
-    pub title: String,
-    pub author: String,
-    pub description: String,
+    title: String,
+    author: String,
+    description: String,
+
+    default_language: &'static str,
+    books: HashMap<&'static str, book::Book>,
 
     pub content: Vec<BookItem>,
     renderer: Box<Renderer>,
@@ -49,12 +53,15 @@ impl MDBook {
 
         MDBook {
             root: root.to_owned(),
-            dest: root.join("book"),
-            src: root.join("src"),
+            dest: PathBuf::from("book"),
+            src: PathBuf::from("src"),
 
             title: String::new(),
             author: String::new(),
             description: String::new(),
+
+            default_language: "en",
+            books: HashMap::new(),
 
             content: vec![],
             renderer: Box::new(HtmlHandlebars::new()),
@@ -125,12 +132,12 @@ impl MDBook {
 
             if !self.dest.exists() {
                 debug!("[*]: {:?} does not exist, trying to create directory", self.dest);
-                try!(fs::create_dir_all(&self.dest));
+                try!(fs::create_dir(&self.dest));
             }
 
             if !self.src.exists() {
                 debug!("[*]: {:?} does not exist, trying to create directory", self.src);
-                try!(fs::create_dir_all(&self.src));
+                try!(fs::create_dir(&self.src));
             }
 
             let summary = self.src.join("SUMMARY.md");
@@ -139,7 +146,7 @@ impl MDBook {
 
                 // Summary does not exist, create it
 
-                debug!("[*]: {:?} does not exist, trying to create SUMMARY.md", self.src.join("SUMMARY.md"));
+                debug!("[*]: {:?} does not exist, trying to create SUMMARY.md", src.join("SUMMARY.md"));
                 let mut f = try!(File::create(&self.src.join("SUMMARY.md")));
 
                 debug!("[*]: Writing to SUMMARY.md");
@@ -158,8 +165,7 @@ impl MDBook {
             debug!("[*]: item: {:?}", item);
             match *item {
                 BookItem::Spacer => continue,
-                BookItem::Chapter(_, ref ch) |
-                BookItem::Affix(ref ch) => {
+                BookItem::Chapter(_, ref ch) | BookItem::Affix(ref ch) => {
                     if ch.path != PathBuf::new() {
                         let path = self.src.join(&ch.path);
 
@@ -287,8 +293,18 @@ impl MDBook {
     pub fn read_config(mut self) -> Self {
 
         let config = BookConfig::new(&self.root)
-                         .read_config(&self.root)
-                         .to_owned();
+                                .read_config(&self.root)
+                                .to_owned();
+
+        // Temporary
+        let mut english = book::Book::new(&config.title);
+
+        english.mut_metadata()
+               .set_description(&config.description)
+               .add_author(metadata::Author::new(&config.author));
+
+        self.books.insert("en", english);
+        self.default_language = "en";
 
         self.title = config.title;
         self.description = config.description;

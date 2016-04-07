@@ -35,7 +35,7 @@ impl BookMetadata {
         }
     }
 
-    pub fn with_description(mut self, description: &str) -> Self {
+    pub fn set_description(&mut self, description: &str) -> &mut Self {
         self.description = description.to_owned();
         self
     }
