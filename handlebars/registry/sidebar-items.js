@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Registry",""]]});
+initSidebarItems({"fn":[["html_escape","The default *escape fn* replaces the characters `&\"<>` with the equivalent html / xml entities."],["no_escape","`EscapeFn` that donot change any thing. Useful when using in a non-html environment."]],"struct":[["Registry","The single entry point of your Handlebars templates"]],"type":[["EscapeFn","This type represents an *escape fn*, that is a function who's purpose it is to escape potentially problematic characters in a string."]]});

@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
 
     
     
@@ -124,6 +125,9 @@
 <span id="81">81</span>
 <span id="82">82</span>
 <span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # mdBook</span>
 <span class='doccomment'>//!</span>
@@ -190,14 +194,17 @@
 <span class='doccomment'>//! I have regrouped some useful functions in the [utils](utils/index.html) module, like the following function</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! utils::create_path(path: &amp;Path)</span>
+<span class='doccomment'>//! utils::fs::create_path(path: &amp;Path)</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! This function creates all the directories in a given path if they do not exist</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Make sure to take a look at it.</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>macros</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>handlebars</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pulldown_cmark</span>;
+
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>macros</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>book</span>;
 <span class='kw'>mod</span> <span class='ident'>parse</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>renderer</span>;
@@ -232,6 +239,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

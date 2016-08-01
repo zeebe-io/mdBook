@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["NullWatcher",""]]});
+initSidebarItems({"struct":[["NullWatcher","Stub `Watcher` implementation"]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["StringInput","A `struct` useful for matching in-memory `String`s."]]});

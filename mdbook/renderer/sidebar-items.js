@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["renderer",""]],"struct":[["HtmlHandlebars",""]]});
+initSidebarItems({"struct":[["HtmlHandlebars",""]],"trait":[["Renderer",""]]});

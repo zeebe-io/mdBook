@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/handlebars-0.12.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.20.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -241,31 +242,161 @@
 <span id="198">198</span>
 <span id="199">199</span>
 <span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Handlebars</span>
 <span class='doccomment'>//! Handlebars is a modern and extensible templating solution originally created in the JavaScript world. It&#39;s used by many popular frameworks like [Ember.js](http://emberjs.com) and Chaplin. It&#39;s also ported to some other platforms such as [Java](https://github.com/jknack/handlebars.java).</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! And this is handlebars Rust implementation, designed for server-side page generation. It&#39;s a general-purpose library so you use it for any kind of text generation.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Handlebars spec</span>
+<span class='doccomment'>//! ## Why (this) Handlebars?</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Base</span>
+<span class='doccomment'>//! Handlebars is a real-world templating system that you can use to build</span>
+<span class='doccomment'>//! your application without pain.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can go to [Handlebars.js](http://handlebarsjs.com/) website for its syntax. This implementation should be compatible with most parts of the spec, except:</span>
+<span class='doccomment'>//! ### Features</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! * raw helper syntax `{{{raw-helper}}}...{{{/raw-helper}}}` is implemented as block helper raw.</span>
-<span class='doccomment'>//! * configurable logging (hard-coded to rust native logging, with fixed level `INFO`)</span>
+<span class='doccomment'>//! #### Isolation of Rust and HTML</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Extensions</span>
+<span class='doccomment'>//! This library doesn&#39;t attempt to use some macro magic to allow you to</span>
+<span class='doccomment'>//! write your template within your rust code. I admit that it&#39;s fun to do</span>
+<span class='doccomment'>//! that but it doesn&#39;t fit real-world use case.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! We have template reuse facilities supported via built-in helpers `&gt;`, `partial` and `block`.</span>
+<span class='doccomment'>//! #### Limited but essential control structure built-in</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! There are two ways to reuse a template:</span>
+<span class='doccomment'>//! Only essential control directive `if` and `each` were built-in. This</span>
+<span class='doccomment'>//! prevents you to put too much application logic into your template.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! * include (using `&gt;`)</span>
-<span class='doccomment'>//! * inheritance (using `&gt;` together with `block` and `partial`)</span>
+<span class='doccomment'>//! #### Extensible helper system</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! Consult [Handlebar.java document about template inheritance](http://jknack.github.io/handlebars.java/reuse.html).</span>
+<span class='doccomment'>//! You can write your own helper with Rust! It can be a block helper or</span>
+<span class='doccomment'>//! inline helper. Put you logic into the helper and don&#39;t repeat</span>
+<span class='doccomment'>//! yourself.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! A helper can be as a simple as a Rust function like:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```ignore</span>
+<span class='doccomment'>//! fn hex_helper (c: &amp;Context, h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
+<span class='doccomment'>//!     let param = h.param(0).unwrap();</span>
+<span class='doccomment'>//!     let rendered = format!(&quot;{:x}&quot;, param.value().render());</span>
+<span class='doccomment'>//!     try!(rc.writer.write(rendered.into_bytes().as_ref()));</span>
+<span class='doccomment'>//!     Ok(())</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! /// register the helper</span>
+<span class='doccomment'>//! handlebars.register_helper(&quot;hex&quot;, Box::new(hex_helper));</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! #### Template inheritance</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Every time I look into a templating system, I will investigate its</span>
+<span class='doccomment'>//! support for [template</span>
+<span class='doccomment'>//! inheritance](https://docs.djangoproject.com/en/1.9/ref/templates/language/#template-inh</span>
+<span class='doccomment'>//! eritance).</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Template include is not enough. In most case you will need a skeleton</span>
+<span class='doccomment'>//! of page as parent (header, footer, etc.), and embed you page into this</span>
+<span class='doccomment'>//! parent.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! You can find a real example for template inheritance in</span>
+<span class='doccomment'>//! `examples/partials.rs`, and templates used by this file.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ### Limitations</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! * This implementation is **not fully compatible** with the original</span>
+<span class='doccomment'>//!   javascript version</span>
+<span class='doccomment'>//! * As a static typed language, it&#39;s a little verbose to use handlebars</span>
+<span class='doccomment'>//! * You will have to make your data `ToJson`-able, so we can render</span>
+<span class='doccomment'>//!   it. If you are on nightly channel, we have [a syntax</span>
+<span class='doccomment'>//!   extension](https://github.com/sunng87/tojson_macros) to generate</span>
+<span class='doccomment'>//!   default `ToJson` implementation for you. If you use</span>
+<span class='doccomment'>//!   [serde](https://github.com/serde-rs/serde), you can enable</span>
+<span class='doccomment'>//!   `serde_type` feature of handlebars-rust and add `#[Serialize]` for</span>
+<span class='doccomment'>//!   your types.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ## Usage</span>
 <span class='doccomment'>//!</span>
@@ -289,15 +420,25 @@
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
+<span class='doccomment'>//! On registeration, the template is parsed and cached in the registry. So further</span>
+<span class='doccomment'>//! usage will benifite from the one-time work. Also features like include, inheritance</span>
+<span class='doccomment'>//! that involves template reference requires you to register those template first so</span>
+<span class='doccomment'>//! the registry can find it.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! If you template is small or just to expirement, you can use `template_render` APIs</span>
+<span class='doccomment'>//! without registeration.</span>
+<span class='doccomment'>//!</span>
 <span class='doccomment'>//! ### Rendering Something</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! I should say that rendering is a little tricky. Since handlebars is originally a JavaScript templating framework. It supports dynamic features like duck-typing, truthy/falsey values. But for a static language like Rust, this is a little difficult. As a solution, I&#39;m using the `serialize::json::Json` internally for data rendering, which seems good by far.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! That means, if you want to render something, you have to ensure that it implements the `serialize::json::ToJson` trait. Luckily, most built-in types already have trait. However, if you want to render your custom struct, you need to implement this trait manually, or use [tojson_macros](https://github.com/sunng87/tojson_macros) to generate default `ToJson` implementation.</span>
+<span class='doccomment'>//! That means, if you want to render something, you have to ensure that it implements the `rustc_serialize::json::ToJson` trait. Luckily, most built-in types already have trait. However, if you want to render your custom struct, you need to implement this trait manually, or use [tojson_macros](https://github.com/sunng87/tojson_macros) to generate default `ToJson` implementation.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! You can use default `render` function to render a template into `String`. From 0.9, there&#39;s `renderw` to render text into anything of `std::io::Write`.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! From 0.13, we also support serde types by a feature flag `serde_type`.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```ignore</span>
 <span class='doccomment'>//! extern crate rustc_serialize;</span>
 <span class='doccomment'>//! extern crate handlebars;</span>
 <span class='doccomment'>//!</span>
@@ -335,6 +476,28 @@
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
+<span class='doccomment'>//! Or if you don&#39;t need the template to be cached or referenced by other ones, you can</span>
+<span class='doccomment'>//! simply render it without registering.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```ignore</span>
+<span class='doccomment'>//! fn main() {</span>
+<span class='doccomment'>//!   let source = &quot;Hello, {{name}}&quot;;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!   let mut handlebars = Handlebars::new();</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!   let data = Person {</span>
+<span class='doccomment'>//!       name: &quot;Ning Sun&quot;.to_string(),</span>
+<span class='doccomment'>//!       age: 27</span>
+<span class='doccomment'>//!   };</span>
+<span class='doccomment'>//!   let result = handlebars.template_render(&quot;Hello, {{name}}&quot;, &amp;data);</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! #### Escaping</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! As per the handlebars spec, output using `{{expression}}` is escaped by default (to be precise, the characters `&amp;&quot;&lt;&gt;` are replaced by their respective html / xml entities). However, since the use cases of a rust template engine are probably a bit more diverse than those of a JavaScript one, this implementation allows the user to supply a custom escape function to be used instead. For more information see the `EscapeFn` type and `Handlebars::register_escape_fn()` method.</span>
+<span class='doccomment'>//!</span>
 <span class='doccomment'>//! ### Custom Helper</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Handlebars is nothing without helpers. You can also create your own helpers with rust. Helpers in handlebars-rust are custom struct implements the `HelperDef` trait, concretely, the `call` function. For your convenience, most of stateless helpers can be implemented as bare functions.</span>
@@ -352,28 +515,20 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! impl HelperDef for SimpleHelper {</span>
 <span class='doccomment'>//!   fn call(&amp;self, c: &amp;Context, h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
-<span class='doccomment'>//!     let param = h.params().get(0).unwrap();</span>
+<span class='doccomment'>//!     let param = h.param(0).unwrap();</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // get value from context data</span>
-<span class='doccomment'>//!     // rc.get_path() is current json parent path, you should always use it like this</span>
-<span class='doccomment'>//!     // param is the key of value you want to display</span>
-<span class='doccomment'>//!     let value = c.navigate(rc.get_path(), param);</span>
 <span class='doccomment'>//!     try!(rc.writer.write(&quot;Ny helper dumps: &quot;.as_bytes()));</span>
-<span class='doccomment'>//!     try!(rc.writer.write(value.render().into_bytes().as_ref()));</span>
+<span class='doccomment'>//!     try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
 <span class='doccomment'>//!     Ok(())</span>
 <span class='doccomment'>//!   }</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! // implement via bare function</span>
 <span class='doccomment'>//! fn another_simple_helper (c: &amp;Context, h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
-<span class='doccomment'>//!     let param = h.params().get(0).unwrap();</span>
+<span class='doccomment'>//!     let param = h.param(0).unwrap();</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // get value from context data</span>
-<span class='doccomment'>//!     // rc.get_path() is current json parent path, you should always use it like this</span>
-<span class='doccomment'>//!     // param is the key of value you want to display</span>
-<span class='doccomment'>//!     let value = c.navigate(rc.get_path(), param);</span>
 <span class='doccomment'>//!     try!(rc.writer.write(&quot;My second helper dumps: &quot;.as_bytes()));</span>
-<span class='doccomment'>//!     try!(rc.writer.write(value.render().into_bytes().as_ref()));</span>
+<span class='doccomment'>//!     try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
 <span class='doccomment'>//!     Ok(())</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//!</span>
@@ -419,22 +574,38 @@
 <span class='doccomment'>//! * `{{log ...}}` log value with rust logger, default level: INFO. Currently you cannot change the level.</span>
 <span class='doccomment'>//!</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>quick_error</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lazy_static</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>maplit</span>;
 
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>recursion_limit</span> <span class='op'>=</span> <span class='string'>&quot;200&quot;</span>]</span>
+
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>quick_error</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lazy_static</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pest</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>maplit</span>;
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc_ser_type&quot;</span>, <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde_type&quot;</span>)))]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span> <span class='kw'>as</span> <span class='ident'>serialize</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>regex</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>template</span>::{<span class='ident'>Template</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>error</span>::<span class='ident'>TemplateError</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>registry</span>::<span class='ident'>Registry</span> <span class='kw'>as</span> <span class='ident'>Handlebars</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>render</span>::{<span class='ident'>Renderable</span>, <span class='ident'>RenderError</span>, <span class='ident'>RenderContext</span>, <span class='ident'>Helper</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>helpers</span>::{<span class='ident'>HelperDef</span>};
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde_type&quot;</span>)]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde_type&quot;</span>)]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
+
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>template</span>::<span class='ident'>Template</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>error</span>::{<span class='ident'>TemplateError</span>, <span class='ident'>TemplateFileError</span>, <span class='ident'>TemplateRenderError</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>registry</span>::{<span class='ident'>EscapeFn</span>, <span class='ident'>no_escape</span>, <span class='ident'>html_escape</span>, <span class='ident'>Registry</span> <span class='kw'>as</span> <span class='ident'>Handlebars</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>render</span>::{<span class='ident'>Renderable</span>, <span class='ident'>RenderError</span>, <span class='ident'>RenderContext</span>, <span class='ident'>Helper</span>, <span class='ident'>ContextJson</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>helpers</span>::<span class='ident'>HelperDef</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>context</span>::{<span class='ident'>Context</span>, <span class='ident'>JsonRender</span>, <span class='ident'>JsonTruthy</span>};
 
+<span class='kw'>mod</span> <span class='ident'>grammar</span>;
 <span class='kw'>mod</span> <span class='ident'>template</span>;
 <span class='kw'>mod</span> <span class='ident'>error</span>;
 <span class='kw'>mod</span> <span class='ident'>registry</span>;
@@ -466,6 +637,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

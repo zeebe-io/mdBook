@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -43,10 +44,10 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>walkdir</a>::<wbr><a class='struct' href=''>WalkDir</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-33' class='srclink' href='../src/walkdir/lib.rs.html.html#183-186' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-33' class='srclink' href='../src/walkdir/lib.rs.html#183-186' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct WalkDir {
     // some fields omitted
 }</pre><div class='docblock'><p>A builder to create an iterator for recursively walking a directory.</p>
@@ -101,7 +102,8 @@ a loop. On most platforms, this operation is illegal.</p>
 
 <p>Note that when following symbolic/soft links, loops are detected and an
 error is reported.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../walkdir/struct.WalkDir.html' title='walkdir::WalkDir'>WalkDir</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(root: P) -&gt; Self</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../walkdir/struct.WalkDir.html' title='walkdir::WalkDir'>WalkDir</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-41' class='srclink' href='../src/walkdir/lib.rs.html#195-288' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(root: P) -&gt; Self</code></h4>
 <div class='docblock'><p>Create a builder for a recursive directory iterator starting at the
 file path <code>root</code>. If <code>root</code> is a directory, then it is the first item
 yielded by the iterator. If <code>root</code> is a file, then it is the first
@@ -157,10 +159,14 @@ acceptable.</p>
 
 <p>Note that this value does not impact the number of system calls made by
 an exhausted iterator.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.IntoIterator.html' title='core::iter::IntoIterator'>IntoIterator</a> for <a class='struct' href='../walkdir/struct.WalkDir.html' title='walkdir::WalkDir'>WalkDir</a></code></h3><div class='impl-items'><h4 id='associatedtype.Item' class='type'><code>type Item = <a class='type' href='../walkdir/type.Result.html' title='walkdir::Result'>Result</a>&lt;<a class='struct' href='../walkdir/struct.DirEntry.html' title='walkdir::DirEntry'>DirEntry</a>&gt;</code></h4>
-<h4 id='associatedtype.IntoIter' class='type'><code>type IntoIter = <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></h4>
-<h4 id='method.into_iter' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/trait.IntoIterator.html#method.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>IntoIterator</a> for <a class='struct' href='../walkdir/struct.WalkDir.html' title='walkdir::WalkDir'>WalkDir</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-57' class='srclink' href='../src/walkdir/lib.rs.html#290-304' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Item' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.Item' class='type'>Item</a> = <a class='type' href='../walkdir/type.Result.html' title='walkdir::Result'>Result</a>&lt;<a class='struct' href='../walkdir/struct.DirEntry.html' title='walkdir::DirEntry'>DirEntry</a>&gt;</code></h4>
+<div class='docblock'><p>The type of the elements being iterated over.</p>
+</div><h4 id='associatedtype.IntoIter' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.IntoIter' class='type'>IntoIter</a> = <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></h4>
+<div class='docblock'><p>Which kind of iterator are we turning this into?</p>
+</div><h4 id='method.into_iter' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></h4>
+<div class='docblock'><p>Creates an iterator from a value. <a href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -183,6 +189,8 @@ an exhausted iterator.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

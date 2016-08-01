@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Helper",""],["RenderContext","The context of a render call"],["RenderError",""]],"trait":[["Renderable",""]]});
+initSidebarItems({"struct":[["ContextJson","Json wrapper that holds the Json value and reference path information"],["Helper","Render-time Helper data when using in a helper definition"],["RenderContext","The context of a render call"],["RenderError",""]],"trait":[["Renderable",""]]});

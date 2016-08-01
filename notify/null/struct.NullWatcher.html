@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -43,14 +44,21 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>notify</a>::<wbr><a href='index.html'>null</a>::<wbr><a class='struct' href=''>NullWatcher</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-463' class='srclink' href='../../src/notify/null.rs.html.html#7' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct NullWatcher;</pre><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../../notify/trait.Watcher.html' title='notify::Watcher'>Watcher</a> for <a class='struct' href='../../notify/null/struct.NullWatcher.html' title='notify::null::NullWatcher'>NullWatcher</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='../../notify/trait.Watcher.html#method.new' class='fnname'>new</a>(tx: <a class='struct' href='https://doc.rust-lang.org/nightly/std/sync/mpsc/struct.Sender.html' title='std::sync::mpsc::Sender'>Sender</a>&lt;<a class='struct' href='../../notify/struct.Event.html' title='notify::Event'>Event</a>&gt;) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../notify/null/struct.NullWatcher.html' title='notify::null::NullWatcher'>NullWatcher</a>, <a class='enum' href='../../notify/enum.Error.html' title='notify::Error'>Error</a>&gt;</code></h4>
-<h4 id='method.watch' class='method'><code>fn <a href='../../notify/trait.Watcher.html#method.watch' class='fnname'>watch</a>&lt;P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(&amp;mut self, path: P) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../../notify/enum.Error.html' title='notify::Error'>Error</a>&gt;</code></h4>
-<h4 id='method.unwatch' class='method'><code>fn <a href='../../notify/trait.Watcher.html#method.unwatch' class='fnname'>unwatch</a>&lt;P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(&amp;mut self, path: P) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../../notify/enum.Error.html' title='notify::Error'>Error</a>&gt;</code></h4>
-</div></section>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-464' class='srclink' href='../../src/notify/null.rs.html#12' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct NullWatcher;</pre><div class='docblock'><p>Stub <code>Watcher</code> implementation</p>
+
+<p>Events are never delivered from this watcher.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../notify/trait.Watcher.html' title='notify::Watcher'>Watcher</a> for <a class='struct' href='../../notify/null/struct.NullWatcher.html' title='notify::null::NullWatcher'>NullWatcher</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-466' class='srclink' href='../../src/notify/null.rs.html#14-26' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='../../notify/trait.Watcher.html#tymethod.new' class='fnname'>new</a>(tx: <a class='struct' href='https://doc.rust-lang.org/nightly/std/sync/mpsc/struct.Sender.html' title='std::sync::mpsc::Sender'>Sender</a>&lt;<a class='struct' href='../../notify/struct.Event.html' title='notify::Event'>Event</a>&gt;) -&gt; <a class='type' href='../../notify/type.Result.html' title='notify::Result'>Result</a>&lt;<a class='struct' href='../../notify/null/struct.NullWatcher.html' title='notify::null::NullWatcher'>NullWatcher</a>&gt;</code></h4>
+<div class='docblock'><p>Create a new Watcher</p>
+</div><h4 id='method.watch' class='method'><code>fn <a href='../../notify/trait.Watcher.html#tymethod.watch' class='fnname'>watch</a>&lt;P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(&amp;mut self, path: P) -&gt; <a class='type' href='../../notify/type.Result.html' title='notify::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Begin watching a new path <a href="../../notify/trait.Watcher.html#tymethod.watch">Read more</a></p>
+</div><h4 id='method.unwatch' class='method'><code>fn <a href='../../notify/trait.Watcher.html#tymethod.unwatch' class='fnname'>unwatch</a>&lt;P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(&amp;mut self, path: P) -&gt; <a class='type' href='../../notify/type.Result.html' title='notify::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Stop watching a path <a href="../../notify/trait.Watcher.html#tymethod.unwatch">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -73,6 +81,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["AppSettings","Application level settings, which affect how `App` operates"]]});
+initSidebarItems({"enum":[["AppSettings","Application level settings, which affect how [`App`] operates"]]});

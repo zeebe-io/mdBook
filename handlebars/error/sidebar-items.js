@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["TemplateError","Template parsing error"]]});
+initSidebarItems({"enum":[["TemplateError","Template parsing error"],["TemplateFileError",""],["TemplateRenderError",""]]});

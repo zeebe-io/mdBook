@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["INotifyWatcher",""]]});
+initSidebarItems({"struct":[["INotifyWatcher","Watcher implementation based on inotify"]]});

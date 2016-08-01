@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["Parser","A `trait` that defines a parser."]]});

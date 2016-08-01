@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/notify-2.5.4/src/null.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/notify-2.6.2/src/null.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>null.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -63,29 +64,37 @@
 <span id="20">20</span>
 <span id="21">21</span>
 <span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
 </pre><pre class='rust '>
+<span class='doccomment'>//! Stub Watcher implementation</span>
+
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unused_variables</span>)]</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Error</span>, <span class='ident'>Event</span>, <span class='ident'>Watcher</span>};
+<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Event</span>, <span class='prelude-ty'>Result</span>, <span class='ident'>Watcher</span>};
 
+<span class='doccomment'>/// Stub `Watcher` implementation</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Events are never delivered from this watcher.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>NullWatcher</span>;
 
 <span class='kw'>impl</span> <span class='ident'>Watcher</span> <span class='kw'>for</span> <span class='ident'>NullWatcher</span> {
-  <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>tx</span>: <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>NullWatcher</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='prelude-val'>Ok</span>(<span class='ident'>NullWatcher</span>)
-  }
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>tx</span>: <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>NullWatcher</span><span class='op'>&gt;</span> {
+        <span class='prelude-val'>Ok</span>(<span class='ident'>NullWatcher</span>)
+    }
 
-  <span class='kw'>fn</span> <span class='ident'>watch</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='prelude-val'>Ok</span>(())
-  }
+    <span class='kw'>fn</span> <span class='ident'>watch</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='prelude-val'>Ok</span>(())
+    }
 
-  <span class='kw'>fn</span> <span class='ident'>unwatch</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='prelude-val'>Ok</span>(())
-  }
+    <span class='kw'>fn</span> <span class='ident'>unwatch</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='prelude-val'>Ok</span>(())
+    }
 }
-
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -110,6 +119,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

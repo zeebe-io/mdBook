@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/inotify-0.1.12/src/ffi.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/inotify-0.2.3/src/ffi.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ffi.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -414,7 +415,7 @@
 <span class='doccomment'>/// [execve(2)]: http://man7.org/linux/man-pages/man2/execve.2.html</span>
 <span class='doccomment'>/// [open(2)]: http://man7.org/linux/man-pages/man2/open.2.html</span>
 <span class='doccomment'>/// [fcntl(2)]: http://man7.org/linux/man-pages/man2/fcntl.2.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOEXEC</span> : <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0o2000000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOEXEC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0o2000000</span>;
 
 <span class='doccomment'>/// Flag: Set the O_NONBLOCK file status flag</span>
 <span class='doccomment'>///</span>
@@ -448,9 +449,10 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
 <span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ACCESS</span>       : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000001</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ACCESS</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000001</span>;
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MODIFY</span>       : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000002</span>;
+<span class='doccomment'>/// Event: File was modified.</span>
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MODIFY</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000002</span>;
 
 <span class='doccomment'>/// Event: Metadata has changed.</span>
 <span class='doccomment'>///</span>
@@ -470,13 +472,13 @@
 <span class='doccomment'>/// [link(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
 <span class='doccomment'>/// [unlink(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
 <span class='doccomment'>/// [chown(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ATTRIB</span>       : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000004</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ATTRIB</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000004</span>;
 
 <span class='doccomment'>/// Event: File opened for writing was closed.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
 <span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOSE_WRITE</span>  : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000008</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOSE_WRITE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000008</span>;
 
 <span class='doccomment'>/// Event: File not opened for writing was closed.</span>
 <span class='doccomment'>///</span>
@@ -488,19 +490,19 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
 <span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_OPEN</span>         : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000020</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_OPEN</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000020</span>;
 
 <span class='doccomment'>/// Event: File or directory was moved away.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
 <span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVED_FROM</span>   : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000040</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVED_FROM</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000040</span>;
 
 <span class='doccomment'>/// Event: File or directory was moved in.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
 <span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVED_TO</span>     : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000080</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVED_TO</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000080</span>;
 
 <span class='doccomment'>/// Event: File or directory was created.</span>
 <span class='doccomment'>///</span>
@@ -508,7 +510,7 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
 <span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CREATE</span>       : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000100</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CREATE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000100</span>;
 
 <span class='doccomment'>/// Event: File or directory was deleted.</span>
 <span class='doccomment'>///</span>
@@ -516,7 +518,7 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
 <span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DELETE</span>       : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000200</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DELETE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000200</span>;
 
 <span class='doccomment'>/// Event: Watched file or directory was deleted.</span>
 <span class='doccomment'>///</span>
@@ -527,16 +529,16 @@
 <span class='doccomment'>/// An IN_IGNORED event will subsequently be generated.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// [mv(1)]: http://man7.org/linux/man-pages/man1/mv.1.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DELETE_SELF</span>  : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000400</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DELETE_SELF</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000400</span>;
 
 <span class='doccomment'>/// Event: Watched file or directory was moved.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVE_SELF</span>    : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000800</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVE_SELF</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000800</span>;
 
 <span class='doccomment'>/// Event: File or directory was moved away or in.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
 <span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVE</span> : <span class='ident'>uint32_t</span> <span class='op'>=</span> (<span class='ident'>IN_MOVED_FROM</span> <span class='op'>|</span> <span class='ident'>IN_MOVED_TO</span>);
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> (<span class='ident'>IN_MOVED_FROM</span> <span class='op'>|</span> <span class='ident'>IN_MOVED_TO</span>);
 
 <span class='doccomment'>/// Event: File opened was closed.</span>
 <span class='doccomment'>///</span>
@@ -551,7 +553,7 @@
     <span class='op'>|</span> <span class='ident'>IN_DELETE_SELF</span> <span class='op'>|</span> <span class='ident'>IN_MOVE_SELF</span>);
 
 <span class='doccomment'>/// Option: Don&#39;t watch children (if self is a directory).</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ONLYDIR</span>    : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x01000000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ONLYDIR</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x01000000</span>;
 
 <span class='doccomment'>/// Option: Don&#39;t dereference (if self is a symlink).</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DONT_FOLLOW</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x02000000</span>;
@@ -576,18 +578,18 @@
 <span class='doccomment'>/// &gt; If a watch instance already exists for the filesystem</span>
 <span class='doccomment'>/// &gt; object corresponding to self, add (|) the events to the</span>
 <span class='doccomment'>/// &gt; watch mask instead of replacing it.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MASK_ADD</span>   : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x20000000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MASK_ADD</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x20000000</span>;
 
 <span class='doccomment'>/// Option: Listen for one event, then remove the watch.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ONESHOT</span>    : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x80000000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ONESHOT</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x80000000</span>;
 
 <span class='doccomment'>/// Info: Subject of this event is a directory.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ISDIR</span>     : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x40000000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ISDIR</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x40000000</span>;
 
 <span class='doccomment'>/// Info: Filesystem containing self was unmounted.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// An IN_IGNORED event will subsequently be generated.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_UNMOUNT</span>   : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00002000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_UNMOUNT</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00002000</span>;
 
 <span class='doccomment'>/// Info: Event queue overflowed.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_Q_OVERFLOW</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00004000</span>;
@@ -601,7 +603,7 @@
 <span class='doccomment'>/// See the BUGS section of [inotify(7)] for more details.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// [inotify(7)]: http://man7.org/linux/man-pages/man7/inotify.7.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_IGNORED</span>   : <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00008000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_IGNORED</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00008000</span>;
 
 
 <span class='doccomment'>/// Describes an event.</span>
@@ -618,7 +620,6 @@
 <span class='doccomment'>/// [read(2)]: http://man7.org/linux/man-pages/man2/read.2.html</span>
 <span class='doccomment'>/// [signal(7)]: http://man7.org/linux/man-pages/man2/read.2.html</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>raw_pointer_derive</span>)]</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>)]</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>inotify_event</span> {
@@ -704,6 +705,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
