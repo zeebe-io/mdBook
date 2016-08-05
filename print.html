@@ -47,7 +47,7 @@
         </script>
 
         <div id="sidebar" class="sidebar">
-            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/test.html"><strong>2.4.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong>3.5.</strong> Rust code specific features</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
+            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong>2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong>2.5.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong>3.5.</strong> Rust code specific features</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
         </div>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -157,6 +157,24 @@ current working directory.</p>
 </code></pre>
 <hr />
 <p><strong><em>note:</em></strong> <em>the <code>watch</code> command has not gotten a lot of testing yet, there could be some rough edges. If you discover a problem, please report it <a href="https://github.com/azerupi/mdBook/issues">on Github</a></em></p>
+<h1>The serve command</h1>
+<p>The <code>serve</code> command is useful when you want to preview your book. It also does hot reloading of the webpage whenever a file changes.
+It achieves this by serving the books content over <code>localhost:3000</code> (unless otherwise configured, see below) and runs a websocket server on <code>localhost:3001</code> which triggers the reloads.
+This preferred by many for writing books with mdbook because it allows for you to see the result of your work instantly after every file change.</p>
+<h4>Specify a directory</h4>
+<p>Like <code>watch</code>, <code>serve</code> can take a directory as argument to use instead of the
+current working directory.</p>
+<pre><code class="language-bash">mdbook serve path/to/book
+</code></pre>
+<h4>Server options</h4>
+<p><code>serve</code> has four options: the http port, the websocket port, the interface to serve on, and the public address of the server so that the browser may reach the websocket server.</p>
+<p>For example: suppose you had an nginx server for SSL termination which has a public address of 192.168.1.100 on port 80 and proxied that to 127.0.0.1 on port 8000. To run use the nginx proxy do:</p>
+<pre><code class="language-bash">mdbook server path/to/book -p 8000 -i 127.0.0.1 -a 192.168.1.100
+</code></pre>
+<p>If you were to want live reloading for this you would need to proxy the websocket calls through nginx as well from <code>192.168.1.100:&lt;WS_PORT&gt;</code> to <code>127.0.0.1:&lt;WS_PORT&gt;</code>. The <code>-w</code> flag allows for the websocket port to be configured.</p>
+<hr />
+<p><strong><em>note:</em></strong> <em>the <code>serve</code> command has not gotten a lot of testing yet, there could be some rough edges. If you discover a problem, please report it <a href="https://github.com/azerupi/mdBook/issues">on Github</a></em></p>
+<p><strong><em>note</em></strong>:</p>
 <h1>The test command</h1>
 <p>When writing a book, you sometimes need to automate some tests. For example, <a href="https://doc.rust-lang.org/stable/book/">The Rust Programming Book</a> uses a lot of code examples that could get outdated.
 Therefore it is very important for them to be able to automatically test these code examples.</p>
