@@ -582,7 +582,7 @@
         <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
         <span class='attribute'>#[<span class='ident'>inline</span>]</span>
         <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>whitespace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-            <span class='boolvalue'>false</span>
+            <span class='bool-val'>false</span>
         }
     };
     ( @<span class='ident'>ws</span> <span class='ident'>whitespace</span> <span class='op'>=</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> ();
@@ -601,7 +601,7 @@
         <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
         <span class='attribute'>#[<span class='ident'>inline</span>]</span>
         <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>comment</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-            <span class='boolvalue'>false</span>
+            <span class='bool-val'>false</span>
         }
     };
     ( @<span class='ident'>com</span> <span class='ident'>comment</span> <span class='op'>=</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> ();
@@ -640,9 +640,9 @@
                     <span class='ident'>queue_index</span>: <span class='ident'>Cell</span>::<span class='ident'>new</span>(<span class='number'>0</span>),
                     <span class='ident'>failures</span>:    <span class='macro'>vec</span><span class='macro'>!</span>[],
                     <span class='ident'>fail_pos</span>:    <span class='number'>0</span>,
-                    <span class='ident'>atomic</span>:      <span class='boolvalue'>false</span>,
-                    <span class='ident'>comment</span>:     <span class='boolvalue'>false</span>,
-                    <span class='ident'>eoi_matched</span>: <span class='boolvalue'>false</span>
+                    <span class='ident'>atomic</span>:      <span class='bool-val'>false</span>,
+                    <span class='ident'>comment</span>:     <span class='bool-val'>false</span>,
+                    <span class='ident'>eoi_matched</span>: <span class='bool-val'>false</span>
                 }
             }
 
@@ -657,12 +657,12 @@
 
                     <span class='self'>self</span>.<span class='ident'>track</span>(<span class='ident'>Rule</span>::<span class='ident'>any</span>, <span class='ident'>pos</span>);
 
-                    <span class='boolvalue'>false</span>
+                    <span class='bool-val'>false</span>
                 } <span class='kw'>else</span> {
                     <span class='kw'>let</span> <span class='ident'>next</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>pos</span>() <span class='op'>+</span> <span class='number'>1</span>;
                     <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>set_pos</span>(<span class='ident'>next</span>);
 
-                    <span class='boolvalue'>true</span>
+                    <span class='bool-val'>true</span>
                 }
             }
 
@@ -676,7 +676,7 @@
 
                     <span class='self'>self</span>.<span class='ident'>track</span>(<span class='ident'>Rule</span>::<span class='ident'>eoi</span>, <span class='ident'>pos</span>);
                 } <span class='kw'>else</span> {
-                    <span class='self'>self</span>.<span class='ident'>eoi_matched</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                    <span class='self'>self</span>.<span class='ident'>eoi_matched</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
                 }
 
                 <span class='ident'>result</span>
@@ -771,7 +771,7 @@
                 }
 
                 <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>comment</span> {
-                    <span class='self'>self</span>.<span class='ident'>comment</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                    <span class='self'>self</span>.<span class='ident'>comment</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
 
                     <span class='kw'>loop</span> {
                         <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>comment</span>() {
@@ -779,7 +779,7 @@
                         }
                     }
 
-                    <span class='self'>self</span>.<span class='ident'>comment</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+                    <span class='self'>self</span>.<span class='ident'>comment</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
                 }
             }
 
@@ -851,11 +851,11 @@
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;asd&quot;</span>));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>parser</span>.<span class='ident'>try</span>(<span class='boolvalue'>false</span>, <span class='op'>|</span><span class='ident'>parser</span><span class='op'>|</span> {
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>parser</span>.<span class='ident'>try</span>(<span class='bool-val'>false</span>, <span class='op'>|</span><span class='ident'>parser</span><span class='op'>|</span> {
             <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;as&quot;</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;dd&quot;</span>)
         }));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>try</span>(<span class='boolvalue'>false</span>, <span class='op'>|</span><span class='ident'>parser</span><span class='op'>|</span> {
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>try</span>(<span class='bool-val'>false</span>, <span class='op'>|</span><span class='ident'>parser</span><span class='op'>|</span> {
             <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;as&quot;</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;df&quot;</span>)
         }));
     }

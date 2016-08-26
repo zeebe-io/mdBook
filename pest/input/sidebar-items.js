@@ -1,1 +1,0 @@
-initSidebarItems({"trait":[["Input","A `trait` that defines an input for a `Parser`."]]});

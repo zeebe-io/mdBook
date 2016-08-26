@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.10.0/src/args/arg.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.10.4/src/args/arg.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>arg.rs.html -- source</title>
@@ -2430,26 +2430,6 @@
 <span id="2386">2386</span>
 <span id="2387">2387</span>
 <span id="2388">2388</span>
-<span id="2389">2389</span>
-<span id="2390">2390</span>
-<span id="2391">2391</span>
-<span id="2392">2392</span>
-<span id="2393">2393</span>
-<span id="2394">2394</span>
-<span id="2395">2395</span>
-<span id="2396">2396</span>
-<span id="2397">2397</span>
-<span id="2398">2398</span>
-<span id="2399">2399</span>
-<span id="2400">2400</span>
-<span id="2401">2401</span>
-<span id="2402">2402</span>
-<span id="2403">2403</span>
-<span id="2404">2404</span>
-<span id="2405">2405</span>
-<span id="2406">2406</span>
-<span id="2407">2407</span>
-<span id="2408">2408</span>
 </pre><pre class='rust '>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;yaml&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
@@ -2598,6 +2578,25 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Arg</span>::<span class='ident'>with_name</span>(<span class='ident'>name_str</span>);
         <span class='kw'>let</span> <span class='ident'>arg_settings</span> <span class='op'>=</span> <span class='ident'>y</span>.<span class='ident'>get</span>(<span class='ident'>name_yml</span>).<span class='ident'>unwrap</span>().<span class='ident'>as_hash</span>().<span class='ident'>unwrap</span>();
 
+        <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>vec_or_str</span> {
+            (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>c</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> {{
+                    <span class='kw'>let</span> <span class='ident'>maybe_vec</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>.<span class='ident'>as_vec</span>();
+                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>vec</span>) <span class='op'>=</span> <span class='ident'>maybe_vec</span> {
+                        <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>vec</span> {
+                            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
+                                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>c</span>(<span class='ident'>s</span>);
+                            }
+                        }
+                    } <span class='kw'>else</span> {
+                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>.<span class='ident'>as_str</span>() {
+                            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>c</span>(<span class='ident'>s</span>);
+                        }
+                    }
+                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>
+                }
+            };
+        }
+
         <span class='kw'>for</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>arg_settings</span>.<span class='ident'>iter</span>() {
             <span class='ident'>a</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>k</span>.<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>() {
                 <span class='string'>&quot;short&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>a</span>.<span class='ident'>short</span>(<span class='ident'>v</span>.<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>()),
@@ -2622,67 +2621,28 @@
                 <span class='string'>&quot;display_order&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>a</span>.<span class='ident'>display_order</span>(<span class='ident'>v</span>.<span class='ident'>as_i64</span>().<span class='ident'>unwrap</span>() <span class='kw'>as</span> <span class='ident'>usize</span>),
                 <span class='string'>&quot;default_value&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>a</span>.<span class='ident'>default_value</span>(<span class='ident'>v</span>.<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>()),
                 <span class='string'>&quot;value_names&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>value_name</span>(<span class='ident'>s</span>);
-                        }
-                    }
-                    <span class='ident'>a</span>
+                    <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>value_name</span>)
                 }
                 <span class='string'>&quot;groups&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>group</span>(<span class='ident'>s</span>);
-                        }
-                    }
-                    <span class='ident'>a</span>
+                    <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>group</span>)
                 }
                 <span class='string'>&quot;requires&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>requires</span>(<span class='ident'>s</span>);
-                        }
-                    }
-                    <span class='ident'>a</span>
+                    <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>requires</span>)
                 }
                 <span class='string'>&quot;conflicts_with&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>conflicts_with</span>(<span class='ident'>s</span>);
-                        }
-                    }
-                    <span class='ident'>a</span>
+                    <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>conflicts_with</span>)
                 }
                 <span class='string'>&quot;overrides_with&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>overrides_with</span>(<span class='ident'>s</span>);
-                        }
-                    }
-                    <span class='ident'>a</span>
+                    <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>overrides_with</span>)
                 }
                 <span class='string'>&quot;possible_values&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>possible_value</span>(<span class='ident'>s</span>);
-                        }
-                    }
-                    <span class='ident'>a</span>
+                    <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>possible_value</span>)
                 }
                 <span class='string'>&quot;required_unless_one&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>required_unless</span>(<span class='ident'>s</span>);
-                        }
-                    }
-                    <span class='ident'>a</span>
+                    <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>required_unless</span>)
                 }
                 <span class='string'>&quot;required_unless_all&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>for</span> <span class='ident'>ys</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>as_vec</span>().<span class='ident'>unwrap</span>() {
-                        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=</span> <span class='ident'>ys</span>.<span class='ident'>as_str</span>() {
-                            <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>required_unless</span>(<span class='ident'>s</span>);
-                        }
-                    }
+                    <span class='ident'>a</span> <span class='op'>=</span> <span class='macro'>vec_or_str</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>required_unless</span>);
                     <span class='ident'>a</span>.<span class='ident'>setb</span>(<span class='ident'>ArgSettings</span>::<span class='ident'>RequiredUnlessAll</span>);
                     <span class='ident'>a</span>
                 }
@@ -3085,7 +3045,7 @@
         } <span class='kw'>else</span> {
             <span class='self'>self</span>.<span class='ident'>r_unless</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>name</span>]);
         }
-        <span class='self'>self</span>.<span class='ident'>required</span>(<span class='boolvalue'>true</span>)
+        <span class='self'>self</span>.<span class='ident'>required</span>(<span class='bool-val'>true</span>)
     }
 
     <span class='doccomment'>/// Sets args that override this arg&#39;s required setting. (i.e. this arg will be required unless</span>
@@ -3160,7 +3120,7 @@
             <span class='self'>self</span>.<span class='ident'>r_unless</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>names</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>s</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>());
         }
         <span class='self'>self</span>.<span class='ident'>setb</span>(<span class='ident'>ArgSettings</span>::<span class='ident'>RequiredUnlessAll</span>);
-        <span class='self'>self</span>.<span class='ident'>required</span>(<span class='boolvalue'>true</span>)
+        <span class='self'>self</span>.<span class='ident'>required</span>(<span class='bool-val'>true</span>)
     }
 
     <span class='doccomment'>/// Sets args that override this arg&#39;s [required] setting. (i.e. this arg will be required</span>
@@ -3235,7 +3195,7 @@
         } <span class='kw'>else</span> {
             <span class='self'>self</span>.<span class='ident'>r_unless</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>names</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>s</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>());
         }
-        <span class='self'>self</span>.<span class='ident'>required</span>(<span class='boolvalue'>true</span>)
+        <span class='self'>self</span>.<span class='ident'>required</span>(<span class='bool-val'>true</span>)
     }
 
     <span class='doccomment'>/// Sets a conflicting argument by name. I.e. when using this argument,</span>

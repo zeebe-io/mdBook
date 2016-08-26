@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-37' class='srclink' href='../../src/inotify/ffi.rs.html#261-293' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-53' class='srclink' href='../../src/inotify/ffi.rs.html#261-293' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct inotify_event {
     pub wd: <a class='type' href='../../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
     pub mask: <a class='type' href='../../libc/type.uint32_t.html' title='libc::uint32_t'>uint32_t</a>,
@@ -65,22 +65,21 @@ case the call fails with the error EINTR; see <a href="http://man7.org/linux/man
 <p>Each successful <a href="http://man7.org/linux/man-pages/man2/read.2.html">read(2)</a> returns a buffer containing one or more of
 this structure.</p>
 </blockquote>
-</div><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                             <td id='structfield.wd'><code>wd</code></td><td><div class='docblock'><p>Identifies the watch for which this event occurs.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.wd' class='structfield'><code>wd: <a class='type' href='../../libc/type.c_int.html' title='libc::c_int'>c_int</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Identifies the watch for which this event occurs.</p>
 
 <p>It is one of the watch descriptors returned by a previous call
 to <code>inotify_add_watch()</code>.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.mask'><code>mask</code></td><td><div class='docblock'><p>Contains bits that describe the event that occurred.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.cookie'><code>cookie</code></td><td><div class='docblock'><p>A unique integer that connects related events.</p>
+</div><span id='structfield.mask' class='structfield'><code>mask: <a class='type' href='../../libc/type.uint32_t.html' title='libc::uint32_t'>uint32_t</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Contains bits that describe the event that occurred.</p>
+</div><span id='structfield.cookie' class='structfield'><code>cookie: <a class='type' href='../../libc/type.uint32_t.html' title='libc::uint32_t'>uint32_t</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>A unique integer that connects related events.</p>
 
 <p>Currently used only for rename events. A related pair of
 IN_MOVED_FROM and IN_MOVED_TO events will have the same,
 non-zero, cookie. For all other events, cookie is 0.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.len'><code>len</code></td><td><div class='docblock'><p>The length of <code>name</code>.</p>
+</div><span id='structfield.len' class='structfield'><code>len: <a class='type' href='../../libc/type.uint32_t.html' title='libc::uint32_t'>uint32_t</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>The length of <code>name</code>.</p>
 
 <p>Used to determine the size of this structure. When <code>name</code>
 isn&#39;t present (<code>name</code> is only present when an event occurs
@@ -96,11 +95,11 @@ align subsequent reads to a suitable address boundary.</p>
 </blockquote>
 
 <p>The <code>name</code> field must be ommited in this definition.</p>
-</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../inotify/ffi/struct.inotify_event.html' title='inotify::ffi::inotify_event'>inotify_event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-42' class='srclink' href='../../src/inotify/ffi.rs.html#259' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../inotify/ffi/struct.inotify_event.html' title='inotify::ffi::inotify_event'>inotify_event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-36' class='srclink' href='../../src/inotify/ffi.rs.html#259' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../../inotify/ffi/struct.inotify_event.html' title='inotify::ffi::inotify_event'>inotify_event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-51' class='srclink' href='../../src/inotify/ffi.rs.html#259' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../inotify/ffi/struct.inotify_event.html' title='inotify::ffi::inotify_event'>inotify_event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-52' class='srclink' href='../../src/inotify/ffi.rs.html#259' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../../inotify/ffi/struct.inotify_event.html' title='inotify::ffi::inotify_event'>inotify_event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-45' class='srclink' href='../../src/inotify/ffi.rs.html#259' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../inotify/ffi/struct.inotify_event.html' title='inotify::ffi::inotify_event'>inotify_event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-46' class='srclink' href='../../src/inotify/ffi.rs.html#259' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../inotify/ffi/struct.inotify_event.html' title='inotify::ffi::inotify_event'>inotify_event</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>

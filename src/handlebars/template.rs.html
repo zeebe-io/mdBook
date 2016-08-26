@@ -856,7 +856,7 @@
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_template</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Template</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>new</span>(<span class='boolvalue'>false</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>new</span>(<span class='bool-val'>false</span>);
         <span class='kw'>let</span> <span class='ident'>el</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>is_helper</span>() {
             <span class='ident'>HelperExpression</span>(<span class='ident'>HelperTemplate</span>::<span class='ident'>from</span>(<span class='self'>self</span>))
         } <span class='kw'>else</span> {
@@ -901,7 +901,7 @@
             <span class='ident'>hash</span>: <span class='ident'>s</span>.<span class='ident'>hash</span>.<span class='ident'>clone</span>(),
             <span class='ident'>template</span>: <span class='prelude-val'>None</span>,
             <span class='ident'>inverse</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>block</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>block</span>: <span class='bool-val'>false</span>,
         }
     }
 }
@@ -947,7 +947,7 @@
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>compile</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>source</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Template</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
-        <span class='ident'>Template</span>::<span class='ident'>compile2</span>(<span class='ident'>source</span>, <span class='boolvalue'>false</span>)
+        <span class='ident'>Template</span>::<span class='ident'>compile2</span>(<span class='ident'>source</span>, <span class='bool-val'>false</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -1045,11 +1045,11 @@
                             <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ExpressionSpec</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>params</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Parameter</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hashes</span>: <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Parameter</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>omit_pre_ws</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>omit_pro_ws</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>omit_pre_ws</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>omit_pro_ws</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
         <span class='kw'>if</span> <span class='ident'>it</span>.<span class='ident'>peek</span>().<span class='ident'>unwrap</span>().<span class='ident'>rule</span> <span class='op'>==</span> <span class='ident'>Rule</span>::<span class='ident'>pre_whitespace_omitter</span> {
-            <span class='ident'>omit_pre_ws</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+            <span class='ident'>omit_pre_ws</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
             <span class='ident'>it</span>.<span class='ident'>next</span>();
         }
 
@@ -1080,7 +1080,7 @@
                     <span class='ident'>hashes</span>.<span class='ident'>insert</span>(<span class='ident'>key</span>, <span class='ident'>value</span>);
                 }
                 <span class='ident'>Rule</span>::<span class='ident'>pro_whitespace_omitter</span> <span class='op'>=&gt;</span> {
-                    <span class='ident'>omit_pro_ws</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                    <span class='ident'>omit_pro_ws</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
                 }
                 _ <span class='op'>=&gt;</span> {}
             }
@@ -1100,7 +1100,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>template_stack</span>: <span class='ident'>VecDeque</span><span class='op'>&lt;</span><span class='ident'>Template</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>VecDeque</span>::<span class='ident'>new</span>();
 
         <span class='comment'>// let mut omit_pre_ws = false;</span>
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>omit_pro_ws</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>omit_pro_ws</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
         <span class='kw'>let</span> <span class='ident'>input</span> <span class='op'>=</span> <span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='ident'>source</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>input</span>);
@@ -1153,7 +1153,7 @@
                             <span class='ident'>name</span>: <span class='ident'>exp</span>.<span class='ident'>name</span>.<span class='ident'>as_name</span>().<span class='ident'>unwrap</span>(),
                             <span class='ident'>params</span>: <span class='ident'>exp</span>.<span class='ident'>params</span>,
                             <span class='ident'>hash</span>: <span class='ident'>exp</span>.<span class='ident'>hash</span>,
-                            <span class='ident'>block</span>: <span class='boolvalue'>true</span>,
+                            <span class='ident'>block</span>: <span class='bool-val'>true</span>,
                             <span class='ident'>template</span>: <span class='prelude-val'>None</span>,
                             <span class='ident'>inverse</span>: <span class='prelude-val'>None</span>,
                         };
@@ -1281,7 +1281,7 @@
                             <span class='ident'>name</span>: <span class='ident'>exp</span>.<span class='ident'>name</span>.<span class='ident'>as_name</span>().<span class='ident'>unwrap</span>(),
                             <span class='ident'>params</span>: <span class='ident'>exp</span>.<span class='ident'>params</span>,
                             <span class='ident'>hash</span>: <span class='ident'>exp</span>.<span class='ident'>hash</span>,
-                            <span class='ident'>block</span>: <span class='boolvalue'>false</span>,
+                            <span class='ident'>block</span>: <span class='bool-val'>false</span>,
                             <span class='ident'>template</span>: <span class='prelude-val'>None</span>,
                             <span class='ident'>inverse</span>: <span class='prelude-val'>None</span>,
                         };
@@ -1532,7 +1532,7 @@
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>params</span>[<span class='number'>0</span>], <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>U64</span>(<span class='number'>1</span>)));
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;name&quot;</span>],
                            <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>String</span>(<span class='string'>&quot;value&quot;</span>.<span class='ident'>to_owned</span>())));
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;valid&quot;</span>], <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>)));
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;valid&quot;</span>], <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>Boolean</span>(<span class='bool-val'>false</span>)));
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;ref&quot;</span>], <span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='string'>&quot;someref&quot;</span>.<span class='ident'>to_owned</span>()));
             }
         }
@@ -1549,7 +1549,7 @@
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>params</span>[<span class='number'>0</span>], <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>U64</span>(<span class='number'>1</span>)));
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;name&quot;</span>],
                            <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>String</span>(<span class='string'>&quot;value&quot;</span>.<span class='ident'>to_owned</span>())));
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;valid&quot;</span>], <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>Bool</span>(<span class='boolvalue'>false</span>)));
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;valid&quot;</span>], <span class='ident'>Parameter</span>::<span class='ident'>Literal</span>(<span class='ident'>Json</span>::<span class='ident'>Bool</span>(<span class='bool-val'>false</span>)));
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>hash</span>[<span class='string'>&quot;ref&quot;</span>], <span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='string'>&quot;someref&quot;</span>.<span class='ident'>to_owned</span>()));
             }
         }
@@ -1559,7 +1559,7 @@
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_template_mapping</span>() {
-    <span class='kw'>match</span> <span class='ident'>Template</span>::<span class='ident'>compile2</span>(<span class='string'>&quot;hello\n  {{~world}}\n{{#if nice}}\n\thello\n{{/if}}&quot;</span>, <span class='boolvalue'>true</span>) {
+    <span class='kw'>match</span> <span class='ident'>Template</span>::<span class='ident'>compile2</span>(<span class='string'>&quot;hello\n  {{~world}}\n{{#if nice}}\n\thello\n{{/if}}&quot;</span>, <span class='bool-val'>true</span>) {
         <span class='prelude-val'>Ok</span>(<span class='ident'>t</span>) <span class='op'>=&gt;</span> {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>mapping</span>) <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>mapping</span> {
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>mapping</span>.<span class='ident'>len</span>(), <span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>len</span>());

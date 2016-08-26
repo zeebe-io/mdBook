@@ -775,7 +775,7 @@
             <span class='ident'>writer</span>: <span class='ident'>w</span>,
             <span class='ident'>current_template</span>: <span class='prelude-val'>None</span>,
             <span class='ident'>root_template</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>disable_escape</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>disable_escape</span>: <span class='bool-val'>false</span>,
         }
     }
 
@@ -1053,7 +1053,7 @@
                 <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> {
                     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>local_rc</span> <span class='op'>=</span> <span class='ident'>rc</span>.<span class='ident'>with_writer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>local_writer</span>);
                     <span class='comment'>// disable html escape for subexpression</span>
-                    <span class='ident'>local_rc</span>.<span class='ident'>disable_escape</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                    <span class='ident'>local_rc</span>.<span class='ident'>disable_escape</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
 
                     <span class='ident'>t</span>.<span class='ident'>as_template</span>().<span class='ident'>render</span>(<span class='ident'>ctx</span>, <span class='ident'>registry</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>local_rc</span>)
                 };
@@ -1296,7 +1296,7 @@
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rc</span> <span class='op'>=</span> <span class='ident'>RenderContext</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sw</span>);
     <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;invalid_template&quot;</span>;
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>template</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile2</span>(<span class='string'>&quot;&lt;h1&gt;\n{{#if true}}\n  {{#each}}{{/each}}\n{{/if}}&quot;</span>,
-                                          <span class='boolvalue'>true</span>)
+                                          <span class='bool-val'>true</span>)
                            .<span class='ident'>unwrap</span>();
     <span class='ident'>template</span>.<span class='ident'>name</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>name</span>.<span class='ident'>to_owned</span>());
 
