@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.20.3/src/template.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.20.5/src/template.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>template.rs.html -- source</title>
@@ -975,7 +975,7 @@
                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Parameter</span>, <span class='ident'>TemplateError</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>name_node</span> <span class='op'>=</span> <span class='ident'>it</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>();
         <span class='kw'>match</span> <span class='ident'>name_node</span>.<span class='ident'>rule</span> {
-            <span class='ident'>Rule</span>::<span class='ident'>identifier</span> <span class='op'>=&gt;</span> {
+            <span class='ident'>Rule</span>::<span class='ident'>identifier</span> <span class='op'>|</span> <span class='ident'>Rule</span>::<span class='ident'>reference</span> <span class='op'>=&gt;</span> {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='ident'>source</span>[<span class='ident'>name_node</span>.<span class='ident'>start</span>..<span class='ident'>name_node</span>.<span class='ident'>end</span>].<span class='ident'>to_owned</span>()))
             }
             <span class='ident'>Rule</span>::<span class='ident'>subexpression</span> <span class='op'>=&gt;</span> {

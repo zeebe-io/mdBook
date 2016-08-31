@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.20.3/src/helpers/helper_partial.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.20.5/src/helpers/helper_partial.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>helper_partial.rs.html -- source</title>
@@ -255,7 +255,6 @@
 <span id="211">211</span>
 <span id="212">212</span>
 <span id="213">213</span>
-<span id="214">214</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>FromIterator</span>;
@@ -290,8 +289,7 @@
                         <span class='ident'>r</span>.<span class='ident'>get_template</span>(<span class='kw-2'>&amp;</span><span class='ident'>include_path</span>)
                     }
                 } <span class='kw'>else</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>RenderError</span>::<span class='ident'>new</span>(<span class='string'>&quot;Do not use literal here, use template name \
-                                                 directly.&quot;</span>));
+                    <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>RenderError</span>::<span class='ident'>new</span>(<span class='string'>&quot;Do not use literal here, use partial name directly.&quot;</span>));
                 }
             }
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>RenderError</span>::<span class='ident'>new</span>(<span class='string'>&quot;Param not found for helper&quot;</span>)),

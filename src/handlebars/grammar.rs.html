@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.20.3/src/grammar.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.20.5/src/grammar.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>grammar.rs.html -- source</title>
@@ -330,6 +330,7 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
+<span id="289">289</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>pest</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
 
@@ -363,7 +364,7 @@
 
         <span class='ident'>identifier</span> <span class='op'>=</span> @{ <span class='ident'>symbol_char</span> ~ ( <span class='ident'>symbol_char</span> <span class='op'>|</span> <span class='ident'>path_char</span> )<span class='op'>*</span> }
         <span class='ident'>reference</span> <span class='op'>=</span> @{ <span class='ident'>identifier</span> ~ ([<span class='string'>&quot;[&quot;</span>] ~ (<span class='ident'>string_literal</span><span class='op'>|</span>[<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>+</span>) ~ [<span class='string'>&quot;]&quot;</span>])<span class='op'>*</span> ~ [<span class='string'>&quot;-&quot;</span>]<span class='op'>*</span> ~ <span class='ident'>reference</span><span class='op'>*</span> }
-        <span class='ident'>name</span> <span class='op'>=</span> _{ <span class='ident'>subexpression</span> <span class='op'>|</span> <span class='ident'>identifier</span> }
+        <span class='ident'>name</span> <span class='op'>=</span> _{ <span class='ident'>subexpression</span> <span class='op'>|</span> <span class='ident'>reference</span> }
 
         <span class='ident'>param</span> <span class='op'>=</span> { <span class='ident'>literal</span> <span class='op'>|</span> <span class='ident'>reference</span> <span class='op'>|</span> <span class='ident'>subexpression</span> }
         <span class='ident'>hash</span> <span class='op'>=</span> { <span class='ident'>identifier</span> ~ [<span class='string'>&quot;=&quot;</span>] ~ <span class='ident'>param</span> }
@@ -439,7 +440,8 @@
                  <span class='string'>&quot;a[\&quot;abc\&quot;]&quot;</span>,
                  <span class='string'>&quot;aBc[\&quot;abc\&quot;]&quot;</span>,
                  <span class='string'>&quot;abc[0][\&quot;nice\&quot;]&quot;</span>,
-                 <span class='string'>&quot;some-name&quot;</span>];
+                 <span class='string'>&quot;some-name&quot;</span>,
+                 <span class='string'>&quot;this.[0].ok&quot;</span>];
     <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>s</span>.<span class='ident'>iter</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rdp</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='ident'>i</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>rdp</span>.<span class='ident'>reference</span>());
@@ -516,7 +518,7 @@
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_expression</span>() {
-    <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;{{exp}}&quot;</span>, <span class='string'>&quot;{{(exp)}}&quot;</span>];
+    <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;{{exp}}&quot;</span>, <span class='string'>&quot;{{(exp)}}&quot;</span>, <span class='string'>&quot;{{this.name}}&quot;</span>, <span class='string'>&quot;{{this.[0].name}}&quot;</span>];
     <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>s</span>.<span class='ident'>iter</span>() {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rdp</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='ident'>i</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>rdp</span>.<span class='ident'>expression</span>());
