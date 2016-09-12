@@ -254,6 +254,7 @@ table thead td {
   position: relative;
   left: 10px;
   z-index: 1000;
+  -webkit-border-radius: 4px;
   border-radius: 4px;
   font-size: 0.7em;
 }
@@ -262,6 +263,11 @@ table thead td {
   padding: 2px 10px;
   line-height: 25px;
   white-space: nowrap;
+}
+.theme-popup .theme:hover:first-child,
+.theme-popup .theme:hover:last-child {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
 }
 @media only screen and (max-width: 1250px) {
   .nav-chapters {
@@ -285,6 +291,7 @@ table thead td {
     position: relative;
     display: inline-block;
     margin-bottom: 50px;
+    -webkit-border-radius: 5px;
     border-radius: 5px;
   }
   .next {
@@ -387,6 +394,7 @@ table thead td {
   display: inline-block;
   vertical-align: middle;
   padding: 0.1em 0.3em;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
 }
 .light pre {
@@ -501,6 +509,7 @@ table thead td {
   display: inline-block;
   vertical-align: middle;
   padding: 0.1em 0.3em;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
 }
 .coal pre {
@@ -615,6 +624,7 @@ table thead td {
   display: inline-block;
   vertical-align: middle;
   padding: 0.1em 0.3em;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
 }
 .navy pre {
@@ -729,6 +739,7 @@ table thead td {
   display: inline-block;
   vertical-align: middle;
   padding: 0.1em 0.3em;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
 }
 .rust pre {
@@ -749,4 +760,57 @@ table thead td {
 }
 .rust pre > .result {
   margin-top: 10px;
+}
+@media only print {
+  #sidebar,
+  #menu-bar,
+  .nav-chapters,
+  .mobile-nav-chapters {
+    display: none;
+  }
+  #page-wrapper {
+    left: 0;
+    overflow-y: initial;
+  }
+  #content {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  .page {
+    overflow-y: initial;
+  }
+  code {
+    background-color: #666;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+/* Force background to be printed in Chrome */
+    -webkit-print-color-adjust: exact;
+  }
+  a,
+  a:visited,
+  a:active,
+  a:hover {
+    color: #4183c4;
+    text-decoration: none;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+/*break-after: avoid*/
+  }
+  pre,
+  code {
+    page-break-inside: avoid;
+    white-space: pre-wrap /* CSS 3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+  }
 }
