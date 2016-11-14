@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-33' class='srclink' href='../src/walkdir/lib.rs.html#184-187' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct WalkDir {
-    // some fields omitted
-}</pre><div class='docblock'><p>A builder to create an iterator for recursively walking a directory.</p>
+<pre class='rust struct'>pub struct WalkDir { /* fields omitted */ }</pre><div class='docblock'><p>A builder to create an iterator for recursively walking a directory.</p>
 
 <p>Results are returned in depth first fashion, with directories yielded
 before their contents. The order is unspecified. Directory entries <code>.</code>
@@ -77,7 +75,7 @@ or <code>3</code> (relative to <code>foo</code>):</p>
 <span class='kw'>for</span> <span class='ident'>entry</span> <span class='kw'>in</span> <span class='ident'>WalkDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;foo&quot;</span>).<span class='ident'>min_depth</span>(<span class='number'>1</span>).<span class='ident'>max_depth</span>(<span class='number'>3</span>) {
     <span class='kw'>let</span> <span class='ident'>entry</span> <span class='op'>=</span> <span class='ident'>entry</span>.<span class='ident'>unwrap</span>();
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>entry</span>.<span class='ident'>path</span>().<span class='ident'>display</span>());
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Note that the iterator by default includes the top-most directory. Since
 this is the only directory yielded with depth <code>0</code>, it is easy to ignore it
@@ -89,7 +87,7 @@ with the <code>min_depth</code> setting:</p>
 <span class='kw'>for</span> <span class='ident'>entry</span> <span class='kw'>in</span> <span class='ident'>WalkDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;foo&quot;</span>).<span class='ident'>min_depth</span>(<span class='number'>1</span>) {
     <span class='kw'>let</span> <span class='ident'>entry</span> <span class='op'>=</span> <span class='ident'>entry</span>.<span class='ident'>unwrap</span>();
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>entry</span>.<span class='ident'>path</span>().<span class='ident'>display</span>());
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>This will only return descendents of the <code>foo</code> directory and not <code>foo</code>
 itself.</p>
@@ -103,18 +101,18 @@ a loop. On most platforms, this operation is illegal.</p>
 <p>Note that when following symbolic/soft links, loops are detected and an
 error is reported.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../walkdir/struct.WalkDir.html' title='walkdir::WalkDir'>WalkDir</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-42' class='srclink' href='../src/walkdir/lib.rs.html#197-311' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;P:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(root: P) -&gt; Self</code></h4>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;P:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(root: P) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Create a builder for a recursive directory iterator starting at the
 file path <code>root</code>. If <code>root</code> is a directory, then it is the first item
 yielded by the iterator. If <code>root</code> is a file, then it is the first
 and only item yielded by the iterator.</p>
-</div><h4 id='method.min_depth' class='method'><code>fn <a href='#method.min_depth' class='fnname'>min_depth</a>(self, depth: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; Self</code></h4>
+</div><h4 id='method.min_depth' class='method'><span id='min_depth.v' class='invisible'><code>fn <a href='#method.min_depth' class='fnname'>min_depth</a>(self, depth: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Set the minimum depth of entries yielded by the iterator.</p>
 
 <p>The smallest depth is <code>0</code> and always corresponds to the path given
 to the <code>new</code> function on this type. Its direct descendents have depth
 <code>1</code>, and their descendents have depth <code>2</code>, and so on.</p>
-</div><h4 id='method.max_depth' class='method'><code>fn <a href='#method.max_depth' class='fnname'>max_depth</a>(self, depth: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; Self</code></h4>
+</div><h4 id='method.max_depth' class='method'><span id='max_depth.v' class='invisible'><code>fn <a href='#method.max_depth' class='fnname'>max_depth</a>(self, depth: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Set the maximum depth of entries yield by the iterator.</p>
 
 <p>The smallest depth is <code>0</code> and always corresponds to the path given
@@ -124,7 +122,7 @@ to the <code>new</code> function on this type. Its direct descendents have depth
 <p>Note that this will not simply filter the entries of the iterator, but
 it will actually avoid descending into directories when the depth is
 exceeded.</p>
-</div><h4 id='method.follow_links' class='method'><code>fn <a href='#method.follow_links' class='fnname'>follow_links</a>(self, yes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; Self</code></h4>
+</div><h4 id='method.follow_links' class='method'><span id='follow_links.v' class='invisible'><code>fn <a href='#method.follow_links' class='fnname'>follow_links</a>(self, yes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Follow symbolic links. By default, this is disabled.</p>
 
 <p>When <code>yes</code> is <code>true</code>, symbolic links are followed as if they were
@@ -139,7 +137,7 @@ type for more details.</p>
 <p>There <a href="https://github.com/rust-lang/rust/issues/28528">is a bug</a>
 that may affect following symbolic links on Windows when using
 junctions.</p>
-</div><h4 id='method.max_open' class='method'><code>fn <a href='#method.max_open' class='fnname'>max_open</a>(self, n: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; Self</code></h4>
+</div><h4 id='method.max_open' class='method'><span id='max_open.v' class='invisible'><code>fn <a href='#method.max_open' class='fnname'>max_open</a>(self, n: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Set the maximum number of simultaneously open file descriptors used
 by the iterator.</p>
 
@@ -159,7 +157,7 @@ acceptable.</p>
 
 <p>Note that this value does not impact the number of system calls made by
 an exhausted iterator.</p>
-</div><h4 id='method.sort_by' class='method'><code>fn <a href='#method.sort_by' class='fnname'>sort_by</a>&lt;F&gt;(self, cmp: F) -&gt; Self <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsString.html' title='std::ffi::os_str::OsString'>OsString</a>, &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsString.html' title='std::ffi::os_str::OsString'>OsString</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a> + 'static</span></code></h4>
+</div><h4 id='method.sort_by' class='method'><span id='sort_by.v' class='invisible'><code>fn <a href='#method.sort_by' class='fnname'>sort_by</a>&lt;F&gt;(self, cmp: F) -&gt; Self <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsString.html' title='std::ffi::os_str::OsString'>OsString</a>, &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsString.html' title='std::ffi::os_str::OsString'>OsString</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a> + 'static</span></code></span></h4>
 <div class='docblock'><p>Set a function for sorting directory entries.</p>
 
 <p>If a compare function is set, the resulting iterator will return all
@@ -172,13 +170,13 @@ entry.</p>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>OsString</span>;
 <span class='kw'>use</span> <span class='ident'>walkdir</span>::<span class='ident'>WalkDir</span>;
 
-<span class='ident'>WalkDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;foo&quot;</span>).<span class='ident'>sort_by</span>(<span class='op'>|</span><span class='ident'>a</span>,<span class='ident'>b</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>cmp</span>(<span class='ident'>b</span>));</pre>
+<span class='ident'>WalkDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;foo&quot;</span>).<span class='ident'>sort_by</span>(<span class='op'>|</span><span class='ident'>a</span>,<span class='ident'>b</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>cmp</span>(<span class='ident'>b</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>IntoIterator</a> for <a class='struct' href='../walkdir/struct.WalkDir.html' title='walkdir::WalkDir'>WalkDir</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-62' class='srclink' href='../src/walkdir/lib.rs.html#313-327' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='associatedtype.Item' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.Item' class='type'>Item</a> = <a class='type' href='../walkdir/type.Result.html' title='walkdir::Result'>Result</a>&lt;<a class='struct' href='../walkdir/struct.DirEntry.html' title='walkdir::DirEntry'>DirEntry</a>&gt;</code></h4>
+<div class='impl-items'><h4 id='associatedtype.Item' class='type'><span id='Item.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.Item' class='type'>Item</a> = <a class='type' href='../walkdir/type.Result.html' title='walkdir::Result'>Result</a>&lt;<a class='struct' href='../walkdir/struct.DirEntry.html' title='walkdir::DirEntry'>DirEntry</a>&gt;</code></span></h4>
 <div class='docblock'><p>The type of the elements being iterated over.</p>
-</div><h4 id='associatedtype.IntoIter' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.IntoIter' class='type'>IntoIter</a> = <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></h4>
+</div><h4 id='associatedtype.IntoIter' class='type'><span id='IntoIter.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.IntoIter' class='type'>IntoIter</a> = <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></span></h4>
 <div class='docblock'><p>Which kind of iterator are we turning this into?</p>
-</div><h4 id='method.into_iter' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></h4>
+</div><h4 id='method.into_iter' class='method'><span id='into_iter.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../walkdir/struct.Iter.html' title='walkdir::Iter'>Iter</a></code></span></h4>
 <div class='docblock'><p>Creates an iterator from a value. <a href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>

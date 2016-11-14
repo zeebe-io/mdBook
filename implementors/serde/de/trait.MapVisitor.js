@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["serde"] = [];
+implementors["serde"] = [];implementors["handlebars"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

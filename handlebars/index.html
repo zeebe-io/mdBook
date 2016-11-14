@@ -84,7 +84,7 @@ yourself.</p>
 }
 
 <span class='doccomment'>/// register the helper</span>
-<span class='ident'>handlebars</span>.<span class='ident'>register_helper</span>(<span class='string'>&quot;hex&quot;</span>, <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>hex_helper</span>));</pre>
+<span class='ident'>handlebars</span>.<span class='ident'>register_helper</span>(<span class='string'>&quot;hex&quot;</span>, <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>hex_helper</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h4 id='template-inheritance' class='section-header'><a href='#template-inheritance'>Template inheritance</a></h4>
 <p>Every time I look into a templating system, I will investigate its
@@ -129,7 +129,7 @@ your types.</li>
   <span class='comment'>//compile returns an Option, we use unwrap() to deref it directly here</span>
   <span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;helloworld&quot;</span>, <span class='ident'>source</span>.<span class='ident'>to_string</span>())
           .<span class='ident'>ok</span>().<span class='ident'>unwrap</span>();
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>On registeration, the template is parsed and cached in the registry. So further
 usage will benifite from the one-time work. Also features like include, inheritance
@@ -183,7 +183,7 @@ without registeration.</p>
       <span class='ident'>age</span>: <span class='number'>27</span>
   };
   <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;hello&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Or if you don&#39;t need the template to be cached or referenced by other ones, you can
 simply render it without registering.</p>
@@ -199,7 +199,7 @@ simply render it without registering.</p>
       <span class='ident'>age</span>: <span class='number'>27</span>
   };
   <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>template_render</span>(<span class='string'>&quot;Hello, {{name}}&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h4 id='escaping' class='section-header'><a href='#escaping'>Escaping</a></h4>
 <p>As per the handlebars spec, output using <code>{{expression}}</code> is escaped by default (to be precise, the characters <code>&amp;&quot;&lt;&gt;</code> are replaced by their respective html / xml entities). However, since the use cases of a rust template engine are probably a bit more diverse than those of a JavaScript one, this implementation allows the user to supply a custom escape function to be used instead. For more information see the <code>EscapeFn</code> type and <code>Handlebars::register_escape_fn()</code> method.</p>
@@ -250,7 +250,7 @@ simply render it without registering.</p>
       }));
 
   <span class='comment'>//...</span>
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h4 id='arguments-of-helpdef' class='section-header'><a href='#arguments-of-helpdef'>Arguments of HelpDef</a></h4>
 <p>You can get data from the <code>Helper</code> argument about the template information:</p>
@@ -283,49 +283,49 @@ simply render it without registering.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Context.html'
                                   title='handlebars::Context'>Context</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The context wrap data you render on your templates.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.ContextJson.html'
                                   title='handlebars::ContextJson'>ContextJson</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Json wrapper that holds the Json value and reference path information</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Handlebars.html'
                                   title='handlebars::Handlebars'>Handlebars</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The single entry point of your Handlebars templates</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Helper.html'
                                   title='handlebars::Helper'>Helper</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Render-time Helper data when using in a helper definition</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.RenderContext.html'
                                   title='handlebars::RenderContext'>RenderContext</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The context of a render call</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.RenderError.html'
                                   title='handlebars::RenderError'>RenderError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Template.html'
                                   title='handlebars::Template'>Template</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -333,21 +333,21 @@ simply render it without registering.</p>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.TemplateError.html'
                                   title='handlebars::TemplateError'>TemplateError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Template parsing error</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.TemplateFileError.html'
                                   title='handlebars::TemplateFileError'>TemplateFileError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.TemplateRenderError.html'
                                   title='handlebars::TemplateRenderError'>TemplateRenderError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
@@ -355,28 +355,28 @@ simply render it without registering.</p>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.HelperDef.html'
                                   title='handlebars::HelperDef'>HelperDef</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Helper Definition</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.JsonRender.html'
                                   title='handlebars::JsonRender'>JsonRender</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.JsonTruthy.html'
                                   title='handlebars::JsonTruthy'>JsonTruthy</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.Renderable.html'
                                   title='handlebars::Renderable'>Renderable</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -384,7 +384,7 @@ simply render it without registering.</p>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.html_escape.html'
                                   title='handlebars::html_escape'>html_escape</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The default <em>escape fn</em> replaces the characters <code>&amp;&quot;&lt;&gt;</code>
 with the equivalent html / xml entities.</p>
                            </td>
@@ -392,7 +392,7 @@ with the equivalent html / xml entities.</p>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.no_escape.html'
                                   title='handlebars::no_escape'>no_escape</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>EscapeFn</code> that donot change any thing. Useful when using in a non-html
 environment.</p>
                            </td>
@@ -401,7 +401,7 @@ environment.</p>
                        <tr class=' module-item'>
                            <td><a class='type' href='type.EscapeFn.html'
                                   title='handlebars::EscapeFn'>EscapeFn</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>This type represents an <em>escape fn</em>, that is a function who&#39;s purpose it is
 to escape potentially problematic characters in a string.</p>
                            </td>
