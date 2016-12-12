@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.19.0/src/completions/zsh.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.19.2/src/completions/zsh.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>zsh.rs.html -- source</title>
@@ -563,7 +563,7 @@ _{bin_name_underscore}_commands() {{
     <span class='kw'>fn</span> <span class='ident'>add_sc</span>(<span class='ident'>sc</span>: <span class='kw-2'>&amp;</span><span class='ident'>App</span>, <span class='ident'>n</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>ret</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>) {
         <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;\&quot;{name}:{help}\&quot; \\&quot;</span>, 
             <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>n</span>, 
-            <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>sc</span>.<span class='ident'>p</span>.<span class='ident'>meta</span>.<span class='ident'>about</span>.<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>));
+            <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>sc</span>.<span class='ident'>p</span>.<span class='ident'>meta</span>.<span class='ident'>about</span>.<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;[&quot;</span>, <span class='string'>&quot;\\[&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;]&quot;</span>, <span class='string'>&quot;\\]&quot;</span>));
         <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>s</span>.<span class='ident'>is_empty</span>() {
             <span class='ident'>ret</span>.<span class='ident'>push</span>(<span class='ident'>s</span>);
         }
@@ -585,7 +585,7 @@ _{bin_name_underscore}_commands() {{
         <span class='macro'>debugln</span><span class='macro'>!</span>(<span class='string'>&quot;iter;arg={}&quot;</span>, <span class='ident'>arg</span>.<span class='ident'>b</span>.<span class='ident'>name</span>);
         <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;\&quot;{name}:{help}\&quot; \\&quot;</span>, 
             <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>arg</span>.<span class='ident'>b</span>.<span class='ident'>name</span>.<span class='ident'>to_ascii_uppercase</span>(), 
-            <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>arg</span>.<span class='ident'>b</span>.<span class='ident'>help</span>.<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>));
+            <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>arg</span>.<span class='ident'>b</span>.<span class='ident'>help</span>.<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;[&quot;</span>, <span class='string'>&quot;\\[&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;]&quot;</span>, <span class='string'>&quot;\\]&quot;</span>));
 
         <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_empty</span>() {
             <span class='ident'>ret</span>.<span class='ident'>push</span>(<span class='ident'>a</span>);
@@ -733,7 +733,7 @@ esac&quot;</span>,
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
     <span class='kw'>for</span> <span class='ident'>o</span> <span class='kw'>in</span> <span class='ident'>p</span>.<span class='ident'>opts</span>() {
         <span class='macro'>debugln</span><span class='macro'>!</span>(<span class='string'>&quot;iter;o={}&quot;</span>, <span class='ident'>o</span>.<span class='ident'>name</span>());
-        <span class='kw'>let</span> <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>o</span>.<span class='ident'>help</span>().<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>o</span>.<span class='ident'>help</span>().<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;[&quot;</span>, <span class='string'>&quot;\\[&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;]&quot;</span>, <span class='string'>&quot;\\]&quot;</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>conflicts</span> <span class='op'>=</span> <span class='macro'>get_zsh_arg_conflicts</span><span class='macro'>!</span>(<span class='ident'>p</span>, <span class='ident'>o</span>, <span class='ident'>INTERNAL_ERROR_MSG</span>);
         <span class='ident'>conflicts</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>conflicts</span>.<span class='ident'>is_empty</span>() {
             <span class='ident'>String</span>::<span class='ident'>new</span>()
@@ -783,7 +783,7 @@ esac&quot;</span>,
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
     <span class='kw'>for</span> <span class='ident'>f</span> <span class='kw'>in</span> <span class='ident'>p</span>.<span class='ident'>flags</span>() {
         <span class='macro'>debugln</span><span class='macro'>!</span>(<span class='string'>&quot;iter;f={}&quot;</span>, <span class='ident'>f</span>.<span class='ident'>name</span>());
-        <span class='kw'>let</span> <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>f</span>.<span class='ident'>help</span>().<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>help</span> <span class='op'>=</span> <span class='ident'>f</span>.<span class='ident'>help</span>().<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;[&quot;</span>, <span class='string'>&quot;\\[&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;]&quot;</span>, <span class='string'>&quot;\\]&quot;</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>conflicts</span> <span class='op'>=</span> <span class='macro'>get_zsh_arg_conflicts</span><span class='macro'>!</span>(<span class='ident'>p</span>, <span class='ident'>f</span>, <span class='ident'>INTERNAL_ERROR_MSG</span>);
         <span class='ident'>conflicts</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>conflicts</span>.<span class='ident'>is_empty</span>() {
             <span class='ident'>String</span>::<span class='ident'>new</span>()
