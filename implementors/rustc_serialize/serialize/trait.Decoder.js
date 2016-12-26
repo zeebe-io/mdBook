@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["hyper"] = [];implementors["iron"] = [];
+implementors["toml"] = ["impl <a class='trait' href='rustc_serialize/serialize/trait.Decoder.html' title='rustc_serialize::serialize::Decoder'>Decoder</a> for <a class='struct' href='toml/struct.Decoder.html' title='toml::Decoder'>Decoder</a>",];implementors["hyper"] = [];implementors["iron"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

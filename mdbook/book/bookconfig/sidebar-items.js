@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BookConfig",""]]});
+initSidebarItems({"fn":[["json_object_to_btreemap",""],["json_value_to_toml_value",""]],"struct":[["BookConfig",""]]});

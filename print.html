@@ -47,7 +47,7 @@
         </script>
 
         <div id="sidebar" class="sidebar">
-            <ul class="chapter"><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong>2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong>2.5.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong>3.5.</strong> Rust code specific features</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
+            <ul class="chapter"><li class="affix"><a href="misc/introduction.html">Introduction</a></li><li><a href="README.html"><strong>1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong>2.</strong> Command Line Tool</a></li><li><ul class="section"><li><a href="cli/init.html"><strong>2.1.</strong> init</a></li><li><a href="cli/build.html"><strong>2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong>2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong>2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong>2.5.</strong> test</a></li></ul></li><li><a href="format/format.html"><strong>3.</strong> Format</a></li><li><ul class="section"><li><a href="format/summary.html"><strong>3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong>3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong>3.3.</strong> Theme</a></li><li><ul class="section"><li><a href="format/theme/index-hbs.html"><strong>3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong>3.3.2.</strong> Syntax highlighting</a></li></ul></li><li><a href="format/mathjax.html"><strong>3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong>3.5.</strong> Rust code specific features</a></li></ul></li><li><a href="lib/lib.html"><strong>4.</strong> Rust Library</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ul>
         </div>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -67,7 +67,9 @@
                 </div>
 
                 <div id="content" class="content">
-                    <h1>mdBook</h1>
+                    <h1>Introduction</h1>
+<p>A frontmatter chapter.</p>
+<h1>mdBook</h1>
 <p><strong>mdBook</strong> is a command line tool and Rust crate to create books using Markdown files. It's very similar to Gitbook but written in <a href="http://www.rust-lang.org">Rust</a>.</p>
 <p>What you are reading serves as an example of the output of mdBook and at the same time as high-level docs.</p>
 <p>mdBook is free and open source, you can find the source code on <a href="https://github.com/azerupi/mdBook">Github</a>. Issues and feature requests can be posted on the <a href="https://github.com/azerupi/mdBook/issues">Github Issue tracker</a>.</p>
@@ -185,7 +187,7 @@ Therefore it is very important for them to be able to automatically test these c
 <li>checking for unused files</li>
 <li>...</li>
 </ul>
-<p>In the future I would like the user to be able to enable / disable test from the <code>book.json</code> configuration file and support custom tests.</p>
+<p>In the future I would like the user to be able to enable / disable test from the <code>book.toml</code> configuration file and support custom tests.</p>
 <p><strong>How to use it:</strong></p>
 <pre><code class="language-bash">$ mdbook test
 [*]: Testing file: &quot;/mdBook/book-example/src/README.md”
@@ -195,7 +197,7 @@ Therefore it is very important for them to be able to automatically test these c
 <ul>
 <li>Structure your book correctly</li>
 <li>Format your <code>SUMMARY.md</code> file</li>
-<li>Configure your book using <code>book.json</code></li>
+<li>Configure your book using <code>book.toml</code></li>
 <li>Customize your theme</li>
 </ul>
 <h1>SUMMARY.md</h1>
@@ -231,14 +233,13 @@ resulting in a nice hierarchy (chapters, sub-chapters, etc.)</p>
 </ol>
 <p>All other elements are unsupported and will be ignored at best or result in an error.</p>
 <h1>Configuration</h1>
-<p>You can configure the parameters for your book in the <strong><em>book.json</em></strong> file.</p>
-<p>Here is an example of what a <strong><em>book.json</em></strong> file might look like:</p>
-<pre><code class="language-json">{
-    &quot;title&quot;: &quot;Example book&quot;,
-    &quot;author&quot;: &quot;Name&quot;,
-    &quot;description&quot;: &quot;The example book covers examples.&quot;,
-    &quot;dest&quot;: &quot;output/my-book&quot;
-}
+<p>You can configure the parameters for your book in the <strong><em>book.toml</em></strong> file.</p>
+<p>We encourage using the TOML format, but JSON is also recognized and parsed.</p>
+<p>Here is an example of what a <strong><em>book.toml</em></strong> file might look like:</p>
+<pre><code class="language-toml">title = &quot;Example book&quot;
+author = &quot;Name&quot;
+description = &quot;The example book covers examples.&quot;
+dest = &quot;output/my-book&quot;
 </code></pre>
 <h4>Supported variables</h4>
 <p>If relative paths are given, they will be relative to the book's root, i.e. the
@@ -287,7 +288,7 @@ In the handlebars template you can access this information by using</p>
 At the moment it is hardcoded.</p>
 </li>
 <li>
-<p><strong><em>title</em></strong> Title of the book, as specified in <code>book.json</code></p>
+<p><strong><em>title</em></strong> Title of the book, as specified in <code>book.toml</code></p>
 </li>
 <li>
 <p><strong><em>path</em></strong> Relative path to the original markdown file from the source directory</p>
@@ -384,7 +385,7 @@ rename it to <code>highlight.css</code> and put it in <code>src/theme</code> (or
     println!(&quot;{}&quot;, x + y);
 # }
 </code></pre>
-<p><strong>At the moment, this only works for code examples that are annotated with <code>rust</code>. Because it would collide with semantics of some programming languages. In the future, we want to make this configurable through the <code>book.json</code> so that everyone can benefit from it.</strong></p>
+<p><strong>At the moment, this only works for code examples that are annotated with <code>rust</code>. Because it would collide with semantics of some programming languages. In the future, we want to make this configurable through the <code>book.toml</code> so that everyone can benefit from it.</strong></p>
 <h2>Improve default theme</h2>
 <p>If you think the default theme doesn't look quite right for a specific language, or could be improved.
 Feel free to <a href="https://github.com/azerupi/mdBook/issues">submit a new issue</a> explaining what you have in mind and I will take a look at it.</p>
@@ -445,7 +446,7 @@ fn main() {
     let mut book =  MDBook::new(Path::new(&quot;my-book&quot;))   // Path to root
                         .set_src(Path::new(&quot;src&quot;))      // Path from root to source directory
                         .set_dest(Path::new(&quot;book&quot;))    // Path from root to output directory
-                        .read_config();                 // Parse book.json file for configuration
+                        .read_config();                 // Parse book.toml or book.json file for configuration
 
     book.build().unwrap();                              // Render the book
 }
