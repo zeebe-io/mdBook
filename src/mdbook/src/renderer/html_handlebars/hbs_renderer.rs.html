@@ -374,6 +374,9 @@
 <span id="330">330</span>
 <span id="331">331</span>
 <span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>html_handlebars</span>::<span class='ident'>helpers</span>;
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>Renderer</span>;
@@ -470,10 +473,13 @@
                             },
                         }
 
-
                         <span class='comment'>// Remove content from previous file and render content for this one</span>
                         <span class='ident'>data</span>.<span class='ident'>remove</span>(<span class='string'>&quot;content&quot;</span>);
                         <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;content&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>content</span>.<span class='ident'>to_json</span>());
+
+                        <span class='comment'>// Remove chapter title from previous file and add title for this one</span>
+                        <span class='ident'>data</span>.<span class='ident'>remove</span>(<span class='string'>&quot;chapter_title&quot;</span>);
+                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;chapter_title&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>ch</span>.<span class='ident'>name</span>.<span class='ident'>to_json</span>());
 
                         <span class='comment'>// Remove path to root from previous file and render content for this one</span>
                         <span class='ident'>data</span>.<span class='ident'>remove</span>(<span class='string'>&quot;path_to_root&quot;</span>);
