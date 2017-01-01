@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `bitflags` crate.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, bitflags">
+    <meta name="description" content="API documentation for the Rust `open` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, open">
 
-    <title>bitflags - Rust</title>
+    <title>open - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'></p><script>window.sidebarCurrent = {name: 'bitflags', ty: 'mod', relpath: '../'};</script>
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'open', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -43,20 +43,33 @@
     </nav>
 
     <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>bitflags</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>open</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/bitflags/lib.rs.html#11-597' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>A typesafe bitmask flag generator.</p>
-</div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+               </span><a id='src-0' class='srclink' href='../src/open/lib.rs.html#1-48' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Use this library to open a path or URL using the program configured on the system.</p>
+
+<h1 id='usage' class='section-header'><a href='#usage'>Usage</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>open</span>;
+
+<span class='ident'>open</span>::<span class='ident'>that</span>(<span class='string'>&quot;/path/to/file/with.fancy-extension&quot;</span>);
+<span class='kw'>if</span> <span class='ident'>open</span>::<span class='ident'>that</span>(<span class='string'>&quot;https://rust-lang.org&quot;</span>).<span class='ident'>is_ok</span>() {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Look at your browser !&quot;</span>);
+}</pre>
+
+<h1 id='notes' class='section-header'><a href='#notes'>Notes</a></h1>
+<p>As an operating system program is used, chances are that the open operation fails.
+Therfore, you are advised to at least check the result with <code>.is_err()</code> and
+behave accordingly, e.g. by letting the user know what you tried to open, and failed.</p>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='macro' href='macro.bitflags.html'
-                                  title='bitflags::bitflags'>bitflags</a></td>
+                           <td><a class='fn' href='fn.that.html'
+                                  title='open::that'>that</a></td>
                            <td class='docblock-short'>
-                                <p>The <code>bitflags!</code> macro generates a <code>struct</code> that holds a set of C-style
-bitmask flags. It is useful for creating typesafe wrappers for C APIs.</p>
+                                
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -113,7 +126,7 @@ bitmask flags. It is useful for creating typesafe wrappers for C APIs.</p>
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "bitflags";
+        window.currentCrate = "open";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
