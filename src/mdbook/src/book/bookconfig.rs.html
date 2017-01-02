@@ -335,13 +335,13 @@
 
         <span class='comment'>// Read book.toml or book.json if exists</span>
 
-        <span class='kw'>if</span> <span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;book.toml&quot;</span>).<span class='ident'>as_os_str</span>()).<span class='ident'>exists</span>() {
+        <span class='kw'>if</span> <span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;book.toml&quot;</span>).<span class='ident'>exists</span>() {
 
             <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Reading config&quot;</span>);
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>read_file</span>(<span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;book.toml&quot;</span>));
             <span class='self'>self</span>.<span class='ident'>parse_from_toml_string</span>(<span class='kw-2'>&amp;</span><span class='ident'>data</span>);
 
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;book.json&quot;</span>).<span class='ident'>as_os_str</span>()).<span class='ident'>exists</span>() {
+        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;book.json&quot;</span>).<span class='ident'>exists</span>() {
 
             <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Reading config&quot;</span>);
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>read_file</span>(<span class='ident'>root</span>.<span class='ident'>join</span>(<span class='string'>&quot;book.json&quot;</span>));
