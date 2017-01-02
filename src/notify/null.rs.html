@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/notify-2.6.3/src/null.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/notify-3.0.1/src/null.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>null.rs.html -- source</title>
@@ -68,6 +68,11 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Stub Watcher implementation</span>
 
@@ -75,7 +80,8 @@
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Event</span>, <span class='prelude-ty'>Result</span>, <span class='ident'>Watcher</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
+<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>RawEvent</span>, <span class='ident'>DebouncedEvent</span>, <span class='prelude-ty'>Result</span>, <span class='ident'>Watcher</span>, <span class='ident'>RecursiveMode</span>};
 
 <span class='doccomment'>/// Stub `Watcher` implementation</span>
 <span class='doccomment'>///</span>
@@ -83,11 +89,15 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>NullWatcher</span>;
 
 <span class='kw'>impl</span> <span class='ident'>Watcher</span> <span class='kw'>for</span> <span class='ident'>NullWatcher</span> {
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>tx</span>: <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>NullWatcher</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>new_raw</span>(<span class='ident'>tx</span>: <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>RawEvent</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>NullWatcher</span><span class='op'>&gt;</span> {
         <span class='prelude-val'>Ok</span>(<span class='ident'>NullWatcher</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>watch</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>tx</span>: <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>DebouncedEvent</span><span class='op'>&gt;</span>, <span class='ident'>delay</span>: <span class='ident'>Duration</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>NullWatcher</span><span class='op'>&gt;</span> {
+        <span class='prelude-val'>Ok</span>(<span class='ident'>NullWatcher</span>)
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>watch</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>, <span class='ident'>recursive_mode</span>: <span class='ident'>RecursiveMode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='prelude-val'>Ok</span>(())
     }
 

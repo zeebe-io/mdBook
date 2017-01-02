@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Event` struct in crate `notify`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, Event">
+    <meta name="description" content="API documentation for the Rust `RawEvent` struct in crate `notify`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, RawEvent">
 
-    <title>notify::Event - Rust</title>
+    <title>notify::RawEvent - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>notify</a></p><script>window.sidebarCurrent = {name: 'Event', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>notify</a></p><script>window.sidebarCurrent = {name: 'RawEvent', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,33 +43,51 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>notify</a>::<wbr><a class='struct' href=''>Event</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>notify</a>::<wbr><a class='struct' href=''>RawEvent</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-734' class='srclink' href='../src/notify/lib.rs.html#156-162' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Event {
+               </span><a id='src-1237' class='srclink' href='../src/notify/lib.rs.html#329-357' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct RawEvent {
     pub path: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html' title='std::path::PathBuf'>PathBuf</a>&gt;,
     pub op: <a class='type' href='../notify/type.Result.html' title='notify::Result'>Result</a>&lt;<a class='struct' href='../notify/op/struct.Op.html' title='notify::op::Op'>Op</a>&gt;,
-}</pre><div class='docblock'><p>Event delivered when action occurs on a watched path</p>
-
-<p>When using the poll watcher, <code>op</code> may be Err in the case where getting metadata for the path
-fails.</p>
-
-<p>When using the INotifyWatcher, <code>op</code> may be Err if activity is detected on the file and there is
-an error reading from inotify.</p>
+    pub cookie: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;,
+}</pre><div class='docblock'><p>Event delivered when action occurs on a watched path in <em>raw</em> mode</p>
 </div><h2 class='fields'>Fields</h2><span id='structfield.path' class='structfield'>
                            <span id='path.v' class='invisible'>
                            <code>path: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html' title='std::path::PathBuf'>PathBuf</a>&gt;</code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Path where Event originated</p>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Path where the event originated.</p>
+
+<p><code>path</code> is always absolute, even if a relative path is used to watch a file or directory.</p>
+
+<p>On <strong>macOS</strong> the path is always canonicalized.</p>
+
+<p>Keep in mind that the path may be false if the watched file or directory or any parent
+directory is renamed. (See: <a href="op/index.html#rename">notify::op</a>)</p>
 </div><span id='structfield.op' class='structfield'>
                            <span id='op.v' class='invisible'>
                            <code>op: <a class='type' href='../notify/type.Result.html' title='notify::Result'>Result</a>&lt;<a class='struct' href='../notify/op/struct.Op.html' title='notify::op::Op'>Op</a>&gt;</code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Operation detected on Path.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../notify/struct.Event.html' title='notify::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-737' class='srclink' href='../src/notify/lib.rs.html#155' title='goto source code'>[src]</a></span></h3>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Operation detected on that path.</p>
+
+<p>When using the <code>PollWatcher</code>, <code>op</code> may be <code>Err</code> if reading meta data for the path fails.</p>
+
+<p>When using the <code>INotifyWatcher</code>, <code>op</code> may be <code>Err</code> if activity is detected on the file and
+there is an error reading from inotify.</p>
+</div><span id='structfield.cookie' class='structfield'>
+                           <span id='cookie.v' class='invisible'>
+                           <code>cookie: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Unique cookie associating related events (for <code>RENAME</code> events).</p>
+
+<p>If two consecutive <code>RENAME</code> events share the same cookie, it means that the first event
+holds the old path, and the second event holds the new path of the renamed file or
+directory.</p>
+
+<p>For details on handling <code>RENAME</code> events with the <code>FsEventWatcher</code> have a look at the
+<a href="op/index.html">notify::op</a> documentation.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../notify/struct.RawEvent.html' title='notify::RawEvent'>RawEvent</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1241' class='srclink' href='../src/notify/lib.rs.html#328' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../notify/struct.Event.html' title='notify::Event'>Event</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-227' class='srclink' href='../src/notify/lib.rs.html#164' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../notify/struct.RawEvent.html' title='notify::RawEvent'>RawEvent</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-527' class='srclink' href='../src/notify/lib.rs.html#359' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
