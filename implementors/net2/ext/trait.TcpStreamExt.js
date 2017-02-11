@@ -1,5 +1,6 @@
 (function() {var implementors = {};
-implementors["mio"] = [];implementors["ws"] = [];
+implementors["mio"] = [];
+implementors["ws"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.8.4/src/de.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.8.6/src/de.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>de.rs.html -- source</title>
@@ -1064,11 +1064,6 @@
 <span id="1020">1020</span>
 <span id="1021">1021</span>
 <span id="1022">1022</span>
-<span id="1023">1023</span>
-<span id="1024">1024</span>
-<span id="1025">1025</span>
-<span id="1026">1026</span>
-<span id="1027">1027</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! JSON Deserialization</span>
 <span class='doccomment'>//!</span>
@@ -1185,16 +1180,11 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_whitespace</span>());
-        <span class='kw'>if</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>eof</span>()) {
+        <span class='kw'>if</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_whitespace</span>()) { <span class='comment'>// true if eof</span>
             <span class='prelude-val'>Ok</span>(())
         } <span class='kw'>else</span> {
             <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>TrailingCharacters</span>))
         }
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>eof</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>peek</span>()).<span class='ident'>is_none</span>())
     }
 
     <span class='kw'>fn</span> <span class='ident'>peek</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
@@ -1229,15 +1219,21 @@
         <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>reason</span>, <span class='ident'>pos</span>.<span class='ident'>line</span>, <span class='ident'>pos</span>.<span class='ident'>column</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_whitespace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Consume whitespace until the next non-whitespace character.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Return `Ok(true)` if EOF was encountered in the process and `Ok(false)` otherwise.</span>
+    <span class='kw'>fn</span> <span class='ident'>parse_whitespace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span> {
         <span class='kw'>loop</span> {
-            <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>peek_or_null</span>()) {
-                <span class='string'>b&#39; &#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\n&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\t&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\r&#39;</span> <span class='op'>=&gt;</span> {
-                    <span class='self'>self</span>.<span class='ident'>eat_char</span>();
-                }
-                _ <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(());
-                }
+            <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>peek</span>()) {
+                <span class='prelude-val'>Some</span>(<span class='ident'>b</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='ident'>b</span> {
+                    <span class='string'>b&#39; &#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\n&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\t&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\r&#39;</span> <span class='op'>=&gt;</span> {
+                        <span class='self'>self</span>.<span class='ident'>eat_char</span>();
+                    }
+                    _ <span class='op'>=&gt;</span> {
+                        <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='bool-val'>false</span>);
+                    }
+                },
+                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='bool-val'>true</span>),
             }
         }
     }
@@ -1245,9 +1241,7 @@
     <span class='kw'>fn</span> <span class='ident'>parse_value</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_whitespace</span>());
-
-        <span class='kw'>if</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>eof</span>()) {
+        <span class='kw'>if</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_whitespace</span>()) { <span class='comment'>// true if eof</span>
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingValue</span>));
         }
 
@@ -2036,12 +2030,8 @@
         <span class='comment'>// skip whitespaces, if any</span>
         <span class='comment'>// this helps with trailing whitespaces, since whitespaces between</span>
         <span class='comment'>// values are handled for us.</span>
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>deser</span>.<span class='ident'>parse_whitespace</span>() {
-            <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Err</span>(<span class='ident'>e</span>));
-        };
-
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>deser</span>.<span class='ident'>eof</span>() {
-            <span class='prelude-val'>Ok</span>(<span class='bool-val'>true</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>deser</span>.<span class='ident'>parse_whitespace</span>() {
+            <span class='prelude-val'>Ok</span>(<span class='bool-val'>true</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>, <span class='comment'>// eof</span>
             <span class='prelude-val'>Ok</span>(<span class='bool-val'>false</span>) <span class='op'>=&gt;</span> {
                 <span class='kw'>match</span> <span class='ident'>de</span>::<span class='ident'>Deserialize</span>::<span class='ident'>deserialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>deser</span>) {
                     <span class='prelude-val'>Ok</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Ok</span>(<span class='ident'>v</span>)),

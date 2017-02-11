@@ -1,5 +1,8 @@
 (function() {var implementors = {};
-implementors["url"] = [];implementors["ws"] = [];implementors["hyper"] = [];implementors["iron"] = [];
+implementors["hyper"] = [];
+implementors["iron"] = [];
+implementors["url"] = [];
+implementors["ws"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

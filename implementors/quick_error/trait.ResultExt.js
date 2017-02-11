@@ -1,5 +1,6 @@
 (function() {var implementors = {};
-implementors["quick_error"] = [];implementors["handlebars"] = [];
+implementors["handlebars"] = [];
+implementors["quick_error"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

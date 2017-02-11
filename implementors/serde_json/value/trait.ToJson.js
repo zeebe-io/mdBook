@@ -1,5 +1,6 @@
 (function() {var implementors = {};
-implementors["serde_json"] = [];implementors["handlebars"] = [];
+implementors["handlebars"] = [];
+implementors["serde_json"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
