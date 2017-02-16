@@ -252,7 +252,6 @@
 <span id="208">208</span>
 <span id="209">209</span>
 <span id="210">210</span>
-<span id="211">211</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>html_handlebars</span>::<span class='ident'>helpers</span>;
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>Renderer</span>;
@@ -269,7 +268,6 @@
 <span class='kw'>use</span> <span class='ident'>handlebars</span>::<span class='ident'>Handlebars</span>;
 
 <span class='kw'>use</span> <span class='ident'>serde_json</span>;
-<span class='kw'>use</span> <span class='ident'>serde_json</span>::<span class='ident'>value</span>::<span class='ident'>ToJson</span>;
 
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>HtmlHandlebars</span>;
@@ -340,10 +338,10 @@
                         <span class='comment'>// Update the context with data for this file</span>
                         <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>,
                                                           <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
-                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>path</span>.<span class='ident'>to_json</span>());
-                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;content&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>content</span>.<span class='ident'>to_json</span>());
-                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;chapter_title&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>ch</span>.<span class='ident'>name</span>.<span class='ident'>to_json</span>());
-                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path_to_root&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>utils</span>::<span class='ident'>fs</span>::<span class='ident'>path_to_root</span>(<span class='kw-2'>&amp;</span><span class='ident'>ch</span>.<span class='ident'>path</span>).<span class='ident'>to_json</span>());
+                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>path</span>));
+                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;content&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>content</span>));
+                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;chapter_title&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>ch</span>.<span class='ident'>name</span>));
+                        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path_to_root&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>utils</span>::<span class='ident'>fs</span>::<span class='ident'>path_to_root</span>(<span class='kw-2'>&amp;</span><span class='ident'>ch</span>.<span class='ident'>path</span>)));
 
                         <span class='comment'>// Render the handlebars template with the data</span>
                         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Render template&quot;</span>);
@@ -384,9 +382,9 @@
         <span class='comment'>// Print version</span>
 
         <span class='comment'>// Update the context with data for this file</span>
-        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='string'>&quot;print.md&quot;</span>.<span class='ident'>to_json</span>());
-        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;content&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>print_content</span>.<span class='ident'>to_json</span>());
-        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path_to_root&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>utils</span>::<span class='ident'>fs</span>::<span class='ident'>path_to_root</span>(<span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='string'>&quot;print.md&quot;</span>)).<span class='ident'>to_json</span>());
+        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='string'>&quot;print.md&quot;</span>));
+        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;content&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>print_content</span>));
+        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path_to_root&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>utils</span>::<span class='ident'>fs</span>::<span class='ident'>path_to_root</span>(<span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='string'>&quot;print.md&quot;</span>))));
 
         <span class='comment'>// Render the handlebars template with the data</span>
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Render template&quot;</span>);
@@ -423,12 +421,12 @@
     <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[fn]: make_data&quot;</span>);
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>serde_json</span>::<span class='ident'>Map</span>::<span class='ident'>new</span>();
-    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;language&quot;</span>.<span class='ident'>to_owned</span>(), <span class='string'>&quot;en&quot;</span>.<span class='ident'>to_json</span>());
-    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;title&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>book</span>.<span class='ident'>get_title</span>().<span class='ident'>to_json</span>());
-    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;description&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>book</span>.<span class='ident'>get_description</span>().<span class='ident'>to_json</span>());
-    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;favicon&quot;</span>.<span class='ident'>to_owned</span>(), <span class='string'>&quot;favicon.png&quot;</span>.<span class='ident'>to_json</span>());
+    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;language&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='string'>&quot;en&quot;</span>));
+    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;title&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>book</span>.<span class='ident'>get_title</span>()));
+    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;description&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>book</span>.<span class='ident'>get_description</span>()));
+    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;favicon&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='string'>&quot;favicon.png&quot;</span>));
     <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>livereload</span>) <span class='op'>=</span> <span class='ident'>book</span>.<span class='ident'>get_livereload</span>() {
-        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;livereload&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>livereload</span>.<span class='ident'>to_json</span>());
+        <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;livereload&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>livereload</span>));
     }
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>chapters</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
@@ -439,20 +437,20 @@
 
         <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>item</span> {
             <span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>ch</span>.<span class='ident'>name</span>.<span class='ident'>to_json</span>());
+                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>ch</span>.<span class='ident'>name</span>));
                 <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>,
                                                                  <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
-                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>path</span>.<span class='ident'>to_json</span>());
+                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>path</span>));
             },
             <span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;section&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>s</span>.<span class='ident'>to_json</span>());
-                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>ch</span>.<span class='ident'>name</span>.<span class='ident'>to_json</span>());
+                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;section&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>s</span>));
+                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>ch</span>.<span class='ident'>name</span>));
                 <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>,
                                                                  <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
-                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>path</span>.<span class='ident'>to_json</span>());
+                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>path</span>));
             },
             <span class='ident'>BookItem</span>::<span class='ident'>Spacer</span> <span class='op'>=&gt;</span> {
-                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;spacer&quot;</span>.<span class='ident'>to_owned</span>(), <span class='string'>&quot;_spacer_&quot;</span>.<span class='ident'>to_json</span>());
+                <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;spacer&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='string'>&quot;_spacer_&quot;</span>));
             },
 
         }
@@ -460,7 +458,7 @@
         <span class='ident'>chapters</span>.<span class='ident'>push</span>(<span class='ident'>chapter</span>);
     }
 
-    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;chapters&quot;</span>.<span class='ident'>to_owned</span>(), <span class='ident'>chapters</span>.<span class='ident'>to_json</span>());
+    <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;chapters&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>chapters</span>));
 
     <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: JSON constructed&quot;</span>);
     <span class='prelude-val'>Ok</span>(<span class='ident'>data</span>)

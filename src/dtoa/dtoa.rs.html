@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/dtoa-0.2.2/src/dtoa.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/dtoa-0.4.1/src/dtoa.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dtoa.rs.html -- source</title>
@@ -513,6 +513,14 @@
 <span id="469">469</span>
 <span id="470">470</span>
 <span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 Dtoa Developers</span>
 <span class='comment'>//</span>
@@ -963,15 +971,18 @@ inline char* dtoa(double value, char* buffer, int maxDecimalPlaces = 324) {
 */</span>
 
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>dtoa</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='ident'>wr</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>, <span class='kw-2'>mut</span> <span class='ident'>value</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fty</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>dtoa</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>wr</span>: <span class='ident'>W</span>, <span class='kw-2'>mut</span> <span class='ident'>value</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fty</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
     <span class='kw'>if</span> <span class='ident'>value</span> <span class='op'>==</span> <span class='number'>0.0</span> {
         <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>is_sign_negative</span>() {
-            <span class='ident'>wr</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;-0.0&quot;</span>)
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>wr</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;-0.0&quot;</span>));
+            <span class='prelude-val'>Ok</span>(<span class='number'>4</span>)
         } <span class='kw'>else</span> {
-            <span class='ident'>wr</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;0.0&quot;</span>)
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>wr</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;0.0&quot;</span>));
+            <span class='prelude-val'>Ok</span>(<span class='number'>3</span>)
         }
     } <span class='kw'>else</span> {
-        <span class='kw'>if</span> <span class='ident'>value</span> <span class='op'>&lt;</span> <span class='number'>0.0</span> {
+        <span class='kw'>let</span> <span class='ident'>negative</span> <span class='op'>=</span> <span class='ident'>value</span> <span class='op'>&lt;</span> <span class='number'>0.0</span>;
+        <span class='kw'>if</span> <span class='ident'>negative</span> {
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>wr</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;-&quot;</span>));
             <span class='ident'>value</span> <span class='op'>=</span> <span class='op'>-</span><span class='ident'>value</span>;
         }
@@ -979,8 +990,13 @@ inline char* dtoa(double value, char* buffer, int maxDecimalPlaces = 324) {
         <span class='kw'>let</span> <span class='ident'>buf_ptr</span> <span class='op'>=</span> <span class='ident'>buffer</span>.<span class='ident'>as_mut_ptr</span>();
         <span class='kw'>let</span> (<span class='ident'>length</span>, <span class='ident'>k</span>) <span class='op'>=</span> <span class='ident'>grisu2</span>(<span class='ident'>value</span>, <span class='ident'>buf_ptr</span>);
         <span class='kw'>let</span> <span class='ident'>end</span> <span class='op'>=</span> <span class='ident'>prettify</span>(<span class='ident'>buf_ptr</span>, <span class='ident'>length</span>, <span class='ident'>k</span>);
-        <span class='ident'>wr</span>.<span class='ident'>write_all</span>(<span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(
-            <span class='ident'>buf_ptr</span>, <span class='ident'>end</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>-</span> <span class='ident'>buf_ptr</span> <span class='kw'>as</span> <span class='ident'>usize</span>))
+        <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>end</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>-</span> <span class='ident'>buf_ptr</span> <span class='kw'>as</span> <span class='ident'>usize</span>;
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>wr</span>.<span class='ident'>write_all</span>(<span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>buf_ptr</span>, <span class='ident'>len</span>)));
+        <span class='kw'>if</span> <span class='ident'>negative</span> {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>len</span> <span class='op'>+</span> <span class='number'>1</span>)
+        } <span class='kw'>else</span> {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>len</span>)
+        }
     }
 }
 

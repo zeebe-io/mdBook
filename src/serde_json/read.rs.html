@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.8.6/src/read.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.6/src/read.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>read.rs.html -- source</title>
@@ -667,7 +667,7 @@
         <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
     ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
         <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>ch</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>next</span>().<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>Io</span>)) {
+            <span class='kw'>let</span> <span class='ident'>ch</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>next</span>()) {
                 <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>) <span class='op'>=&gt;</span> <span class='ident'>ch</span>,
                 <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
                     <span class='kw'>return</span> <span class='ident'>error</span>(<span class='self'>self</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingString</span>);
@@ -897,7 +897,7 @@
 
 <span class='kw'>fn</span> <span class='ident'>error</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>read</span>: <span class='kw-2'>&amp;</span><span class='ident'>R</span>, <span class='ident'>reason</span>: <span class='ident'>ErrorCode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>read</span>.<span class='ident'>position</span>();
-    <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>reason</span>, <span class='ident'>pos</span>.<span class='ident'>line</span>, <span class='ident'>pos</span>.<span class='ident'>column</span>))
+    <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>syntax</span>(<span class='ident'>reason</span>, <span class='ident'>pos</span>.<span class='ident'>line</span>, <span class='ident'>pos</span>.<span class='ident'>column</span>))
 }
 
 <span class='kw'>fn</span> <span class='ident'>as_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>R</span>: <span class='ident'>Read</span><span class='op'>&gt;</span>(<span class='ident'>read</span>: <span class='kw-2'>&amp;</span><span class='ident'>R</span>, <span class='ident'>slice</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
@@ -908,7 +908,7 @@
 <span class='doccomment'>/// Parses a JSON escape sequence and appends it into the scratch space. Assumes</span>
 <span class='doccomment'>/// the previous byte read was a backslash.</span>
 <span class='kw'>fn</span> <span class='ident'>parse_escape</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span><span class='op'>&gt;</span>(<span class='ident'>read</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>, <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>ch</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>().<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>Io</span>)) {
+    <span class='kw'>let</span> <span class='ident'>ch</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>()) {
         <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>) <span class='op'>=&gt;</span> <span class='ident'>ch</span>,
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
             <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingString</span>);
@@ -934,8 +934,8 @@
                     <span class='comment'>// Non-BMP characters are encoded as a sequence of</span>
                     <span class='comment'>// two hex escapes, representing UTF-16 surrogates.</span>
                     <span class='ident'>n1</span> @ <span class='number'>0xD800</span>...<span class='number'>0xDBFF</span> <span class='op'>=&gt;</span> {
-                        <span class='kw'>match</span> (<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>().<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>Io</span>)),
-                               <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>().<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>Io</span>))) {
+                        <span class='kw'>match</span> (<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>()),
+                               <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>())) {
                             (<span class='prelude-val'>Some</span>(<span class='string'>b&#39;\\&#39;</span>), <span class='prelude-val'>Some</span>(<span class='string'>b&#39;u&#39;</span>)) <span class='op'>=&gt;</span> (),
                             _ <span class='op'>=&gt;</span> {
                                 <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>UnexpectedEndOfHexEscape</span>);

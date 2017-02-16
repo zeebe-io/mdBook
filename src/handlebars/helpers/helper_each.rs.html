@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.23.0/src/helpers/helper_each.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.0/src/helpers/helper_each.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>helper_each.rs.html -- source</title>
@@ -354,40 +354,6 @@
 <span id="310">310</span>
 <span id="311">311</span>
 <span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
 
@@ -398,19 +364,14 @@
 
 <span class='kw'>use</span> <span class='ident'>helpers</span>::<span class='ident'>HelperDef</span>;
 <span class='kw'>use</span> <span class='ident'>registry</span>::<span class='ident'>Registry</span>;
-<span class='kw'>use</span> <span class='ident'>context</span>::{<span class='ident'>Context</span>, <span class='ident'>JsonTruthy</span>, <span class='ident'>to_json</span>};
+<span class='kw'>use</span> <span class='ident'>context</span>::{<span class='ident'>JsonTruthy</span>, <span class='ident'>to_json</span>};
 <span class='kw'>use</span> <span class='ident'>render</span>::{<span class='ident'>Renderable</span>, <span class='ident'>RenderContext</span>, <span class='ident'>RenderError</span>, <span class='ident'>Helper</span>};
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EachHelper</span>;
 
 <span class='kw'>impl</span> <span class='ident'>HelperDef</span> <span class='kw'>for</span> <span class='ident'>EachHelper</span> {
-    <span class='kw'>fn</span> <span class='ident'>call</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-            <span class='ident'>c</span>: <span class='kw-2'>&amp;</span><span class='ident'>Context</span>,
-            <span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='ident'>Helper</span>,
-            <span class='ident'>r</span>: <span class='kw-2'>&amp;</span><span class='ident'>Registry</span>,
-            <span class='ident'>rc</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>RenderContext</span>)
-            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>RenderError</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>call</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='ident'>Helper</span>, <span class='ident'>r</span>: <span class='kw-2'>&amp;</span><span class='ident'>Registry</span>, <span class='ident'>rc</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>RenderContext</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>RenderError</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>param</span>(<span class='number'>0</span>)
                           .<span class='ident'>ok_or_else</span>(<span class='op'>||</span> <span class='ident'>RenderError</span>::<span class='ident'>new</span>(<span class='string'>&quot;Param not found for helper \&quot;each\&quot;&quot;</span>)));
 
@@ -451,7 +412,7 @@
                                 <span class='ident'>local_rc</span>.<span class='ident'>push_block_context</span>(<span class='kw-2'>&amp;</span><span class='ident'>map</span>);
                             }
 
-                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>render</span>(<span class='ident'>c</span>, <span class='ident'>r</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>local_rc</span>));
+                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>render</span>(<span class='ident'>r</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>local_rc</span>));
 
                             <span class='kw'>if</span> <span class='ident'>h</span>.<span class='ident'>block_param</span>().<span class='ident'>is_some</span>() {
                                 <span class='ident'>local_rc</span>.<span class='ident'>pop_block_context</span>();
@@ -492,7 +453,7 @@
                                 <span class='ident'>local_rc</span>.<span class='ident'>push_block_context</span>(<span class='kw-2'>&amp;</span><span class='ident'>map</span>);
                             }
 
-                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>render</span>(<span class='ident'>c</span>, <span class='ident'>r</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>local_rc</span>));
+                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>render</span>(<span class='ident'>r</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>local_rc</span>));
 
                             <span class='kw'>if</span> <span class='ident'>h</span>.<span class='ident'>block_param</span>().<span class='ident'>is_some</span>() {
                                 <span class='ident'>local_rc</span>.<span class='ident'>pop_block_context</span>();
@@ -507,7 +468,7 @@
                     }
                     (<span class='bool-val'>false</span>, _) <span class='op'>=&gt;</span> {
                         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>else_template</span>) <span class='op'>=</span> <span class='ident'>h</span>.<span class='ident'>inverse</span>() {
-                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>else_template</span>.<span class='ident'>render</span>(<span class='ident'>c</span>, <span class='ident'>r</span>, <span class='ident'>rc</span>));
+                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>else_template</span>.<span class='ident'>render</span>(<span class='ident'>r</span>, <span class='ident'>rc</span>));
                         }
                         <span class='prelude-val'>Ok</span>(())
                     }
@@ -528,7 +489,6 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>template</span>::<span class='ident'>Template</span>;
     <span class='kw'>use</span> <span class='ident'>registry</span>::<span class='ident'>Registry</span>;
     <span class='kw'>use</span> <span class='ident'>context</span>::<span class='ident'>to_json</span>;
 
@@ -539,19 +499,11 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_each</span>() {
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each this}}{{@first}}|{{@last}}|{{@index}}:\
-                                    {{this}}|{{/each}}&quot;</span>
-                                       .<span class='ident'>to_string</span>())
-                     .<span class='ident'>ok</span>()
-                     .<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t1</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each this}}{{@first}}|{{@key}}:{{this}}|{{/each}}&quot;</span>
-                                       .<span class='ident'>to_string</span>())
-                     .<span class='ident'>ok</span>()
-                     .<span class='ident'>unwrap</span>();
-
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t1&quot;</span>, <span class='ident'>t1</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each this}}{{@first}}|{{@last}}|{{@index}}:{{this}}|{{/each}}&quot;</span>).<span class='ident'>is_ok</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t1&quot;</span>,
+                                                    <span class='string'>&quot;{{#each this}}{{@first}}|{{@key}}:{{this}}|{{/each}}&quot;</span>)
+                .<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>r0</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;t0&quot;</span>, <span class='kw-2'>&amp;</span><span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1u16</span>, <span class='number'>2u16</span>, <span class='number'>3u16</span>]);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r0</span>.<span class='ident'>ok</span>().<span class='ident'>unwrap</span>(),
@@ -572,16 +524,14 @@
 
         <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='ident'>json_str</span>).<span class='ident'>unwrap</span>();
         <span class='comment'>// println!(&quot;data: {}&quot;, data);</span>
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
 
         <span class='comment'>// previously, to access the parent in an each block,</span>
         <span class='comment'>// a user would need to specify ../../b, as the path</span>
         <span class='comment'>// that is computed includes the array index: ./a.c.[0]</span>
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each a.c}} d={{d}} b={{../a.a}} {{/each}}&quot;</span>.<span class='ident'>to_string</span>())
-                     .<span class='ident'>ok</span>()
-                     .<span class='ident'>unwrap</span>();
-
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>,
+                                                    <span class='string'>&quot;{{#each a.c}} d={{d}} b={{../a.a}} {{/each}}&quot;</span>)
+                          .<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>r1</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;t0&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r1</span>.<span class='ident'>ok</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot; d=100 b=99  d=200 b=99 &quot;</span>.<span class='ident'>to_string</span>());
@@ -594,13 +544,8 @@
         <span class='kw'>let</span> <span class='ident'>json_str</span> <span class='op'>=</span> <span class='string'>r#&quot;{&quot;a&quot;: [{&quot;b&quot;: [{&quot;d&quot;: 100}], &quot;c&quot;: 200}]}&quot;#</span>;
 
         <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='ident'>json_str</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each a}}{{#each b}}{{d}}:{{../c}}{{/each}}{{/each}}&quot;</span>
-                                       .<span class='ident'>to_string</span>())
-                     .<span class='ident'>ok</span>()
-                     .<span class='ident'>unwrap</span>();
-
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each a}}{{#each b}}{{d}}:{{../c}}{{/each}}{{/each}}&quot;</span>).<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>r1</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;t0&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r1</span>.<span class='ident'>ok</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;100:200&quot;</span>.<span class='ident'>to_string</span>());
@@ -613,12 +558,9 @@
         <span class='kw'>let</span> <span class='ident'>json_str</span> <span class='op'>=</span> <span class='string'>r#&quot;{&quot;a&quot;: [{&quot;b&quot;: true}], &quot;b&quot;: [[1, 2, 3],[4, 5]]}&quot;#</span>;
 
         <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='ident'>json_str</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each b}}{{#if ../a}}{{#each this}}{{this}}{{/each}}{{/if}}{{/each}}&quot;</span>.<span class='ident'>to_string</span>())
-            .<span class='ident'>ok</span>()
-            .<span class='ident'>unwrap</span>();
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each b}}{{#if ../a}}{{#each this}}{{this}}{{/each}}{{/if}}{{/each}}&quot;</span>).<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>r1</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;t0&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r1</span>.<span class='ident'>ok</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;12345&quot;</span>.<span class='ident'>to_string</span>());
@@ -627,10 +569,9 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_nested_array</span>() {
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each this.[0]}}{{this}}{{/each}}&quot;</span>.<span class='ident'>to_owned</span>()).<span class='ident'>ok</span>().<span class='ident'>unwrap</span>();
-
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each this.[0]}}{{this}}{{/each}}&quot;</span>)
+                          .<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>r0</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;t0&quot;</span>, <span class='kw-2'>&amp;</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>]]));
 
@@ -639,11 +580,10 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_empty_key</span>() {
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each this}}{{@key}}-{{value}}\n{{/each}}&quot;</span>.<span class='ident'>to_owned</span>())
-                     .<span class='ident'>unwrap</span>();
-
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>,
+                                                    <span class='string'>&quot;{{#each this}}{{@key}}-{{value}}\n{{/each}}&quot;</span>)
+                          .<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>r0</span> <span class='op'>=</span> <span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;t0&quot;</span>,
                                    <span class='kw-2'>&amp;</span>({
@@ -670,9 +610,9 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_each_else</span>() {
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each a}}1{{else}}empty{{/each}}&quot;</span>.<span class='ident'>to_owned</span>()).<span class='ident'>unwrap</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each a}}1{{else}}empty{{/each}}&quot;</span>)
+                          .<span class='ident'>is_ok</span>());
         <span class='kw'>let</span> <span class='ident'>m1</span> <span class='op'>=</span> <span class='macro'>btreemap</span><span class='macro'>!</span> {
             <span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>() <span class='op'>=&gt;</span> <span class='ident'>Vec</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>::<span class='ident'>new</span>(),
         };
@@ -688,9 +628,9 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_block_param</span>() {
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each a as |i|}}{{i}}{{/each}}&quot;</span>.<span class='ident'>to_owned</span>()).<span class='ident'>unwrap</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each a as |i|}}{{i}}{{/each}}&quot;</span>)
+                          .<span class='ident'>is_ok</span>());
         <span class='kw'>let</span> <span class='ident'>m1</span> <span class='op'>=</span> <span class='macro'>btreemap</span><span class='macro'>!</span> {
             <span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>() <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1</span>,<span class='number'>2</span>,<span class='number'>3</span>,<span class='number'>4</span>,<span class='number'>5</span>]
         };
@@ -700,12 +640,8 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_each_object_block_param</span>() {
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each this as |k v|}}{{#with k as |inner_k|}}{{inner_k}}{{/with}}:{{v}}|{{/each}}&quot;</span>.<span class='ident'>to_string</span>())
-                     .<span class='ident'>ok</span>()
-                     .<span class='ident'>unwrap</span>();
-
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each this as |k v|}}{{#with k as |inner_k|}}{{inner_k}}{{/with}}:{{v}}|{{/each}}&quot;</span>).<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='macro'>btreemap</span><span class='macro'>!</span>{
             <span class='string'>&quot;ftp&quot;</span>.<span class='ident'>to_string</span>() <span class='op'>=&gt;</span> <span class='number'>21</span>,
@@ -717,12 +653,8 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_nested_each_with_path_ups</span>() {
-        <span class='kw'>let</span> <span class='ident'>t0</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='string'>&quot;{{#each a.b}}{{#each c}}{{../../d}}{{/each}}{{/each}}&quot;</span>
-                                       .<span class='ident'>to_string</span>())
-                     .<span class='ident'>ok</span>()
-                     .<span class='ident'>unwrap</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Registry</span>::<span class='ident'>new</span>();
-        <span class='ident'>handlebars</span>.<span class='ident'>register_template</span>(<span class='string'>&quot;t0&quot;</span>, <span class='ident'>t0</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t0&quot;</span>, <span class='string'>&quot;{{#each a.b}}{{#each c}}{{../../d}}{{/each}}{{/each}}&quot;</span>).<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>btreemap</span><span class='macro'>!</span> {
             <span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>() <span class='op'>=&gt;</span> <span class='ident'>to_json</span>(<span class='kw-2'>&amp;</span><span class='macro'>btreemap</span><span class='macro'>!</span> {

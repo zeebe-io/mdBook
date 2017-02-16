@@ -8,6 +8,7 @@ implementors["mio"] = [];
 implementors["nix"] = [];
 implementors["regex_syntax"] = [];
 implementors["serde"] = [];
+implementors["void"] = [];
 implementors["ws"] = [];
 
             if (window.register_implementors) {
