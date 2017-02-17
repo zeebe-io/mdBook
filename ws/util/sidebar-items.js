@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Timeout",""],["Token",""]],"type":[["Slab",""]]});
+initSidebarItems({"struct":[["Timeout",""],["Token","Used to identify which `Evented` value is associated with an `Event` notification returned by `Poll`."]],"type":[["Slab","A Slab allocator for associating tokens to data."]]});

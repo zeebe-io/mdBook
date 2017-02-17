@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.3/src/factory.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.4/src/factory.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>factory.rs.html -- source</title>
@@ -239,13 +239,6 @@
 <span id="195">195</span>
 <span id="196">196</span>
 <span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>handler</span>::<span class='ident'>Handler</span>;
 <span class='kw'>use</span> <span class='ident'>communication</span>::<span class='ident'>Sender</span>;
@@ -255,7 +248,7 @@
     <span class='kw'>type</span> <span class='ident'>Handler</span>: <span class='ident'>Handler</span>;
 
     <span class='doccomment'>/// Called when a TCP connection is made.</span>
-    <span class='kw'>fn</span> <span class='ident'>connection_made</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>Sender</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Handler</span>;
+    <span class='kw'>fn</span> <span class='ident'>connection_made</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: <span class='ident'>Sender</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Handler</span>;
 
     <span class='doccomment'>/// Called when the WebSocket is shutting down.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -375,13 +368,6 @@
     <span class='kw'>use</span> <span class='ident'>handler</span>::<span class='ident'>Handler</span>;
     <span class='kw'>use</span> <span class='ident'>result</span>::<span class='prelude-ty'>Result</span>;
 
-    <span class='kw'>struct</span> <span class='ident'>S</span>;
-
-    <span class='kw'>impl</span> <span class='ident'>mio</span>::<span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>S</span> {
-        <span class='kw'>type</span> <span class='ident'>Message</span> <span class='op'>=</span> <span class='ident'>Command</span>;
-        <span class='kw'>type</span> <span class='ident'>Timeout</span> <span class='op'>=</span> ();
-    }
-
     <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>)]</span>
     <span class='kw'>struct</span> <span class='ident'>M</span>;
     <span class='kw'>impl</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>M</span> {
@@ -406,25 +392,25 @@
             }
         }
 
-        <span class='kw'>let</span> <span class='ident'>event_loop</span> <span class='op'>=</span> <span class='ident'>mio</span>::<span class='ident'>EventLoop</span>::<span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
+        <span class='kw'>let</span> (<span class='ident'>chn</span>, _) <span class='op'>=</span> <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>sync_channel</span>(<span class='number'>42</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>X</span>;
         <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>connection_made</span>(
-            <span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>mio</span>::<span class='ident'>Token</span>(<span class='number'>0</span>), <span class='ident'>event_loop</span>.<span class='ident'>channel</span>())
+            <span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>mio</span>::<span class='ident'>Token</span>(<span class='number'>0</span>), <span class='ident'>chn</span>)
         );
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>m</span>, <span class='ident'>M</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>closure_factory</span>() {
-        <span class='kw'>let</span> <span class='ident'>event_loop</span> <span class='op'>=</span> <span class='ident'>mio</span>::<span class='ident'>EventLoop</span>::<span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
+        <span class='kw'>let</span> (<span class='ident'>chn</span>, _) <span class='op'>=</span> <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>sync_channel</span>(<span class='number'>42</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>factory</span> <span class='op'>=</span> <span class='op'>|</span>_<span class='op'>|</span> {
             <span class='op'>|</span>_<span class='op'>|</span> {<span class='prelude-val'>Ok</span>(())}
         };
 
         <span class='ident'>factory</span>.<span class='ident'>connection_made</span>(
-            <span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>mio</span>::<span class='ident'>Token</span>(<span class='number'>0</span>), <span class='ident'>event_loop</span>.<span class='ident'>channel</span>())
+            <span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>mio</span>::<span class='ident'>Token</span>(<span class='number'>0</span>), <span class='ident'>chn</span>)
         );
     }
 
@@ -442,11 +428,11 @@
             }
         }
 
-        <span class='kw'>let</span> <span class='ident'>event_loop</span> <span class='op'>=</span> <span class='ident'>mio</span>::<span class='ident'>EventLoop</span>::<span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
+        <span class='kw'>let</span> (<span class='ident'>chn</span>, _) <span class='op'>=</span> <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>sync_channel</span>(<span class='number'>42</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>X</span>;
         <span class='kw'>let</span> <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>connection_made</span>(
-            <span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>mio</span>::<span class='ident'>Token</span>(<span class='number'>0</span>), <span class='ident'>event_loop</span>.<span class='ident'>channel</span>())
+            <span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>mio</span>::<span class='ident'>Token</span>(<span class='number'>0</span>), <span class='ident'>chn</span>)
         );
         <span class='ident'>x</span>.<span class='ident'>connection_lost</span>(<span class='ident'>m</span>);
     }

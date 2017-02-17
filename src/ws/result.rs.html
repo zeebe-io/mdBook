@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.3/src/result.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.4/src/result.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>result.rs.html -- source</title>
@@ -292,9 +292,9 @@
     <span class='doccomment'>/// `Settings::max_connections` and `Settings:queue_size` high enough to handle the load.</span>
     <span class='doccomment'>/// If encountered, retuning from a handler method and waiting for the EventLoop to consume</span>
     <span class='doccomment'>/// the queue may relieve the situation.</span>
-    <span class='ident'>Queue</span>(<span class='ident'>mio</span>::<span class='ident'>NotifyError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>),
+    <span class='ident'>Queue</span>(<span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>),
     <span class='doccomment'>/// Indicates a failure to schedule a timeout on the EventLoop.</span>
-    <span class='ident'>Timer</span>(<span class='ident'>mio</span>::<span class='ident'>TimerError</span>),
+    <span class='ident'>Timer</span>(<span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>TimerError</span>),
     <span class='doccomment'>/// Indicates a failure to perform SSL encryption.</span>
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
     <span class='ident'>Ssl</span>(<span class='ident'>SslError</span>),
@@ -404,20 +404,20 @@
 
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>mio</span>::<span class='ident'>NotifyError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
+<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>mio</span>::<span class='ident'>NotifyError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
         <span class='kw'>match</span> <span class='ident'>err</span> {
-            <span class='ident'>mio</span>::<span class='ident'>NotifyError</span>::<span class='ident'>Io</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>Error</span>::<span class='ident'>from</span>(<span class='ident'>err</span>),
+            <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span>::<span class='ident'>Io</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>Error</span>::<span class='ident'>from</span>(<span class='ident'>err</span>),
             _ <span class='op'>=&gt;</span> <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Queue</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
         }
     }
 
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>mio</span>::<span class='ident'>TimerError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
+<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>TimerError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>mio</span>::<span class='ident'>TimerError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>TimerError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
         <span class='kw'>match</span> <span class='ident'>err</span> {
             _ <span class='op'>=&gt;</span> <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Timer</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
         }

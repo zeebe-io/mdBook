@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/ws/handler.rs.html#16-281' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/ws/handler.rs.html#16-280' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Handler {
     fn <a href='#method.on_shutdown' class='fnname'>on_shutdown</a>(&amp;mut self) { ... }
     fn <a href='#method.on_open' class='fnname'>on_open</a>(&amp;mut self, shake: <a class='struct' href='../ws/struct.Handshake.html' title='ws::Handshake'>Handshake</a>) -&gt; <a class='type' href='../ws/type.Result.html' title='ws::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; { ... }
@@ -130,49 +130,48 @@ token. To schedule a timeout with your specific token use the <code>Sender::time
 </div><h3 id='method.on_new_timeout' class='method stab '><span id='on_new_timeout.v' class='invisible'><code>fn <a href='#method.on_new_timeout' class='fnname'>on_new_timeout</a>(&amp;mut self, _: <a class='struct' href='../ws/util/struct.Token.html' title='ws::util::Token'>Token</a>, _: <a class='struct' href='../ws/util/struct.Timeout.html' title='ws::util::Timeout'>Timeout</a>) -&gt; <a class='type' href='../ws/type.Result.html' title='ws::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h3><div class='docblock'><p>Called when a timeout has been scheduled on the eventloop.</p>
 
 <p>This method is the hook for obtaining a Timeout object that may be used to cancel a
- timeout. This is a noop by default.</p>
+timeout. This is a noop by default.</p>
 
-<p># Examples
- ```ignore
- const PING: Token = Token(1);
- const EXPIRE: Token = Token(2);</p>
+<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>const</span> <span class='ident'>PING</span>: <span class='ident'>Token</span> <span class='op'>=</span> <span class='ident'>Token</span>(<span class='number'>1</span>);
+<span class='kw'>const</span> <span class='ident'>EXPIRE</span>: <span class='ident'>Token</span> <span class='op'>=</span> <span class='ident'>Token</span>(<span class='number'>2</span>);
 
-<p>... Handler</p>
+... <span class='ident'>Handler</span>
 
-<p>fn on_open(&amp;mut self, _: Handshake) -&gt; Result&lt;()&gt; {
-     // schedule a timeout to send a ping every 5 seconds
-     try!(self.ws.timeout(5_000, PING));
-     // schedule a timeout to close the connection if there is no activity for 30 seconds
-     self.ws.timeout(30_000, EXPIRE)
- }</p>
+<span class='kw'>fn</span> <span class='ident'>on_open</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: <span class='ident'>Handshake</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='comment'>// schedule a timeout to send a ping every 5 seconds</span>
+    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>ws</span>.<span class='ident'>timeout</span>(<span class='number'>5_000</span>, <span class='ident'>PING</span>));
+    <span class='comment'>// schedule a timeout to close the connection if there is no activity for 30 seconds</span>
+    <span class='self'>self</span>.<span class='ident'>ws</span>.<span class='ident'>timeout</span>(<span class='number'>30_000</span>, <span class='ident'>EXPIRE</span>)
+}
 
-<p>fn on_timeout(&amp;mut self, event: Token) -&gt; Result&lt;()&gt; {
-     match event {
-         PING =&gt; {
-             self.ws.ping(vec![]);
-             self.ws.timeout(5_000, PING)
-         }
-         EXPIRE =&gt; self.ws.close(CloseCode::Away),
-         _ =&gt; Err(Error::new(ErrorKind::Internal, &quot;Invalid timeout token encountered!&quot;)),
-     }
- }</p>
+<span class='kw'>fn</span> <span class='ident'>on_timeout</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>event</span>: <span class='ident'>Token</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>match</span> <span class='ident'>event</span> {
+        <span class='ident'>PING</span> <span class='op'>=&gt;</span> {
+            <span class='self'>self</span>.<span class='ident'>ws</span>.<span class='ident'>ping</span>(<span class='macro'>vec</span><span class='macro'>!</span>[]);
+            <span class='self'>self</span>.<span class='ident'>ws</span>.<span class='ident'>timeout</span>(<span class='number'>5_000</span>, <span class='ident'>PING</span>)
+        }
+        <span class='ident'>EXPIRE</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>ws</span>.<span class='ident'>close</span>(<span class='ident'>CloseCode</span>::<span class='ident'>Away</span>),
+        _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>ErrorKind</span>::<span class='ident'>Internal</span>, <span class='string'>&quot;Invalid timeout token encountered!&quot;</span>)),
+    }
+}
 
-<p>fn on_new_timeout(&amp;mut self, event: Token, timeout: Timeout) -&gt; Result&lt;()&gt; {
-     if event == EXPIRE {
-         if let Some(t) = self.timeout.take() {
-             try!(self.ws.cancel(t))
-         }
-         self.timeout = Some(timeout)
-     }
-     Ok(())
- }</p>
+<span class='kw'>fn</span> <span class='ident'>on_new_timeout</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>event</span>: <span class='ident'>Token</span>, <span class='ident'>timeout</span>: <span class='ident'>Timeout</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>if</span> <span class='ident'>event</span> <span class='op'>==</span> <span class='ident'>EXPIRE</span> {
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>t</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>timeout</span>.<span class='ident'>take</span>() {
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>ws</span>.<span class='ident'>cancel</span>(<span class='ident'>t</span>))
+        }
+        <span class='self'>self</span>.<span class='ident'>timeout</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>timeout</span>)
+    }
+    <span class='prelude-val'>Ok</span>(())
+}
 
-<p>fn on_frame(&amp;mut self, frame: Frame) -&gt; Result<Option<Frame>&gt; {
-     // some activity has occurred, let&#39;s reset the expiration
-     try!(self.ws.timeout(30_000, EXPIRE));
-     Ok(Some(frame))
- }
-```</p>
+<span class='kw'>fn</span> <span class='ident'>on_frame</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>frame</span>: <span class='ident'>Frame</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Frame</span><span class='op'>&gt;&gt;</span> {
+    <span class='comment'>// some activity has occurred, let&#39;s reset the expiration</span>
+    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>ws</span>.<span class='ident'>timeout</span>(<span class='number'>30_000</span>, <span class='ident'>EXPIRE</span>));
+    <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>frame</span>))
+}</pre>
 </div><h3 id='method.on_frame' class='method stab '><span id='on_frame.v' class='invisible'><code>fn <a href='#method.on_frame' class='fnname'>on_frame</a>(&amp;mut self, frame: <a class='struct' href='../ws/struct.Frame.html' title='ws::Frame'>Frame</a>) -&gt; <a class='type' href='../ws/type.Result.html' title='ws::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../ws/struct.Frame.html' title='ws::Frame'>Frame</a>&gt;&gt;</code></span></h3><div class='docblock'><p>A method for handling incoming frames.</p>
 
 <p>This method provides very low-level access to the details of the WebSocket protocol. It may
@@ -208,7 +207,7 @@ request as necessary.</p>
 
 <p>Implementors should indicate any available WebSocket extensions here.</p>
 
-<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<h1 id='examples-3' class='section-header'><a href='#examples-3'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>req</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Request</span>::<span class='ident'>from_url</span>(<span class='ident'>url</span>));
 <span class='ident'>req</span>.<span class='ident'>add_extension</span>(<span class='string'>&quot;permessage-deflate; client_max_window_bits&quot;</span>);

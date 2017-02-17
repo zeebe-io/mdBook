@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.3/src/communication.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.4/src/communication.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>communication.rs.html -- source</title>
@@ -235,7 +235,7 @@
 <span class='kw'>use</span> <span class='ident'>protocol</span>::<span class='ident'>CloseCode</span>;
 <span class='kw'>use</span> <span class='ident'>io</span>::<span class='ident'>ALL</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Signal</span> {
     <span class='ident'>Message</span>(<span class='ident'>message</span>::<span class='ident'>Message</span>),
     <span class='ident'>Close</span>(<span class='ident'>CloseCode</span>, <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span>, <span class='ident'>str</span><span class='op'>&gt;</span>),
@@ -247,10 +247,10 @@
         <span class='ident'>delay</span>: <span class='ident'>u64</span>,
         <span class='ident'>token</span>: <span class='ident'>Token</span>,
     },
-    <span class='ident'>Cancel</span>(<span class='ident'>mio</span>::<span class='ident'>Timeout</span>),
+    <span class='ident'>Cancel</span>(<span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>Timeout</span>),
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Command</span> {
     <span class='ident'>token</span>: <span class='ident'>Token</span>,
     <span class='ident'>signal</span>: <span class='ident'>Signal</span>,
@@ -268,17 +268,17 @@
 
 <span class='doccomment'>/// A representation of the output of the WebSocket connection. Use this to send messages to the</span>
 <span class='doccomment'>/// other endpoint.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Sender</span> {
     <span class='ident'>token</span>: <span class='ident'>Token</span>,
-    <span class='ident'>channel</span>: <span class='ident'>mio</span>::<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>,
+    <span class='ident'>channel</span>: <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SyncSender</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>Sender</span> {
 
     <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>token</span>: <span class='ident'>Token</span>, <span class='ident'>channel</span>: <span class='ident'>mio</span>::<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Sender</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>token</span>: <span class='ident'>Token</span>, <span class='ident'>channel</span>: <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SyncSender</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Sender</span> {
         <span class='ident'>Sender</span> {
             <span class='ident'>token</span>: <span class='ident'>token</span>,
             <span class='ident'>channel</span>: <span class='ident'>channel</span>,
@@ -394,7 +394,7 @@
     <span class='doccomment'>/// possible to call this method after a timeout has already occured. It is still necessary to</span>
     <span class='doccomment'>/// handle spurious timeouts.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cancel</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='ident'>mio</span>::<span class='ident'>Timeout</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cancel</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>Timeout</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
             <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
             <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Cancel</span>(<span class='ident'>timeout</span>),

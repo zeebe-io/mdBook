@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-0.1.80/src/dfa.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-0.2.1/src/dfa.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dfa.rs.html -- source</title>
@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
 
-    <link rel="shortcut icon" href="https://www.rust-lang.org/favicon.ico">
+    
     
 </head>
 <body class="rustdoc">
@@ -27,7 +27,7 @@
     
 
     <nav class="sidebar">
-        <a href='../../regex/index.html'><img src='https://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
+        
         
     </nav>
 
@@ -1902,6 +1902,25 @@
 <span id="1858">1858</span>
 <span id="1859">1859</span>
 <span id="1860">1860</span>
+<span id="1861">1861</span>
+<span id="1862">1862</span>
+<span id="1863">1863</span>
+<span id="1864">1864</span>
+<span id="1865">1865</span>
+<span id="1866">1866</span>
+<span id="1867">1867</span>
+<span id="1868">1868</span>
+<span id="1869">1869</span>
+<span id="1870">1870</span>
+<span id="1871">1871</span>
+<span id="1872">1872</span>
+<span id="1873">1873</span>
+<span id="1874">1874</span>
+<span id="1875">1875</span>
+<span id="1876">1876</span>
+<span id="1877">1877</span>
+<span id="1878">1878</span>
+<span id="1879">1879</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014-2016 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -3283,7 +3302,9 @@ implementation.)
              ((<span class='ident'>empty_flags</span>.<span class='ident'>end</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>1</span>) <span class='op'>|</span>
              ((<span class='ident'>empty_flags</span>.<span class='ident'>start_line</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>2</span>) <span class='op'>|</span>
              ((<span class='ident'>empty_flags</span>.<span class='ident'>end_line</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>3</span>) <span class='op'>|</span>
-             ((<span class='ident'>state_flags</span>.<span class='ident'>is_word</span>() <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>4</span>))
+             ((<span class='ident'>empty_flags</span>.<span class='ident'>word_boundary</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>4</span>) <span class='op'>|</span>
+             ((<span class='ident'>empty_flags</span>.<span class='ident'>not_word_boundary</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>5</span>) <span class='op'>|</span>
+             ((<span class='ident'>state_flags</span>.<span class='ident'>is_word</span>() <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>6</span>))
             <span class='kw'>as</span> <span class='ident'>usize</span>
         };
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>cache</span>.<span class='ident'>start_states</span>[<span class='ident'>flagi</span>] {
@@ -3317,8 +3338,16 @@ implementation.)
         <span class='ident'>empty_flags</span>.<span class='ident'>end</span> <span class='op'>=</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span>;
         <span class='ident'>empty_flags</span>.<span class='ident'>start_line</span> <span class='op'>=</span> <span class='ident'>at</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>||</span> <span class='ident'>text</span>[<span class='ident'>at</span> <span class='op'>-</span> <span class='number'>1</span>] <span class='op'>==</span> <span class='string'>b&#39;\n&#39;</span>;
         <span class='ident'>empty_flags</span>.<span class='ident'>end_line</span> <span class='op'>=</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span>;
-        <span class='kw'>if</span> <span class='ident'>at</span> <span class='op'>&gt;</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>Byte</span>::<span class='ident'>byte</span>(<span class='ident'>text</span>[<span class='ident'>at</span> <span class='op'>-</span> <span class='number'>1</span>]).<span class='ident'>is_ascii_word</span>() {
+
+        <span class='kw'>let</span> <span class='ident'>is_word_last</span> <span class='op'>=</span> <span class='ident'>at</span> <span class='op'>&gt;</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>Byte</span>::<span class='ident'>byte</span>(<span class='ident'>text</span>[<span class='ident'>at</span> <span class='op'>-</span> <span class='number'>1</span>]).<span class='ident'>is_ascii_word</span>();
+        <span class='kw'>let</span> <span class='ident'>is_word</span> <span class='op'>=</span> <span class='ident'>at</span> <span class='op'>&lt;</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>Byte</span>::<span class='ident'>byte</span>(<span class='ident'>text</span>[<span class='ident'>at</span>]).<span class='ident'>is_ascii_word</span>();
+        <span class='kw'>if</span> <span class='ident'>is_word_last</span> {
             <span class='ident'>state_flags</span>.<span class='ident'>set_word</span>();
+        }
+        <span class='kw'>if</span> <span class='ident'>is_word</span> <span class='op'>==</span> <span class='ident'>is_word_last</span> {
+            <span class='ident'>empty_flags</span>.<span class='ident'>not_word_boundary</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+        } <span class='kw'>else</span> {
+            <span class='ident'>empty_flags</span>.<span class='ident'>word_boundary</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         }
         (<span class='ident'>empty_flags</span>, <span class='ident'>state_flags</span>)
     }
@@ -3338,8 +3367,17 @@ implementation.)
         <span class='ident'>empty_flags</span>.<span class='ident'>end</span> <span class='op'>=</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span>;
         <span class='ident'>empty_flags</span>.<span class='ident'>start_line</span> <span class='op'>=</span> <span class='ident'>at</span> <span class='op'>==</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>||</span> <span class='ident'>text</span>[<span class='ident'>at</span>] <span class='op'>==</span> <span class='string'>b&#39;\n&#39;</span>;
         <span class='ident'>empty_flags</span>.<span class='ident'>end_line</span> <span class='op'>=</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span>;
-        <span class='kw'>if</span> <span class='ident'>at</span> <span class='op'>&lt;</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>Byte</span>::<span class='ident'>byte</span>(<span class='ident'>text</span>[<span class='ident'>at</span>]).<span class='ident'>is_ascii_word</span>() {
+
+        <span class='kw'>let</span> <span class='ident'>is_word_last</span> <span class='op'>=</span>
+            <span class='ident'>at</span> <span class='op'>&lt;</span> <span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>Byte</span>::<span class='ident'>byte</span>(<span class='ident'>text</span>[<span class='ident'>at</span>]).<span class='ident'>is_ascii_word</span>();
+        <span class='kw'>let</span> <span class='ident'>is_word</span> <span class='op'>=</span> <span class='ident'>at</span> <span class='op'>&gt;</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>Byte</span>::<span class='ident'>byte</span>(<span class='ident'>text</span>[<span class='ident'>at</span> <span class='op'>-</span> <span class='number'>1</span>]).<span class='ident'>is_ascii_word</span>();
+        <span class='kw'>if</span> <span class='ident'>is_word_last</span> {
             <span class='ident'>state_flags</span>.<span class='ident'>set_word</span>();
+        }
+        <span class='kw'>if</span> <span class='ident'>is_word</span> <span class='op'>==</span> <span class='ident'>is_word_last</span> {
+            <span class='ident'>empty_flags</span>.<span class='ident'>not_word_boundary</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+        } <span class='kw'>else</span> {
+            <span class='ident'>empty_flags</span>.<span class='ident'>word_boundary</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         }
         (<span class='ident'>empty_flags</span>, <span class='ident'>state_flags</span>)
     }

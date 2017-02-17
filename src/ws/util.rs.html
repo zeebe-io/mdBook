@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.3/src/util.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.5.4/src/util.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>util.rs.html -- source</title>
@@ -50,15 +50,17 @@
 <span id="6">6</span>
 <span id="7">7</span>
 <span id="8">8</span>
+<span id="9">9</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! The util module rexports some tools from mio in order to facilitate handling timeouts.</span>
+<span class='kw'>use</span> <span class='ident'>slab</span>;
 
 <span class='doccomment'>/// Used to identify some timed-out event.</span>
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>mio</span>::<span class='ident'>Token</span>;
 <span class='doccomment'>/// A handle to a specific timeout.</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>mio</span>::<span class='ident'>Timeout</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>Timeout</span>;
 <span class='doccomment'>/// A Slab allocator for associating tokens to data.</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>mio</span>::<span class='ident'>util</span>::<span class='ident'>Slab</span>;
+<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>Slab</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>slab</span>::<span class='ident'>Slab</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Token</span><span class='op'>&gt;</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
