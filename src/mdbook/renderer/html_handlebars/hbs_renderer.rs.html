@@ -288,6 +288,7 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
+<span id="247">247</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>html_handlebars</span>::<span class='ident'>helpers</span>;
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>Renderer</span>;
@@ -308,6 +309,7 @@
 <span class='kw'>use</span> <span class='ident'>serde_json</span>;
 
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Default</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>HtmlHandlebars</span>;
 
 <span class='kw'>impl</span> <span class='ident'>HtmlHandlebars</span> {
@@ -341,7 +343,7 @@
 
         <span class='comment'>// Check if dest directory exists</span>
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;[*]: Check if destination directory exists&quot;</span>);
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Err</span>(_) <span class='op'>=</span> <span class='ident'>fs</span>::<span class='ident'>create_dir_all</span>(<span class='ident'>book</span>.<span class='ident'>get_dest</span>()) {
+        <span class='kw'>if</span> <span class='ident'>fs</span>::<span class='ident'>create_dir_all</span>(<span class='ident'>book</span>.<span class='ident'>get_dest</span>()).<span class='ident'>is_err</span>() {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>,
                                                <span class='string'>&quot;Unexpected error when constructing destination path&quot;</span>)));
         }
@@ -374,8 +376,8 @@
                         <span class='ident'>print_content</span>.<span class='ident'>push_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>content</span>);
 
                         <span class='comment'>// Update the context with data for this file</span>
-                        <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>,
-                                                          <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
+                        <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or_else</span>(<span class='op'>||</span>
+                            <span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>, <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
                         <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>path</span>));
                         <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;content&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>content</span>));
                         <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;chapter_title&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>ch</span>.<span class='ident'>name</span>));
@@ -479,15 +481,15 @@
         <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>item</span> {
             <span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
                 <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>ch</span>.<span class='ident'>name</span>));
-                <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>,
-                                                                 <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
+                <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or_else</span>(<span class='op'>||</span>
+                    <span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>, <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
                 <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>path</span>));
             },
             <span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
                 <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;section&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>s</span>));
                 <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>ch</span>.<span class='ident'>name</span>));
-                <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>,
-                                                                 <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
+                <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or_else</span>(<span class='op'>||</span>
+                    <span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>, <span class='string'>&quot;Could not convert path to str&quot;</span>))<span class='question-mark'>?</span>;
                 <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;path&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>path</span>));
             },
             <span class='ident'>BookItem</span>::<span class='ident'>Spacer</span> <span class='op'>=&gt;</span> {
