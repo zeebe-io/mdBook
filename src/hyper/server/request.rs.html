@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.9.18/src/server/request.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.4/src/server/request.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>request.rs.html -- source</title>
@@ -349,22 +349,6 @@
 <span id="305">305</span>
 <span id="306">306</span>
 <span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Server Requests</span>
 <span class='doccomment'>//!</span>
@@ -447,22 +431,6 @@
     <span class='doccomment'>/// over HTTPS.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// This is actually just an alias for `downcast_ref`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// # extern crate hyper;</span>
-    <span class='doccomment'>/// # #[cfg(feature = &quot;openssl&quot;)]</span>
-    <span class='doccomment'>/// extern crate openssl;</span>
-    <span class='doccomment'>/// # #[cfg(feature = &quot;openssl&quot;)]</span>
-    <span class='doccomment'>/// use openssl::ssl::SslStream;</span>
-    <span class='doccomment'>/// use hyper::net::HttpStream;</span>
-    <span class='doccomment'>/// # fn main() {}</span>
-    <span class='doccomment'>/// # #[cfg(feature = &quot;openssl&quot;)]</span>
-    <span class='doccomment'>/// # fn doc_ssl(req: hyper::server::Request) {</span>
-    <span class='doccomment'>/// let maybe_ssl = req.ssl::&lt;SslStream&lt;HttpStream&gt;&gt;();</span>
-    <span class='doccomment'>/// # }</span>
-    <span class='doccomment'>/// ```</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ssl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>NetworkStream</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>downcast_ref</span>()

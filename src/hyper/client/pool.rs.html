@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.9.18/src/client/pool.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.4/src/client/pool.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>pool.rs.html -- source</title>
@@ -342,22 +342,6 @@
 <span id="298">298</span>
 <span id="299">299</span>
 <span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Client Connection Pooling</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>ToOwned</span>;
@@ -371,6 +355,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
 
 <span class='kw'>use</span> <span class='ident'>net</span>::{<span class='ident'>NetworkConnector</span>, <span class='ident'>NetworkStream</span>, <span class='ident'>DefaultConnector</span>};
+<span class='kw'>use</span> <span class='ident'>client</span>::<span class='ident'>scheme</span>::<span class='ident'>Scheme</span>;
 
 <span class='doccomment'>/// The `NetworkConnector` that behaves as a connection pool used by hyper&#39;s `Client`.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Pool</span><span class='op'>&lt;</span><span class='ident'>C</span>: <span class='ident'>NetworkConnector</span><span class='op'>&gt;</span> {
@@ -404,23 +389,6 @@
 
 <span class='kw'>fn</span> <span class='ident'>key</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>Scheme</span><span class='op'>&gt;&gt;</span>(<span class='ident'>host</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>port</span>: <span class='ident'>u16</span>, <span class='ident'>scheme</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Key</span> {
     (<span class='ident'>host</span>.<span class='ident'>to_owned</span>(), <span class='ident'>port</span>, <span class='ident'>scheme</span>.<span class='ident'>into</span>())
-}
-
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Debug</span>, <span class='ident'>Hash</span>)]</span>
-<span class='kw'>enum</span> <span class='ident'>Scheme</span> {
-    <span class='ident'>Http</span>,
-    <span class='ident'>Https</span>,
-    <span class='ident'>Other</span>(<span class='ident'>String</span>)
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Scheme</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Scheme</span> {
-        <span class='kw'>match</span> <span class='ident'>s</span> {
-            <span class='string'>&quot;http&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Scheme</span>::<span class='ident'>Http</span>,
-            <span class='string'>&quot;https&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Scheme</span>::<span class='ident'>Https</span>,
-            <span class='ident'>s</span> <span class='op'>=&gt;</span> <span class='ident'>Scheme</span>::<span class='ident'>Other</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='ident'>s</span>))
-        }
-    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Pool</span><span class='op'>&lt;</span><span class='ident'>DefaultConnector</span><span class='op'>&gt;</span> {

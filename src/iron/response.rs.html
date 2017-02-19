@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/iron-0.4.0/src/response.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/iron-0.5.1/src/response.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>response.rs.html -- source</title>
@@ -216,27 +216,6 @@
 <span id="172">172</span>
 <span id="173">173</span>
 <span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Iron&#39;s HTTP Response representation and associated methods.</span>
 
@@ -255,80 +234,60 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>server</span>::<span class='ident'>response</span>::<span class='ident'>Response</span> <span class='kw'>as</span> <span class='ident'>HttpResponse</span>;
 <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>net</span>::<span class='ident'>Fresh</span>;
 
-<span class='doccomment'>/// A `Write`r of HTTP response bodies.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ResponseBody</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Write</span> <span class='op'>+</span> <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>);
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ResponseBody</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create a new ResponseBody, mostly for use in mocking.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>Write</span> <span class='op'>+</span> <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>writer</span>: <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>ResponseBody</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>ResponseBody</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>writer</span>))
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>ResponseBody</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>write</span>(<span class='ident'>buf</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>flush</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>flush</span>()
-    }
-}
-
 <span class='doccomment'>/// Wrapper type to set `Read`ers as response bodies</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BodyReader</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Send</span><span class='op'>&gt;</span>(<span class='kw'>pub</span> <span class='ident'>R</span>);
 
 <span class='doccomment'>/// A trait which writes the body of an HTTP response.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>WriteBody</span>: <span class='ident'>Send</span> {
-    <span class='doccomment'>/// Writes the body to the provided `ResponseBody`.</span>
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>;
+    <span class='doccomment'>/// Writes the body to the provided `Write`.</span>
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>;
 }
 
 <span class='kw'>impl</span> <span class='ident'>WriteBody</span> <span class='kw'>for</span> <span class='ident'>String</span> {
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>as_bytes</span>().<span class='ident'>write_body</span>(<span class='ident'>res</span>)
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>WriteBody</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span> {
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>as_bytes</span>().<span class='ident'>write_body</span>(<span class='ident'>res</span>)
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>WriteBody</span> <span class='kw'>for</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='ident'>res</span>.<span class='ident'>write_all</span>(<span class='self'>self</span>)
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>WriteBody</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>] {
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='ident'>res</span>.<span class='ident'>write_all</span>(<span class='self'>self</span>)
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>WriteBody</span> <span class='kw'>for</span> <span class='ident'>File</span> {
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='ident'>io</span>::<span class='ident'>copy</span>(<span class='self'>self</span>, <span class='ident'>res</span>).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>WriteBody</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Read</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='ident'>io</span>::<span class='ident'>copy</span>(<span class='self'>self</span>, <span class='ident'>res</span>).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
     }
 }
 
 <span class='kw'>impl</span> <span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>WriteBody</span> <span class='kw'>for</span> <span class='ident'>BodyReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>res</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='ident'>io</span>::<span class='ident'>copy</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>res</span>).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
     }
 }
 
 <span class='comment'>/* Needs specialization :(
 impl&lt;R: Read + Send&gt; WriteBody for R {
-    fn write_body(&amp;mut self, res: &amp;mut ResponseBody) -&gt; io::Result&lt;()&gt; {
+    fn write_body(&amp;mut self, res: &amp;mut Write) -&gt; io::Result&lt;()&gt; {
         io::copy(self, res)
     }
 }
@@ -400,15 +359,14 @@ impl&lt;R: Read + Send&gt; WriteBody for R {
     <span class='ident'>res</span>.<span class='ident'>headers_mut</span>().<span class='ident'>set</span>(<span class='ident'>content_type</span>);
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>raw_res</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>res</span>.<span class='ident'>start</span>());
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>body</span>.<span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ResponseBody</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>raw_res</span>)));
+    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>body</span>.<span class='ident'>write_body</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>raw_res</span>));
     <span class='ident'>raw_res</span>.<span class='ident'>end</span>()
 }
 
 <span class='kw'>impl</span> <span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Response</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;HTTP/1.1 {} {}\n{}&quot;</span>,
+        <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;HTTP/1.1 {}\n{}&quot;</span>,
             <span class='self'>self</span>.<span class='ident'>status</span>.<span class='ident'>unwrap_or</span>(<span class='ident'>status</span>::<span class='ident'>NotFound</span>),
-            <span class='self'>self</span>.<span class='ident'>status</span>.<span class='ident'>unwrap_or</span>(<span class='ident'>status</span>::<span class='ident'>NotFound</span>).<span class='ident'>canonical_reason</span>().<span class='ident'>unwrap</span>(),
             <span class='self'>self</span>.<span class='ident'>headers</span>
         )
     }

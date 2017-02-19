@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.9.18/src/header/common/strict_transport_security.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.4/src/header/common/strict_transport_security.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>strict_transport_security.rs.html -- source</title>
@@ -237,6 +237,12 @@
 <span id="193">193</span>
 <span id="194">194</span>
 <span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::{<span class='self'>self</span>, <span class='ident'>FromStr</span>};
@@ -371,6 +377,12 @@
 
 <span class='kw'>impl</span> <span class='ident'>HeaderFormat</span> <span class='kw'>for</span> <span class='ident'>StrictTransportSecurity</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt_header</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+        <span class='ident'>fmt</span>::<span class='ident'>Display</span>::<span class='ident'>fmt</span>(<span class='self'>self</span>, <span class='ident'>f</span>)
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>StrictTransportSecurity</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>include_subdomains</span> {
             <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;max-age={}; includeSubdomains&quot;</span>, <span class='self'>self</span>.<span class='ident'>max_age</span>)
         } <span class='kw'>else</span> {
