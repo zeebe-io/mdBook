@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.0/src/grammar.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.1/src/grammar.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>grammar.rs.html -- source</title>
@@ -567,6 +567,14 @@
 <span id="523">523</span>
 <span id="524">524</span>
 <span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>pest</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
 
@@ -575,7 +583,7 @@
     <span class='macro'>grammar</span><span class='macro'>!</span> {
         <span class='ident'>whitespace</span> <span class='op'>=</span> _{ [<span class='string'>&quot; &quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;\t&quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;\n&quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;\r&quot;</span>] }
 
-        <span class='ident'>raw_text</span> <span class='op'>=</span> @{ ( <span class='op'>!</span>[<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>any</span> )<span class='op'>+</span> }
+        <span class='ident'>raw_text</span> <span class='op'>=</span> @{ ( [<span class='string'>&quot;\\{{{{&quot;</span>]<span class='question-mark'>?</span> ~ [<span class='string'>&quot;\\{{&quot;</span>]<span class='question-mark'>?</span> ~ <span class='op'>!</span>[<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>any</span> )<span class='op'>+</span> }
         <span class='ident'>raw_block_text</span> <span class='op'>=</span> @{ ( <span class='op'>!</span>[<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>any</span> )<span class='op'>*</span> }
 
 <span class='comment'>// Note: this is not full and strict json literal definition, just for tokenize string,</span>
@@ -613,53 +621,54 @@
 
         <span class='ident'>pre_whitespace_omitter</span> <span class='op'>=</span> { [<span class='string'>&quot;~&quot;</span>] }
         <span class='ident'>pro_whitespace_omitter</span> <span class='op'>=</span> { [<span class='string'>&quot;~&quot;</span>] }
+        <span class='ident'>escape</span> <span class='op'>=</span> { [<span class='string'>&quot;\\&quot;</span>] }
 
-        <span class='ident'>expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>invert_tag</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
+        <span class='ident'>expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ <span class='op'>!</span><span class='ident'>invert_tag</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
                         <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
 
-        <span class='ident'>html_expression</span> <span class='op'>=</span> { [<span class='string'>&quot;{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
+        <span class='ident'>html_expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
                                       <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}&quot;</span>] }
 
-        <span class='ident'>helper_expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>invert_tag</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>exp_line</span> ~
+        <span class='ident'>helper_expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ <span class='op'>!</span><span class='ident'>invert_tag</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>exp_line</span> ~
                                <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
 
-        <span class='ident'>directive_expression</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
-                                          <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>partial_expression</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
-                                        <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>directive_expression</span> <span class='op'>=</span> {  <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
+                                   <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>partial_expression</span> <span class='op'>=</span> {  <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
+                                 <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
 
         <span class='ident'>invert_tag_item</span> <span class='op'>=</span> { [<span class='string'>&quot;else&quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;^&quot;</span>] }
-        <span class='ident'>invert_tag</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>invert_tag_item</span>
+        <span class='ident'>invert_tag</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>invert_tag_item</span>
                                 ~ <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>]}
 
-        <span class='ident'>helper_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ <span class='ident'>exp_line</span> ~
+        <span class='ident'>helper_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ <span class='ident'>exp_line</span> ~
                                         <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>helper_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+        <span class='ident'>helper_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
                                       <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
         <span class='ident'>helper_block</span> <span class='op'>=</span> _{ <span class='ident'>helper_block_start</span> ~ <span class='ident'>template</span> ~
                          (<span class='ident'>invert_tag</span> ~ <span class='ident'>template</span>)<span class='question-mark'>?</span> ~
                           <span class='ident'>helper_block_end</span> }
 
-        <span class='ident'>directive_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
+        <span class='ident'>directive_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
                                            <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>directive_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+        <span class='ident'>directive_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
                                          <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
         <span class='ident'>directive_block</span> <span class='op'>=</span> _{ <span class='ident'>directive_block_start</span> ~ <span class='ident'>template</span> ~
                              <span class='ident'>directive_block_end</span> }
 
-        <span class='ident'>partial_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
-                                         <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>partial_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
-                                       <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>partial_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
+                                 <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>partial_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+                               <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
         <span class='ident'>partial_block</span> <span class='op'>=</span> _{ <span class='ident'>partial_block_start</span> ~ <span class='ident'>template</span> ~ <span class='ident'>partial_block_end</span> }
 
-        <span class='ident'>raw_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>exp_line</span> ~
-                                       <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
-        <span class='ident'>raw_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
-                                     <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
+        <span class='ident'>raw_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>exp_line</span> ~
+                             <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
+        <span class='ident'>raw_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+                           <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
         <span class='ident'>raw_block</span> <span class='op'>=</span> _{ <span class='ident'>raw_block_start</span> ~ <span class='ident'>raw_block_text</span> ~ <span class='ident'>raw_block_end</span> }
 
-        <span class='ident'>hbs_comment</span> <span class='op'>=</span> { [<span class='string'>&quot;{{!&quot;</span>] ~ (<span class='op'>!</span>[<span class='string'>&quot;}}&quot;</span>] ~ <span class='ident'>any</span>)<span class='op'>*</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>hbs_comment</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{!&quot;</span>] ~ (<span class='op'>!</span>[<span class='string'>&quot;}}&quot;</span>] ~ <span class='ident'>any</span>)<span class='op'>*</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
 
         <span class='ident'>template</span> <span class='op'>=</span> { (
             <span class='ident'>raw_text</span> <span class='op'>|</span>
@@ -696,7 +705,7 @@
     <span class='macro'>grammar</span><span class='macro'>!</span> {
         <span class='ident'>whitespace</span> <span class='op'>=</span> _{ [<span class='string'>&quot; &quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;\t&quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;\n&quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;\r&quot;</span>] }
 
-        <span class='ident'>raw_text</span> <span class='op'>=</span> @{ ( <span class='op'>!</span>[<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>any</span> )<span class='op'>+</span> }
+        <span class='ident'>raw_text</span> <span class='op'>=</span> @{ ( [<span class='string'>&quot;\\{{{{&quot;</span>]<span class='question-mark'>?</span> ~ [<span class='string'>&quot;\\{{&quot;</span>]<span class='question-mark'>?</span> ~ <span class='op'>!</span>[<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>any</span> )<span class='op'>+</span> }
         <span class='ident'>raw_block_text</span> <span class='op'>=</span> @{ ( <span class='op'>!</span>[<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>any</span> )<span class='op'>*</span> }
 
 <span class='comment'>// Note: this is not full and strict json literal definition, just for tokenize string,</span>
@@ -734,51 +743,52 @@
 
         <span class='ident'>pre_whitespace_omitter</span> <span class='op'>=</span> { [<span class='string'>&quot;~&quot;</span>] }
         <span class='ident'>pro_whitespace_omitter</span> <span class='op'>=</span> { [<span class='string'>&quot;~&quot;</span>] }
+        <span class='ident'>escape</span> <span class='op'>=</span> { [<span class='string'>&quot;\\&quot;</span>] }
 
-        <span class='ident'>expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>invert_tag</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
+        <span class='ident'>expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ <span class='op'>!</span><span class='ident'>invert_tag</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
                         <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
 
-        <span class='ident'>html_expression</span> <span class='op'>=</span> { [<span class='string'>&quot;{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
-                                      <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}&quot;</span>] }
+        <span class='ident'>html_expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>name</span> ~
+                             <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}&quot;</span>] }
 
         <span class='ident'>helper_expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>invert_tag</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>exp_line</span> ~
                                <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
 
-        <span class='ident'>directive_expression</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
-                                          <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>partial_expression</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
-                                        <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>directive_expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
+                                  <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>partial_expression</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
+                                <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
         <span class='ident'>invert_tag_item</span> <span class='op'>=</span> { [<span class='string'>&quot;else&quot;</span>]<span class='op'>|</span>[<span class='string'>&quot;^&quot;</span>] }
-        <span class='ident'>invert_tag</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>invert_tag_item</span>
-                                ~ <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>]}
-        <span class='ident'>helper_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ <span class='ident'>exp_line</span> ~
+        <span class='ident'>invert_tag</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>invert_tag_item</span>
+                        ~ <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>]}
+        <span class='ident'>helper_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ <span class='ident'>exp_line</span> ~
                                         <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>helper_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
-                                      <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>helper_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+                              <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
         <span class='ident'>helper_block</span> <span class='op'>=</span> _{ <span class='ident'>helper_block_start</span> ~ <span class='ident'>template</span> ~
                          (<span class='ident'>invert_tag</span> ~ <span class='ident'>template</span>)<span class='question-mark'>?</span> ~
                           <span class='ident'>helper_block_end</span> }
 
-        <span class='ident'>directive_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
-                                           <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>directive_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
-                                         <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>directive_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;*&quot;</span>] ~ <span class='ident'>exp_line</span> ~
+                                   <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>directive_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+                                 <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
         <span class='ident'>directive_block</span> <span class='op'>=</span> _{ <span class='ident'>directive_block_start</span> ~ <span class='ident'>template</span> ~
                              <span class='ident'>directive_block_end</span> }
 
-        <span class='ident'>partial_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
-                                         <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
-        <span class='ident'>partial_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
-                                       <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>partial_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;#&quot;</span>] ~ [<span class='string'>&quot;&gt;&quot;</span>] ~ <span class='ident'>partial_exp_line</span> ~
+                                 <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>partial_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+                               <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
         <span class='ident'>partial_block</span> <span class='op'>=</span> _{ <span class='ident'>partial_block_start</span> ~ <span class='ident'>template</span> ~ <span class='ident'>partial_block_end</span> }
 
-        <span class='ident'>raw_block_start</span> <span class='op'>=</span> { [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>exp_line</span> ~
-                                       <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
-        <span class='ident'>raw_block_end</span> <span class='op'>=</span> { [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
-                                     <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
+        <span class='ident'>raw_block_start</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ <span class='ident'>exp_line</span> ~
+                             <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
+        <span class='ident'>raw_block_end</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{{{&quot;</span>] ~ <span class='ident'>pre_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;/&quot;</span>] ~ <span class='ident'>name</span> ~
+                           <span class='ident'>pro_whitespace_omitter</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;}}}}&quot;</span>] }
         <span class='ident'>raw_block</span> <span class='op'>=</span> _{ <span class='ident'>raw_block_start</span> ~ <span class='ident'>raw_block_text</span> ~ <span class='ident'>raw_block_end</span> }
 
-        <span class='ident'>hbs_comment</span> <span class='op'>=</span> { [<span class='string'>&quot;{{!&quot;</span>] ~ (<span class='op'>!</span>[<span class='string'>&quot;}}&quot;</span>] ~ <span class='ident'>any</span>)<span class='op'>*</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
+        <span class='ident'>hbs_comment</span> <span class='op'>=</span> { <span class='op'>!</span><span class='ident'>escape</span> ~ [<span class='string'>&quot;{{!&quot;</span>] ~ (<span class='op'>!</span>[<span class='string'>&quot;}}&quot;</span>] ~ <span class='ident'>any</span>)<span class='op'>*</span> ~ [<span class='string'>&quot;}}&quot;</span>] }
 
         <span class='ident'>template</span> <span class='op'>=</span> { (
             <span class='ident'>raw_text</span> <span class='op'>|</span>
@@ -814,9 +824,15 @@
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_raw_text</span>() {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rdp</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;&lt;h1&gt; helloworld &lt;/h1&gt;    &quot;</span>));
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>rdp</span>.<span class='ident'>raw_text</span>());
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>rdp</span>.<span class='ident'>end</span>());
+    <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;&lt;h1&gt; helloworld &lt;/h1&gt;    &quot;</span>,
+                 <span class='string'>&quot;hello\\{{world}}&quot;</span>,
+                 <span class='string'>&quot;hello\\{{#if world}}nice\\{{/if}}&quot;</span>,
+                 <span class='string'>&quot;hello \\{{{{raw}}}}hello\\{{{{/raw}}}}&quot;</span>];
+    <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>s</span>.<span class='ident'>iter</span>() {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rdp</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='ident'>i</span>));
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>rdp</span>.<span class='ident'>raw_text</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>rdp</span>.<span class='ident'>end</span>());
+    }
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>

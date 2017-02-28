@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.3.0/src/value.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.3.1/src/value.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>value.rs.html -- source</title>
@@ -934,8 +934,6 @@
 <span id="890">890</span>
 <span id="891">891</span>
 <span id="892">892</span>
-<span id="893">893</span>
-<span id="894">894</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Definition of a TOML value</span>
 
@@ -1305,21 +1303,19 @@
                 <span class='comment'>// Be sure to visit non-tables first (and also non</span>
                 <span class='comment'>// array-of-tables) as all keys must be emitted first.</span>
                 <span class='kw'>for</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>t</span> {
-                    <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>is_array</span>() <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>is_table</span>() {
-                        <span class='ident'>map</span>.<span class='ident'>serialize_key</span>(<span class='ident'>k</span>)<span class='question-mark'>?</span>;
-                        <span class='ident'>map</span>.<span class='ident'>serialize_value</span>(<span class='ident'>v</span>)<span class='question-mark'>?</span>;
+                    <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>is_table</span>() <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>is_array</span>() <span class='op'>||</span>
+                       (<span class='ident'>v</span>.<span class='ident'>as_array</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>a</span><span class='op'>|</span> <span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span>.<span class='ident'>is_table</span>())).<span class='ident'>unwrap_or</span>(<span class='bool-val'>false</span>)) {
+                        <span class='ident'>map</span>.<span class='ident'>serialize_entry</span>(<span class='ident'>k</span>, <span class='ident'>v</span>)<span class='question-mark'>?</span>;
                     }
                 }
                 <span class='kw'>for</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>t</span> {
-                    <span class='kw'>if</span> <span class='ident'>v</span>.<span class='ident'>is_array</span>() {
-                        <span class='ident'>map</span>.<span class='ident'>serialize_key</span>(<span class='ident'>k</span>)<span class='question-mark'>?</span>;
-                        <span class='ident'>map</span>.<span class='ident'>serialize_value</span>(<span class='ident'>v</span>)<span class='question-mark'>?</span>;
+                    <span class='kw'>if</span> <span class='ident'>v</span>.<span class='ident'>as_array</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>a</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span>.<span class='ident'>is_table</span>())).<span class='ident'>unwrap_or</span>(<span class='bool-val'>false</span>) {
+                        <span class='ident'>map</span>.<span class='ident'>serialize_entry</span>(<span class='ident'>k</span>, <span class='ident'>v</span>)<span class='question-mark'>?</span>;
                     }
                 }
                 <span class='kw'>for</span> (<span class='ident'>k</span>, <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>t</span> {
                     <span class='kw'>if</span> <span class='ident'>v</span>.<span class='ident'>is_table</span>() {
-                        <span class='ident'>map</span>.<span class='ident'>serialize_key</span>(<span class='ident'>k</span>)<span class='question-mark'>?</span>;
-                        <span class='ident'>map</span>.<span class='ident'>serialize_value</span>(<span class='ident'>v</span>)<span class='question-mark'>?</span>;
+                        <span class='ident'>map</span>.<span class='ident'>serialize_entry</span>(<span class='ident'>k</span>, <span class='ident'>v</span>)<span class='question-mark'>?</span>;
                     }
                 }
                 <span class='ident'>map</span>.<span class='ident'>end</span>()
