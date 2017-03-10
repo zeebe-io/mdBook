@@ -2,7 +2,6 @@
 implementors["handlebars"] = [];
 implementors["hyper"] = [];
 implementors["iron"] = [];
-implementors["lazy_static"] = [];
 implementors["libc"] = [];
 implementors["mio"] = [];
 implementors["nix"] = [];

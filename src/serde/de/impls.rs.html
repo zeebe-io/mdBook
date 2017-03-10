@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.9/src/de/impls.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.11/src/de/impls.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>impls.rs.html -- source</title>
@@ -1345,6 +1345,23 @@
 <span id="1301">1301</span>
 <span id="1302">1302</span>
 <span id="1303">1303</span>
+<span id="1304">1304</span>
+<span id="1305">1305</span>
+<span id="1306">1306</span>
+<span id="1307">1307</span>
+<span id="1308">1308</span>
+<span id="1309">1309</span>
+<span id="1310">1310</span>
+<span id="1311">1311</span>
+<span id="1312">1312</span>
+<span id="1313">1313</span>
+<span id="1314">1314</span>
+<span id="1315">1315</span>
+<span id="1316">1316</span>
+<span id="1317">1317</span>
+<span id="1318">1318</span>
+<span id="1319">1319</span>
+<span id="1320">1320</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! This module contains `Deserialize` and `Visitor` implementations.</span>
 
@@ -1373,6 +1390,8 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>str</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>)]</span>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CString</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
@@ -1400,6 +1419,9 @@
 <span class='kw'>use</span> <span class='ident'>de</span>::{<span class='ident'>Deserialize</span>, <span class='ident'>Deserializer</span>, <span class='ident'>EnumVisitor</span>, <span class='ident'>Error</span>, <span class='ident'>MapVisitor</span>, <span class='ident'>SeqVisitor</span>, <span class='ident'>Unexpected</span>,
          <span class='ident'>VariantVisitor</span>, <span class='ident'>Visitor</span>};
 <span class='kw'>use</span> <span class='ident'>de</span>::<span class='ident'>from_primitive</span>::<span class='ident'>FromPrimitive</span>;
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>)]</span>
+<span class='kw'>use</span> <span class='ident'>bytes</span>::<span class='ident'>ByteBuf</span>;
 
 <span class='comment'>///////////////////////////////////////////////////////////////////////////////</span>
 
@@ -1638,6 +1660,18 @@
         <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>
     {
         <span class='ident'>deserializer</span>.<span class='ident'>deserialize_string</span>(<span class='ident'>StringVisitor</span>)
+    }
+}
+
+<span class='comment'>///////////////////////////////////////////////////////////////////////////////</span>
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>)]</span>
+<span class='kw'>impl</span> <span class='ident'>Deserialize</span> <span class='kw'>for</span> <span class='ident'>CString</span> {
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>CString</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>
+    {
+        <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ByteBuf</span>::<span class='ident'>deserialize</span>(<span class='ident'>deserializer</span>));
+        <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>bytes</span>).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>custom</span>)
     }
 }
 

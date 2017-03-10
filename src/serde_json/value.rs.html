@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.8/src/value.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.9/src/value.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>value.rs.html -- source</title>
@@ -2275,6 +2275,9 @@
 <span id="2231">2231</span>
 <span id="2232">2232</span>
 <span id="2233">2233</span>
+<span id="2234">2234</span>
+<span id="2235">2235</span>
+<span id="2236">2236</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! The Value enum, a loosely typed way of representing any valid JSON value.</span>
 <span class='doccomment'>//!</span>
@@ -4471,6 +4474,9 @@
 <span class='doccomment'>/// let val = serde_json::to_value(&quot;s&quot;).unwrap();</span>
 <span class='doccomment'>/// assert_eq!(val, Value::String(&quot;s&quot;.to_owned()));</span>
 <span class='doccomment'>/// ```</span>
+<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cargo-clippy&quot;</span>, <span class='ident'>allow</span>(<span class='ident'>needless_pass_by_value</span>))]</span>
+<span class='comment'>// Taking by value is more friendly to iterator adapters, option and result</span>
+<span class='comment'>// consumers, etc. See https://github.com/serde-rs/json/pull/149.</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_value</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Value</span>, <span class='ident'>Error</span><span class='op'>&gt;</span>
     <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>ser</span>::<span class='ident'>Serialize</span>,
 {

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.8/src/macros.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.9/src/macros.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>macros.rs.html -- source</title>
@@ -301,6 +301,8 @@
 <span id="257">257</span>
 <span id="258">258</span>
 <span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/// Construct a `serde_json::Value` from a JSON literal.</span>
 <span class='doccomment'>///</span>
@@ -324,7 +326,9 @@
 <span class='doccomment'>/// Variables or expressions can be interpolated into the JSON literal. Any type</span>
 <span class='doccomment'>/// interpolated into an array element or object value must implement Serde&#39;s</span>
 <span class='doccomment'>/// `Serialize` trait, while any type interpolated into a object key must</span>
-<span class='doccomment'>/// implement `Into&lt;String&gt;`.</span>
+<span class='doccomment'>/// implement `Into&lt;String&gt;`. If the `Serialize` implementation of the</span>
+<span class='doccomment'>/// interpolated type decides to fail, or if the interpolated type contains a</span>
+<span class='doccomment'>/// map with non-string keys, the `json!` macro will panic.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```rust</span>
 <span class='doccomment'>/// # #![allow(unused_variables)]</span>
