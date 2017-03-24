@@ -9,6 +9,7 @@
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -2070,8 +2071,8 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Unexpected</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>formatter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>fmt</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Unexpected</span>::<span class='op'>*</span>;
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Unexpected</span>::<span class='kw-2'>*</span>;
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Bool</span>(<span class='ident'>b</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;boolean `{}`&quot;</span>, <span class='ident'>b</span>),
             <span class='ident'>Unsigned</span>(<span class='ident'>i</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;integer `{}`&quot;</span>, <span class='ident'>i</span>),
             <span class='ident'>Signed</span>(<span class='ident'>i</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;integer `{}`&quot;</span>, <span class='ident'>i</span>),
@@ -2934,19 +2935,19 @@
     <span class='kw'>fn</span> <span class='ident'>visit_seed</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>seed</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>, <span class='ident'>V</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>DeserializeSeed</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit_seed</span>(<span class='ident'>seed</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit_seed</span>(<span class='ident'>seed</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>visit</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>V</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Deserialize</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit</span>()
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit</span>()
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>size_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>size_hint</span>()
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>size_hint</span>()
     }
 }
 
@@ -3052,14 +3053,14 @@
     <span class='kw'>fn</span> <span class='ident'>visit_key_seed</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>seed</span>: <span class='ident'>K</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>K</span>::<span class='ident'>Value</span><span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>DeserializeSeed</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit_key_seed</span>(<span class='ident'>seed</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit_key_seed</span>(<span class='ident'>seed</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>visit_value_seed</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>seed</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>DeserializeSeed</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit_value_seed</span>(<span class='ident'>seed</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit_value_seed</span>(<span class='ident'>seed</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -3070,7 +3071,7 @@
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>DeserializeSeed</span>,
               <span class='ident'>V</span>: <span class='ident'>DeserializeSeed</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit_seed</span>(<span class='ident'>kseed</span>, <span class='ident'>vseed</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit_seed</span>(<span class='ident'>kseed</span>, <span class='ident'>vseed</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -3078,26 +3079,26 @@
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>Deserialize</span>,
               <span class='ident'>V</span>: <span class='ident'>Deserialize</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit</span>()
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit</span>()
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>visit_key</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span>, <span class='ident'>V_</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>Deserialize</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit_key</span>()
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit_key</span>()
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>visit_value</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>, <span class='ident'>V_</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Deserialize</span>
     {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit_value</span>()
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>visit_value</span>()
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>size_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>size_hint</span>()
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>size_hint</span>()
     }
 }
 

@@ -9,6 +9,7 @@
 
     <title>iron::Iron - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -77,7 +78,7 @@ requests.</p>
 
 <p>This will create a new <code>Iron</code>, the base unit of the server, using the
 passed in <code>Handler</code>.</p>
-</div><h4 id='method.http' class='method'><span id='http.v' class='invisible'><code>fn <a href='#method.http' class='fnname'>http</a>&lt;A&gt;(self, addr: A) -&gt; <a class='type' href='../iron/error/type.HttpResult.html' title='iron::error::HttpResult'>HttpResult</a>&lt;<a class='struct' href='../iron/struct.Listening.html' title='iron::Listening'>Listening</a>&gt; <span class='where'>where A: <a class='trait' href='https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html' title='std::net::addr::ToSocketAddrs'>ToSocketAddrs</a></span></code></span></h4>
+</div><h4 id='method.http' class='method'><span id='http.v' class='invisible'><code>fn <a href='#method.http' class='fnname'>http</a>&lt;A&gt;(self, addr: A) -&gt; <a class='type' href='../iron/error/type.HttpResult.html' title='iron::error::HttpResult'>HttpResult</a>&lt;<a class='struct' href='../iron/struct.Listening.html' title='iron::Listening'>Listening</a>&gt; <span class='where fmt-newline'>where A: <a class='trait' href='https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html' title='std::net::addr::ToSocketAddrs'>ToSocketAddrs</a></span></code></span></h4>
 <div class='docblock'><p>Kick off the server process using the HTTP protocol.</p>
 
 <p>Call this once to begin listening for requests on the server.
@@ -86,7 +87,7 @@ another task, so is not blocking.</p>
 
 <p>The thread returns a guard that will automatically join with the parent
 once it is dropped, blocking until this happens.</p>
-</div><h4 id='method.https' class='method'><span id='https.v' class='invisible'><code>fn <a href='#method.https' class='fnname'>https</a>&lt;A, S&gt;(self, addr: A, ssl: S) -&gt; <a class='type' href='../iron/error/type.HttpResult.html' title='iron::error::HttpResult'>HttpResult</a>&lt;<a class='struct' href='../iron/struct.Listening.html' title='iron::Listening'>Listening</a>&gt; <span class='where'>where A: <a class='trait' href='https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html' title='std::net::addr::ToSocketAddrs'>ToSocketAddrs</a>, S: 'static + <a class='trait' href='../hyper/net/trait.SslServer.html' title='hyper::net::SslServer'>SslServer</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code></span></h4>
+</div><h4 id='method.https' class='method'><span id='https.v' class='invisible'><code>fn <a href='#method.https' class='fnname'>https</a>&lt;A, S&gt;(self, addr: A, ssl: S) -&gt; <a class='type' href='../iron/error/type.HttpResult.html' title='iron::error::HttpResult'>HttpResult</a>&lt;<a class='struct' href='../iron/struct.Listening.html' title='iron::Listening'>Listening</a>&gt; <span class='where fmt-newline'>where A: <a class='trait' href='https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html' title='std::net::addr::ToSocketAddrs'>ToSocketAddrs</a>, S: 'static + <a class='trait' href='../hyper/net/trait.SslServer.html' title='hyper::net::SslServer'>SslServer</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code></span></h4>
 <div class='docblock'><p>Kick off the server process using the HTTPS protocol.</p>
 
 <p>Call this once to begin listening for requests on the server.
@@ -95,7 +96,7 @@ another task, so is not blocking.</p>
 
 <p>The thread returns a guard that will automatically join with the parent
 once it is dropped, blocking until this happens.</p>
-</div><h4 id='method.listen' class='method'><span id='listen.v' class='invisible'><code>fn <a href='#method.listen' class='fnname'>listen</a>&lt;L&gt;(self, listener: L, protocol: <a class='struct' href='../iron/struct.Protocol.html' title='iron::Protocol'>Protocol</a>) -&gt; <a class='type' href='../iron/error/type.HttpResult.html' title='iron::error::HttpResult'>HttpResult</a>&lt;<a class='struct' href='../iron/struct.Listening.html' title='iron::Listening'>Listening</a>&gt; <span class='where'>where L: 'static + <a class='trait' href='../hyper/net/trait.NetworkListener.html' title='hyper::net::NetworkListener'>NetworkListener</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></span></h4>
+</div><h4 id='method.listen' class='method'><span id='listen.v' class='invisible'><code>fn <a href='#method.listen' class='fnname'>listen</a>&lt;L&gt;(self, listener: L, protocol: <a class='struct' href='../iron/struct.Protocol.html' title='iron::Protocol'>Protocol</a>) -&gt; <a class='type' href='../iron/error/type.HttpResult.html' title='iron::error::HttpResult'>HttpResult</a>&lt;<a class='struct' href='../iron/struct.Listening.html' title='iron::Listening'>Listening</a>&gt; <span class='where fmt-newline'>where L: 'static + <a class='trait' href='../hyper/net/trait.NetworkListener.html' title='hyper::net::NetworkListener'>NetworkListener</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a></span></code></span></h4>
 <div class='docblock'><p>Kick off a server process on an arbitrary <code>Listener</code>.</p>
 
 <p>Most use cases may call <code>http</code> and <code>https</code> methods instead of this.</p>

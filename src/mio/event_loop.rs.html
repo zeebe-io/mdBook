@@ -9,6 +9,7 @@
 
     <title>event_loop.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -999,12 +1000,12 @@
 
         <span class='kw'>fn</span> <span class='ident'>ready</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>_event_loop</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>EventLoop</span><span class='op'>&lt;</span><span class='ident'>Funtimes</span><span class='op'>&gt;</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>, <span class='ident'>events</span>: <span class='ident'>EventSet</span>) {
             <span class='kw'>if</span> <span class='ident'>events</span>.<span class='ident'>is_readable</span>() {
-                (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>rcount</span>).<span class='ident'>fetch_add</span>(<span class='number'>1</span>, <span class='ident'>SeqCst</span>);
+                (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>rcount</span>).<span class='ident'>fetch_add</span>(<span class='number'>1</span>, <span class='ident'>SeqCst</span>);
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>token</span>, <span class='ident'>Token</span>(<span class='number'>10</span>));
             }
 
             <span class='kw'>if</span> <span class='ident'>events</span>.<span class='ident'>is_writable</span>() {
-                (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>wcount</span>).<span class='ident'>fetch_add</span>(<span class='number'>1</span>, <span class='ident'>SeqCst</span>);
+                (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>wcount</span>).<span class='ident'>fetch_add</span>(<span class='number'>1</span>, <span class='ident'>SeqCst</span>);
                 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>token</span>, <span class='ident'>Token</span>(<span class='number'>10</span>));
             }
         }
@@ -1027,7 +1028,7 @@
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>event_loop</span>.<span class='ident'>run_once</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>handler</span>, <span class='prelude-val'>None</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>ByteBuf</span>::<span class='ident'>mut_with_capacity</span>(<span class='number'>16</span>);
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>rcount</span>).<span class='ident'>load</span>(<span class='ident'>SeqCst</span>), <span class='number'>1</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>*</span><span class='ident'>rcount</span>).<span class='ident'>load</span>(<span class='ident'>SeqCst</span>), <span class='number'>1</span>);
 
         <span class='ident'>reader</span>.<span class='ident'>try_read_buf</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>b</span>).<span class='ident'>unwrap</span>();
 

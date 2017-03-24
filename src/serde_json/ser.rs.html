@@ -9,6 +9,7 @@
 
     <title>ser.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1665,7 +1666,7 @@
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_str</span>(<span class='ident'>variant</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>end_object_key</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>begin_object_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='self'>self</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>end_object_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
         <span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>end_object</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>)
     }
@@ -1841,7 +1842,7 @@
     {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>formatter</span>.<span class='ident'>begin_array_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>writer</span>, <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>==</span> <span class='ident'>State</span>::<span class='ident'>First</span>));
         <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>State</span>::<span class='ident'>Rest</span>;
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>ser</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>ser</span>));
         <span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>formatter</span>.<span class='ident'>end_array_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>writer</span>)
     }
 
@@ -1960,7 +1961,7 @@
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>ser</span>::<span class='ident'>Serialize</span>,
     {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>formatter</span>.<span class='ident'>begin_object_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>writer</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>ser</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>ser</span>));
         <span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>formatter</span>.<span class='ident'>end_object_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>ser</span>.<span class='ident'>writer</span>)
     }
 
@@ -2423,7 +2424,7 @@
     <span class='kw'>fn</span> <span class='ident'>write_char_escape</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>, <span class='ident'>char_escape</span>: <span class='ident'>CharEscape</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span>
     {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>CharEscape</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>CharEscape</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>char_escape</span> {
             <span class='ident'>Quote</span> <span class='op'>=&gt;</span> <span class='string'>b&quot;\\\&quot;&quot;</span>,
@@ -2435,10 +2436,10 @@
             <span class='ident'>CarriageReturn</span> <span class='op'>=&gt;</span> <span class='string'>b&quot;\\r&quot;</span>,
             <span class='ident'>Tab</span> <span class='op'>=&gt;</span> <span class='string'>b&quot;\\t&quot;</span>,
             <span class='ident'>AsciiControl</span>(<span class='ident'>byte</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>static</span> <span class='ident'>HEX_DIGITS</span>: [<span class='ident'>u8</span>; <span class='number'>16</span>] <span class='op'>=</span> <span class='op'>*</span><span class='string'>b&quot;0123456789abcdef&quot;</span>;
+                <span class='kw'>static</span> <span class='ident'>HEX_DIGITS</span>: [<span class='ident'>u8</span>; <span class='number'>16</span>] <span class='op'>=</span> <span class='kw-2'>*</span><span class='string'>b&quot;0123456789abcdef&quot;</span>;
                 <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='string'>b&#39;\\&#39;</span>, <span class='string'>b&#39;u&#39;</span>, <span class='string'>b&#39;0&#39;</span>, <span class='string'>b&#39;0&#39;</span>,
                               <span class='ident'>HEX_DIGITS</span>[(<span class='ident'>byte</span> <span class='op'>&gt;&gt;</span> <span class='number'>4</span>) <span class='kw'>as</span> <span class='ident'>usize</span>],
-                              <span class='ident'>HEX_DIGITS</span>[(<span class='ident'>byte</span> <span class='kw-2'>&amp;</span> <span class='number'>0xF</span>) <span class='kw'>as</span> <span class='ident'>usize</span>]];
+                              <span class='ident'>HEX_DIGITS</span>[(<span class='ident'>byte</span> <span class='op'>&amp;</span> <span class='number'>0xF</span>) <span class='kw'>as</span> <span class='ident'>usize</span>]];
                 <span class='kw'>return</span> <span class='ident'>writer</span>.<span class='ident'>write_all</span>(<span class='ident'>bytes</span>).<span class='ident'>map_err</span>(<span class='ident'>From</span>::<span class='ident'>from</span>);
             }
         };

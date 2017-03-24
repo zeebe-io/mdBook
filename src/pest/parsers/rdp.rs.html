@@ -9,6 +9,7 @@
 
     <title>rdp.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -553,7 +554,7 @@
 
     <span class='comment'>// filter out silent rules</span>
     ( @<span class='ident'>filter</span> [  ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>rules</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='op'>*</span>);
+        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>rules</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='kw-2'>*</span>);
     };
     ( @<span class='ident'>filter</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_primary</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
       [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
@@ -587,13 +588,13 @@
     };
     ( @<span class='ident'>ws</span> <span class='ident'>whitespace</span> <span class='op'>=</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> ();
     ( @<span class='ident'>ws</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span>);
+        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
     };
     ( @<span class='ident'>ws</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span>);
+        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
     };
     ( @<span class='ident'>ws</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span>);
+        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
     };
 
     <span class='comment'>// implement empty comment rule</span>
@@ -606,13 +607,13 @@
     };
     ( @<span class='ident'>com</span> <span class='ident'>comment</span> <span class='op'>=</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> ();
     ( @<span class='ident'>com</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span>);
+        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
     };
     ( @<span class='ident'>com</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span>);
+        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
     };
     ( @<span class='ident'>com</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span>);
+        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
     };
 
     ( <span class='macro'>grammar</span><span class='macro'>!</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mac</span>:<span class='macro'>ident</span><span class='macro'>!</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rest</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
@@ -646,8 +647,8 @@
                 }
             }
 
-            <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span>);
-            <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span>);
+            <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='kw-2'>*</span>);
+            <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='kw-2'>*</span>);
 
             <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
             <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -831,7 +832,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw'>super</span>::<span class='kw'>super</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw'>super</span>::<span class='kw'>super</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
 
     <span class='macro'>impl_rdp</span><span class='macro'>!</span> {
         <span class='macro'>grammar</span><span class='macro'>!</span> {

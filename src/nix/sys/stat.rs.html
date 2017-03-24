@@ -9,6 +9,7 @@
 
     <title>stat.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -164,7 +165,7 @@
     <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>stat</span>, <span class='ident'>fstat</span>, <span class='ident'>lstat</span>};
 
     <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mknod</span>(<span class='ident'>pathname</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>mode</span>: <span class='ident'>mode_t</span>, <span class='ident'>dev</span>: <span class='ident'>dev_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mknod</span>(<span class='ident'>pathname</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>mode</span>: <span class='ident'>mode_t</span>, <span class='ident'>dev</span>: <span class='ident'>dev_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
         <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>umask</span>(<span class='ident'>mask</span>: <span class='ident'>mode_t</span>) <span class='op'>-&gt;</span> <span class='ident'>mode_t</span>;
     }
 }
@@ -229,7 +230,7 @@
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>() };
     <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>path</span>.<span class='ident'>with_nix_path</span>(<span class='op'>|</span><span class='ident'>cstr</span><span class='op'>|</span> {
         <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>stat</span>(<span class='ident'>cstr</span>.<span class='ident'>as_ptr</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileStat</span>)
+            <span class='ident'>ffi</span>::<span class='ident'>stat</span>(<span class='ident'>cstr</span>.<span class='ident'>as_ptr</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileStat</span>)
         }
     }));
 
@@ -242,7 +243,7 @@
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>() };
     <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>path</span>.<span class='ident'>with_nix_path</span>(<span class='op'>|</span><span class='ident'>cstr</span><span class='op'>|</span> {
         <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>lstat</span>(<span class='ident'>cstr</span>.<span class='ident'>as_ptr</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileStat</span>)
+            <span class='ident'>ffi</span>::<span class='ident'>lstat</span>(<span class='ident'>cstr</span>.<span class='ident'>as_ptr</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileStat</span>)
         }
     }));
 
@@ -253,7 +254,7 @@
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fstat</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>FileStat</span><span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>() };
-    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>fstat</span>(<span class='ident'>fd</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileStat</span>) };
+    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>fstat</span>(<span class='ident'>fd</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>dst</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileStat</span>) };
 
     <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>));
 

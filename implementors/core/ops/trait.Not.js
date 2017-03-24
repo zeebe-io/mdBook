@@ -1,4 +1,5 @@
 (function() {var implementors = {};
+implementors["bytes"] = [];
 implementors["handlebars"] = [];
 implementors["hyper"] = [];
 implementors["iron"] = [];
@@ -10,7 +11,7 @@ implementors["pulldown_cmark"] = ["impl <a class='trait' href='https://doc.rust-
 implementors["regex_syntax"] = [];
 implementors["serde"] = [];
 implementors["void"] = [];
-implementors["ws"] = ["impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Not.html' title='core::ops::Not'>Not</a> for <a class='struct' href='mio/event/struct.PollOpt.html' title='mio::event::PollOpt'>PollOpt</a>","impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Not.html' title='core::ops::Not'>Not</a> for <a class='struct' href='mio/event/struct.Ready.html' title='mio::event::Ready'>Ready</a>",];
+implementors["ws"] = ["impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Not.html' title='core::ops::Not'>Not</a> for <a class='struct' href='mio/event_imp/struct.PollOpt.html' title='mio::event_imp::PollOpt'>PollOpt</a>","impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Not.html' title='core::ops::Not'>Not</a> for <a class='struct' href='mio/event_imp/struct.Ready.html' title='mio::event_imp::Ready'>Ready</a>","impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Not.html' title='core::ops::Not'>Not</a> for <a class='struct' href='mio/sys/unix/ready/struct.UnixReady.html' title='mio::sys::unix::ready::UnixReady'>UnixReady</a>",];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

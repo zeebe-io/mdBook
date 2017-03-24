@@ -9,6 +9,7 @@
 
     <title>hbs_renderer.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
     
@@ -363,6 +364,17 @@
 <span id="319">319</span>
 <span id="320">320</span>
 <span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>html_handlebars</span>::<span class='ident'>helpers</span>;
 <span class='kw'>use</span> <span class='ident'>renderer</span>::<span class='ident'>Renderer</span>;
@@ -377,6 +389,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='self'>self</span>, <span class='ident'>Read</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
 
 <span class='kw'>use</span> <span class='ident'>handlebars</span>::<span class='ident'>Handlebars</span>;
 
@@ -426,7 +439,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>index</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         <span class='kw'>for</span> <span class='ident'>item</span> <span class='kw'>in</span> <span class='ident'>book</span>.<span class='ident'>iter</span>() {
 
-            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>item</span> {
+            <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>item</span> {
                 <span class='ident'>BookItem</span>::<span class='ident'>Chapter</span>(_, <span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>|</span>
                 <span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
                     <span class='kw'>if</span> <span class='ident'>ch</span>.<span class='ident'>path</span> <span class='op'>!=</span> <span class='ident'>PathBuf</span>::<span class='ident'>new</span>() {
@@ -564,7 +577,7 @@
         <span class='comment'>// Create the data to inject in the template</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>chapter</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
 
-        <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>item</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>item</span> {
             <span class='ident'>BookItem</span>::<span class='ident'>Affix</span>(<span class='kw-2'>ref</span> <span class='ident'>ch</span>) <span class='op'>=&gt;</span> {
                 <span class='ident'>chapter</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_owned</span>(), <span class='macro'>json</span><span class='macro'>!</span>(<span class='ident'>ch</span>.<span class='ident'>name</span>));
                 <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>ch</span>.<span class='ident'>path</span>.<span class='ident'>to_str</span>().<span class='ident'>ok_or_else</span>(<span class='op'>||</span>
@@ -595,6 +608,7 @@
 
 <span class='kw'>fn</span> <span class='ident'>build_header_links</span>(<span class='ident'>html</span>: <span class='ident'>String</span>, <span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
     <span class='kw'>let</span> <span class='ident'>regex</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;&lt;h(\d)&gt;(.*?)&lt;/h\d&gt;&quot;</span>).<span class='ident'>unwrap</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>id_counter</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
 
     <span class='ident'>regex</span>.<span class='ident'>replace_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>html</span>, <span class='op'>|</span><span class='ident'>caps</span>: <span class='kw-2'>&amp;</span><span class='ident'>Captures</span><span class='op'>|</span> {
         <span class='kw'>let</span> <span class='ident'>level</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>caps</span>[<span class='number'>1</span>];
@@ -620,7 +634,16 @@
             }
         }).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>();
 
-        <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;&lt;a class=\&quot;header\&quot; href=\&quot;{filename}#{id}\&quot; name=\&quot;{id}\&quot;&gt;&lt;h{level}&gt;{text}&lt;/h{level}&gt;&lt;/a&gt;&quot;</span>,
+        <span class='kw'>let</span> <span class='ident'>id_count</span> <span class='op'>=</span> <span class='kw-2'>*</span><span class='ident'>id_counter</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>id</span>).<span class='ident'>unwrap_or</span>(<span class='kw-2'>&amp;</span><span class='number'>0</span>);
+        <span class='ident'>id_counter</span>.<span class='ident'>insert</span>(<span class='ident'>id</span>.<span class='ident'>clone</span>(), <span class='ident'>id_count</span> <span class='op'>+</span> <span class='number'>1</span>);
+
+        <span class='kw'>let</span> <span class='ident'>id</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>id_count</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
+            <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}-{}&quot;</span>, <span class='ident'>id</span>, <span class='ident'>id_count</span>)
+        } <span class='kw'>else</span> {
+            <span class='ident'>id</span>
+        };
+
+        <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;&lt;a class=\&quot;header\&quot; href=\&quot;{filename}#{id}\&quot; id=\&quot;{id}\&quot;&gt;&lt;h{level}&gt;{text}&lt;/h{level}&gt;&lt;/a&gt;&quot;</span>,
             <span class='ident'>level</span><span class='op'>=</span><span class='ident'>level</span>, <span class='ident'>id</span><span class='op'>=</span><span class='ident'>id</span>, <span class='ident'>text</span><span class='op'>=</span><span class='ident'>text</span>, <span class='ident'>filename</span><span class='op'>=</span><span class='ident'>filename</span>)
     }).<span class='ident'>into_owned</span>()
 }

@@ -67,25 +67,25 @@
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="cli/serve.html#the-serve-command" name="the-serve-command"><h1>The serve command</h1></a>
+                    <a class="header" href="cli/serve.html#the-serve-command" id="the-serve-command"><h1>The serve command</h1></a>
 <p>The <code>serve</code> command is useful when you want to preview your book. It also does hot reloading of the webpage whenever a file changes.
 It achieves this by serving the books content over <code>localhost:3000</code> (unless otherwise configured, see below) and runs a websocket server on <code>localhost:3001</code> which triggers the reloads.
 This preferred by many for writing books with mdbook because it allows for you to see the result of your work instantly after every file change.</p>
-<a class="header" href="cli/serve.html#specify-a-directory" name="specify-a-directory"><h4>Specify a directory</h4></a>
+<a class="header" href="cli/serve.html#specify-a-directory" id="specify-a-directory"><h4>Specify a directory</h4></a>
 <p>Like <code>watch</code>, <code>serve</code> can take a directory as argument to use instead of the
 current working directory.</p>
 <pre><code class="language-bash">mdbook serve path/to/book
 </code></pre>
-<a class="header" href="cli/serve.html#server-options" name="server-options"><h4>Server options</h4></a>
+<a class="header" href="cli/serve.html#server-options" id="server-options"><h4>Server options</h4></a>
 <p><code>serve</code> has four options: the http port, the websocket port, the interface to serve on, and the public address of the server so that the browser may reach the websocket server.</p>
 <p>For example: suppose you had an nginx server for SSL termination which has a public address of 192.168.1.100 on port 80 and proxied that to 127.0.0.1 on port 8000. To run use the nginx proxy do:</p>
 <pre><code class="language-bash">mdbook server path/to/book -p 8000 -i 127.0.0.1 -a 192.168.1.100
 </code></pre>
 <p>If you were to want live reloading for this you would need to proxy the websocket calls through nginx as well from <code>192.168.1.100:&lt;WS_PORT&gt;</code> to <code>127.0.0.1:&lt;WS_PORT&gt;</code>. The <code>-w</code> flag allows for the websocket port to be configured.</p>
-<a class="header" href="cli/serve.html#--open" name="--open"><h4>--open</h4></a>
+<a class="header" href="cli/serve.html#--open" id="--open"><h4>--open</h4></a>
 <p>When you use the <code>--open</code> (<code>-o</code>) option, mdbook will open the book in your
 your default web browser after starting the server.</p>
-<a class="header" href="cli/serve.html#--dest-dir" name="--dest-dir"><h4>--dest-dir</h4></a>
+<a class="header" href="cli/serve.html#--dest-dir" id="--dest-dir"><h4>--dest-dir</h4></a>
 <p>The <code>--dest-dir</code> (<code>-d</code>) option allows you to change the output directory for your book.</p>
 <hr />
 <p><strong><em>note:</em></strong> <em>the <code>serve</code> command has not gotten a lot of testing yet, there could be some rough edges. If you discover a problem, please report it <a href="https://github.com/azerupi/mdBook/issues">on Github</a></em></p>

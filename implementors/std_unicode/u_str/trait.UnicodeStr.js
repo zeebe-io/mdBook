@@ -1,4 +1,5 @@
 (function() {var implementors = {};
+implementors["bytes"] = [];
 implementors["handlebars"] = [];
 implementors["hyper"] = [];
 implementors["iron"] = [];

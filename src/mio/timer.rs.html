@@ -9,6 +9,7 @@
 
     <title>timer.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -665,7 +666,7 @@
 
     <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>token</span>: <span class='ident'>T</span>, <span class='ident'>tick</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>TimerResult</span><span class='op'>&lt;</span><span class='ident'>Timeout</span><span class='op'>&gt;</span> {
         <span class='comment'>// Get the slot for the requested tick</span>
-        <span class='kw'>let</span> <span class='ident'>slot</span> <span class='op'>=</span> (<span class='ident'>tick</span> <span class='kw-2'>&amp;</span> <span class='self'>self</span>.<span class='ident'>mask</span>) <span class='kw'>as</span> <span class='ident'>usize</span>;
+        <span class='kw'>let</span> <span class='ident'>slot</span> <span class='op'>=</span> (<span class='ident'>tick</span> <span class='op'>&amp;</span> <span class='self'>self</span>.<span class='ident'>mask</span>) <span class='kw'>as</span> <span class='ident'>usize</span>;
         <span class='kw'>let</span> <span class='ident'>curr</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>wheel</span>[<span class='ident'>slot</span>];
 
         <span class='comment'>// Insert the new entry</span>
@@ -769,7 +770,7 @@
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>slot_for</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>tick</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        (<span class='self'>self</span>.<span class='ident'>mask</span> <span class='kw-2'>&amp;</span> <span class='ident'>tick</span>) <span class='kw'>as</span> <span class='ident'>usize</span>
+        (<span class='self'>self</span>.<span class='ident'>mask</span> <span class='op'>&amp;</span> <span class='ident'>tick</span>) <span class='kw'>as</span> <span class='ident'>usize</span>
     }
 
     <span class='comment'>// Convert a ms duration into a number of ticks, rounds up</span>

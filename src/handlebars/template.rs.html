@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.1/src/template.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.2/src/template.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>template.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1001,7 +1002,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>Peekable</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>From</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>BTreeMap</span>, <span class='ident'>VecDeque</span>};
-<span class='kw'>use</span> <span class='ident'>pest</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>pest</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc_ser_type&quot;</span>, <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde_type&quot;</span>)))]</span>
 <span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>json</span>::<span class='ident'>Json</span>;
@@ -1014,7 +1015,7 @@
 
 <span class='kw'>use</span> <span class='ident'>error</span>::{<span class='ident'>TemplateError</span>, <span class='ident'>TemplateErrorReason</span>};
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>TemplateElement</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>TemplateElement</span>::<span class='kw-2'>*</span>;
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TemplateMapping</span>(<span class='kw'>pub</span> <span class='ident'>usize</span>, <span class='kw'>pub</span> <span class='ident'>usize</span>);
@@ -1613,14 +1614,14 @@
 
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>len</span>(), <span class='number'>10</span>);
 
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>(), <span class='ident'>RawString</span>(<span class='string'>&quot;&lt;h1&gt;&quot;</span>.<span class='ident'>to_string</span>()));
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>(),
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>(), <span class='ident'>RawString</span>(<span class='string'>&quot;&lt;h1&gt;&quot;</span>.<span class='ident'>to_string</span>()));
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>(),
                <span class='ident'>Expression</span>(<span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='string'>&quot;title&quot;</span>.<span class='ident'>to_string</span>())));
 
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>3</span>).<span class='ident'>unwrap</span>(),
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>3</span>).<span class='ident'>unwrap</span>(),
                <span class='ident'>HTMLExpression</span>(<span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='string'>&quot;content&quot;</span>.<span class='ident'>to_string</span>())));
 
-    <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>5</span>).<span class='ident'>unwrap</span>() {
+    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>5</span>).<span class='ident'>unwrap</span>() {
         <span class='ident'>HelperBlock</span>(<span class='kw-2'>ref</span> <span class='ident'>h</span>) <span class='op'>=&gt;</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>name</span>, <span class='string'>&quot;if&quot;</span>.<span class='ident'>to_string</span>());
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
@@ -1631,18 +1632,18 @@
         }
     };
 
-    <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>7</span>).<span class='ident'>unwrap</span>() {
+    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>7</span>).<span class='ident'>unwrap</span>() {
         <span class='ident'>HelperExpression</span>(<span class='kw-2'>ref</span> <span class='ident'>h</span>) <span class='op'>=&gt;</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>name</span>, <span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>());
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>()), <span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='string'>&quot;bar&quot;</span>.<span class='ident'>into</span>()));
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>*</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>()), <span class='ident'>Parameter</span>::<span class='ident'>Name</span>(<span class='string'>&quot;bar&quot;</span>.<span class='ident'>into</span>()));
         }
         _ <span class='op'>=&gt;</span> {
             <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Helper expression here&quot;</span>);
         }
     };
 
-    <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>9</span>).<span class='ident'>unwrap</span>() {
+    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>9</span>).<span class='ident'>unwrap</span>() {
         <span class='ident'>HelperBlock</span>(<span class='kw-2'>ref</span> <span class='ident'>h</span>) <span class='op'>=&gt;</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>name</span>, <span class='string'>&quot;unless&quot;</span>.<span class='ident'>to_string</span>());
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
@@ -1671,7 +1672,7 @@
     <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>Template</span>::<span class='ident'>compile</span>(<span class='ident'>source</span>.<span class='ident'>to_string</span>()).<span class='ident'>ok</span>().<span class='ident'>unwrap</span>();
 
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>len</span>(), <span class='number'>4</span>);
-    <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>() {
+    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>() {
         <span class='ident'>HelperExpression</span>(<span class='kw-2'>ref</span> <span class='ident'>h</span>) <span class='op'>=&gt;</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>name</span>, <span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_owned</span>());
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
@@ -1686,7 +1687,7 @@
         }
     };
 
-    <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>() {
+    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>() {
         <span class='ident'>HelperExpression</span>(<span class='kw-2'>ref</span> <span class='ident'>h</span>) <span class='op'>=&gt;</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>name</span>, <span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>());
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
@@ -1706,7 +1707,7 @@
         }
     };
 
-    <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>3</span>).<span class='ident'>unwrap</span>() {
+    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>t</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>3</span>).<span class='ident'>unwrap</span>() {
         <span class='ident'>HelperBlock</span>(<span class='kw-2'>ref</span> <span class='ident'>h</span>) <span class='op'>=&gt;</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>name</span>, <span class='string'>&quot;if&quot;</span>.<span class='ident'>to_string</span>());
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>params</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
@@ -1791,7 +1792,7 @@
                     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>h</span>.<span class='ident'>name</span>, <span class='string'>&quot;raw&quot;</span>.<span class='ident'>to_owned</span>());
                     <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ht</span>) <span class='op'>=</span> <span class='ident'>h</span>.<span class='ident'>template</span> {
                         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ht</span>.<span class='ident'>elements</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
-                        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>ht</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>(),
+                        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>*</span><span class='ident'>ht</span>.<span class='ident'>elements</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>(),
                                    <span class='ident'>RawString</span>(<span class='string'>&quot;good{{night}}&quot;</span>.<span class='ident'>to_owned</span>()));
                     } <span class='kw'>else</span> {
                         <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;helper template not found&quot;</span>);

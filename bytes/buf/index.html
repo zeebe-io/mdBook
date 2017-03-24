@@ -9,6 +9,7 @@
 
     <title>bytes::buf - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -47,58 +48,54 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/bytes/buf/mod.rs.html#1-430' title='goto source code'>[src]</a></span></h1>
-<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+               </span><a class='srclink' href='../../src/bytes/buf/mod.rs.html#1-37' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Utilities for working with buffers.</p>
+
+<p>A buffer is any structure that contains a sequence of bytes. The bytes may
+or may not be stored in contiguous memory. This module contains traits used
+to abstract over buffers as well as utilities for working with buffer types.</p>
+
+<h1 id='buf-bufmut' class='section-header'><a href='#buf-bufmut'><code>Buf</code>, <code>BufMut</code></a></h1>
+<p>These are the two foundational traits for abstractly working with buffers.
+They can be thought as iterators for byte structures. They offer additional
+performance over <code>Iterator</code> by providing an API optimized for byte slices.</p>
+
+<p>See <a href="trait.Buf.html"><code>Buf</code></a> and <a href="trait.BufMut.html"><code>BufMut</code></a> for more details.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.ByteBuf.html'
-                                  title='bytes::buf::ByteBuf'>ByteBuf</a></td>
+                           <td><a class='struct' href='struct.Chain.html'
+                                  title='bytes::buf::Chain'>Chain</a></td>
                            <td class='docblock-short'>
-                                <p>A <code>Buf</code> backed by a contiguous region of memory.</p>
+                                <p>A <code>Chain</code> sequences two buffers.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.MutByteBuf.html'
-                                  title='bytes::buf::MutByteBuf'>MutByteBuf</a></td>
+                           <td><a class='struct' href='struct.Iter.html'
+                                  title='bytes::buf::Iter'>Iter</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Iterator over the bytes contained by the buffer.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.MutSliceBuf.html'
-                                  title='bytes::buf::MutSliceBuf'>MutSliceBuf</a></td>
+                           <td><a class='struct' href='struct.Reader.html'
+                                  title='bytes::buf::Reader'>Reader</a></td>
                            <td class='docblock-short'>
-                                
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.ROByteBuf.html'
-                                  title='bytes::buf::ROByteBuf'>ROByteBuf</a></td>
-                           <td class='docblock-short'>
-                                <p>Same as <code>ByteBuf</code> but cannot be flipped to a <code>MutByteBuf</code>.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.RingBuf.html'
-                                  title='bytes::buf::RingBuf'>RingBuf</a></td>
-                           <td class='docblock-short'>
-                                <p>Buf backed by a continous chunk of memory. Maintains a read cursor and a
-write cursor. When reads and writes reach the end of the allocated buffer,
-wraps around to the start.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.SliceBuf.html'
-                                  title='bytes::buf::SliceBuf'>SliceBuf</a></td>
-                           <td class='docblock-short'>
-                                
+                                <p>A <code>Buf</code> adapter which implements <code>io::Read</code> for the inner value.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Take.html'
                                   title='bytes::buf::Take'>Take</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A <code>Buf</code> adapter which limits the bytes read from an underlying buffer.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Writer.html'
+                                  title='bytes::buf::Writer'>Writer</a></td>
+                           <td class='docblock-short'>
+                                <p>A <code>BufMut</code> adapter which implements <code>io::Write</code> for the inner value.</p>
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -106,42 +103,28 @@ wraps around to the start.</p>
                            <td><a class='trait' href='trait.Buf.html'
                                   title='bytes::buf::Buf'>Buf</a></td>
                            <td class='docblock-short'>
-                                <p>A trait for values that provide sequential read access to bytes.</p>
+                                <p>Read bytes from a buffer.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.BufExt.html'
-                                  title='bytes::buf::BufExt'>BufExt</a></td>
-                           <td class='docblock-short'>
-                                <p>An extension trait providing extra functions applicable to all <code>Buf</code> values.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.MutBuf.html'
-                                  title='bytes::buf::MutBuf'>MutBuf</a></td>
+                           <td><a class='trait' href='trait.BufMut.html'
+                                  title='bytes::buf::BufMut'>BufMut</a></td>
                            <td class='docblock-short'>
                                 <p>A trait for values that provide sequential write access to bytes.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.MutBufExt.html'
-                                  title='bytes::buf::MutBufExt'>MutBufExt</a></td>
+                           <td><a class='trait' href='trait.FromBuf.html'
+                                  title='bytes::buf::FromBuf'>FromBuf</a></td>
                            <td class='docblock-short'>
-                                <p>An extension trait providing extra functions applicable to all <code>MutBuf</code> values.</p>
+                                <p>Conversion from a <a href="trait.Buf.html"><code>Buf</code></a></p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Sink.html'
-                                  title='bytes::buf::Sink'>Sink</a></td>
+                           <td><a class='trait' href='trait.IntoBuf.html'
+                                  title='bytes::buf::IntoBuf'>IntoBuf</a></td>
                            <td class='docblock-short'>
-                                <p>A value that reads bytes from a Buf into itself</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Source.html'
-                                  title='bytes::buf::Source'>Source</a></td>
-                           <td class='docblock-short'>
-                                <p>A value that writes bytes from itself into a <code>MutBuf</code>.</p>
+                                <p>Conversion into a <code>Buf</code></p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

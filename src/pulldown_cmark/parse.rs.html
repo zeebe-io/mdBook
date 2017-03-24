@@ -9,6 +9,7 @@
 
     <title>parse.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1740,7 +1741,7 @@
 
 <span class='doccomment'>//! Raw parser, for doing a single pass over input.</span>
 
-<span class='kw'>use</span> <span class='ident'>scanners</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>scanners</span>::<span class='kw-2'>*</span>;
 <span class='kw'>use</span> <span class='ident'>utils</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>::{<span class='ident'>Borrowed</span>};
@@ -1968,7 +1969,7 @@
     <span class='kw'>fn</span> <span class='ident'>scan_containers</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>text</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='ident'>bool</span>, <span class='ident'>usize</span>) {
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>i</span>, <span class='kw-2'>mut</span> <span class='ident'>space</span>) <span class='op'>=</span> <span class='ident'>scan_leading_space</span>(<span class='ident'>text</span>, <span class='number'>0</span>);
         <span class='kw'>for</span> <span class='ident'>container</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>containers</span>.<span class='ident'>iter</span>() {
-            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>container</span> {
+            <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>container</span> {
                 <span class='ident'>Container</span>::<span class='ident'>BlockQuote</span> <span class='op'>=&gt;</span> {
                     <span class='kw'>if</span> <span class='ident'>space</span> <span class='op'>&lt;=</span> <span class='number'>3</span> {
                         <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>scan_blockquote_start</span>(<span class='kw-2'>&amp;</span><span class='ident'>text</span>[<span class='ident'>i</span>..]);

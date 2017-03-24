@@ -9,6 +9,7 @@
 
     <title>pest - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -172,7 +173,7 @@ subtractions, multiplications, and divisions.</p>
 <pre class='rust rust-example-rendered'>
 <span class='macro'>impl_rdp</span><span class='macro'>!</span> {
     <span class='macro'>grammar</span><span class='macro'>!</span> {
-        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
                <span class='comment'>//  |    | |  |     | |          | |         ^ zero or more</span>
                <span class='comment'>//  |    | |  |     | |          | ^ digit</span>
                <span class='comment'>//  |    | |  |     | |          ^ followed by</span>
@@ -195,7 +196,7 @@ subtractions, multiplications, and divisions.</p>
 <pre class='rust rust-example-rendered'>
 <span class='macro'>impl_rdp</span><span class='macro'>!</span> {
     <span class='macro'>grammar</span><span class='macro'>!</span> {
-        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
         <span class='ident'>plus</span>   <span class='op'>=</span> { [<span class='string'>&quot;+&quot;</span>] }
         <span class='ident'>minus</span>  <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>] }
         <span class='ident'>times</span>  <span class='op'>=</span> { [<span class='string'>&quot;*&quot;</span>] }
@@ -214,7 +215,7 @@ subtractions, multiplications, and divisions.</p>
             <span class='ident'>addition</span>       <span class='op'>=</span> { <span class='ident'>plus</span>  <span class='op'>|</span> <span class='ident'>minus</span> } <span class='comment'>// precedence 0 is addition</span>
             <span class='ident'>multiplication</span> <span class='op'>=</span> { <span class='ident'>times</span> <span class='op'>|</span> <span class='ident'>slash</span> } <span class='comment'>// precedence 1 is multiplication</span>
         }
-        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
         <span class='ident'>plus</span>   <span class='op'>=</span> { [<span class='string'>&quot;+&quot;</span>] }
         <span class='ident'>minus</span>  <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>] }
         <span class='ident'>times</span>  <span class='op'>=</span> { [<span class='string'>&quot;*&quot;</span>] }
@@ -245,7 +246,7 @@ the queue.</p>
             <span class='ident'>addition</span>       <span class='op'>=</span> { <span class='ident'>plus</span>  <span class='op'>|</span> <span class='ident'>minus</span> }
             <span class='ident'>multiplication</span> <span class='op'>=</span> { <span class='ident'>times</span> <span class='op'>|</span> <span class='ident'>slash</span> }
         }
-        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
         <span class='ident'>plus</span>   <span class='op'>=</span> { [<span class='string'>&quot;+&quot;</span>] }
         <span class='ident'>minus</span>  <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>] }
         <span class='ident'>times</span>  <span class='op'>=</span> { [<span class='string'>&quot;*&quot;</span>] }
@@ -275,7 +276,7 @@ the precedence climber.</p>
             <span class='ident'>addition</span>       <span class='op'>=</span> { <span class='ident'>plus</span>  <span class='op'>|</span> <span class='ident'>minus</span> }
             <span class='ident'>multiplication</span> <span class='op'>=</span> { <span class='ident'>times</span> <span class='op'>|</span> <span class='ident'>slash</span> }
         }
-        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
         <span class='ident'>plus</span>   <span class='op'>=</span> { [<span class='string'>&quot;+&quot;</span>] }
         <span class='ident'>minus</span>  <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>] }
         <span class='ident'>times</span>  <span class='op'>=</span> { [<span class='string'>&quot;*&quot;</span>] }
@@ -304,7 +305,7 @@ the precedence climber.</p>
             <span class='ident'>addition</span>       <span class='op'>=</span> { <span class='ident'>plus</span>  <span class='op'>|</span> <span class='ident'>minus</span> }
             <span class='ident'>multiplication</span> <span class='op'>=</span> { <span class='ident'>times</span> <span class='op'>|</span> <span class='ident'>slash</span> }
         }
-        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
         <span class='ident'>plus</span>   <span class='op'>=</span> { [<span class='string'>&quot;+&quot;</span>] }
         <span class='ident'>minus</span>  <span class='op'>=</span> { [<span class='string'>&quot;-&quot;</span>] }
         <span class='ident'>times</span>  <span class='op'>=</span> { [<span class='string'>&quot;*&quot;</span>] }
@@ -344,7 +345,7 @@ white-space matching inside of the rule.</p>
             <span class='ident'>addition</span>       <span class='op'>=</span> { <span class='ident'>plus</span>  <span class='op'>|</span> <span class='ident'>minus</span> }
             <span class='ident'>multiplication</span> <span class='op'>=</span> { <span class='ident'>times</span> <span class='op'>|</span> <span class='ident'>slash</span> }
         }
-        <span class='ident'>number</span> <span class='op'>=</span> @{ [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> @{ [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
         <span class='ident'>plus</span>   <span class='op'>=</span>  { [<span class='string'>&quot;+&quot;</span>] }
         <span class='ident'>minus</span>  <span class='op'>=</span>  { [<span class='string'>&quot;-&quot;</span>] }
         <span class='ident'>times</span>  <span class='op'>=</span>  { [<span class='string'>&quot;*&quot;</span>] }
@@ -418,7 +419,7 @@ necessarily easier to read.</p>
             <span class='ident'>addition</span>       <span class='op'>=</span> { <span class='ident'>plus</span>  <span class='op'>|</span> <span class='ident'>minus</span> }
             <span class='ident'>multiplication</span> <span class='op'>=</span> { <span class='ident'>times</span> <span class='op'>|</span> <span class='ident'>slash</span> }
         }
-        <span class='ident'>number</span> <span class='op'>=</span> @{ [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='op'>*</span>) }
+        <span class='ident'>number</span> <span class='op'>=</span> @{ [<span class='string'>&quot;-&quot;</span>]<span class='question-mark'>?</span> ~ ([<span class='string'>&quot;0&quot;</span>] <span class='op'>|</span> [<span class='string'>&#39;1&#39;</span>..<span class='string'>&#39;9&#39;</span>] ~ [<span class='string'>&#39;0&#39;</span>..<span class='string'>&#39;9&#39;</span>]<span class='kw-2'>*</span>) }
         <span class='ident'>plus</span>   <span class='op'>=</span>  { [<span class='string'>&quot;+&quot;</span>] }
         <span class='ident'>minus</span>  <span class='op'>=</span>  { [<span class='string'>&quot;-&quot;</span>] }
         <span class='ident'>times</span>  <span class='op'>=</span>  { [<span class='string'>&quot;*&quot;</span>] }

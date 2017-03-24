@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1645,8 +1646,8 @@ for entry in walker.filter_entry(|e| !is_hidden(e)) {
 
 <span class='kw'>impl</span> <span class='ident'>DirList</span> {
     <span class='kw'>fn</span> <span class='ident'>close</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>DirList</span>::<span class='ident'>Opened</span> { .. } <span class='op'>=</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='op'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>DirList</span>::<span class='ident'>Closed</span>(<span class='self'>self</span>.<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>().<span class='ident'>into_iter</span>());
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>DirList</span>::<span class='ident'>Opened</span> { .. } <span class='op'>=</span> <span class='kw-2'>*</span><span class='self'>self</span> {
+            <span class='kw-2'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>DirList</span>::<span class='ident'>Closed</span>(<span class='self'>self</span>.<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>().<span class='ident'>into_iter</span>());
         }
     }
 }
@@ -1656,9 +1657,9 @@ for entry in walker.filter_entry(|e| !is_hidden(e)) {
 
     <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>fs</span>::<span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>DirList</span>::<span class='ident'>Closed</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>it</span>) <span class='op'>=&gt;</span> <span class='ident'>it</span>.<span class='ident'>next</span>(),
-            <span class='ident'>DirList</span>::<span class='ident'>Opened</span> { <span class='ident'>depth</span>, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>it</span> } <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>it</span> {
+            <span class='ident'>DirList</span>::<span class='ident'>Opened</span> { <span class='ident'>depth</span>, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>it</span> } <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>it</span> {
                 <span class='prelude-val'>Err</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>err</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='prelude-val'>Err</span>),
                 <span class='prelude-val'>Ok</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>rd</span>) <span class='op'>=&gt;</span> <span class='ident'>rd</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span>.<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
                     <span class='ident'>Error</span>::<span class='ident'>from_io</span>(<span class='ident'>depth</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>err</span>)

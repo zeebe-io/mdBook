@@ -9,6 +9,7 @@
 
     <title>scoped.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -409,7 +410,7 @@
             <span class='kw'>let</span> <span class='ident'>dtor</span> <span class='op'>=</span> {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dtors</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>dtors</span>.<span class='ident'>borrow_mut</span>();
                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>mut</span> <span class='ident'>node</span>) <span class='op'>=</span> <span class='ident'>dtors</span>.<span class='ident'>take</span>() {
-                    <span class='op'>*</span><span class='ident'>dtors</span> <span class='op'>=</span> <span class='ident'>node</span>.<span class='ident'>next</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>b</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>b</span>);
+                    <span class='kw-2'>*</span><span class='ident'>dtors</span> <span class='op'>=</span> <span class='ident'>node</span>.<span class='ident'>next</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>b</span><span class='op'>|</span> <span class='kw-2'>*</span><span class='ident'>b</span>);
                     <span class='ident'>node</span>.<span class='ident'>dtor</span>
                 } <span class='kw'>else</span> {
                     <span class='kw'>return</span>
@@ -425,7 +426,7 @@
     <span class='doccomment'>/// *guaranteed* to be run.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>defer</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() <span class='op'>+</span> <span class='lifetime'>&#39;a</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dtors</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>dtors</span>.<span class='ident'>borrow_mut</span>();
-        <span class='op'>*</span><span class='ident'>dtors</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>DtorChain</span> {
+        <span class='kw-2'>*</span><span class='ident'>dtors</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>DtorChain</span> {
             <span class='ident'>dtor</span>: <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>f</span>),
             <span class='ident'>next</span>: <span class='ident'>dtors</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>)
         });

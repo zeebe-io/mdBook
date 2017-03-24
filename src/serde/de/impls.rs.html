@@ -9,6 +9,7 @@
 
     <title>impls.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -1756,19 +1757,19 @@
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>seq_impl</span> {
     (
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>:<span class='ident'>ty</span>,
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span>:<span class='ident'>ident</span> <span class='op'>&lt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span>:<span class='ident'>ident</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>:<span class='ident'>ident</span>)<span class='op'>*</span>),<span class='op'>*</span> <span class='op'>&gt;</span>,
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span>:<span class='ident'>ident</span> <span class='op'>&lt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span>:<span class='ident'>ident</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>:<span class='ident'>ident</span>)<span class='kw-2'>*</span>),<span class='op'>*</span> <span class='op'>&gt;</span>,
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor</span>:<span class='ident'>ident</span>,
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctor</span>:<span class='ident'>expr</span>,
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>with_capacity</span>:<span class='ident'>expr</span>,
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>insert</span>:<span class='ident'>expr</span>
     ) <span class='op'>=&gt;</span> {
         <span class='doccomment'>/// A visitor that produces a sequence.</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> {
+        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> {
             <span class='ident'>marker</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span><span class='op'>&gt;</span>,
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='op'>*</span>),<span class='op'>*</span>
+        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span>
+            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='kw-2'>*</span>),<span class='op'>*</span>
         {
             <span class='doccomment'>/// Construct a new sequence visitor.</span>
             <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
@@ -1778,8 +1779,8 @@
             }
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='ident'>Visitor</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='op'>*</span>),<span class='op'>*</span>
+        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> <span class='ident'>Visitor</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span>
+            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='kw-2'>*</span>),<span class='op'>*</span>
         {
             <span class='kw'>type</span> <span class='ident'>Value</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>;
 
@@ -1808,8 +1809,8 @@
             }
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='ident'>Deserialize</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>
-            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='op'>*</span>),<span class='op'>*</span>
+        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> <span class='ident'>Deserialize</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>
+            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='kw-2'>*</span>),<span class='op'>*</span>
         {
             <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
                 <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>,
@@ -2070,18 +2071,18 @@
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>map_impl</span> {
     (
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>:<span class='ident'>ty</span>,
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span>:<span class='ident'>ident</span> <span class='op'>&lt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span>:<span class='ident'>ident</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>:<span class='ident'>ident</span>)<span class='op'>*</span>),<span class='op'>*</span> <span class='op'>&gt;</span>,
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span>:<span class='ident'>ident</span> <span class='op'>&lt;</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>:<span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span>:<span class='ident'>ident</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>:<span class='ident'>ident</span>)<span class='kw-2'>*</span>),<span class='op'>*</span> <span class='op'>&gt;</span>,
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor</span>:<span class='ident'>ident</span>,
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctor</span>:<span class='ident'>expr</span>,
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>with_capacity</span>:<span class='ident'>expr</span>
     ) <span class='op'>=&gt;</span> {
         <span class='doccomment'>/// A visitor that produces a map.</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> {
+        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> {
             <span class='ident'>marker</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span><span class='op'>&gt;</span>,
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='op'>*</span>),<span class='op'>*</span>
+        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span>
+            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='kw-2'>*</span>),<span class='op'>*</span>
         {
             <span class='doccomment'>/// Construct a `MapVisitor*&lt;T&gt;`.</span>
             <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
@@ -2091,8 +2092,8 @@
             }
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='ident'>Visitor</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='op'>*</span>),<span class='op'>*</span>
+        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> <span class='ident'>Visitor</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>visitor_ty</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span>
+            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='kw-2'>*</span>),<span class='op'>*</span>
         {
             <span class='kw'>type</span> <span class='ident'>Value</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>;
 
@@ -2121,8 +2122,8 @@
             }
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='op'>*</span><span class='op'>&gt;</span> <span class='ident'>Deserialize</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>
-            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='op'>*</span>),<span class='op'>*</span>
+        <span class='kw'>impl</span><span class='op'>&lt;</span>$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>),<span class='kw-2'>*</span><span class='op'>&gt;</span> <span class='ident'>Deserialize</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>
+            <span class='kw'>where</span> $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typaram</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound1</span> $(<span class='op'>+</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>bound2</span>)<span class='kw-2'>*</span>),<span class='op'>*</span>
         {
             <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ty</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
                 <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>,

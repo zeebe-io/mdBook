@@ -9,6 +9,7 @@
 
     <title>de.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1573,8 +1574,8 @@
             <span class='ident'>cur</span>: <span class='number'>0</span>,
             <span class='ident'>max</span>: <span class='self'>self</span>.<span class='ident'>max</span>,
             <span class='ident'>array</span>: <span class='ident'>array</span>,
-            <span class='ident'>tables</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>tables</span>,
-            <span class='ident'>de</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>de</span>,
+            <span class='ident'>tables</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>tables</span>,
+            <span class='ident'>de</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>de</span>,
         });
         <span class='ident'>res</span>.<span class='ident'>map_err</span>(<span class='op'>|</span><span class='kw-2'>mut</span> <span class='ident'>e</span><span class='op'>|</span> {
             <span class='ident'>e</span>.<span class='ident'>add_key_context</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>tables</span>[<span class='self'>self</span>.<span class='ident'>cur</span> <span class='op'>-</span> <span class='number'>1</span>].<span class='ident'>header</span>[<span class='self'>self</span>.<span class='ident'>depth</span>]);
@@ -2064,15 +2065,15 @@
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>number</span> <span class='op'>=</span> <span class='ident'>integral</span>.<span class='ident'>trim_left_matches</span>(<span class='string'>&quot;+&quot;</span>)
                                  .<span class='ident'>chars</span>()
-                                 .<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>c</span> <span class='op'>!=</span> <span class='string'>&#39;_&#39;</span>)
+                                 .<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='kw-2'>*</span><span class='ident'>c</span> <span class='op'>!=</span> <span class='string'>&#39;_&#39;</span>)
                                  .<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>();
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>fraction</span>) <span class='op'>=</span> <span class='ident'>fraction</span> {
             <span class='ident'>number</span>.<span class='ident'>push_str</span>(<span class='string'>&quot;.&quot;</span>);
-            <span class='ident'>number</span>.<span class='ident'>extend</span>(<span class='ident'>fraction</span>.<span class='ident'>chars</span>().<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>c</span> <span class='op'>!=</span> <span class='string'>&#39;_&#39;</span>));
+            <span class='ident'>number</span>.<span class='ident'>extend</span>(<span class='ident'>fraction</span>.<span class='ident'>chars</span>().<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='kw-2'>*</span><span class='ident'>c</span> <span class='op'>!=</span> <span class='string'>&#39;_&#39;</span>));
         }
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>exponent</span>) <span class='op'>=</span> <span class='ident'>exponent</span> {
             <span class='ident'>number</span>.<span class='ident'>push_str</span>(<span class='string'>&quot;E&quot;</span>);
-            <span class='ident'>number</span>.<span class='ident'>extend</span>(<span class='ident'>exponent</span>.<span class='ident'>chars</span>().<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>c</span> <span class='op'>!=</span> <span class='string'>&#39;_&#39;</span>));
+            <span class='ident'>number</span>.<span class='ident'>extend</span>(<span class='ident'>exponent</span>.<span class='ident'>chars</span>().<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='kw-2'>*</span><span class='ident'>c</span> <span class='op'>!=</span> <span class='string'>&#39;_&#39;</span>));
         }
         <span class='ident'>number</span>.<span class='ident'>parse</span>().<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>_e</span><span class='op'>|</span> {
             <span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>start</span>, <span class='ident'>ErrorKind</span>::<span class='ident'>NumberInvalid</span>)

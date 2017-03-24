@@ -9,6 +9,7 @@
 
     <title>tokens.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -668,7 +669,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>string</span>;
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Token</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Token</span>::<span class='kw-2'>*</span>;
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Token</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
@@ -765,7 +766,7 @@
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>eat</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>expected</span>: <span class='ident'>Token</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>bool</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>peek</span>()<span class='question-mark'>?</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>found</span>) <span class='kw'>if</span> <span class='ident'>expected</span> <span class='op'>==</span> <span class='op'>*</span><span class='ident'>found</span> <span class='op'>=&gt;</span> {}
+            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>found</span>) <span class='kw'>if</span> <span class='ident'>expected</span> <span class='op'>==</span> <span class='kw-2'>*</span><span class='ident'>found</span> <span class='op'>=&gt;</span> {}
             <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='bool-val'>false</span>),
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='bool-val'>false</span>),
         }
@@ -1072,16 +1073,16 @@
 
 <span class='kw'>impl</span> <span class='ident'>MaybeString</span> {
     <span class='kw'>fn</span> <span class='ident'>push</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>ch</span>: <span class='ident'>char</span>) {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>MaybeString</span>::<span class='ident'>NotEscaped</span>(..) <span class='op'>=&gt;</span> {}
             <span class='ident'>MaybeString</span>::<span class='ident'>Owned</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='ident'>s</span>.<span class='ident'>push</span>(<span class='ident'>ch</span>),
         }
     }
 
     <span class='kw'>fn</span> <span class='ident'>to_owned</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>MaybeString</span>::<span class='ident'>NotEscaped</span>(<span class='ident'>start</span>) <span class='op'>=&gt;</span> {
-                <span class='op'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>MaybeString</span>::<span class='ident'>Owned</span>(<span class='ident'>input</span>[<span class='ident'>start</span>..].<span class='ident'>to_owned</span>());
+                <span class='kw-2'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>MaybeString</span>::<span class='ident'>Owned</span>(<span class='ident'>input</span>[<span class='ident'>start</span>..].<span class='ident'>to_owned</span>());
             }
             <span class='ident'>MaybeString</span>::<span class='ident'>Owned</span>(..) <span class='op'>=&gt;</span> {}
         }
@@ -1105,7 +1106,7 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Token</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>describe</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Token</span>::<span class='ident'>Keylike</span>(_) <span class='op'>=&gt;</span> <span class='string'>&quot;an identifier&quot;</span>,
             <span class='ident'>Token</span>::<span class='ident'>Equals</span> <span class='op'>=&gt;</span> <span class='string'>&quot;an equals&quot;</span>,
             <span class='ident'>Token</span>::<span class='ident'>Period</span> <span class='op'>=&gt;</span> <span class='string'>&quot;a period&quot;</span>,

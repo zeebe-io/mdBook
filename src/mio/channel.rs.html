@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mio-0.6.4/src/channel.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mio-0.6.6/src/channel.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>channel.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -434,7 +435,7 @@
 </pre><pre class='rust '>
 <span class='doccomment'>//! Thread safe communication channel implementing `Evented`</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unused_imports</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unused_imports</span>, <span class='ident'>deprecated</span>, <span class='ident'>missing_debug_implementations</span>)]</span>
 
 <span class='kw'>use</span> {<span class='ident'>io</span>, <span class='ident'>Evented</span>, <span class='ident'>Ready</span>, <span class='ident'>Poll</span>, <span class='ident'>PollOpt</span>, <span class='ident'>Registration</span>, <span class='ident'>SetReadiness</span>, <span class='ident'>Token</span>};
 <span class='kw'>use</span> <span class='ident'>lazycell</span>::{<span class='ident'>LazyCell</span>, <span class='ident'>AtomicLazyCell</span>};
@@ -663,7 +664,7 @@
         <span class='kw'>if</span> <span class='ident'>first</span> <span class='op'>==</span> <span class='number'>1</span> {
             <span class='comment'>// Unset readiness</span>
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>set_readiness</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_readiness</span>.<span class='ident'>borrow</span>() {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>set_readiness</span>.<span class='ident'>set_readiness</span>(<span class='ident'>Ready</span>::<span class='ident'>none</span>()));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>set_readiness</span>.<span class='ident'>set_readiness</span>(<span class='ident'>Ready</span>::<span class='ident'>empty</span>()));
             }
         }
 

@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -453,7 +454,7 @@
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>len</span>;
         <span class='kw'>let</span> <span class='ident'>state</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>state</span>;
         <span class='self'>self</span>.<span class='ident'>blocks</span>.<span class='ident'>input</span>(<span class='ident'>data</span>, <span class='op'>|</span><span class='ident'>chunk</span><span class='op'>|</span> {
-            <span class='op'>*</span><span class='ident'>len</span> <span class='op'>+=</span> <span class='number'>64</span>;
+            <span class='kw-2'>*</span><span class='ident'>len</span> <span class='op'>+=</span> <span class='number'>64</span>;
             <span class='ident'>state</span>.<span class='ident'>process</span>(<span class='ident'>chunk</span>);
         })
     }
@@ -555,9 +556,9 @@
                        ((<span class='ident'>chunk</span>[<span class='number'>0</span>] <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>&lt;&lt;</span> <span class='number'>24</span>);
         }
 
-        <span class='kw'>fn</span> <span class='ident'>ff</span>(<span class='ident'>b</span>: <span class='ident'>u32</span>, <span class='ident'>c</span>: <span class='ident'>u32</span>, <span class='ident'>d</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='ident'>d</span> <span class='op'>^</span> (<span class='ident'>b</span> <span class='kw-2'>&amp;</span> (<span class='ident'>c</span> <span class='op'>^</span> <span class='ident'>d</span>)) }
+        <span class='kw'>fn</span> <span class='ident'>ff</span>(<span class='ident'>b</span>: <span class='ident'>u32</span>, <span class='ident'>c</span>: <span class='ident'>u32</span>, <span class='ident'>d</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='ident'>d</span> <span class='op'>^</span> (<span class='ident'>b</span> <span class='op'>&amp;</span> (<span class='ident'>c</span> <span class='op'>^</span> <span class='ident'>d</span>)) }
         <span class='kw'>fn</span> <span class='ident'>gg</span>(<span class='ident'>b</span>: <span class='ident'>u32</span>, <span class='ident'>c</span>: <span class='ident'>u32</span>, <span class='ident'>d</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='ident'>b</span> <span class='op'>^</span> <span class='ident'>c</span> <span class='op'>^</span> <span class='ident'>d</span> }
-        <span class='kw'>fn</span> <span class='ident'>hh</span>(<span class='ident'>b</span>: <span class='ident'>u32</span>, <span class='ident'>c</span>: <span class='ident'>u32</span>, <span class='ident'>d</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { (<span class='ident'>b</span> <span class='kw-2'>&amp;</span> <span class='ident'>c</span>) <span class='op'>|</span> (<span class='ident'>d</span> <span class='kw-2'>&amp;</span> (<span class='ident'>b</span> <span class='op'>|</span> <span class='ident'>c</span>)) }
+        <span class='kw'>fn</span> <span class='ident'>hh</span>(<span class='ident'>b</span>: <span class='ident'>u32</span>, <span class='ident'>c</span>: <span class='ident'>u32</span>, <span class='ident'>d</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { (<span class='ident'>b</span> <span class='op'>&amp;</span> <span class='ident'>c</span>) <span class='op'>|</span> (<span class='ident'>d</span> <span class='op'>&amp;</span> (<span class='ident'>b</span> <span class='op'>|</span> <span class='ident'>c</span>)) }
         <span class='kw'>fn</span> <span class='ident'>ii</span>(<span class='ident'>b</span>: <span class='ident'>u32</span>, <span class='ident'>c</span>: <span class='ident'>u32</span>, <span class='ident'>d</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='ident'>b</span> <span class='op'>^</span> <span class='ident'>c</span> <span class='op'>^</span> <span class='ident'>d</span> }
 
         <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>16</span>..<span class='number'>80</span> {
@@ -602,7 +603,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Blocks</span> {
     <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Blocks</span> {
-        <span class='ident'>Blocks</span> { ..<span class='op'>*</span><span class='self'>self</span> }
+        <span class='ident'>Blocks</span> { ..<span class='kw-2'>*</span><span class='self'>self</span> }
     }
 }
 
@@ -621,7 +622,7 @@
     <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
     <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>openssl</span>;
 
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>std</span>::<span class='ident'>prelude</span>::<span class='ident'>v1</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>std</span>::<span class='ident'>prelude</span>::<span class='ident'>v1</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
 
     <span class='kw'>use</span> <span class='ident'>Sha1</span>;
@@ -653,7 +654,7 @@
             <span class='kw'>let</span> <span class='ident'>hh</span> <span class='op'>=</span> <span class='ident'>m</span>.<span class='ident'>digest</span>().<span class='ident'>to_string</span>();
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>hh</span>.<span class='ident'>len</span>(), <span class='ident'>h</span>.<span class='ident'>len</span>());
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>hh</span>, <span class='op'>*</span><span class='ident'>h</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>hh</span>, <span class='kw-2'>*</span><span class='ident'>h</span>);
         }
     }
 
@@ -670,7 +671,7 @@
 
         <span class='kw'>let</span> <span class='ident'>h</span> <span class='op'>=</span> <span class='string'>&quot;2fd4e1c67a2d28fced849ee1bb76e7391b93eb12&quot;</span>;
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>hh</span>.<span class='ident'>len</span>(), <span class='ident'>h</span>.<span class='ident'>len</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>hh</span>, <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>h</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>hh</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>*</span><span class='ident'>h</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

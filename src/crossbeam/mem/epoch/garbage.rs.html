@@ -9,6 +9,7 @@
 
     <title>garbage.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
     
@@ -207,8 +208,8 @@
 <span class='doccomment'>/// Stores enough information to do a deallocation.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>Item</span> {
-    <span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-    <span class='ident'>free</span>: <span class='kw'>unsafe</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>),
+    <span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+    <span class='ident'>free</span>: <span class='kw'>unsafe</span> <span class='kw'>fn</span>(<span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>),
 }
 
 <span class='doccomment'>/// A single, thread-local bag of garbage.</span>
@@ -220,16 +221,16 @@
         <span class='ident'>Bag</span>(<span class='macro'>vec</span><span class='macro'>!</span>[])
     }
 
-    <span class='kw'>fn</span> <span class='ident'>insert</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>elem</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) {
+    <span class='kw'>fn</span> <span class='ident'>insert</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>elem</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) {
         <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>();
         <span class='kw'>if</span> <span class='ident'>size</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
             <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>push</span>(<span class='ident'>Item</span> {
-                <span class='ident'>ptr</span>: <span class='ident'>elem</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                <span class='ident'>ptr</span>: <span class='ident'>elem</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
                 <span class='ident'>free</span>: <span class='ident'>free</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
             })
         }
-        <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>free</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>t</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>) {
-            <span class='ident'>drop</span>(<span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>t</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='number'>0</span>, <span class='number'>1</span>));
+        <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>free</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>t</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>) {
+            <span class='ident'>drop</span>(<span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>t</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='number'>0</span>, <span class='number'>1</span>));
         }
     }
 
@@ -272,7 +273,7 @@
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>elem</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>elem</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) {
         <span class='self'>self</span>.<span class='ident'>new</span>.<span class='ident'>insert</span>(<span class='ident'>elem</span>)
     }
 
@@ -311,7 +312,7 @@
             <span class='ident'>Node</span> { <span class='ident'>data</span>: <span class='ident'>t</span>, <span class='ident'>next</span>: <span class='ident'>AtomicPtr</span>::<span class='ident'>new</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>()) }));
         <span class='kw'>loop</span> {
             <span class='kw'>let</span> <span class='ident'>head</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>head</span>.<span class='ident'>load</span>(<span class='ident'>Acquire</span>);
-            <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>n</span>).<span class='ident'>next</span>.<span class='ident'>store</span>(<span class='ident'>head</span>, <span class='ident'>Relaxed</span>) };
+            <span class='kw'>unsafe</span> { (<span class='kw-2'>*</span><span class='ident'>n</span>).<span class='ident'>next</span>.<span class='ident'>store</span>(<span class='ident'>head</span>, <span class='ident'>Relaxed</span>) };
             <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>head</span>.<span class='ident'>compare_and_swap</span>(<span class='ident'>head</span>, <span class='ident'>n</span>, <span class='ident'>Release</span>) <span class='op'>==</span> <span class='ident'>head</span> { <span class='kw'>break</span> }
         }
     }

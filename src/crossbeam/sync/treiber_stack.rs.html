@@ -9,6 +9,7 @@
 
     <title>treiber_stack.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -204,7 +205,7 @@
                     <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>head</span>.<span class='ident'>cas_shared</span>(<span class='prelude-val'>Some</span>(<span class='ident'>head</span>), <span class='ident'>next</span>, <span class='ident'>Release</span>) {
                         <span class='kw'>unsafe</span> {
                             <span class='ident'>guard</span>.<span class='ident'>unlinked</span>(<span class='ident'>head</span>);
-                            <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='kw-2'>&amp;</span>(<span class='op'>*</span><span class='ident'>head</span>).<span class='ident'>data</span>));
+                            <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='kw-2'>&amp;</span>(<span class='kw-2'>*</span><span class='ident'>head</span>).<span class='ident'>data</span>));
                         }
                     }
                 }
@@ -222,7 +223,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>is_empty</span>() {

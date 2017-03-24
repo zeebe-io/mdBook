@@ -9,6 +9,7 @@
 
     <title>chase_lev.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -965,17 +966,17 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>storage</span>.<span class='ident'>get</span>()).<span class='ident'>capacity</span>() }
+        <span class='kw'>unsafe</span> { (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>storage</span>.<span class='ident'>get</span>()).<span class='ident'>capacity</span>() }
     }
 
     <span class='kw'>fn</span> <span class='ident'>mask</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>isize</span> {
         <span class='kw'>unsafe</span> {
-            ((<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>storage</span>.<span class='ident'>get</span>()).<span class='ident'>capacity</span>() <span class='op'>-</span> <span class='number'>1</span>) <span class='kw'>as</span> <span class='ident'>isize</span>
+            ((<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>storage</span>.<span class='ident'>get</span>()).<span class='ident'>capacity</span>() <span class='op'>-</span> <span class='number'>1</span>) <span class='kw'>as</span> <span class='ident'>isize</span>
         }
     }
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>elem</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>i</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>storage</span>.<span class='ident'>get</span>()).<span class='ident'>as_mut_ptr</span>().<span class='ident'>offset</span>(<span class='ident'>i</span> <span class='kw-2'>&amp;</span> <span class='self'>self</span>.<span class='ident'>mask</span>())
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>elem</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>i</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
+        (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>storage</span>.<span class='ident'>get</span>()).<span class='ident'>as_mut_ptr</span>().<span class='ident'>offset</span>(<span class='ident'>i</span> <span class='op'>&amp;</span> <span class='self'>self</span>.<span class='ident'>mask</span>())
     }
 
     <span class='comment'>// This does not protect against loading duplicate values of the same cell,</span>
@@ -1092,7 +1093,7 @@
                 <span class='kw'>while</span> <span class='ident'>remaining</span>.<span class='ident'>load</span>(<span class='ident'>SeqCst</span>) <span class='op'>&gt;</span> <span class='number'>0</span> {
                     <span class='kw'>match</span> <span class='ident'>s</span>.<span class='ident'>steal</span>() {
                         <span class='ident'>Steal</span>::<span class='ident'>Data</span>(<span class='ident'>val</span>) <span class='op'>=&gt;</span> {
-                            <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>val</span> <span class='op'>==</span> <span class='number'>20</span> {
+                            <span class='kw'>if</span> <span class='kw-2'>*</span><span class='ident'>val</span> <span class='op'>==</span> <span class='number'>20</span> {
                                 <span class='ident'>remaining</span>.<span class='ident'>fetch_sub</span>(<span class='number'>1</span>, <span class='ident'>SeqCst</span>);
                             } <span class='kw'>else</span> {
                                 <span class='macro'>panic</span><span class='macro'>!</span>()
@@ -1106,7 +1107,7 @@
 
         <span class='kw'>while</span> <span class='ident'>remaining</span>.<span class='ident'>load</span>(<span class='ident'>SeqCst</span>) <span class='op'>&gt;</span> <span class='number'>0</span> {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>val</span>) <span class='op'>=</span> <span class='ident'>w</span>.<span class='ident'>try_pop</span>() {
-                <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>val</span> <span class='op'>==</span> <span class='number'>20</span> {
+                <span class='kw'>if</span> <span class='kw-2'>*</span><span class='ident'>val</span> <span class='op'>==</span> <span class='number'>20</span> {
                     <span class='ident'>remaining</span>.<span class='ident'>fetch_sub</span>(<span class='number'>1</span>, <span class='ident'>SeqCst</span>);
                 } <span class='kw'>else</span> {
                     <span class='macro'>panic</span><span class='macro'>!</span>()

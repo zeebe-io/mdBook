@@ -9,6 +9,7 @@
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -198,16 +199,16 @@
   <span class='kw'>fn</span> <span class='ident'>allocate</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>MemRef</span>;
 
   <span class='doccomment'>/// Deallocate a chunk of memory</span>
-  <span class='kw'>fn</span> <span class='ident'>deallocate</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>mem</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span>);
+  <span class='kw'>fn</span> <span class='ident'>deallocate</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>mem</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span>);
 }
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MemRef</span> {
-    <span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+    <span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>MemRef</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>mem</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span>) <span class='op'>-&gt;</span> <span class='ident'>MemRef</span> {
-        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>mem</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>mem</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span>) <span class='op'>-&gt;</span> <span class='ident'>MemRef</span> {
+        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>mem</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>;
 
         <span class='kw'>unsafe</span> {
             <span class='ident'>MemRef</span> {
@@ -227,7 +228,7 @@
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> {
         <span class='self'>self</span>.<span class='ident'>ptr</span>
     }
 
@@ -247,9 +248,9 @@
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>mem_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span> {
+    <span class='kw'>fn</span> <span class='ident'>mem_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span> {
         <span class='kw'>unsafe</span> {
-            <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>offset</span>(<span class='op'>-</span>(<span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>Mem</span><span class='op'>&gt;</span>() <span class='kw'>as</span> <span class='ident'>isize</span>)) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span>
+            <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>offset</span>(<span class='op'>-</span>(<span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>Mem</span><span class='op'>&gt;</span>() <span class='kw'>as</span> <span class='ident'>isize</span>)) <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Mem</span>
         }
     }
 
@@ -291,13 +292,13 @@
 <span class='doccomment'>/// Memory allocated by an Allocator must be prefixed with Mem</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Mem</span> {
     <span class='comment'>// TODO: It should be possible to reduce the size of this struct</span>
-    <span class='ident'>allocator</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Allocator</span>,
+    <span class='ident'>allocator</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Allocator</span>,
     <span class='ident'>refs</span>: <span class='ident'>AtomicUsize</span>,
     <span class='ident'>len</span>: <span class='ident'>usize</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>Mem</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>len</span>: <span class='ident'>usize</span>, <span class='ident'>allocator</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Allocator</span>) <span class='op'>-&gt;</span> <span class='ident'>Mem</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>len</span>: <span class='ident'>usize</span>, <span class='ident'>allocator</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Allocator</span>) <span class='op'>-&gt;</span> <span class='ident'>Mem</span> {
         <span class='ident'>Mem</span> {
             <span class='ident'>allocator</span>: <span class='ident'>allocator</span>,
             <span class='ident'>refs</span>: <span class='ident'>AtomicUsize</span>::<span class='ident'>new</span>(<span class='number'>1</span>),

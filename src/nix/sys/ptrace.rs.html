@@ -9,6 +9,7 @@
 
     <title>ptrace.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -220,8 +221,8 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptrace</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ptrace</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptrace</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
+    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ptrace</span>::<span class='kw-2'>*</span>;
 
     <span class='kw'>match</span> <span class='ident'>request</span> {
         <span class='ident'>PTRACE_PEEKTEXT</span> <span class='op'>|</span> <span class='ident'>PTRACE_PEEKDATA</span> <span class='op'>|</span> <span class='ident'>PTRACE_PEEKUSER</span> <span class='op'>=&gt;</span> <span class='ident'>ptrace_peek</span>(<span class='ident'>request</span>, <span class='ident'>pid</span>, <span class='ident'>addr</span>, <span class='ident'>data</span>),
@@ -229,7 +230,7 @@
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>ptrace_peek</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>ptrace_peek</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
         <span class='ident'>Errno</span>::<span class='ident'>clear</span>();
         <span class='ident'>ffi</span>::<span class='ident'>ptrace</span>(<span class='ident'>request</span>, <span class='ident'>pid</span>, <span class='ident'>addr</span>, <span class='ident'>data</span>)
@@ -240,16 +241,16 @@
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>ptrace_other</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>ptrace_other</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
     <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>ptrace</span>(<span class='ident'>request</span>, <span class='ident'>pid</span>, <span class='ident'>addr</span>, <span class='ident'>data</span>) }).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='number'>0</span>)
 }
 
 <span class='doccomment'>/// Set options, as with ptrace(PTRACE_SETOPTIONS,...).</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptrace_setoptions</span>(<span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>options</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceOptions</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ptrace</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ptrace</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 
-    <span class='ident'>ptrace</span>(<span class='ident'>PTRACE_SETOPTIONS</span>, <span class='ident'>pid</span>, <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>options</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+    <span class='ident'>ptrace</span>(<span class='ident'>PTRACE_SETOPTIONS</span>, <span class='ident'>pid</span>, <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>options</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>).<span class='ident'>map</span>(<span class='ident'>drop</span>)
 }
 </pre>
 </section>

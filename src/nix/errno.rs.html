@@ -9,6 +9,7 @@
 
     <title>errno.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -2270,21 +2271,21 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>fmt</span>, <span class='ident'>io</span>, <span class='ident'>error</span>};
 <span class='kw'>use</span> {<span class='ident'>Error</span>, <span class='prelude-ty'>Result</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>consts</span>::<span class='op'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>consts</span>::<span class='ident'>Errno</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>consts</span>::<span class='ident'>Errno</span>::<span class='kw-2'>*</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>,
           <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>,
           <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>))]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
-    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__error</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
+    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__error</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
     <span class='ident'>__error</span>()
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;bitrig&quot;</span>)]</span>
-<span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
+<span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
     <span class='kw'>extern</span> {
-        <span class='kw'>fn</span> <span class='ident'>__errno</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>;
+        <span class='kw'>fn</span> <span class='ident'>__errno</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>;
     }
     <span class='kw'>unsafe</span> {
         <span class='ident'>__errno</span>()
@@ -2292,32 +2293,32 @@
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>)]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
-    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__dfly_error</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
+    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__dfly_error</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
     <span class='ident'>__dfly_error</span>()
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
-    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__errno</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
+    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__errno</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
     <span class='ident'>__errno</span>()
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
-    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__errno_location</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>errno_location</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span> {
+    <span class='kw'>extern</span> { <span class='kw'>fn</span> <span class='ident'>__errno_location</span>() <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>; }
     <span class='ident'>__errno_location</span>()
 }
 
 <span class='doccomment'>/// Sets the platform-specific errno to no-error</span>
 <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>clear</span>() <span class='op'>-&gt;</span> () {
-    <span class='op'>*</span><span class='ident'>errno_location</span>() <span class='op'>=</span> <span class='number'>0</span>;
+    <span class='kw-2'>*</span><span class='ident'>errno_location</span>() <span class='op'>=</span> <span class='number'>0</span>;
 }
 
 <span class='doccomment'>/// Returns the platform-specific value of errno</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>errno</span>() <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='kw'>unsafe</span> {
-        (<span class='op'>*</span><span class='ident'>errno_location</span>()) <span class='kw'>as</span> <span class='ident'>i32</span>
+        (<span class='kw-2'>*</span><span class='ident'>errno_location</span>()) <span class='kw'>as</span> <span class='ident'>i32</span>
     }
 }
 
@@ -2933,7 +2934,7 @@
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EDEADLOCK</span>:   <span class='ident'>Errno</span> <span class='op'>=</span> <span class='ident'>Errno</span>::<span class='ident'>EDEADLK</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>e</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Errno</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>match</span> <span class='ident'>e</span> {
             <span class='number'>0</span>   <span class='op'>=&gt;</span> <span class='ident'>UnknownErrno</span>,
@@ -3196,7 +3197,7 @@
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EL2NSYNC</span>: <span class='ident'>Errno</span> <span class='op'>=</span> <span class='ident'>Errno</span>::<span class='ident'>UnknownErrno</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>e</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Errno</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>match</span> <span class='ident'>e</span> {
             <span class='number'>0</span>   <span class='op'>=&gt;</span> <span class='ident'>UnknownErrno</span>,
@@ -3422,7 +3423,7 @@
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EL2NSYNC</span>: <span class='ident'>Errno</span> <span class='op'>=</span> <span class='ident'>Errno</span>::<span class='ident'>UnknownErrno</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>e</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Errno</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>match</span> <span class='ident'>e</span> {
             <span class='number'>0</span>   <span class='op'>=&gt;</span> <span class='ident'>UnknownErrno</span>,
@@ -3643,7 +3644,7 @@
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EL2NSYNC</span>: <span class='ident'>Errno</span> <span class='op'>=</span> <span class='ident'>Errno</span>::<span class='ident'>UnknownErrno</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>e</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Errno</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>match</span> <span class='ident'>e</span> {
             <span class='number'>0</span>   <span class='op'>=&gt;</span> <span class='ident'>UnknownErrno</span>,
@@ -3856,7 +3857,7 @@
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EL2NSYNC</span>: <span class='ident'>Errno</span> <span class='op'>=</span> <span class='ident'>Errno</span>::<span class='ident'>UnknownErrno</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>e</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Errno</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>match</span> <span class='ident'>e</span> {
             <span class='number'>0</span>   <span class='op'>=&gt;</span> <span class='ident'>UnknownErrno</span>,
@@ -4065,7 +4066,7 @@
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EL2NSYNC</span>: <span class='ident'>Errno</span> <span class='op'>=</span> <span class='ident'>Errno</span>::<span class='ident'>UnknownErrno</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>e</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>Errno</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Errno</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>match</span> <span class='ident'>e</span> {
             <span class='number'>0</span>   <span class='op'>=&gt;</span> <span class='ident'>UnknownErrno</span>,
@@ -4173,7 +4174,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='ident'>nixtest</span>::<span class='ident'>assert_const_eq</span>;
     <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
 

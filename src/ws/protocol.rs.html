@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.6.0/src/protocol.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/ws-0.6.1/src/protocol.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>protocol.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -277,7 +278,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::{<span class='ident'>Into</span>, <span class='ident'>From</span>};
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>OpCode</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>OpCode</span>::<span class='kw-2'>*</span>;
 <span class='doccomment'>/// Operation codes as part of rfc6455.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>OpCode</span> {
@@ -301,7 +302,7 @@
 
     <span class='doccomment'>/// Test whether the opcode indicates a control frame.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_control</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Text</span> <span class='op'>|</span> <span class='ident'>Binary</span> <span class='op'>|</span> <span class='ident'>Continue</span> <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
             _ <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
         }
@@ -311,7 +312,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>OpCode</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Continue</span>   <span class='op'>=&gt;</span>   <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;CONTINUE&quot;</span>),
             <span class='ident'>Text</span>       <span class='op'>=&gt;</span>   <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;TEXT&quot;</span>),
             <span class='ident'>Binary</span>     <span class='op'>=&gt;</span>   <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;BINARY&quot;</span>),
@@ -356,7 +357,7 @@
     }
 }
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>CloseCode</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>CloseCode</span>::<span class='kw-2'>*</span>;
 <span class='doccomment'>/// Status code used to indicate why an endpoint is closing the WebSocket connection.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>CloseCode</span> {
@@ -477,7 +478,7 @@
 
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unused_imports</span>, <span class='ident'>unused_variables</span>, <span class='ident'>dead_code</span>)]</span>
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>opcode_from_u8</span>() {

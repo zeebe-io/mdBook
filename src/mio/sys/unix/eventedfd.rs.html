@@ -9,6 +9,7 @@
 
     <title>eventedfd.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
     
@@ -84,15 +85,15 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Evented</span> <span class='kw'>for</span> <span class='ident'>EventedFd</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>register</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>, <span class='ident'>interest</span>: <span class='ident'>EventSet</span>, <span class='ident'>opts</span>: <span class='ident'>PollOpt</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='ident'>selector</span>.<span class='ident'>register</span>(<span class='op'>*</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
+        <span class='ident'>selector</span>.<span class='ident'>register</span>(<span class='kw-2'>*</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>reregister</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>, <span class='ident'>interest</span>: <span class='ident'>EventSet</span>, <span class='ident'>opts</span>: <span class='ident'>PollOpt</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='ident'>selector</span>.<span class='ident'>reregister</span>(<span class='op'>*</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
+        <span class='ident'>selector</span>.<span class='ident'>reregister</span>(<span class='kw-2'>*</span><span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>deregister</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='ident'>selector</span>.<span class='ident'>deregister</span>(<span class='op'>*</span><span class='self'>self</span>.<span class='number'>0</span>)
+        <span class='ident'>selector</span>.<span class='ident'>deregister</span>(<span class='kw-2'>*</span><span class='self'>self</span>.<span class='number'>0</span>)
     }
 }
 </pre>

@@ -9,6 +9,7 @@
 
     <title>macros.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -269,7 +270,7 @@
 <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>forward_to_deserialize_method</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>ty</span>),<span class='op'>*</span>)) <span class='op'>=&gt;</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>ty</span>),<span class='kw-2'>*</span>)) <span class='op'>=&gt;</span> {
         <span class='attribute'>#[<span class='ident'>inline</span>]</span>
         <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span><span class='op'>&lt;</span><span class='ident'>__V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, $(_: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>,)<span class='op'>*</span> <span class='ident'>visitor</span>: <span class='ident'>__V</span>) <span class='op'>-&gt;</span> ::<span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>__V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
             <span class='kw'>where</span> <span class='ident'>__V</span>: <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>de</span>::<span class='ident'>Visitor</span>
@@ -283,7 +284,7 @@
 <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>forward_to_deserialize_method</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>ty</span>),<span class='op'>*</span>)) <span class='op'>=&gt;</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>ty</span>),<span class='kw-2'>*</span>)) <span class='op'>=&gt;</span> {
         <span class='attribute'>#[<span class='ident'>inline</span>]</span>
         <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span><span class='op'>&lt;</span><span class='ident'>__V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, $(_: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>,)<span class='op'>*</span> <span class='ident'>visitor</span>: <span class='ident'>__V</span>) <span class='op'>-&gt;</span> ::<span class='ident'>core</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>__V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
             <span class='kw'>where</span> <span class='ident'>__V</span>: <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>de</span>::<span class='ident'>Visitor</span>
@@ -451,7 +452,7 @@
 <span class='doccomment'>/// ```</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>forward_to_deserialize</span> {
-    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>)<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> {
         $(<span class='macro'>forward_to_deserialize_helper</span><span class='macro'>!</span>{<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>})<span class='op'>*</span>
     };
 }

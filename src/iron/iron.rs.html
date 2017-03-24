@@ -9,6 +9,7 @@
 
     <title>iron.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -411,7 +412,7 @@
     <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>http_req</span>: <span class='ident'>HttpRequest</span>, <span class='kw-2'>mut</span> <span class='ident'>http_res</span>: <span class='ident'>HttpResponse</span><span class='op'>&lt;</span><span class='ident'>Fresh</span><span class='op'>&gt;</span>) {
         <span class='comment'>// Set some defaults in case request handler panics.</span>
         <span class='comment'>// This should not be necessary anymore once stdlib&#39;s catch_panic becomes stable.</span>
-        <span class='op'>*</span><span class='ident'>http_res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>status</span>::<span class='ident'>InternalServerError</span>;
+        <span class='kw-2'>*</span><span class='ident'>http_res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>status</span>::<span class='ident'>InternalServerError</span>;
 
         <span class='comment'>// Create `Request` wrapper.</span>
         <span class='kw'>match</span> <span class='ident'>Request</span>::<span class='ident'>from_http</span>(<span class='ident'>http_req</span>, <span class='self'>self</span>.<span class='ident'>addr</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>protocol</span>) {
@@ -431,7 +432,7 @@
 }
 
 <span class='kw'>fn</span> <span class='ident'>bad_request</span>(<span class='kw-2'>mut</span> <span class='ident'>http_res</span>: <span class='ident'>HttpResponse</span><span class='op'>&lt;</span><span class='ident'>Fresh</span><span class='op'>&gt;</span>) {
-    <span class='op'>*</span><span class='ident'>http_res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>status</span>::<span class='ident'>BadRequest</span>;
+    <span class='kw-2'>*</span><span class='ident'>http_res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>status</span>::<span class='ident'>BadRequest</span>;
 
     <span class='comment'>// Consume and flush the response.</span>
     <span class='comment'>// We would like this to work, but can&#39;t do anything if it doesn&#39;t.</span>

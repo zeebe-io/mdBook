@@ -9,6 +9,7 @@
 
     <title>ms_queue.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -586,7 +587,7 @@
     <span class='doccomment'>/// A node with actual data that can be popped.</span>
     <span class='ident'>Data</span>(<span class='ident'>T</span>),
     <span class='doccomment'>/// A node representing a blocked request for data.</span>
-    <span class='ident'>Blocked</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>Signal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>),
+    <span class='ident'>Blocked</span>(<span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Signal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>),
 }
 
 <span class='doccomment'>/// A blocked request for data, which includes a slot to write the data.</span>
@@ -729,9 +730,9 @@
                     <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>head</span>.<span class='ident'>cas_shared</span>(<span class='prelude-val'>Some</span>(<span class='ident'>head</span>), <span class='prelude-val'>Some</span>(<span class='ident'>blocked_node</span>), <span class='ident'>Release</span>) {
                         <span class='kw'>unsafe</span> {
                             <span class='comment'>// signal the thread</span>
-                            (<span class='op'>*</span><span class='ident'>signal</span>).<span class='ident'>data</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>cache</span>.<span class='ident'>into_data</span>());
-                            (<span class='op'>*</span><span class='ident'>signal</span>).<span class='ident'>ready</span>.<span class='ident'>store</span>(<span class='bool-val'>true</span>, <span class='ident'>Relaxed</span>);
-                            (<span class='op'>*</span><span class='ident'>signal</span>).<span class='ident'>thread</span>.<span class='ident'>unpark</span>();
+                            (<span class='kw-2'>*</span><span class='ident'>signal</span>).<span class='ident'>data</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>cache</span>.<span class='ident'>into_data</span>());
+                            (<span class='kw-2'>*</span><span class='ident'>signal</span>).<span class='ident'>ready</span>.<span class='ident'>store</span>(<span class='bool-val'>true</span>, <span class='ident'>Relaxed</span>);
+                            (<span class='kw-2'>*</span><span class='ident'>signal</span>).<span class='ident'>thread</span>.<span class='ident'>unpark</span>();
                             <span class='ident'>guard</span>.<span class='ident'>unlinked</span>(<span class='ident'>head</span>);
                             <span class='kw'>return</span>;
                         }
@@ -869,7 +870,7 @@
     <span class='kw'>const</span> <span class='ident'>CONC_COUNT</span>: <span class='ident'>i64</span> <span class='op'>=</span> <span class='number'>1000000</span>;
 
     <span class='kw'>use</span> <span class='ident'>scope</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>push_try_pop_1</span>() {

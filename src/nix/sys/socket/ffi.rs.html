@@ -9,6 +9,7 @@
 
     <title>ffi.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
     
@@ -125,11 +126,11 @@
 <span class='comment'>// actual mutability of data pointed to by this structure.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>msghdr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='kw'>pub</span> <span class='ident'>msg_name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+    <span class='kw'>pub</span> <span class='ident'>msg_name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
     <span class='kw'>pub</span> <span class='ident'>msg_namelen</span>: <span class='ident'>socklen_t</span>,
-    <span class='kw'>pub</span> <span class='ident'>msg_iov</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>IoVec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>msg_iov</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>IoVec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>,
     <span class='kw'>pub</span> <span class='ident'>msg_iovlen</span>: <span class='ident'>size_t</span>,
-    <span class='kw'>pub</span> <span class='ident'>msg_control</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
+    <span class='kw'>pub</span> <span class='ident'>msg_control</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>,
     <span class='kw'>pub</span> <span class='ident'>msg_controllen</span>: <span class='ident'>size_t</span>,
     <span class='kw'>pub</span> <span class='ident'>msg_flags</span>: <span class='ident'>c_int</span>,
 }
@@ -150,18 +151,18 @@
         <span class='ident'>sockfd</span>: <span class='ident'>c_int</span>,
         <span class='ident'>level</span>: <span class='ident'>c_int</span>,
         <span class='ident'>optname</span>: <span class='ident'>c_int</span>,
-        <span class='ident'>optval</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
-        <span class='ident'>optlen</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>socklen_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='ident'>optval</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
+        <span class='ident'>optlen</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>socklen_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>socketpair</span>(
         <span class='ident'>domain</span>:     <span class='ident'>c_int</span>,
         <span class='ident'>typ</span>:        <span class='ident'>c_int</span>,
         <span class='ident'>protocol</span>:   <span class='ident'>c_int</span>,
-        <span class='ident'>sv</span>:         <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>
+        <span class='ident'>sv</span>:         <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>
     ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sendmsg</span>(<span class='ident'>sockfd</span>: <span class='ident'>c_int</span>, <span class='ident'>msg</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>msghdr</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>ssize_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>recvmsg</span>(<span class='ident'>sockfd</span>: <span class='ident'>c_int</span>, <span class='ident'>msg</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>msghdr</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>ssize_t</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sendmsg</span>(<span class='ident'>sockfd</span>: <span class='ident'>c_int</span>, <span class='ident'>msg</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>msghdr</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>ssize_t</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>recvmsg</span>(<span class='ident'>sockfd</span>: <span class='ident'>c_int</span>, <span class='ident'>msg</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>msghdr</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>ssize_t</span>;
 }
 </pre>
 </section>

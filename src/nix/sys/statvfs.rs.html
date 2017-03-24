@@ -9,6 +9,7 @@
 
     <title>statvfs.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -358,8 +359,8 @@
     <span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>statvfs</span>::<span class='ident'>vfs</span>;
 
     <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>statvfs</span>(<span class='ident'>path</span>: <span class='op'>*</span> <span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>buf</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>vfs</span>::<span class='ident'>Statvfs</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fstatvfs</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>buf</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>vfs</span>::<span class='ident'>Statvfs</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>statvfs</span>(<span class='ident'>path</span>: <span class='op'>*</span> <span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>vfs</span>::<span class='ident'>Statvfs</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fstatvfs</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>vfs</span>::<span class='ident'>Statvfs</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
     }
 }
 
@@ -386,7 +387,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::<span class='ident'>File</span>;
-    <span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>statvfs</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>statvfs</span>::<span class='kw-2'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>statvfs_call</span>() {

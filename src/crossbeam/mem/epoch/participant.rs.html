@@ -9,6 +9,7 @@
 
     <title>participant.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../../main.css">
     
@@ -245,7 +246,7 @@
         <span class='kw'>let</span> <span class='ident'>global_epoch</span> <span class='op'>=</span> <span class='ident'>global</span>::<span class='ident'>get</span>().<span class='ident'>epoch</span>.<span class='ident'>load</span>(<span class='ident'>Relaxed</span>);
         <span class='kw'>if</span> <span class='ident'>global_epoch</span> <span class='op'>!=</span> <span class='self'>self</span>.<span class='ident'>epoch</span>.<span class='ident'>load</span>(<span class='ident'>Relaxed</span>) {
             <span class='self'>self</span>.<span class='ident'>epoch</span>.<span class='ident'>store</span>(<span class='ident'>global_epoch</span>, <span class='ident'>Relaxed</span>);
-            <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>collect</span>(); }
+            <span class='kw'>unsafe</span> { (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>collect</span>(); }
         }
 
         <span class='bool-val'>true</span>
@@ -260,8 +261,8 @@
     }
 
     <span class='doccomment'>/// Begin the reclamation process for a piece of data.</span>
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>reclaim</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) {
-        (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>insert</span>(<span class='ident'>data</span>);
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>reclaim</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>data</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>) {
+        (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>insert</span>(<span class='ident'>data</span>);
     }
 
     <span class='doccomment'>/// Attempt to collect garbage by moving the global epoch forward.</span>
@@ -283,7 +284,7 @@
         }
 
         <span class='kw'>unsafe</span> {
-            (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>collect</span>();
+            (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>collect</span>();
             <span class='ident'>global</span>::<span class='ident'>get</span>().<span class='ident'>garbage</span>[<span class='ident'>new_epoch</span>.<span class='ident'>wrapping_add</span>(<span class='number'>1</span>) <span class='op'>%</span> <span class='number'>3</span>].<span class='ident'>collect</span>();
         }
         <span class='self'>self</span>.<span class='ident'>epoch</span>.<span class='ident'>store</span>(<span class='ident'>new_epoch</span>, <span class='ident'>Release</span>);
@@ -294,7 +295,7 @@
     <span class='doccomment'>/// Move the current thread-local garbage into the global garbage bags.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>migrate_garbage</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
         <span class='kw'>let</span> <span class='ident'>cur_epoch</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>epoch</span>.<span class='ident'>load</span>(<span class='ident'>Relaxed</span>);
-        <span class='kw'>let</span> <span class='ident'>local</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>(), <span class='ident'>garbage</span>::<span class='ident'>Local</span>::<span class='ident'>new</span>()) };
+        <span class='kw'>let</span> <span class='ident'>local</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>(), <span class='ident'>garbage</span>::<span class='ident'>Local</span>::<span class='ident'>new</span>()) };
         <span class='ident'>global</span>::<span class='ident'>get</span>().<span class='ident'>garbage</span>[<span class='ident'>cur_epoch</span>.<span class='ident'>wrapping_sub</span>(<span class='number'>1</span>) <span class='op'>%</span> <span class='number'>3</span>].<span class='ident'>insert</span>(<span class='ident'>local</span>.<span class='ident'>old</span>);
         <span class='ident'>global</span>::<span class='ident'>get</span>().<span class='ident'>garbage</span>[<span class='ident'>cur_epoch</span> <span class='op'>%</span> <span class='number'>3</span>].<span class='ident'>insert</span>(<span class='ident'>local</span>.<span class='ident'>cur</span>);
         <span class='ident'>global</span>::<span class='ident'>get</span>().<span class='ident'>garbage</span>[<span class='ident'>global</span>::<span class='ident'>get</span>().<span class='ident'>epoch</span>.<span class='ident'>load</span>(<span class='ident'>Relaxed</span>) <span class='op'>%</span> <span class='number'>3</span>].<span class='ident'>insert</span>(<span class='ident'>local</span>.<span class='ident'>new</span>);
@@ -302,7 +303,7 @@
 
     <span class='doccomment'>/// How much garbage is this participant currently storing?</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>garbage_size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>size</span>() }
+        <span class='kw'>unsafe</span> { (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>garbage</span>.<span class='ident'>get</span>()).<span class='ident'>size</span>() }
     }
     <span class='doccomment'>/// Is this participant past its local GC threshhold?</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>should_gc</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {

@@ -9,6 +9,7 @@
 
     <title>ring.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -420,7 +421,7 @@
 
         <span class='comment'>// Adjust the mark to account for bytes written.</span>
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Mark</span>::<span class='ident'>At</span> { <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>len</span>, .. } <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>mark</span> {
-            <span class='op'>*</span><span class='ident'>len</span> <span class='op'>+=</span> <span class='ident'>cnt</span>;
+            <span class='kw-2'>*</span><span class='ident'>len</span> <span class='op'>+=</span> <span class='ident'>cnt</span>;
         }
 
         <span class='comment'>// Clear the mark if we&#39;ve written past it.</span>
@@ -445,11 +446,11 @@
             <span class='kw'>let</span> <span class='ident'>to</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>len</span>;
 
             <span class='kw'>if</span> <span class='ident'>to</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>cap</span> {
-                <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>ret</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>(), <span class='ident'>to</span> <span class='op'>%</span> <span class='self'>self</span>.<span class='ident'>cap</span>);
+                <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>ret</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>(), <span class='ident'>to</span> <span class='op'>%</span> <span class='self'>self</span>.<span class='ident'>cap</span>);
             }
 
             <span class='ident'>ptr</span>::<span class='ident'>copy</span>(
-                <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>().<span class='ident'>offset</span>(<span class='self'>self</span>.<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>isize</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>().<span class='ident'>offset</span>(<span class='self'>self</span>.<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>isize</span>) <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
                 <span class='ident'>ret</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>().<span class='ident'>offset</span>(<span class='self'>self</span>.<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>isize</span>),
                 <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>len</span>, <span class='self'>self</span>.<span class='ident'>cap</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>pos</span>));
         }

@@ -9,6 +9,7 @@
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -738,67 +739,67 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>F</span>
 <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>)
+        (<span class='kw-2'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>)
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>handle</span>(<span class='ident'>req</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>handle</span>(<span class='ident'>req</span>)
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>BeforeMiddleware</span> <span class='kw'>for</span> <span class='ident'>F</span>
 <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>)
+        (<span class='kw-2'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>)
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>BeforeMiddleware</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>BeforeMiddleware</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>before</span>(<span class='ident'>req</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>before</span>(<span class='ident'>req</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>BeforeMiddleware</span> <span class='kw'>for</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>BeforeMiddleware</span> {
     <span class='kw'>fn</span> <span class='ident'>before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>before</span>(<span class='ident'>req</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>before</span>(<span class='ident'>req</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>AfterMiddleware</span> <span class='kw'>for</span> <span class='ident'>F</span>
 <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>, <span class='ident'>res</span>)
+        (<span class='kw-2'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>, <span class='ident'>res</span>)
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>AfterMiddleware</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>AfterMiddleware</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>after</span>(<span class='ident'>req</span>, <span class='ident'>res</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>after</span>(<span class='ident'>req</span>, <span class='ident'>res</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
     }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>AfterMiddleware</span> <span class='kw'>for</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>AfterMiddleware</span> {
     <span class='kw'>fn</span> <span class='ident'>after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>after</span>(<span class='ident'>req</span>, <span class='ident'>res</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>after</span>(<span class='ident'>req</span>, <span class='ident'>res</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
     }
 }
 

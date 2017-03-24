@@ -9,6 +9,7 @@
 
     <title>unistd.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -489,7 +490,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::<span class='ident'>RawFd</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>linux</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>linux</span>::<span class='kw-2'>*</span>;
 
 <span class='kw'>mod</span> <span class='ident'>ffi</span> {
     <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>c_int</span>, <span class='ident'>size_t</span>};
@@ -504,25 +505,25 @@
 
         <span class='comment'>// change working directory</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man2/chdir.2.html</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>chdir</span>(<span class='ident'>path</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>chdir</span>(<span class='ident'>path</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// Execute PATH with arguments ARGV and environment from `environ&#39;.</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man3/execv.3.html</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execv</span>(<span class='ident'>path</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execv</span>(<span class='ident'>path</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// execute program</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man2/execve.2.html</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execve</span>(<span class='ident'>path</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>envp</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execve</span>(<span class='ident'>path</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>envp</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// Execute FILE, searching in the `PATH&#39; environment variable if it contains</span>
         <span class='comment'>// no slashes, with arguments ARGV and environment from `environ&#39;.</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man3/execvp.3.html</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execvp</span>(<span class='ident'>filename</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execvp</span>(<span class='ident'>filename</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man3/exec.3.html</span>
         <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
         <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;execvpe&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execvpe</span>(<span class='ident'>filename</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>envp</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>execvpe</span>(<span class='ident'>filename</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>argv</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>envp</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// run the current process in the background</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man3/daemon.3.html</span>
@@ -530,15 +531,15 @@
 
         <span class='comment'>// sets the hostname to the value given</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man2/gethostname.2.html</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gethostname</span>(<span class='ident'>name</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gethostname</span>(<span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// gets the hostname</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man2/sethostname.2.html</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sethostname</span>(<span class='ident'>name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sethostname</span>(<span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// change root directory</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man2/chroot.2.html</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>chroot</span>(<span class='ident'>path</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>chroot</span>(<span class='ident'>path</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
         <span class='comment'>// synchronize a file&#39;s in-core state with storage device</span>
         <span class='comment'>// doc: http://man7.org/linux/man-pages/man2/fsync.2.html</span>
@@ -555,14 +556,14 @@
 
 <span class='kw'>impl</span> <span class='ident'>Fork</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_child</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Fork</span>::<span class='ident'>Child</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
             _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>
         }
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_parent</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Fork</span>::<span class='ident'>Parent</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
             _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>
         }
@@ -647,11 +648,11 @@
     <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>).<span class='ident'>map</span>(<span class='ident'>drop</span>)
 }
 
-<span class='kw'>fn</span> <span class='ident'>to_exec_array</span>(<span class='ident'>args</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>CString</span>]) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>to_exec_array</span>(<span class='ident'>args</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>CString</span>]) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
     <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>args_p</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>args</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>collect</span>();
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>args_p</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>args</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>collect</span>();
     <span class='ident'>args_p</span>.<span class='ident'>push</span>(<span class='ident'>ptr</span>::<span class='ident'>null</span>());
     <span class='ident'>args_p</span>
 }
@@ -696,7 +697,7 @@
 }
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sethostname</span>(<span class='ident'>name</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
+    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
     <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>;
 
     <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>sethostname</span>(<span class='ident'>ptr</span>, <span class='ident'>len</span>) };
@@ -704,7 +705,7 @@
 }
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gethostname</span>(<span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>;
+    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>;
     <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>;
 
     <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>gethostname</span>(<span class='ident'>ptr</span>, <span class='ident'>len</span>) };
@@ -717,13 +718,13 @@
 }
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>read</span>(<span class='ident'>fd</span>, <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>) };
+    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>read</span>(<span class='ident'>fd</span>, <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>) };
 
     <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
 }
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>write</span>(<span class='ident'>fd</span>, <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>, <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>) };
+    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>write</span>(<span class='ident'>fd</span>, <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_void</span>, <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>) };
 
     <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
 }
@@ -900,10 +901,10 @@
         <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
         <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>args_p</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>args</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>collect</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>args_p</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>args</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>collect</span>();
         <span class='ident'>args_p</span>.<span class='ident'>push</span>(<span class='ident'>ptr</span>::<span class='ident'>null</span>());
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>env_p</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>env</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>collect</span>();
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>env_p</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>env</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>collect</span>();
         <span class='ident'>env_p</span>.<span class='ident'>push</span>(<span class='ident'>ptr</span>::<span class='ident'>null</span>());
 
         <span class='kw'>unsafe</span> {
