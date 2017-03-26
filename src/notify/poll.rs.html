@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/notify-4.0.0/src/poll.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/notify-4.0.1/src/poll.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>poll.rs.html -- source</title>
@@ -326,7 +326,6 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
-<span id="284">284</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Generic Watcher implementation based on polling</span>
 <span class='doccomment'>//!</span>
@@ -341,16 +340,15 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>RwLock</span>, <span class='ident'>Mutex</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::{<span class='ident'>Duration</span>, <span class='ident'>Instant</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Error</span>, <span class='ident'>RawEvent</span>, <span class='ident'>DebouncedEvent</span>, <span class='ident'>op</span>, <span class='prelude-ty'>Result</span>, <span class='ident'>Watcher</span>, <span class='ident'>RecursiveMode</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>debounce</span>::{<span class='ident'>Debounce</span>, <span class='ident'>EventTx</span>};
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>walkdir</span>;
 
 <span class='kw'>struct</span> <span class='ident'>PathData</span> {
     <span class='ident'>mtime</span>: <span class='ident'>u64</span>,
-    <span class='ident'>last_check</span>: <span class='ident'>f64</span>,
+    <span class='ident'>last_check</span>: <span class='ident'>Instant</span>,
 }
 
 <span class='kw'>struct</span> <span class='ident'>WatchData</span> {
@@ -394,7 +392,7 @@
                 }
 
                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='kw-2'>mut</span> <span class='ident'>watches</span>) <span class='op'>=</span> <span class='ident'>watches</span>.<span class='ident'>lock</span>() {
-                    <span class='kw'>let</span> <span class='ident'>current_time</span> <span class='op'>=</span> <span class='ident'>time</span>::<span class='ident'>precise_time_s</span>();
+                    <span class='kw'>let</span> <span class='ident'>current_time</span> <span class='op'>=</span> <span class='ident'>Instant</span>::<span class='ident'>now</span>();
 
                     <span class='kw'>for</span> (<span class='ident'>watch</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>WatchData</span> { <span class='ident'>is_recursive</span>, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>paths</span> }) <span class='kw'>in</span>
                         <span class='ident'>watches</span>.<span class='ident'>iter_mut</span>() {
@@ -525,7 +523,7 @@
 
     <span class='kw'>fn</span> <span class='ident'>watch</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>, <span class='ident'>recursive_mode</span>: <span class='ident'>RecursiveMode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='kw-2'>mut</span> <span class='ident'>watches</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>watches</span>.<span class='ident'>lock</span>() {
-            <span class='kw'>let</span> <span class='ident'>current_time</span> <span class='op'>=</span> <span class='ident'>time</span>::<span class='ident'>precise_time_s</span>();
+            <span class='kw'>let</span> <span class='ident'>current_time</span> <span class='op'>=</span> <span class='ident'>Instant</span>::<span class='ident'>now</span>();
 
             <span class='kw'>let</span> <span class='ident'>watch</span> <span class='op'>=</span> <span class='ident'>path</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_owned</span>();
 

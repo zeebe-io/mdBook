@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/lazy_static-0.2.4/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/lazy_static-0.2.5/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -250,6 +250,9 @@
 <span id="205">205</span>
 <span id="206">206</span>
 <span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/*!
 A macro for declaring lazily evaluated statics.
@@ -283,7 +286,7 @@ lazy_static! {
 # }
 ```
 
-# Semantic
+# Semantics
 
 For a given `static ref NAME: TYPE = EXPR;`, the macro generates a unique type that
 implements `Deref&lt;TYPE&gt;` and stores it in a static with name `NAME`. (Attributes end up
@@ -293,8 +296,11 @@ On first deref, `EXPR` gets evaluated and stored internally, such that all furth
 can return a reference to the same object. Note that this can lead to deadlocks
 if you have multiple lazy statics that depend on each other in their initialization.
 
-Like regular `static mut`s, this macro only works for types that fulfill the `Sync`
-trait.
+Apart from the lazy initialization, the resulting &quot;static ref&quot; variables
+have generally the same properties as regular &quot;static&quot; variables:
+
+- Any type in them needs to fulfill the `Sync` trait.
+- If the type has a destructor, then it will not run when the process exits.
 
 # Example
 
