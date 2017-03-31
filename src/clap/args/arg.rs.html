@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.22.1/src/args/arg.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.22.2/src/args/arg.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>arg.rs.html -- source</title>
@@ -3412,6 +3412,12 @@
 <span id="3367">3367</span>
 <span id="3368">3368</span>
 <span id="3369">3369</span>
+<span id="3370">3370</span>
+<span id="3371">3371</span>
+<span id="3372">3372</span>
+<span id="3373">3373</span>
+<span id="3374">3374</span>
+<span id="3375">3375</span>
 </pre><pre class='rust '>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;yaml&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
@@ -5855,18 +5861,24 @@
         <span class='self'>self</span>
     }
 
-    <span class='doccomment'>///Works identically to Validator but is intended to be used with non UTF-8 formatted strings.</span>
+    <span class='doccomment'>/// Works identically to Validator but is intended to be used with values that could </span>
+    <span class='doccomment'>/// contain non UTF-8 formatted strings.</span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>/// ```rust</span>
+    <span class='doccomment'>///</span>
+    <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>not</span>(<span class='ident'>unix</span>), <span class='ident'>doc</span><span class='op'>=</span><span class='string'>&quot; ```ignore&quot;</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>cfg_attr</span>(    <span class='ident'>unix</span> , <span class='ident'>doc</span><span class='op'>=</span><span class='string'>&quot; ```rust&quot;</span>)]</span>
     <span class='doccomment'>/// # use clap::{App, Arg};</span>
-    <span class='doccomment'>///fn has_ampersand(v: &amp;OsStr) -&gt; Result&lt;(), String&gt; {</span>
-    <span class='doccomment'>///     if v.contains(&quot;&amp;&quot;) { return Ok(()); }</span>
-    <span class='doccomment'>///     Err(String::from(&quot;The value did not contain the required &amp; sigil&quot;))</span>
+    <span class='doccomment'>/// # use std::ffi::{OsStr, OsString};</span>
+    <span class='doccomment'>/// # use std::os::unix::ffi::OsStrExt;</span>
+    <span class='doccomment'>/// fn has_ampersand(v: &amp;OsStr) -&gt; Result&lt;(), OsString&gt; {</span>
+    <span class='doccomment'>///     if v.as_bytes().iter().any(|b| *b == b&#39;&amp;&#39;) { return Ok(()); }</span>
+    <span class='doccomment'>///     Err(OsString::from(&quot;The value did not contain the required &amp; sigil&quot;))</span>
     <span class='doccomment'>/// }</span>
     <span class='doccomment'>/// let res = App::new(&quot;prog&quot;)</span>
     <span class='doccomment'>///     .arg(Arg::with_name(&quot;file&quot;)</span>
     <span class='doccomment'>///         .index(1)</span>
-    <span class='doccomment'>///         .validator(has_ampersand))</span>
+    <span class='doccomment'>///         .validator_os(has_ampersand))</span>
     <span class='doccomment'>///     .get_matches_from_safe(vec![</span>
     <span class='doccomment'>///         &quot;prog&quot;, &quot;Fish &amp; chips&quot;</span>
     <span class='doccomment'>///     ]);</span>

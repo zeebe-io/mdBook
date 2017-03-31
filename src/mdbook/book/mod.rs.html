@@ -515,6 +515,8 @@
 <span id="470">470</span>
 <span id="471">471</span>
 <span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
 </pre><pre class='rust '>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>bookitem</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>bookconfig</span>;
@@ -554,6 +556,20 @@
 
 <span class='kw'>impl</span> <span class='ident'>MDBook</span> {
     <span class='doccomment'>/// Create a new `MDBook` struct with root directory `root`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Examples</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// # extern crate mdbook;</span>
+    <span class='doccomment'>/// # use mdbook::MDBook;</span>
+    <span class='doccomment'>/// # use std::path::Path;</span>
+    <span class='doccomment'>/// # fn main() {</span>
+    <span class='doccomment'>/// let book = MDBook::new(Path::new(&quot;root_dir&quot;));</span>
+    <span class='doccomment'>/// # }</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// In this example, `root_dir` will be the root directory of our book and is specified in function</span>
+    <span class='doccomment'>/// of the current working directory by using a relative path instead of an absolute path.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Default directory paths:</span>
     <span class='doccomment'>///</span>
@@ -804,18 +820,6 @@
     <span class='doccomment'>/// Parses the `book.json` file (if it exists) to extract the configuration parameters.</span>
     <span class='doccomment'>/// The `book.json` file should be in the root directory of the book.</span>
     <span class='doccomment'>/// The root directory is the one specified when creating a new `MDBook`</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```no_run</span>
-    <span class='doccomment'>/// # extern crate mdbook;</span>
-    <span class='doccomment'>/// # use mdbook::MDBook;</span>
-    <span class='doccomment'>/// # use std::path::Path;</span>
-    <span class='doccomment'>/// # fn main() {</span>
-    <span class='doccomment'>/// let mut book = MDBook::new(Path::new(&quot;root_dir&quot;));</span>
-    <span class='doccomment'>/// # }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// In this example, `root_dir` will be the root directory of our book and is specified in function</span>
-    <span class='doccomment'>/// of the current working directory by using a relative path instead of an absolute path.</span>
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read_config</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
 
