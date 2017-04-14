@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.9/src/de.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.10/src/de.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>de.rs.html -- source</title>
@@ -1296,7 +1296,7 @@
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='kw'>if</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>parse_whitespace</span>()) { <span class='comment'>// true if eof</span>
-            <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingValue</span>));
+            <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EofWhileParsingValue</span>));
         }
 
         <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>peek_or_null</span>()) {
@@ -1663,7 +1663,7 @@
                 <span class='prelude-val'>Ok</span>(())
             }
             <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>ExpectedColon</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingObject</span>)),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EofWhileParsingObject</span>)),
         }
     }
 
@@ -1673,7 +1673,7 @@
         <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>next_char</span>()) {
             <span class='prelude-val'>Some</span>(<span class='string'>b&#39;]&#39;</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(()),
             <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>TrailingCharacters</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingList</span>)),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EofWhileParsingList</span>)),
         }
     }
 
@@ -1683,7 +1683,7 @@
         <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>next_char</span>()) {
             <span class='prelude-val'>Some</span>(<span class='string'>b&#39;}&#39;</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(()),
             <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>TrailingCharacters</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingObject</span>)),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EofWhileParsingObject</span>)),
         }
     }
 }
@@ -1902,7 +1902,7 @@
                 }
             }
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>de</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingList</span>));
+                <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>de</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EofWhileParsingList</span>));
             }
         }
 
@@ -1951,14 +1951,14 @@
             }
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
                 <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>de</span>
-                    .<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingObject</span>));
+                    .<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EofWhileParsingObject</span>));
             }
         }
 
         <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>de</span>.<span class='ident'>peek</span>()) {
             <span class='prelude-val'>Some</span>(<span class='string'>b&#39;&quot;&#39;</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>seed</span>.<span class='ident'>deserialize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>de</span>)))),
             <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>de</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>KeyMustBeAString</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>de</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingValue</span>)),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='self'>self</span>.<span class='ident'>de</span>.<span class='ident'>peek_error</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EofWhileParsingValue</span>)),
         }
     }
 

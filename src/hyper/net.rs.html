@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.5/src/net.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.8/src/net.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>net.rs.html -- source</title>
@@ -681,16 +681,6 @@
 <span id="636">636</span>
 <span id="637">637</span>
 <span id="638">638</span>
-<span id="639">639</span>
-<span id="640">640</span>
-<span id="641">641</span>
-<span id="642">642</span>
-<span id="643">643</span>
-<span id="644">644</span>
-<span id="645">645</span>
-<span id="646">646</span>
-<span id="647">647</span>
-<span id="648">648</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A collection of traits abstracting over Listeners and Streams.</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>any</span>::{<span class='ident'>Any</span>, <span class='ident'>TypeId</span>};
@@ -698,6 +688,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='self'>self</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>Read</span>, <span class='ident'>Write</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>SocketAddr</span>, <span class='ident'>ToSocketAddrs</span>, <span class='ident'>TcpStream</span>, <span class='ident'>TcpListener</span>, <span class='ident'>Shutdown</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
 
@@ -913,29 +904,18 @@
 }
 
 <span class='doccomment'>/// A `NetworkListener` for `HttpStream`s.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>HttpListener</span> {
-    <span class='ident'>listener</span>: <span class='ident'>TcpListener</span>,
+    <span class='ident'>listener</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>TcpListener</span><span class='op'>&gt;</span>,
 
     <span class='ident'>read_timeout</span> : <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;</span>,
     <span class='ident'>write_timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>HttpListener</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>HttpListener</span> {
-        <span class='ident'>HttpListener</span> {
-            <span class='ident'>listener</span>: <span class='self'>self</span>.<span class='ident'>listener</span>.<span class='ident'>try_clone</span>().<span class='ident'>unwrap</span>(),
-
-            <span class='ident'>read_timeout</span> : <span class='self'>self</span>.<span class='ident'>read_timeout</span>.<span class='ident'>clone</span>(),
-            <span class='ident'>write_timeout</span>: <span class='self'>self</span>.<span class='ident'>write_timeout</span>.<span class='ident'>clone</span>(),
-        }
-    }
-}
-
 <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>TcpListener</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>HttpListener</span> {
     <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>listener</span>: <span class='ident'>TcpListener</span>) <span class='op'>-&gt;</span> <span class='ident'>HttpListener</span> {
         <span class='ident'>HttpListener</span> {
-            <span class='ident'>listener</span>: <span class='ident'>listener</span>,
+            <span class='ident'>listener</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>listener</span>),
 
             <span class='ident'>read_timeout</span> : <span class='prelude-val'>None</span>,
             <span class='ident'>write_timeout</span>: <span class='prelude-val'>None</span>,

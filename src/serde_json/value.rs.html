@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.9/src/value.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.10/src/value.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>value.rs.html -- source</title>
@@ -2279,6 +2279,37 @@
 <span id="2234">2234</span>
 <span id="2235">2235</span>
 <span id="2236">2236</span>
+<span id="2237">2237</span>
+<span id="2238">2238</span>
+<span id="2239">2239</span>
+<span id="2240">2240</span>
+<span id="2241">2241</span>
+<span id="2242">2242</span>
+<span id="2243">2243</span>
+<span id="2244">2244</span>
+<span id="2245">2245</span>
+<span id="2246">2246</span>
+<span id="2247">2247</span>
+<span id="2248">2248</span>
+<span id="2249">2249</span>
+<span id="2250">2250</span>
+<span id="2251">2251</span>
+<span id="2252">2252</span>
+<span id="2253">2253</span>
+<span id="2254">2254</span>
+<span id="2255">2255</span>
+<span id="2256">2256</span>
+<span id="2257">2257</span>
+<span id="2258">2258</span>
+<span id="2259">2259</span>
+<span id="2260">2260</span>
+<span id="2261">2261</span>
+<span id="2262">2262</span>
+<span id="2263">2263</span>
+<span id="2264">2264</span>
+<span id="2265">2265</span>
+<span id="2266">2266</span>
+<span id="2267">2267</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! The Value enum, a loosely typed way of representing any valid JSON value.</span>
 <span class='doccomment'>//!</span>
@@ -3458,12 +3489,43 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Value</span> {
-    <span class='doccomment'>/// Serializes a json value into a string</span>
+    <span class='doccomment'>/// Display a JSON value as a string.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```rust</span>
+    <span class='doccomment'>/// # #[macro_use] extern crate serde_json;</span>
+    <span class='doccomment'>/// # fn main() {</span>
+    <span class='doccomment'>/// let json = json!({ &quot;city&quot;: &quot;London&quot;, &quot;street&quot;: &quot;10 Downing Street&quot; });</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// // Compact format:</span>
+    <span class='doccomment'>/// //</span>
+    <span class='doccomment'>/// // {&quot;city&quot;:&quot;London&quot;,&quot;street&quot;:&quot;10 Downing Street&quot;}</span>
+    <span class='doccomment'>/// let compact = format!(&quot;{}&quot;, json);</span>
+    <span class='doccomment'>/// assert_eq!(compact,</span>
+    <span class='doccomment'>///     &quot;{\&quot;city\&quot;:\&quot;London\&quot;,\&quot;street\&quot;:\&quot;10 Downing Street\&quot;}&quot;);</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// // Pretty format:</span>
+    <span class='doccomment'>/// //</span>
+    <span class='doccomment'>/// // {</span>
+    <span class='doccomment'>/// //   &quot;city&quot;: &quot;London&quot;,</span>
+    <span class='doccomment'>/// //   &quot;street&quot;: &quot;10 Downing Street&quot;</span>
+    <span class='doccomment'>/// // }</span>
+    <span class='doccomment'>/// let pretty = format!(&quot;{:#}&quot;, json);</span>
+    <span class='doccomment'>/// assert_eq!(pretty,</span>
+    <span class='doccomment'>///     &quot;{\n  \&quot;city\&quot;: \&quot;London\&quot;,\n  \&quot;street\&quot;: \&quot;10 Downing Street\&quot;\n}&quot;);</span>
+    <span class='doccomment'>/// # }</span>
+    <span class='doccomment'>/// ```</span>
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+        <span class='kw'>let</span> <span class='ident'>alternate</span> <span class='op'>=</span> <span class='ident'>f</span>.<span class='ident'>alternate</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>wr</span> <span class='op'>=</span> <span class='ident'>WriterFormatter</span> {
             <span class='ident'>inner</span>: <span class='ident'>f</span>,
         };
-        <span class='kw'>super</span>::<span class='ident'>ser</span>::<span class='ident'>to_writer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>wr</span>, <span class='self'>self</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>fmt</span>::<span class='ident'>Error</span>)
+        <span class='kw'>if</span> <span class='ident'>alternate</span> {
+            <span class='comment'>// {:#}</span>
+            <span class='kw'>super</span>::<span class='ident'>ser</span>::<span class='ident'>to_writer_pretty</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>wr</span>, <span class='self'>self</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>fmt</span>::<span class='ident'>Error</span>)
+        } <span class='kw'>else</span> {
+            <span class='comment'>// {}</span>
+            <span class='kw'>super</span>::<span class='ident'>ser</span>::<span class='ident'>to_writer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>wr</span>, <span class='self'>self</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>fmt</span>::<span class='ident'>Error</span>)
+        }
     }
 }
 
