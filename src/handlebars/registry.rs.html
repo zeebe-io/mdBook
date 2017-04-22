@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.2/src/registry.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.3/src/registry.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>registry.rs.html -- source</title>
@@ -509,19 +509,19 @@
 <span class='doccomment'>/// with the equivalent html / xml entities.</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>html_escape</span>(<span class='ident'>data</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
     <span class='ident'>DEFAULT_REPLACE</span>.<span class='ident'>replace_all</span>(<span class='ident'>data</span>, <span class='op'>|</span><span class='ident'>cap</span>: <span class='kw-2'>&amp;</span><span class='ident'>Captures</span><span class='op'>|</span> {
-                       <span class='kw'>match</span> <span class='ident'>cap</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>m</span><span class='op'>|</span> <span class='ident'>m</span>.<span class='ident'>as_str</span>()) {
-                           <span class='prelude-val'>Some</span>(<span class='string'>&quot;&lt;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;lt;&quot;</span>,
-                           <span class='prelude-val'>Some</span>(<span class='string'>&quot;&gt;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;gt;&quot;</span>,
-                           <span class='prelude-val'>Some</span>(<span class='string'>&quot;\&quot;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;quot;&quot;</span>,
-                           <span class='prelude-val'>Some</span>(<span class='string'>&quot;&amp;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;amp;&quot;</span>,
-                           _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>(),
-                       }
-                       .<span class='ident'>to_owned</span>()
-                   })
-                   .<span class='ident'>into_owned</span>()
+            <span class='kw'>match</span> <span class='ident'>cap</span>.<span class='ident'>get</span>(<span class='number'>0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>m</span><span class='op'>|</span> <span class='ident'>m</span>.<span class='ident'>as_str</span>()) {
+                    <span class='prelude-val'>Some</span>(<span class='string'>&quot;&lt;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;lt;&quot;</span>,
+                    <span class='prelude-val'>Some</span>(<span class='string'>&quot;&gt;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;gt;&quot;</span>,
+                    <span class='prelude-val'>Some</span>(<span class='string'>&quot;\&quot;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;quot;&quot;</span>,
+                    <span class='prelude-val'>Some</span>(<span class='string'>&quot;&amp;&quot;</span>) <span class='op'>=&gt;</span> <span class='string'>&quot;&amp;amp;&quot;</span>,
+                    _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>(),
+                }
+                .<span class='ident'>to_owned</span>()
+        })
+        .<span class='ident'>into_owned</span>()
 }
 
-<span class='doccomment'>/// `EscapeFn` that donot change any thing. Useful when using in a non-html</span>
+<span class='doccomment'>/// `EscapeFn` that do not change any thing. Useful when using in a non-html</span>
 <span class='doccomment'>/// environment.</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>no_escape</span>(<span class='ident'>data</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
     <span class='ident'>data</span>.<span class='ident'>to_owned</span>()
@@ -623,8 +623,8 @@
                                      <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>TemplateFileError</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;</span>
     {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>open</span>(<span class='ident'>tpl_path</span>)
-                                .<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>TemplateFileError</span>::<span class='ident'>IOError</span>(<span class='ident'>e</span>, <span class='ident'>name</span>.<span class='ident'>to_owned</span>())));
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file</span> <span class='op'>=</span>
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>open</span>(<span class='ident'>tpl_path</span>).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>TemplateFileError</span>::<span class='ident'>IOError</span>(<span class='ident'>e</span>, <span class='ident'>name</span>.<span class='ident'>to_owned</span>())));
         <span class='self'>self</span>.<span class='ident'>register_template_source</span>(<span class='ident'>name</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>file</span>)
     }
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.2/src/helpers/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.3/src/helpers/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -355,14 +355,14 @@
                                              _: <span class='kw-2'>&amp;</span><span class='ident'>Registry</span>,
                                              <span class='ident'>rc</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>RenderContext</span><span class='op'>|</span>
                                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>RenderError</span><span class='op'>&gt;</span> {
-                                       <span class='kw'>let</span> <span class='ident'>output</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>,
-                                                            <span class='ident'>h</span>.<span class='ident'>hash_get</span>(<span class='string'>&quot;value&quot;</span>)
-                                                             .<span class='ident'>unwrap</span>()
-                                                             .<span class='ident'>value</span>()
-                                                             .<span class='ident'>render</span>());
-                                       <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='ident'>output</span>.<span class='ident'>into_bytes</span>().<span class='ident'>as_ref</span>()));
-                                       <span class='prelude-val'>Ok</span>(())
-                                   }));
+            <span class='kw'>let</span> <span class='ident'>output</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>,
+                                 <span class='ident'>h</span>.<span class='ident'>hash_get</span>(<span class='string'>&quot;value&quot;</span>)
+                                     .<span class='ident'>unwrap</span>()
+                                     .<span class='ident'>value</span>()
+                                     .<span class='ident'>render</span>());
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='ident'>output</span>.<span class='ident'>into_bytes</span>().<span class='ident'>as_ref</span>()));
+            <span class='prelude-val'>Ok</span>(())
+        }));
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
         <span class='comment'>// handlebars should never try to lookup this value because</span>
