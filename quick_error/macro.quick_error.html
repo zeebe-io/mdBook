@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/quick_error/lib.rs.html#262-865' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/quick_error/lib.rs.html#307-982' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>quick_error</span> {
     (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
@@ -56,6 +56,22 @@
     ) <span class='op'>=&gt;</span> { ... };
     (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
         <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
+    ) <span class='op'>=&gt;</span> { ... };
+    (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='ident'>wraps</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>enum_name</span>:<span class='ident'>ident</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
+    ) <span class='op'>=&gt;</span> { ... };
+    (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='ident'>wraps</span> <span class='kw'>pub</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>enum_name</span>:<span class='ident'>ident</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
+    ) <span class='op'>=&gt;</span> { ... };
+    (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+        <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='ident'>wraps</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>enum_name</span>:<span class='ident'>ident</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
+    ) <span class='op'>=&gt;</span> { ... };
+    (   $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+        <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='ident'>wraps</span> <span class='kw'>pub</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>enum_name</span>:<span class='ident'>ident</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>chunks</span>:<span class='ident'>tt</span>)<span class='op'>*</span> }
+    ) <span class='op'>=&gt;</span> { ... };
+    (
+        <span class='ident'>WRAPPER</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>internal</span>:<span class='ident'>ident</span> [ $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>strdef</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>strname</span>:<span class='ident'>ident</span>
+        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
     ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>SORT</span> [<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> $( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>meta</span>:<span class='ident'>meta</span>]</span> )<span class='kw-2'>*</span>]
         <span class='ident'>items</span> [$($( <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>imeta</span>:<span class='ident'>meta</span>]</span> )<span class='op'>*</span>
@@ -168,7 +184,7 @@
     ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>IMPLEMENTATIONS</span>
         <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> {$(
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>imode</span>:<span class='ident'>tt</span> [$( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>:<span class='ident'>ty</span> ),<span class='kw-2'>*</span>] {$( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>funcs</span>:<span class='ident'>tt</span> )<span class='kw-2'>*</span>}
+            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>imode</span>:<span class='ident'>tt</span> [$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>imeta</span>:<span class='ident'>meta</span>]</span>)<span class='kw-2'>*</span>] [$( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>typ</span>:<span class='ident'>ty</span> ),<span class='kw-2'>*</span>] {$( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>funcs</span>:<span class='ident'>tt</span> )<span class='kw-2'>*</span>}
         )<span class='kw-2'>*</span>}
     ) <span class='op'>=&gt;</span> { ... };
     (<span class='ident'>FIND_DISPLAY_IMPL</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>item</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>imode</span>:<span class='ident'>tt</span>
