@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -244,206 +244,206 @@
 <span id="199">199</span>
 <span id="200">200</span>
 <span id="201">201</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::<span class='ident'>Utf8Error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>StdResult</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>StdError</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::{<span class='ident'>From</span>, <span class='ident'>Into</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">Utf8Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">StdResult</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::{<span class="ident">From</span>, <span class="ident">Into</span>};
 
-<span class='kw'>use</span> <span class='ident'>httparse</span>;
-<span class='kw'>use</span> <span class='ident'>mio</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>openssl</span>::<span class='ident'>ssl</span>::<span class='ident'>error</span>::<span class='ident'>SslError</span>;
+<span class="kw">use</span> <span class="ident">httparse</span>;
+<span class="kw">use</span> <span class="ident">mio</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">openssl</span>::<span class="ident">ssl</span>::<span class="ident">error</span>::<span class="ident">SslError</span>;
 
-<span class='kw'>use</span> <span class='ident'>communication</span>::<span class='ident'>Command</span>;
+<span class="kw">use</span> <span class="ident">communication</span>::<span class="ident">Command</span>;
 
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>StdResult</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Error</span><span class='op'>&gt;</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StdResult</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
-<span class='doccomment'>/// The type of an error, which may indicate other kinds of errors as the underlying cause.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Kind</span> {
-    <span class='doccomment'>/// Indicates an internal application error.</span>
-    <span class='doccomment'>/// The WebSocket will automatically attempt to send an Error (1011) close code.</span>
-    <span class='ident'>Internal</span>,
-    <span class='doccomment'>/// Indicates a state where some size limit has been exceeded, such as an inability to accept</span>
-    <span class='doccomment'>/// any more new connections.</span>
-    <span class='doccomment'>/// If a Connection is active, the WebSocket will automatically attempt to send</span>
-    <span class='doccomment'>/// a Size (1009) close code.</span>
-    <span class='ident'>Capacity</span>,
-    <span class='doccomment'>/// Indicates a violation of the WebSocket protocol.</span>
-    <span class='doccomment'>/// The WebSocket will automatically attempt to send a Protocol (1002) close code, or if</span>
-    <span class='doccomment'>/// this error occurs during a handshake, an HTTP 400 reponse will be generated.</span>
-    <span class='ident'>Protocol</span>,
-    <span class='doccomment'>/// Indicates that the WebSocket received data that should be utf8 encoded but was not.</span>
-    <span class='doccomment'>/// The WebSocket will automatically attempt to send a Invalid Frame Payload Data (1007) close</span>
-    <span class='doccomment'>/// code.</span>
-    <span class='ident'>Encoding</span>(<span class='ident'>Utf8Error</span>),
-    <span class='doccomment'>/// Indicates an underlying IO Error.</span>
-    <span class='doccomment'>/// This kind of error will result in a WebSocket Connection disconnecting.</span>
-    <span class='ident'>Io</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>),
-    <span class='doccomment'>/// Indicates a failure to parse an HTTP message.</span>
-    <span class='doccomment'>/// This kind of error should only occur during a WebSocket Handshake, and a HTTP 500 response</span>
-    <span class='doccomment'>/// will be generated.</span>
-    <span class='ident'>Http</span>(<span class='ident'>httparse</span>::<span class='ident'>Error</span>),
-    <span class='doccomment'>/// Indicates a failure to send a signal on the internal EventLoop channel. This means that</span>
-    <span class='doccomment'>/// the WebSocket is overloaded. In order to avoid this error, it is important to set</span>
-    <span class='doccomment'>/// `Settings::max_connections` and `Settings:queue_size` high enough to handle the load.</span>
-    <span class='doccomment'>/// If encountered, retuning from a handler method and waiting for the EventLoop to consume</span>
-    <span class='doccomment'>/// the queue may relieve the situation.</span>
-    <span class='ident'>Queue</span>(<span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>),
-    <span class='doccomment'>/// Indicates a failure to schedule a timeout on the EventLoop.</span>
-    <span class='ident'>Timer</span>(<span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>TimerError</span>),
-    <span class='doccomment'>/// Indicates a failure to perform SSL encryption.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-    <span class='ident'>Ssl</span>(<span class='ident'>SslError</span>),
-    <span class='doccomment'>/// A custom error kind for use by applications. This error kind involves extra overhead</span>
-    <span class='doccomment'>/// because it will allocate the memory on the heap. The WebSocket ignores such errors by</span>
-    <span class='doccomment'>/// default, simply passing them to the Connection Handler.</span>
-    <span class='ident'>Custom</span>(<span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>StdError</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span><span class='op'>&gt;</span>),
+<span class="doccomment">/// The type of an error, which may indicate other kinds of errors as the underlying cause.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Kind</span> {
+    <span class="doccomment">/// Indicates an internal application error.</span>
+    <span class="doccomment">/// The WebSocket will automatically attempt to send an Error (1011) close code.</span>
+    <span class="ident">Internal</span>,
+    <span class="doccomment">/// Indicates a state where some size limit has been exceeded, such as an inability to accept</span>
+    <span class="doccomment">/// any more new connections.</span>
+    <span class="doccomment">/// If a Connection is active, the WebSocket will automatically attempt to send</span>
+    <span class="doccomment">/// a Size (1009) close code.</span>
+    <span class="ident">Capacity</span>,
+    <span class="doccomment">/// Indicates a violation of the WebSocket protocol.</span>
+    <span class="doccomment">/// The WebSocket will automatically attempt to send a Protocol (1002) close code, or if</span>
+    <span class="doccomment">/// this error occurs during a handshake, an HTTP 400 reponse will be generated.</span>
+    <span class="ident">Protocol</span>,
+    <span class="doccomment">/// Indicates that the WebSocket received data that should be utf8 encoded but was not.</span>
+    <span class="doccomment">/// The WebSocket will automatically attempt to send a Invalid Frame Payload Data (1007) close</span>
+    <span class="doccomment">/// code.</span>
+    <span class="ident">Encoding</span>(<span class="ident">Utf8Error</span>),
+    <span class="doccomment">/// Indicates an underlying IO Error.</span>
+    <span class="doccomment">/// This kind of error will result in a WebSocket Connection disconnecting.</span>
+    <span class="ident">Io</span>(<span class="ident">io</span>::<span class="ident">Error</span>),
+    <span class="doccomment">/// Indicates a failure to parse an HTTP message.</span>
+    <span class="doccomment">/// This kind of error should only occur during a WebSocket Handshake, and a HTTP 500 response</span>
+    <span class="doccomment">/// will be generated.</span>
+    <span class="ident">Http</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>),
+    <span class="doccomment">/// Indicates a failure to send a signal on the internal EventLoop channel. This means that</span>
+    <span class="doccomment">/// the WebSocket is overloaded. In order to avoid this error, it is important to set</span>
+    <span class="doccomment">/// `Settings::max_connections` and `Settings:queue_size` high enough to handle the load.</span>
+    <span class="doccomment">/// If encountered, retuning from a handler method and waiting for the EventLoop to consume</span>
+    <span class="doccomment">/// the queue may relieve the situation.</span>
+    <span class="ident">Queue</span>(<span class="ident">mio</span>::<span class="ident">channel</span>::<span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">Command</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// Indicates a failure to schedule a timeout on the EventLoop.</span>
+    <span class="ident">Timer</span>(<span class="ident">mio</span>::<span class="ident">timer</span>::<span class="ident">TimerError</span>),
+    <span class="doccomment">/// Indicates a failure to perform SSL encryption.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+    <span class="ident">Ssl</span>(<span class="ident">SslError</span>),
+    <span class="doccomment">/// A custom error kind for use by applications. This error kind involves extra overhead</span>
+    <span class="doccomment">/// because it will allocate the memory on the heap. The WebSocket ignores such errors by</span>
+    <span class="doccomment">/// default, simply passing them to the Connection Handler.</span>
+    <span class="ident">Custom</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">StdError</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>),
 }
 
-<span class='doccomment'>/// A struct indicating the kind of error that has occured and any precise details of that error.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Error</span> {
-    <span class='kw'>pub</span> <span class='ident'>kind</span>: <span class='ident'>Kind</span>,
-    <span class='kw'>pub</span> <span class='ident'>details</span>: <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span>, <span class='ident'>str</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// A struct indicating the kind of error that has occured and any precise details of that error.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
+    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">Kind</span>,
+    <span class="kw">pub</span> <span class="ident">details</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> {
+<span class="kw">impl</span> <span class="ident">Error</span> {
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='ident'>kind</span>: <span class='ident'>Kind</span>, <span class='ident'>details</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span>, <span class='ident'>str</span><span class='op'>&gt;&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">kind</span>: <span class="ident">Kind</span>, <span class="ident">details</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="ident">Error</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>
     {
-        <span class='ident'>Error</span> {
-            <span class='ident'>kind</span>: <span class='ident'>kind</span>,
-            <span class='ident'>details</span>: <span class='ident'>details</span>.<span class='ident'>into</span>(),
+        <span class="ident">Error</span> {
+            <span class="ident">kind</span>: <span class="ident">kind</span>,
+            <span class="ident">details</span>: <span class="ident">details</span>.<span class="ident">into</span>(),
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_box</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>StdError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>kind</span> {
-            <span class='ident'>Kind</span>::<span class='ident'>Custom</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>err</span>,
-            _ <span class='op'>=&gt;</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='self'>self</span>),
-        }
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>details</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> {
-            <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;WS Error &lt;{:?}&gt;: {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>kind</span>, <span class='self'>self</span>.<span class='ident'>details</span>)
-        } <span class='kw'>else</span> {
-            <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;WS Error &lt;{:?}&gt;&quot;</span>, <span class='self'>self</span>.<span class='ident'>kind</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_box</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">StdError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Custom</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">err</span>,
+            _ <span class="op">=&gt;</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="self">self</span>),
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>details</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>0</span> {
-            <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>description</span>(), <span class='self'>self</span>.<span class='ident'>details</span>)
-        } <span class='kw'>else</span> {
-            <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>description</span>())
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">details</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;WS Error &lt;{:?}&gt;: {}&quot;</span>, <span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">details</span>)
+        } <span class="kw">else</span> {
+            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;WS Error &lt;{:?}&gt;&quot;</span>, <span class="self">self</span>.<span class="ident">kind</span>)
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>StdError</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>kind</span> {
-            <span class='ident'>Kind</span>::<span class='ident'>Internal</span>          <span class='op'>=&gt;</span> <span class='string'>&quot;Internal Application Error&quot;</span>,
-            <span class='ident'>Kind</span>::<span class='ident'>Capacity</span>          <span class='op'>=&gt;</span> <span class='string'>&quot;WebSocket at Capacity&quot;</span>,
-            <span class='ident'>Kind</span>::<span class='ident'>Protocol</span>          <span class='op'>=&gt;</span> <span class='string'>&quot;WebSocket Protocol Error&quot;</span>,
-            <span class='ident'>Kind</span>::<span class='ident'>Encoding</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>err</span>.<span class='ident'>description</span>(),
-            <span class='ident'>Kind</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>)       <span class='op'>=&gt;</span> <span class='ident'>err</span>.<span class='ident'>description</span>(),
-            <span class='ident'>Kind</span>::<span class='ident'>Http</span>(_)          <span class='op'>=&gt;</span> <span class='string'>&quot;Unable to parse HTTP&quot;</span>,
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Kind</span>::<span class='ident'>Ssl</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>)      <span class='op'>=&gt;</span> <span class='ident'>err</span>.<span class='ident'>description</span>(),
-            <span class='ident'>Kind</span>::<span class='ident'>Queue</span>(_)          <span class='op'>=&gt;</span> <span class='string'>&quot;Unable to send signal on event loop&quot;</span>,
-            <span class='ident'>Kind</span>::<span class='ident'>Timer</span>(_)          <span class='op'>=&gt;</span> <span class='string'>&quot;Unable to schedule timeout on event loop&quot;</span>,
-            <span class='ident'>Kind</span>::<span class='ident'>Custom</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>)   <span class='op'>=&gt;</span> <span class='ident'>err</span>.<span class='ident'>description</span>(),
-        }
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>StdError</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>kind</span> {
-            <span class='ident'>Kind</span>::<span class='ident'>Encoding</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>err</span>),
-            <span class='ident'>Kind</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>)       <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>err</span>),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Kind</span>::<span class='ident'>Ssl</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>)      <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>err</span>),
-            <span class='ident'>Kind</span>::<span class='ident'>Custom</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>)   <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>err</span>.<span class='ident'>as_ref</span>()),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">details</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}: {}&quot;</span>, <span class="self">self</span>.<span class="ident">description</span>(), <span class="self">self</span>.<span class="ident">details</span>)
+        } <span class="kw">else</span> {
+            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">description</span>())
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>io</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Io</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
+<span class="kw">impl</span> <span class="ident">StdError</span> <span class="kw">for</span> <span class="ident">Error</span> {
+
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Internal</span>          <span class="op">=&gt;</span> <span class="string">&quot;Internal Application Error&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Capacity</span>          <span class="op">=&gt;</span> <span class="string">&quot;WebSocket at Capacity&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Protocol</span>          <span class="op">=&gt;</span> <span class="string">&quot;WebSocket Protocol Error&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Encoding</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">description</span>(),
+            <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">err</span>)       <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">description</span>(),
+            <span class="ident">Kind</span>::<span class="ident">Http</span>(_)          <span class="op">=&gt;</span> <span class="string">&quot;Unable to parse HTTP&quot;</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Kind</span>::<span class="ident">Ssl</span>(<span class="kw-2">ref</span> <span class="ident">err</span>)      <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">description</span>(),
+            <span class="ident">Kind</span>::<span class="ident">Queue</span>(_)          <span class="op">=&gt;</span> <span class="string">&quot;Unable to send signal on event loop&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Timer</span>(_)          <span class="op">=&gt;</span> <span class="string">&quot;Unable to schedule timeout on event loop&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Custom</span>(<span class="kw-2">ref</span> <span class="ident">err</span>)   <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">description</span>(),
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">StdError</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Encoding</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>),
+            <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">err</span>)       <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Kind</span>::<span class="ident">Ssl</span>(<span class="kw-2">ref</span> <span class="ident">err</span>)      <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>),
+            <span class="ident">Kind</span>::<span class="ident">Custom</span>(<span class="kw-2">ref</span> <span class="ident">err</span>)   <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>.<span class="ident">as_ref</span>()),
+            _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>httparse</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">io</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">err</span>), <span class="string">&quot;&quot;</span>)
+    }
+}
 
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>httparse</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='kw'>let</span> <span class='ident'>details</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>err</span> {
-            <span class='ident'>httparse</span>::<span class='ident'>Error</span>::<span class='ident'>HeaderName</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Invalid byte in header name.&quot;</span>,
-            <span class='ident'>httparse</span>::<span class='ident'>Error</span>::<span class='ident'>HeaderValue</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Invalid byte in header value.&quot;</span>,
-            <span class='ident'>httparse</span>::<span class='ident'>Error</span>::<span class='ident'>NewLine</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Invalid byte in new line.&quot;</span>,
-            <span class='ident'>httparse</span>::<span class='ident'>Error</span>::<span class='ident'>Status</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Invalid byte in Response status.&quot;</span>,
-            <span class='ident'>httparse</span>::<span class='ident'>Error</span>::<span class='ident'>Token</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Invalid byte where token is required.&quot;</span>,
-            <span class='ident'>httparse</span>::<span class='ident'>Error</span>::<span class='ident'>TooManyHeaders</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Parsed more headers than provided buffer can contain.&quot;</span>,
-            <span class='ident'>httparse</span>::<span class='ident'>Error</span>::<span class='ident'>Version</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Invalid byte in HTTP version.&quot;</span>,
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">httparse</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">httparse</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="kw">let</span> <span class="ident">details</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">err</span> {
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">HeaderName</span> <span class="op">=&gt;</span> <span class="string">&quot;Invalid byte in header name.&quot;</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">HeaderValue</span> <span class="op">=&gt;</span> <span class="string">&quot;Invalid byte in header value.&quot;</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">NewLine</span> <span class="op">=&gt;</span> <span class="string">&quot;Invalid byte in new line.&quot;</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Status</span> <span class="op">=&gt;</span> <span class="string">&quot;Invalid byte in Response status.&quot;</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Token</span> <span class="op">=&gt;</span> <span class="string">&quot;Invalid byte where token is required.&quot;</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">TooManyHeaders</span> <span class="op">=&gt;</span> <span class="string">&quot;Parsed more headers than provided buffer can contain.&quot;</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Version</span> <span class="op">=&gt;</span> <span class="string">&quot;Invalid byte in HTTP version.&quot;</span>,
         };
 
-        <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Http</span>(<span class='ident'>err</span>), <span class='ident'>details</span>)
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="ident">err</span>), <span class="ident">details</span>)
     }
 
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">mio</span>::<span class="ident">channel</span>::<span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">Command</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='kw'>match</span> <span class='ident'>err</span> {
-            <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SendError</span>::<span class='ident'>Io</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>Error</span>::<span class='ident'>from</span>(<span class='ident'>err</span>),
-            _ <span class='op'>=&gt;</span> <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Queue</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">mio</span>::<span class="ident">channel</span>::<span class="ident">SendError</span><span class="op">&lt;</span><span class="ident">Command</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="kw">match</span> <span class="ident">err</span> {
+            <span class="ident">mio</span>::<span class="ident">channel</span>::<span class="ident">SendError</span>::<span class="ident">Io</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>),
+            _ <span class="op">=&gt;</span> <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Queue</span>(<span class="ident">err</span>), <span class="string">&quot;&quot;</span>)
         }
     }
 
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>TimerError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">mio</span>::<span class="ident">timer</span>::<span class="ident">TimerError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>TimerError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='kw'>match</span> <span class='ident'>err</span> {
-            _ <span class='op'>=&gt;</span> <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Timer</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">mio</span>::<span class="ident">timer</span>::<span class="ident">TimerError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="kw">match</span> <span class="ident">err</span> {
+            _ <span class="op">=&gt;</span> <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Timer</span>(<span class="ident">err</span>), <span class="string">&quot;&quot;</span>)
         }
     }
 
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Utf8Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>Utf8Error</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Encoding</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Utf8Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Utf8Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Encoding</span>(<span class="ident">err</span>), <span class="string">&quot;&quot;</span>)
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>SslError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>SslError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Ssl</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">SslError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">SslError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Ssl</span>(<span class="ident">err</span>), <span class="string">&quot;&quot;</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span>
-    <span class='kw'>where</span> <span class='ident'>B</span>: <span class='ident'>StdError</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">Error</span>
+    <span class="kw">where</span> <span class="ident">B</span>: <span class="ident">StdError</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>
 {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Custom</span>(<span class='ident'>err</span>), <span class='string'>&quot;&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Custom</span>(<span class="ident">err</span>), <span class="string">&quot;&quot;</span>)
     }
 }
 </pre>

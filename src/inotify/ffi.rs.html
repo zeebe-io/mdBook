@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -362,325 +362,325 @@
 <span id="317">317</span>
 <span id="318">318</span>
 <span id="319">319</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Bindings for inotify</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There are four types of statics:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! - __Flags__, to be passed to `inotify_init1()`;</span>
-<span class='doccomment'>//! - __Events__, that describe which events should be</span>
-<span class='doccomment'>//!   watched for (when calling `inotify_add_watch()`),</span>
-<span class='doccomment'>//!   and which event has occured (when returned by</span>
-<span class='doccomment'>//!   `read()`);</span>
-<span class='doccomment'>//! - __Options__, which can be added to the bit mask</span>
-<span class='doccomment'>//!   passed to `inotify_add_watch()`, to change default</span>
-<span class='doccomment'>//!   behavior;</span>
-<span class='doccomment'>//! - __Infos__, indicating further details of the event</span>
-<span class='doccomment'>//!   that occured (returned by `read()`).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! When events occur for monitored files and directories, those events</span>
-<span class='doccomment'>//! are made available to the application as structured data that can</span>
-<span class='doccomment'>//! be read from the inotify file descriptor using `read()`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! When all file descriptors referring to an inotify instance have been</span>
-<span class='doccomment'>//! closed (using `close()`), the underlying object and its resources</span>
-<span class='doccomment'>//! are freed for reuse by the kernel; all associated watches are</span>
-<span class='doccomment'>//! automatically freed.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A programmer wanting to use inotify should also carefully read through</span>
-<span class='doccomment'>//! the [inotify(7)] man page, which contains many caveats, warnings, and</span>
-<span class='doccomment'>//! recommendations for proper, robust, and efficient usage of inotify.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! [inotify(7)]: http://man7.org/linux/man-pages/man7/inotify.7.html</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Bindings for inotify</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! There are four types of statics:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! - __Flags__, to be passed to `inotify_init1()`;</span>
+<span class="doccomment">//! - __Events__, that describe which events should be</span>
+<span class="doccomment">//!   watched for (when calling `inotify_add_watch()`),</span>
+<span class="doccomment">//!   and which event has occured (when returned by</span>
+<span class="doccomment">//!   `read()`);</span>
+<span class="doccomment">//! - __Options__, which can be added to the bit mask</span>
+<span class="doccomment">//!   passed to `inotify_add_watch()`, to change default</span>
+<span class="doccomment">//!   behavior;</span>
+<span class="doccomment">//! - __Infos__, indicating further details of the event</span>
+<span class="doccomment">//!   that occured (returned by `read()`).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! When events occur for monitored files and directories, those events</span>
+<span class="doccomment">//! are made available to the application as structured data that can</span>
+<span class="doccomment">//! be read from the inotify file descriptor using `read()`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! When all file descriptors referring to an inotify instance have been</span>
+<span class="doccomment">//! closed (using `close()`), the underlying object and its resources</span>
+<span class="doccomment">//! are freed for reuse by the kernel; all associated watches are</span>
+<span class="doccomment">//! automatically freed.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A programmer wanting to use inotify should also carefully read through</span>
+<span class="doccomment">//! the [inotify(7)] man page, which contains many caveats, warnings, and</span>
+<span class="doccomment">//! recommendations for proper, robust, and efficient usage of inotify.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [inotify(7)]: http://man7.org/linux/man-pages/man7/inotify.7.html</span>
 
-<span class='kw'>use</span> <span class='ident'>libc</span>::{
-    <span class='ident'>c_char</span>,
-    <span class='ident'>c_int</span>,
-    <span class='ident'>uint32_t</span> };
-
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>close</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>read</span>;
-
-<span class='doccomment'>/// Flag: Set the FD_CLOEXEC flag</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The FD_CLOEXEC flag, or &quot;close-on-exec&quot;, changes the</span>
-<span class='doccomment'>/// behavior of file descriptor when [execve(2)]&#39;d:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// &gt; If the FD_CLOEXEC bit is 0, the file descriptor will</span>
-<span class='doccomment'>/// &gt; remain open across an [execve(2)], otherwise it will be</span>
-<span class='doccomment'>/// &gt; closed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See [open(2)] and [fcntl(2)] for details.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [execve(2)]: http://man7.org/linux/man-pages/man2/execve.2.html</span>
-<span class='doccomment'>/// [open(2)]: http://man7.org/linux/man-pages/man2/open.2.html</span>
-<span class='doccomment'>/// [fcntl(2)]: http://man7.org/linux/man-pages/man2/fcntl.2.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOEXEC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0o2000000</span>;
-
-<span class='doccomment'>/// Flag: Set the O_NONBLOCK file status flag</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The O_NONBLOCK flag changes the behavior of system</span>
-<span class='doccomment'>/// calls when accessing files with mandatory locks:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// &gt; By default, both traditional (process-associated) and</span>
-<span class='doccomment'>/// &gt; open file description record locks are advisory.  Advisory</span>
-<span class='doccomment'>/// &gt; locks are not enforced and are useful only between</span>
-<span class='doccomment'>/// &gt; cooperating processes.</span>
-<span class='doccomment'>/// &gt;</span>
-<span class='doccomment'>/// &gt; Both lock types can also be mandatory. Mandatory locks</span>
-<span class='doccomment'>/// &gt; are enforced for all processes. If a process tries to</span>
-<span class='doccomment'>/// &gt; perform an incompatible access (e.g., [read(2)] or [write(2)])</span>
-<span class='doccomment'>/// &gt; on a file region that has an incompatible mandatory lock,</span>
-<span class='doccomment'>/// &gt; then the result depends upon whether the O_NONBLOCK flag</span>
-<span class='doccomment'>/// &gt; is enabled for its open file description. If the O_NONBLOCK</span>
-<span class='doccomment'>/// &gt; flag is not enabled, then the system call is blocked until</span>
-<span class='doccomment'>/// &gt; the lock is removed or converted to a mode that is compatible</span>
-<span class='doccomment'>/// &gt; with the access. If the O_NONBLOCK flag is enabled, then the</span>
-<span class='doccomment'>/// &gt; system call fails with the error EAGAIN.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See [fcntl(2)] for more details.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [read(2)]:  http://man7.org/linux/man-pages/man2/read.2.html</span>
-<span class='doccomment'>/// [write(2)]: http://man7.org/linux/man-pages/man2/write.2.html</span>
-<span class='doccomment'>/// [fcntl(2)]: http://man7.org/linux/man-pages/man2/fcntl.2.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_NONBLOCK</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0o4000</span>;
-
-<span class='doccomment'>/// Event: File was accessed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
-<span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ACCESS</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000001</span>;
-
-<span class='doccomment'>/// Event: File was modified.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MODIFY</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000002</span>;
-
-<span class='doccomment'>/// Event: Metadata has changed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This can include e.g.</span>
-<span class='doccomment'>/// - permissions, see [chmod(2)];</span>
-<span class='doccomment'>/// - timestamps, see [utimensat(2)];</span>
-<span class='doccomment'>/// - extended attributes, see [setxattr(s)];</span>
-<span class='doccomment'>/// - link count, see [link(2)] and [unlink(2)];</span>
-<span class='doccomment'>/// - user/group, see [chown(2)].</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
-<span class='doccomment'>/// directory itself and the files within.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [chmod(2)]: http://man7.org/linux/man-pages/man2/chmod.2.html</span>
-<span class='doccomment'>/// [utimensat(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html</span>
-<span class='doccomment'>/// [setxattr(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html</span>
-<span class='doccomment'>/// [link(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
-<span class='doccomment'>/// [unlink(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
-<span class='doccomment'>/// [chown(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ATTRIB</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000004</span>;
-
-<span class='doccomment'>/// Event: File opened for writing was closed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
-<span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOSE_WRITE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000008</span>;
-
-<span class='doccomment'>/// Event: File not opened for writing was closed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
-<span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOSE_NOWRITE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000010</span>;
-
-<span class='doccomment'>/// Event: File was opened.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
-<span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_OPEN</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000020</span>;
-
-<span class='doccomment'>/// Event: File or directory was moved away.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
-<span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVED_FROM</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000040</span>;
-
-<span class='doccomment'>/// Event: File or directory was moved in.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
-<span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVED_TO</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000080</span>;
-
-<span class='doccomment'>/// Event: File or directory was created.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This may also include hard links, symlinks, and UNIX sockets.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
-<span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CREATE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000100</span>;
-
-<span class='doccomment'>/// Event: File or directory was deleted.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This may also include hard links, symlinks, and UNIX sockets.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
-<span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DELETE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000200</span>;
-
-<span class='doccomment'>/// Event: Watched file or directory was deleted.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This may also occur if the object is moved to another</span>
-<span class='doccomment'>/// filesystem, since [mv(1)] in effect copies the file to the</span>
-<span class='doccomment'>/// other filesystem and then deletes it from the original.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// An IN_IGNORED event will subsequently be generated.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [mv(1)]: http://man7.org/linux/man-pages/man1/mv.1.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DELETE_SELF</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000400</span>;
-
-<span class='doccomment'>/// Event: Watched file or directory was moved.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVE_SELF</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00000800</span>;
-
-<span class='doccomment'>/// Event: File or directory was moved away or in.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur *only* for</span>
-<span class='doccomment'>/// the files within, not the directory itself.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MOVE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> (<span class='ident'>IN_MOVED_FROM</span> <span class='op'>|</span> <span class='ident'>IN_MOVED_TO</span>);
-
-<span class='doccomment'>/// Event: File opened was closed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// When monitoring a directory, the event may occur both for the</span>
-<span class='doccomment'>/// directory itself and the files within.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_CLOSE</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> (<span class='ident'>IN_CLOSE_WRITE</span> <span class='op'>|</span> <span class='ident'>IN_CLOSE_NOWRITE</span>);
-
-<span class='doccomment'>/// Event: Any event occured.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ALL_EVENTS</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> (
-    <span class='ident'>IN_ACCESS</span> <span class='op'>|</span> <span class='ident'>IN_MODIFY</span> <span class='op'>|</span> <span class='ident'>IN_ATTRIB</span> <span class='op'>|</span> <span class='ident'>IN_CLOSE_WRITE</span> <span class='op'>|</span> <span class='ident'>IN_CLOSE_NOWRITE</span>
-    <span class='op'>|</span> <span class='ident'>IN_OPEN</span> <span class='op'>|</span> <span class='ident'>IN_MOVED_FROM</span> <span class='op'>|</span> <span class='ident'>IN_MOVED_TO</span> <span class='op'>|</span> <span class='ident'>IN_CREATE</span> <span class='op'>|</span> <span class='ident'>IN_DELETE</span>
-    <span class='op'>|</span> <span class='ident'>IN_DELETE_SELF</span> <span class='op'>|</span> <span class='ident'>IN_MOVE_SELF</span>);
-
-<span class='doccomment'>/// Option: Don&#39;t watch children (if self is a directory).</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ONLYDIR</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x01000000</span>;
-
-<span class='doccomment'>/// Option: Don&#39;t dereference (if self is a symlink).</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_DONT_FOLLOW</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x02000000</span>;
-
-<span class='doccomment'>/// Option: Don&#39;t watch unlinked children.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// &gt; By default, when watching events on the children of a</span>
-<span class='doccomment'>/// &gt; directory, events are generated for children even after</span>
-<span class='doccomment'>/// &gt; they have been unlinked from the directory.  This can</span>
-<span class='doccomment'>/// &gt; result in large numbers of uninteresting events for some</span>
-<span class='doccomment'>/// &gt; applications (e.g., if watching /tmp, in which many</span>
-<span class='doccomment'>/// &gt; applications create temporary files whose names are</span>
-<span class='doccomment'>/// &gt; immediately unlinked).</span>
-<span class='doccomment'>/// &gt;</span>
-<span class='doccomment'>/// &gt; IN_EXCL_UNLINK changes this behavior, so that events are</span>
-<span class='doccomment'>/// &gt; not generated for children after they have been unlinked</span>
-<span class='doccomment'>/// &gt; from the watched directory.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_EXCL_UNLINK</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x04000000</span>;
-
-<span class='doccomment'>/// Option: Add events to an existing watch instead of replacing it.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// &gt; If a watch instance already exists for the filesystem</span>
-<span class='doccomment'>/// &gt; object corresponding to self, add (|) the events to the</span>
-<span class='doccomment'>/// &gt; watch mask instead of replacing it.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_MASK_ADD</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x20000000</span>;
-
-<span class='doccomment'>/// Option: Listen for one event, then remove the watch.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ONESHOT</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x80000000</span>;
-
-<span class='doccomment'>/// Info: Subject of this event is a directory.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_ISDIR</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x40000000</span>;
-
-<span class='doccomment'>/// Info: Filesystem containing self was unmounted.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// An IN_IGNORED event will subsequently be generated.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_UNMOUNT</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00002000</span>;
-
-<span class='doccomment'>/// Info: Event queue overflowed.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_Q_OVERFLOW</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00004000</span>;
-
-<span class='doccomment'>/// Info: Watch was removed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This can occur either as a result of `inotify_rm_watch()`,</span>
-<span class='doccomment'>/// or because self was deleted or the containing filesystem</span>
-<span class='doccomment'>/// was unmounted, or after an IN_ONESHOT watch is complete.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See the BUGS section of [inotify(7)] for more details.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [inotify(7)]: http://man7.org/linux/man-pages/man7/inotify.7.html</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IN_IGNORED</span>: <span class='ident'>uint32_t</span> <span class='op'>=</span> <span class='number'>0x00008000</span>;
+<span class="kw">use</span> <span class="ident">libc</span>::{
+    <span class="ident">c_char</span>,
+    <span class="ident">c_int</span>,
+    <span class="ident">uint32_t</span> };
 
 
-<span class='doccomment'>/// Describes an event.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// &gt; To determine what events have occurred, an application [read(2)]s</span>
-<span class='doccomment'>/// &gt; from the inotify file descriptor.  If no events have so far occurred,</span>
-<span class='doccomment'>/// &gt; then, assuming a blocking file descriptor, [read(2)] will block until</span>
-<span class='doccomment'>/// &gt; at least one event occurs (unless interrupted by a signal, in which</span>
-<span class='doccomment'>/// &gt; case the call fails with the error EINTR; see [signal(7)]).</span>
-<span class='doccomment'>/// &gt;</span>
-<span class='doccomment'>/// &gt; Each successful [read(2)] returns a buffer containing one or more of</span>
-<span class='doccomment'>/// &gt; this structure.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [read(2)]: http://man7.org/linux/man-pages/man2/read.2.html</span>
-<span class='doccomment'>/// [signal(7)]: http://man7.org/linux/man-pages/man2/read.2.html</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>)]</span>
-<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>inotify_event</span> {
-    <span class='doccomment'>/// Identifies the watch for which this event occurs.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// It is one of the watch descriptors returned by a previous call</span>
-    <span class='doccomment'>/// to `inotify_add_watch()`.</span>
-    <span class='kw'>pub</span> <span class='ident'>wd</span>: <span class='ident'>c_int</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">close</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">read</span>;
 
-    <span class='doccomment'>/// Contains bits that describe the event that occurred.</span>
-    <span class='kw'>pub</span> <span class='ident'>mask</span>: <span class='ident'>uint32_t</span>,
+<span class="doccomment">/// Flag: Set the FD_CLOEXEC flag</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The FD_CLOEXEC flag, or &quot;close-on-exec&quot;, changes the</span>
+<span class="doccomment">/// behavior of file descriptor when [execve(2)]&#39;d:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &gt; If the FD_CLOEXEC bit is 0, the file descriptor will</span>
+<span class="doccomment">/// &gt; remain open across an [execve(2)], otherwise it will be</span>
+<span class="doccomment">/// &gt; closed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [open(2)] and [fcntl(2)] for details.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [execve(2)]: http://man7.org/linux/man-pages/man2/execve.2.html</span>
+<span class="doccomment">/// [open(2)]: http://man7.org/linux/man-pages/man2/open.2.html</span>
+<span class="doccomment">/// [fcntl(2)]: http://man7.org/linux/man-pages/man2/fcntl.2.html</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_CLOEXEC</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0o2000000</span>;
 
-    <span class='doccomment'>/// A unique integer that connects related events.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Currently used only for rename events. A related pair of</span>
-    <span class='doccomment'>/// IN_MOVED_FROM and IN_MOVED_TO events will have the same,</span>
-    <span class='doccomment'>/// non-zero, cookie. For all other events, cookie is 0.</span>
-    <span class='kw'>pub</span> <span class='ident'>cookie</span>: <span class='ident'>uint32_t</span>,
+<span class="doccomment">/// Flag: Set the O_NONBLOCK file status flag</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The O_NONBLOCK flag changes the behavior of system</span>
+<span class="doccomment">/// calls when accessing files with mandatory locks:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &gt; By default, both traditional (process-associated) and</span>
+<span class="doccomment">/// &gt; open file description record locks are advisory.  Advisory</span>
+<span class="doccomment">/// &gt; locks are not enforced and are useful only between</span>
+<span class="doccomment">/// &gt; cooperating processes.</span>
+<span class="doccomment">/// &gt;</span>
+<span class="doccomment">/// &gt; Both lock types can also be mandatory. Mandatory locks</span>
+<span class="doccomment">/// &gt; are enforced for all processes. If a process tries to</span>
+<span class="doccomment">/// &gt; perform an incompatible access (e.g., [read(2)] or [write(2)])</span>
+<span class="doccomment">/// &gt; on a file region that has an incompatible mandatory lock,</span>
+<span class="doccomment">/// &gt; then the result depends upon whether the O_NONBLOCK flag</span>
+<span class="doccomment">/// &gt; is enabled for its open file description. If the O_NONBLOCK</span>
+<span class="doccomment">/// &gt; flag is not enabled, then the system call is blocked until</span>
+<span class="doccomment">/// &gt; the lock is removed or converted to a mode that is compatible</span>
+<span class="doccomment">/// &gt; with the access. If the O_NONBLOCK flag is enabled, then the</span>
+<span class="doccomment">/// &gt; system call fails with the error EAGAIN.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [fcntl(2)] for more details.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [read(2)]:  http://man7.org/linux/man-pages/man2/read.2.html</span>
+<span class="doccomment">/// [write(2)]: http://man7.org/linux/man-pages/man2/write.2.html</span>
+<span class="doccomment">/// [fcntl(2)]: http://man7.org/linux/man-pages/man2/fcntl.2.html</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_NONBLOCK</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0o4000</span>;
 
-    <span class='doccomment'>/// The length of `name`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Used to determine the size of this structure. When `name`</span>
-    <span class='doccomment'>/// isn&#39;t present (`name` is only present when an event occurs</span>
-    <span class='doccomment'>/// for a file inside a watched directory), it is 0. When `name`</span>
-    <span class='doccomment'>/// *is* present, it counts all of `name`&#39;s bytes, including `\0`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// &gt; The `name` field is present only when an event is returned for</span>
-    <span class='doccomment'>/// &gt; a file inside a watched directory; it identifies the file</span>
-    <span class='doccomment'>/// &gt; pathname relative to the watched directory. This pathname is</span>
-    <span class='doccomment'>/// &gt; null-terminated, and may include further null bytes (&#39;\0&#39;) to</span>
-    <span class='doccomment'>/// &gt; align subsequent reads to a suitable address boundary.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The `name` field must be ommited in this definition.</span>
-    <span class='kw'>pub</span> <span class='ident'>len</span>: <span class='ident'>uint32_t</span>,
+<span class="doccomment">/// Event: File was accessed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur both for the</span>
+<span class="doccomment">/// directory itself and the files within.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_ACCESS</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000001</span>;
+
+<span class="doccomment">/// Event: File was modified.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_MODIFY</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000002</span>;
+
+<span class="doccomment">/// Event: Metadata has changed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This can include e.g.</span>
+<span class="doccomment">/// - permissions, see [chmod(2)];</span>
+<span class="doccomment">/// - timestamps, see [utimensat(2)];</span>
+<span class="doccomment">/// - extended attributes, see [setxattr(s)];</span>
+<span class="doccomment">/// - link count, see [link(2)] and [unlink(2)];</span>
+<span class="doccomment">/// - user/group, see [chown(2)].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur both for the</span>
+<span class="doccomment">/// directory itself and the files within.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [chmod(2)]: http://man7.org/linux/man-pages/man2/chmod.2.html</span>
+<span class="doccomment">/// [utimensat(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html</span>
+<span class="doccomment">/// [setxattr(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html</span>
+<span class="doccomment">/// [link(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
+<span class="doccomment">/// [unlink(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
+<span class="doccomment">/// [chown(2)]: http://man7.org/linux/man-pages/man2/link.2.html</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_ATTRIB</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000004</span>;
+
+<span class="doccomment">/// Event: File opened for writing was closed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur both for the</span>
+<span class="doccomment">/// directory itself and the files within.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_CLOSE_WRITE</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000008</span>;
+
+<span class="doccomment">/// Event: File not opened for writing was closed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur both for the</span>
+<span class="doccomment">/// directory itself and the files within.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_CLOSE_NOWRITE</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000010</span>;
+
+<span class="doccomment">/// Event: File was opened.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur both for the</span>
+<span class="doccomment">/// directory itself and the files within.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_OPEN</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000020</span>;
+
+<span class="doccomment">/// Event: File or directory was moved away.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur *only* for</span>
+<span class="doccomment">/// the files within, not the directory itself.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_MOVED_FROM</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000040</span>;
+
+<span class="doccomment">/// Event: File or directory was moved in.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur *only* for</span>
+<span class="doccomment">/// the files within, not the directory itself.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_MOVED_TO</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000080</span>;
+
+<span class="doccomment">/// Event: File or directory was created.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This may also include hard links, symlinks, and UNIX sockets.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur *only* for</span>
+<span class="doccomment">/// the files within, not the directory itself.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_CREATE</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000100</span>;
+
+<span class="doccomment">/// Event: File or directory was deleted.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This may also include hard links, symlinks, and UNIX sockets.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur *only* for</span>
+<span class="doccomment">/// the files within, not the directory itself.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_DELETE</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000200</span>;
+
+<span class="doccomment">/// Event: Watched file or directory was deleted.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This may also occur if the object is moved to another</span>
+<span class="doccomment">/// filesystem, since [mv(1)] in effect copies the file to the</span>
+<span class="doccomment">/// other filesystem and then deletes it from the original.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// An IN_IGNORED event will subsequently be generated.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [mv(1)]: http://man7.org/linux/man-pages/man1/mv.1.html</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_DELETE_SELF</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000400</span>;
+
+<span class="doccomment">/// Event: Watched file or directory was moved.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_MOVE_SELF</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00000800</span>;
+
+<span class="doccomment">/// Event: File or directory was moved away or in.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur *only* for</span>
+<span class="doccomment">/// the files within, not the directory itself.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_MOVE</span>: <span class="ident">uint32_t</span> <span class="op">=</span> (<span class="ident">IN_MOVED_FROM</span> <span class="op">|</span> <span class="ident">IN_MOVED_TO</span>);
+
+<span class="doccomment">/// Event: File opened was closed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// When monitoring a directory, the event may occur both for the</span>
+<span class="doccomment">/// directory itself and the files within.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_CLOSE</span>: <span class="ident">uint32_t</span> <span class="op">=</span> (<span class="ident">IN_CLOSE_WRITE</span> <span class="op">|</span> <span class="ident">IN_CLOSE_NOWRITE</span>);
+
+<span class="doccomment">/// Event: Any event occured.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_ALL_EVENTS</span>: <span class="ident">uint32_t</span> <span class="op">=</span> (
+    <span class="ident">IN_ACCESS</span> <span class="op">|</span> <span class="ident">IN_MODIFY</span> <span class="op">|</span> <span class="ident">IN_ATTRIB</span> <span class="op">|</span> <span class="ident">IN_CLOSE_WRITE</span> <span class="op">|</span> <span class="ident">IN_CLOSE_NOWRITE</span>
+    <span class="op">|</span> <span class="ident">IN_OPEN</span> <span class="op">|</span> <span class="ident">IN_MOVED_FROM</span> <span class="op">|</span> <span class="ident">IN_MOVED_TO</span> <span class="op">|</span> <span class="ident">IN_CREATE</span> <span class="op">|</span> <span class="ident">IN_DELETE</span>
+    <span class="op">|</span> <span class="ident">IN_DELETE_SELF</span> <span class="op">|</span> <span class="ident">IN_MOVE_SELF</span>);
+
+<span class="doccomment">/// Option: Don&#39;t watch children (if self is a directory).</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_ONLYDIR</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x01000000</span>;
+
+<span class="doccomment">/// Option: Don&#39;t dereference (if self is a symlink).</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_DONT_FOLLOW</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x02000000</span>;
+
+<span class="doccomment">/// Option: Don&#39;t watch unlinked children.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &gt; By default, when watching events on the children of a</span>
+<span class="doccomment">/// &gt; directory, events are generated for children even after</span>
+<span class="doccomment">/// &gt; they have been unlinked from the directory.  This can</span>
+<span class="doccomment">/// &gt; result in large numbers of uninteresting events for some</span>
+<span class="doccomment">/// &gt; applications (e.g., if watching /tmp, in which many</span>
+<span class="doccomment">/// &gt; applications create temporary files whose names are</span>
+<span class="doccomment">/// &gt; immediately unlinked).</span>
+<span class="doccomment">/// &gt;</span>
+<span class="doccomment">/// &gt; IN_EXCL_UNLINK changes this behavior, so that events are</span>
+<span class="doccomment">/// &gt; not generated for children after they have been unlinked</span>
+<span class="doccomment">/// &gt; from the watched directory.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_EXCL_UNLINK</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x04000000</span>;
+
+<span class="doccomment">/// Option: Add events to an existing watch instead of replacing it.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &gt; If a watch instance already exists for the filesystem</span>
+<span class="doccomment">/// &gt; object corresponding to self, add (|) the events to the</span>
+<span class="doccomment">/// &gt; watch mask instead of replacing it.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_MASK_ADD</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x20000000</span>;
+
+<span class="doccomment">/// Option: Listen for one event, then remove the watch.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_ONESHOT</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x80000000</span>;
+
+<span class="doccomment">/// Info: Subject of this event is a directory.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_ISDIR</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x40000000</span>;
+
+<span class="doccomment">/// Info: Filesystem containing self was unmounted.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// An IN_IGNORED event will subsequently be generated.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_UNMOUNT</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00002000</span>;
+
+<span class="doccomment">/// Info: Event queue overflowed.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_Q_OVERFLOW</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00004000</span>;
+
+<span class="doccomment">/// Info: Watch was removed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This can occur either as a result of `inotify_rm_watch()`,</span>
+<span class="doccomment">/// or because self was deleted or the containing filesystem</span>
+<span class="doccomment">/// was unmounted, or after an IN_ONESHOT watch is complete.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See the BUGS section of [inotify(7)] for more details.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [inotify(7)]: http://man7.org/linux/man-pages/man7/inotify.7.html</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IN_IGNORED</span>: <span class="ident">uint32_t</span> <span class="op">=</span> <span class="number">0x00008000</span>;
+
+
+<span class="doccomment">/// Describes an event.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &gt; To determine what events have occurred, an application [read(2)]s</span>
+<span class="doccomment">/// &gt; from the inotify file descriptor.  If no events have so far occurred,</span>
+<span class="doccomment">/// &gt; then, assuming a blocking file descriptor, [read(2)] will block until</span>
+<span class="doccomment">/// &gt; at least one event occurs (unless interrupted by a signal, in which</span>
+<span class="doccomment">/// &gt; case the call fails with the error EINTR; see [signal(7)]).</span>
+<span class="doccomment">/// &gt;</span>
+<span class="doccomment">/// &gt; Each successful [read(2)] returns a buffer containing one or more of</span>
+<span class="doccomment">/// &gt; this structure.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [read(2)]: http://man7.org/linux/man-pages/man2/read.2.html</span>
+<span class="doccomment">/// [signal(7)]: http://man7.org/linux/man-pages/man2/read.2.html</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">inotify_event</span> {
+    <span class="doccomment">/// Identifies the watch for which this event occurs.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is one of the watch descriptors returned by a previous call</span>
+    <span class="doccomment">/// to `inotify_add_watch()`.</span>
+    <span class="kw">pub</span> <span class="ident">wd</span>: <span class="ident">c_int</span>,
+
+    <span class="doccomment">/// Contains bits that describe the event that occurred.</span>
+    <span class="kw">pub</span> <span class="ident">mask</span>: <span class="ident">uint32_t</span>,
+
+    <span class="doccomment">/// A unique integer that connects related events.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Currently used only for rename events. A related pair of</span>
+    <span class="doccomment">/// IN_MOVED_FROM and IN_MOVED_TO events will have the same,</span>
+    <span class="doccomment">/// non-zero, cookie. For all other events, cookie is 0.</span>
+    <span class="kw">pub</span> <span class="ident">cookie</span>: <span class="ident">uint32_t</span>,
+
+    <span class="doccomment">/// The length of `name`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Used to determine the size of this structure. When `name`</span>
+    <span class="doccomment">/// isn&#39;t present (`name` is only present when an event occurs</span>
+    <span class="doccomment">/// for a file inside a watched directory), it is 0. When `name`</span>
+    <span class="doccomment">/// *is* present, it counts all of `name`&#39;s bytes, including `\0`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// &gt; The `name` field is present only when an event is returned for</span>
+    <span class="doccomment">/// &gt; a file inside a watched directory; it identifies the file</span>
+    <span class="doccomment">/// &gt; pathname relative to the watched directory. This pathname is</span>
+    <span class="doccomment">/// &gt; null-terminated, and may include further null bytes (&#39;\0&#39;) to</span>
+    <span class="doccomment">/// &gt; align subsequent reads to a suitable address boundary.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The `name` field must be ommited in this definition.</span>
+    <span class="kw">pub</span> <span class="ident">len</span>: <span class="ident">uint32_t</span>,
 }
 
 
-<span class='kw'>extern</span> {
-    <span class='doccomment'>/// Creates an inotify instance.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns a file descriptor referring to the inotify instance.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inotify_init</span>() <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+<span class="kw">extern</span> {
+    <span class="doccomment">/// Creates an inotify instance.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a file descriptor referring to the inotify instance.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inotify_init</span>() <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 
-    <span class='doccomment'>/// Creates an inotify instance.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Also takes a bit mask of flags that provide access to extra</span>
-    <span class='doccomment'>/// functionality. Returns a file descriptor.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inotify_init1</span>(<span class='ident'>flags</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class="doccomment">/// Creates an inotify instance.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Also takes a bit mask of flags that provide access to extra</span>
+    <span class="doccomment">/// functionality. Returns a file descriptor.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inotify_init1</span>(<span class="ident">flags</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 
-    <span class='doccomment'>/// Manipulates the &quot;watch list&quot; associated with an inotify instance.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// &gt; Each item (&quot;watch&quot;) in the watch list specifies the pathname of</span>
-    <span class='doccomment'>/// &gt; a file or directory, along with some set of events that the kernel</span>
-    <span class='doccomment'>/// &gt; should monitor for the file referred to by that pathname.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This function either creates a new watch, or modifies an existing one.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inotify_add_watch</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>pathname</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>mask</span>: <span class='ident'>uint32_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class="doccomment">/// Manipulates the &quot;watch list&quot; associated with an inotify instance.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// &gt; Each item (&quot;watch&quot;) in the watch list specifies the pathname of</span>
+    <span class="doccomment">/// &gt; a file or directory, along with some set of events that the kernel</span>
+    <span class="doccomment">/// &gt; should monitor for the file referred to by that pathname.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function either creates a new watch, or modifies an existing one.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inotify_add_watch</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">pathname</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">mask</span>: <span class="ident">uint32_t</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 
-    <span class='doccomment'>/// Removes an item from an inotify watch list.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inotify_rm_watch</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>wd</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class="doccomment">/// Removes an item from an inotify watch list.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inotify_rm_watch</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">wd</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 }
 </pre>
 </section>

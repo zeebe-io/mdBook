@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -231,192 +231,192 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>SocketAddr</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">SocketAddr</span>;
 
-<span class='kw'>use</span> <span class='ident'>mio</span>::<span class='ident'>tcp</span>::<span class='ident'>TcpStream</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>openssl</span>::<span class='ident'>ssl</span>::<span class='ident'>SslStream</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>openssl</span>::<span class='ident'>ssl</span>::<span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>SslError</span>;
-<span class='kw'>use</span> <span class='ident'>bytes</span>::{<span class='ident'>Buf</span>, <span class='ident'>BufMut</span>};
+<span class="kw">use</span> <span class="ident">mio</span>::<span class="ident">tcp</span>::<span class="ident">TcpStream</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">openssl</span>::<span class="ident">ssl</span>::<span class="ident">SslStream</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">openssl</span>::<span class="ident">ssl</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">SslError</span>;
+<span class="kw">use</span> <span class="ident">bytes</span>::{<span class="ident">Buf</span>, <span class="ident">BufMut</span>};
 
-<span class='kw'>use</span> <span class='ident'>result</span>::{<span class='prelude-ty'>Result</span>, <span class='ident'>Error</span>, <span class='ident'>Kind</span>};
+<span class="kw">use</span> <span class="ident">result</span>::{<span class="prelude-ty">Result</span>, <span class="ident">Error</span>, <span class="ident">Kind</span>};
 
-<span class='kw'>fn</span> <span class='ident'>map_non_block</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>res</span>: <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
-    <span class='kw'>match</span> <span class='ident'>res</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>value</span>)),
-        <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>WouldBlock</span> <span class='op'>=</span> <span class='ident'>err</span>.<span class='ident'>kind</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>err</span>)
+<span class="kw">fn</span> <span class="ident">map_non_block</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">res</span>: <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">match</span> <span class="ident">res</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">value</span>)),
+        <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">WouldBlock</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">kind</span>() {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>)
             }
         }
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>TryReadBuf</span>: <span class='ident'>io</span>::<span class='ident'>Read</span> {
-    <span class='kw'>fn</span> <span class='ident'>try_read_buf</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>BufMut</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;&gt;</span>
-        <span class='kw'>where</span> <span class='self'>Self</span> : <span class='ident'>Sized</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TryReadBuf</span>: <span class="ident">io</span>::<span class="ident">Read</span> {
+    <span class="kw">fn</span> <span class="ident">try_read_buf</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BufMut</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">B</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;&gt;</span>
+        <span class="kw">where</span> <span class="self">Self</span> : <span class="ident">Sized</span>
     {
-        <span class='comment'>// Reads the length of the slice supplied by buf.mut_bytes into the buffer</span>
-        <span class='comment'>// This is not guaranteed to consume an entire datagram or segment.</span>
-        <span class='comment'>// If your protocol is msg based (instead of continuous stream) you should</span>
-        <span class='comment'>// ensure that your buffer is large enough to hold an entire segment (1532 bytes if not jumbo</span>
-        <span class='comment'>// frames)</span>
-        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>map_non_block</span>(<span class='self'>self</span>.<span class='ident'>read</span>(<span class='kw'>unsafe</span> { <span class='ident'>buf</span>.<span class='ident'>bytes_mut</span>() }));
+        <span class="comment">// Reads the length of the slice supplied by buf.mut_bytes into the buffer</span>
+        <span class="comment">// This is not guaranteed to consume an entire datagram or segment.</span>
+        <span class="comment">// If your protocol is msg based (instead of continuous stream) you should</span>
+        <span class="comment">// ensure that your buffer is large enough to hold an entire segment (1532 bytes if not jumbo</span>
+        <span class="comment">// frames)</span>
+        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">map_non_block</span>(<span class="self">self</span>.<span class="ident">read</span>(<span class="kw">unsafe</span> { <span class="ident">buf</span>.<span class="ident">bytes_mut</span>() }));
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>cnt</span>)) <span class='op'>=</span> <span class='ident'>res</span> {
-            <span class='kw'>unsafe</span> { <span class='ident'>buf</span>.<span class='ident'>advance_mut</span>(<span class='ident'>cnt</span>); }
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">cnt</span>)) <span class="op">=</span> <span class="ident">res</span> {
+            <span class="kw">unsafe</span> { <span class="ident">buf</span>.<span class="ident">advance_mut</span>(<span class="ident">cnt</span>); }
         }
 
-        <span class='ident'>res</span>
+        <span class="ident">res</span>
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>TryWriteBuf</span>: <span class='ident'>io</span>::<span class='ident'>Write</span> {
-    <span class='kw'>fn</span> <span class='ident'>try_write_buf</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;&gt;</span>
-        <span class='kw'>where</span> <span class='self'>Self</span> : <span class='ident'>Sized</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TryWriteBuf</span>: <span class="ident">io</span>::<span class="ident">Write</span> {
+    <span class="kw">fn</span> <span class="ident">try_write_buf</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buf</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">B</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;&gt;</span>
+        <span class="kw">where</span> <span class="self">Self</span> : <span class="ident">Sized</span>
     {
-        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>map_non_block</span>(<span class='self'>self</span>.<span class='ident'>write</span>(<span class='ident'>buf</span>.<span class='ident'>bytes</span>()));
+        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">map_non_block</span>(<span class="self">self</span>.<span class="ident">write</span>(<span class="ident">buf</span>.<span class="ident">bytes</span>()));
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>cnt</span>)) <span class='op'>=</span> <span class='ident'>res</span> {
-            <span class='ident'>buf</span>.<span class='ident'>advance</span>(<span class='ident'>cnt</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">cnt</span>)) <span class="op">=</span> <span class="ident">res</span> {
+            <span class="ident">buf</span>.<span class="ident">advance</span>(<span class="ident">cnt</span>);
         }
 
-        <span class='ident'>res</span>
+        <span class="ident">res</span>
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>io</span>::<span class='ident'>Read</span><span class='op'>&gt;</span> <span class='ident'>TryReadBuf</span> <span class='kw'>for</span> <span class='ident'>T</span> {}
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>&gt;</span> <span class='ident'>TryWriteBuf</span> <span class='kw'>for</span> <span class='ident'>T</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">io</span>::<span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">TryReadBuf</span> <span class="kw">for</span> <span class="ident">T</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">TryWriteBuf</span> <span class="kw">for</span> <span class="ident">T</span> {}
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>Stream</span>::<span class='kw-2'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Stream</span> {
-    <span class='ident'>Tcp</span>(<span class='ident'>TcpStream</span>),
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-    <span class='ident'>Tls</span> {
-        <span class='ident'>sock</span>: <span class='ident'>SslStream</span><span class='op'>&lt;</span><span class='ident'>TcpStream</span><span class='op'>&gt;</span>,
-        <span class='ident'>negotiating</span>: <span class='ident'>bool</span>,
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">Stream</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Stream</span> {
+    <span class="ident">Tcp</span>(<span class="ident">TcpStream</span>),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+    <span class="ident">Tls</span> {
+        <span class="ident">sock</span>: <span class="ident">SslStream</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;</span>,
+        <span class="ident">negotiating</span>: <span class="ident">bool</span>,
     }
 }
 
 
-<span class='kw'>impl</span> <span class='ident'>Stream</span> {
+<span class="kw">impl</span> <span class="ident">Stream</span> {
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcp</span>(<span class='ident'>stream</span>: <span class='ident'>TcpStream</span>) <span class='op'>-&gt;</span> <span class='ident'>Stream</span> {
-        <span class='ident'>Tcp</span>(<span class='ident'>stream</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcp</span>(<span class="ident">stream</span>: <span class="ident">TcpStream</span>) <span class="op">-&gt;</span> <span class="ident">Stream</span> {
+        <span class="ident">Tcp</span>(<span class="ident">stream</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tls</span>(<span class='ident'>stream</span>: <span class='ident'>SslStream</span><span class='op'>&lt;</span><span class='ident'>TcpStream</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Stream</span> {
-        <span class='ident'>Tls</span> { <span class='ident'>sock</span>: <span class='ident'>stream</span>, <span class='ident'>negotiating</span>: <span class='bool-val'>false</span> }
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tls</span>(<span class="ident">stream</span>: <span class="ident">SslStream</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Stream</span> {
+        <span class="ident">Tls</span> { <span class="ident">sock</span>: <span class="ident">stream</span>, <span class="ident">negotiating</span>: <span class="bool-val">false</span> }
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_tls</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-            <span class='ident'>Tls</span> {..} <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_tls</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(_) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">Tls</span> {..} <span class="op">=&gt;</span> <span class="bool-val">true</span>,
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>evented</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>TcpStream</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(<span class='kw-2'>ref</span> <span class='ident'>sock</span>) <span class='op'>=&gt;</span> <span class='ident'>sock</span>,
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='kw-2'>ref</span> <span class='ident'>sock</span>, ..} <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>get_ref</span>(),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">evented</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">TcpStream</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="ident">sock</span>) <span class="op">=&gt;</span> <span class="ident">sock</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="kw-2">ref</span> <span class="ident">sock</span>, ..} <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">get_ref</span>(),
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_negotiating</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='ident'>sock</span>: _, <span class='kw-2'>ref</span> <span class='ident'>negotiating</span> } <span class='op'>=&gt;</span> <span class='kw-2'>*</span><span class='ident'>negotiating</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_negotiating</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(_) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="ident">sock</span>: _, <span class="kw-2">ref</span> <span class="ident">negotiating</span> } <span class="op">=&gt;</span> <span class="kw-2">*</span><span class="ident">negotiating</span>,
         }
 
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clear_negotiating</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>Kind</span>::<span class='ident'>Internal</span>, <span class='string'>&quot;Attempted to clear negotiating flag on non ssl connection.&quot;</span>)),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='ident'>sock</span>: _, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>negotiating</span> } <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='kw-2'>*</span><span class='ident'>negotiating</span> <span class='op'>=</span> <span class='bool-val'>false</span>),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear_negotiating</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Internal</span>, <span class="string">&quot;Attempted to clear negotiating flag on non ssl connection.&quot;</span>)),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="ident">sock</span>: _, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">negotiating</span> } <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="kw-2">*</span><span class="ident">negotiating</span> <span class="op">=</span> <span class="bool-val">false</span>),
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>peer_addr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(<span class='kw-2'>ref</span> <span class='ident'>sock</span>) <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>peer_addr</span>(),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='kw-2'>ref</span> <span class='ident'>sock</span>, ..} <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>get_ref</span>().<span class='ident'>peer_addr</span>(),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">peer_addr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="ident">sock</span>) <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">peer_addr</span>(),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="kw-2">ref</span> <span class="ident">sock</span>, ..} <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">get_ref</span>().<span class="ident">peer_addr</span>(),
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>local_addr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(<span class='kw-2'>ref</span> <span class='ident'>sock</span>) <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>local_addr</span>(),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='kw-2'>ref</span> <span class='ident'>sock</span>, ..} <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>get_ref</span>().<span class='ident'>local_addr</span>(),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">local_addr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="ident">sock</span>) <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">local_addr</span>(),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="kw-2">ref</span> <span class="ident">sock</span>, ..} <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">get_ref</span>().<span class="ident">local_addr</span>(),
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>Stream</span> {
+<span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Read</span> <span class="kw">for</span> <span class="ident">Stream</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>sock</span>) <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>read</span>(<span class='ident'>buf</span>),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>sock</span>, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>negotiating</span> } <span class='op'>=&gt;</span> {
-                <span class='kw'>match</span> <span class='ident'>sock</span>.<span class='ident'>ssl_read</span>(<span class='ident'>buf</span>) {
-                    <span class='prelude-val'>Ok</span>(<span class='ident'>cnt</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>cnt</span>),
-                    <span class='prelude-val'>Err</span>(<span class='ident'>SslError</span>::<span class='ident'>WantWrite</span>(_)) <span class='op'>=&gt;</span> {
-                        <span class='kw-2'>*</span><span class='ident'>negotiating</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
-                        <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span>, <span class='string'>&quot;SSL wants writing&quot;</span>))
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">sock</span>) <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">read</span>(<span class="ident">buf</span>),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">sock</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">negotiating</span> } <span class="op">=&gt;</span> {
+                <span class="kw">match</span> <span class="ident">sock</span>.<span class="ident">ssl_read</span>(<span class="ident">buf</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">cnt</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">cnt</span>),
+                    <span class="prelude-val">Err</span>(<span class="ident">SslError</span>::<span class="ident">WantWrite</span>(_)) <span class="op">=&gt;</span> {
+                        <span class="kw-2">*</span><span class="ident">negotiating</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                        <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span>, <span class="string">&quot;SSL wants writing&quot;</span>))
                     },
-                    <span class='prelude-val'>Err</span>(<span class='ident'>SslError</span>::<span class='ident'>WantRead</span>(_)) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span>, <span class='string'>&quot;SSL wants reading&quot;</span>)),
-                    <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span>
-                        <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>, <span class='ident'>err</span>)),
+                    <span class="prelude-val">Err</span>(<span class="ident">SslError</span>::<span class="ident">WantRead</span>(_)) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span>, <span class="string">&quot;SSL wants reading&quot;</span>)),
+                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span>
+                        <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">err</span>)),
                 }
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>Stream</span> {
+<span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">Stream</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>sock</span>) <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>write</span>(<span class='ident'>buf</span>),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>sock</span>, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>negotiating</span> } <span class='op'>=&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">sock</span>) <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">write</span>(<span class="ident">buf</span>),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">sock</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">negotiating</span> } <span class="op">=&gt;</span> {
 
-                <span class='kw-2'>*</span><span class='ident'>negotiating</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+                <span class="kw-2">*</span><span class="ident">negotiating</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
-                <span class='kw'>match</span> <span class='ident'>sock</span>.<span class='ident'>ssl_write</span>(<span class='ident'>buf</span>) {
-                    <span class='prelude-val'>Ok</span>(<span class='ident'>cnt</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>cnt</span>),
-                    <span class='prelude-val'>Err</span>(<span class='ident'>SslError</span>::<span class='ident'>WantRead</span>(_)) <span class='op'>=&gt;</span> {
-                        <span class='kw-2'>*</span><span class='ident'>negotiating</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
-                        <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span>, <span class='string'>&quot;SSL wants reading&quot;</span>))
+                <span class="kw">match</span> <span class="ident">sock</span>.<span class="ident">ssl_write</span>(<span class="ident">buf</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">cnt</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">cnt</span>),
+                    <span class="prelude-val">Err</span>(<span class="ident">SslError</span>::<span class="ident">WantRead</span>(_)) <span class="op">=&gt;</span> {
+                        <span class="kw-2">*</span><span class="ident">negotiating</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                        <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span>, <span class="string">&quot;SSL wants reading&quot;</span>))
                     },
-                    <span class='prelude-val'>Err</span>(<span class='ident'>SslError</span>::<span class='ident'>WantWrite</span>(_)) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span>, <span class='string'>&quot;SSL wants writing&quot;</span>)),
-                    <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span>
-                        <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>, <span class='ident'>err</span>)),
+                    <span class="prelude-val">Err</span>(<span class="ident">SslError</span>::<span class="ident">WantWrite</span>(_)) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WouldBlock</span>, <span class="string">&quot;SSL wants writing&quot;</span>)),
+                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span>
+                        <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">err</span>)),
                 }
             }
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>flush</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Tcp</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>sock</span>) <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>flush</span>(),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;ssl&quot;</span>)]</span>
-            <span class='ident'>Tls</span> { <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>sock</span>, <span class='ident'>negotiating</span>: _ } <span class='op'>=&gt;</span> <span class='ident'>sock</span>.<span class='ident'>flush</span>(),
+    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Tcp</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">sock</span>) <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">flush</span>(),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;ssl&quot;</span>)]</span>
+            <span class="ident">Tls</span> { <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">sock</span>, <span class="ident">negotiating</span>: _ } <span class="op">=&gt;</span> <span class="ident">sock</span>.<span class="ident">flush</span>(),
         }
     }
 }

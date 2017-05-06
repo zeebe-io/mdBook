@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.2/src/buf/from_buf.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.3/src/buf/from_buf.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>from_buf.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -160,122 +160,122 @@
 <span id="115">115</span>
 <span id="116">116</span>
 <span id="117">117</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> {<span class='ident'>Buf</span>, <span class='ident'>BufMut</span>, <span class='ident'>IntoBuf</span>, <span class='ident'>Bytes</span>, <span class='ident'>BytesMut</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> {<span class="ident">Buf</span>, <span class="ident">BufMut</span>, <span class="ident">IntoBuf</span>, <span class="ident">Bytes</span>, <span class="ident">BytesMut</span>};
 
-<span class='doccomment'>/// Conversion from a [`Buf`]</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Implementing `FromBuf` for a type defines how it is created from a buffer.</span>
-<span class='doccomment'>/// This is common for types which represent byte storage of some kind.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [`FromBuf::from_buf`] is rarely called explicitly, and it is instead used</span>
-<span class='doccomment'>/// through [`Buf::collect`]. See [`Buf::collect`] documentation for more examples.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See also [`IntoBuf`].</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Basic  usage:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use bytes::{Bytes, IntoBuf};</span>
-<span class='doccomment'>/// use bytes::buf::FromBuf;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]).into_buf();</span>
-<span class='doccomment'>/// let vec = Vec::from_buf(buf);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert_eq!(vec, &amp;b&quot;hello world&quot;[..]);</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Using [`Buf::collect`] to implicitly use `FromBuf`:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use bytes::{Buf, Bytes, IntoBuf};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]).into_buf();</span>
-<span class='doccomment'>/// let vec: Vec&lt;u8&gt; = buf.collect();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert_eq!(vec, &amp;b&quot;hello world&quot;[..]);</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Implementing `FromBuf` for your type:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use bytes::{BufMut, Bytes};</span>
-<span class='doccomment'>/// use bytes::buf::{IntoBuf, FromBuf};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // A sample buffer, that&#39;s just a wrapper over Vec&lt;u8&gt;</span>
-<span class='doccomment'>/// struct MyBuffer(Vec&lt;u8&gt;);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// impl FromBuf for MyBuffer {</span>
-<span class='doccomment'>///     fn from_buf&lt;B&gt;(buf: B) -&gt; Self where B: IntoBuf {</span>
-<span class='doccomment'>///         let mut v = Vec::new();</span>
-<span class='doccomment'>///         v.put(buf.into_buf());</span>
-<span class='doccomment'>///         MyBuffer(v)</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // Now we can make a new buf</span>
-<span class='doccomment'>/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // And make a MyBuffer out of it</span>
-<span class='doccomment'>/// let my_buf = MyBuffer::from_buf(buf);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert_eq!(my_buf.0, &amp;b&quot;hello world&quot;[..]);</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [`Buf`]: trait.Buf.html</span>
-<span class='doccomment'>/// [`FromBuf::from_buf`]: #method.from_buf</span>
-<span class='doccomment'>/// [`Buf::collect`]: trait.Buf.html#method.collect</span>
-<span class='doccomment'>/// [`IntoBuf`]: trait.IntoBuf.html</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>FromBuf</span> {
-    <span class='doccomment'>/// Creates a value from a buffer.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See the [type-level documentation](#) for more details.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Basic  usage:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use bytes::{Bytes, IntoBuf};</span>
-    <span class='doccomment'>/// use bytes::buf::FromBuf;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]).into_buf();</span>
-    <span class='doccomment'>/// let vec = Vec::from_buf(buf);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(vec, &amp;b&quot;hello world&quot;[..]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>from_buf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>IntoBuf</span>;
+<span class="doccomment">/// Conversion from a [`Buf`]</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Implementing `FromBuf` for a type defines how it is created from a buffer.</span>
+<span class="doccomment">/// This is common for types which represent byte storage of some kind.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`FromBuf::from_buf`] is rarely called explicitly, and it is instead used</span>
+<span class="doccomment">/// through [`Buf::collect`]. See [`Buf::collect`] documentation for more examples.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See also [`IntoBuf`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Basic  usage:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use bytes::{Bytes, IntoBuf};</span>
+<span class="doccomment">/// use bytes::buf::FromBuf;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]).into_buf();</span>
+<span class="doccomment">/// let vec = Vec::from_buf(buf);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(vec, &amp;b&quot;hello world&quot;[..]);</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Using [`Buf::collect`] to implicitly use `FromBuf`:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use bytes::{Buf, Bytes, IntoBuf};</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]).into_buf();</span>
+<span class="doccomment">/// let vec: Vec&lt;u8&gt; = buf.collect();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(vec, &amp;b&quot;hello world&quot;[..]);</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Implementing `FromBuf` for your type:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use bytes::{BufMut, Bytes};</span>
+<span class="doccomment">/// use bytes::buf::{IntoBuf, FromBuf};</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // A sample buffer, that&#39;s just a wrapper over Vec&lt;u8&gt;</span>
+<span class="doccomment">/// struct MyBuffer(Vec&lt;u8&gt;);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// impl FromBuf for MyBuffer {</span>
+<span class="doccomment">///     fn from_buf&lt;B&gt;(buf: B) -&gt; Self where B: IntoBuf {</span>
+<span class="doccomment">///         let mut v = Vec::new();</span>
+<span class="doccomment">///         v.put(buf.into_buf());</span>
+<span class="doccomment">///         MyBuffer(v)</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Now we can make a new buf</span>
+<span class="doccomment">/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // And make a MyBuffer out of it</span>
+<span class="doccomment">/// let my_buf = MyBuffer::from_buf(buf);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(my_buf.0, &amp;b&quot;hello world&quot;[..]);</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`Buf`]: trait.Buf.html</span>
+<span class="doccomment">/// [`FromBuf::from_buf`]: #method.from_buf</span>
+<span class="doccomment">/// [`Buf::collect`]: trait.Buf.html#method.collect</span>
+<span class="doccomment">/// [`IntoBuf`]: trait.IntoBuf.html</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FromBuf</span> {
+    <span class="doccomment">/// Creates a value from a buffer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See the [type-level documentation](#) for more details.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Basic  usage:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use bytes::{Bytes, IntoBuf};</span>
+    <span class="doccomment">/// use bytes::buf::FromBuf;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let buf = Bytes::from(&amp;b&quot;hello world&quot;[..]).into_buf();</span>
+    <span class="doccomment">/// let vec = Vec::from_buf(buf);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(vec, &amp;b&quot;hello world&quot;[..]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">from_buf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">buf</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoBuf</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromBuf</span> <span class='kw'>for</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_buf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>IntoBuf</span>
+<span class="kw">impl</span> <span class="ident">FromBuf</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_buf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">buf</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoBuf</span>
     {
-        <span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>buf</span>.<span class='ident'>into_buf</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>buf</span>.<span class='ident'>remaining</span>());
-        <span class='ident'>ret</span>.<span class='ident'>put</span>(<span class='ident'>buf</span>);
-        <span class='ident'>ret</span>
+        <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">into_buf</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">buf</span>.<span class="ident">remaining</span>());
+        <span class="ident">ret</span>.<span class="ident">put</span>(<span class="ident">buf</span>);
+        <span class="ident">ret</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromBuf</span> <span class='kw'>for</span> <span class='ident'>Bytes</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_buf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>IntoBuf</span>
+<span class="kw">impl</span> <span class="ident">FromBuf</span> <span class="kw">for</span> <span class="ident">Bytes</span> {
+    <span class="kw">fn</span> <span class="ident">from_buf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">buf</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoBuf</span>
     {
-        <span class='ident'>BytesMut</span>::<span class='ident'>from_buf</span>(<span class='ident'>buf</span>).<span class='ident'>freeze</span>()
+        <span class="ident">BytesMut</span>::<span class="ident">from_buf</span>(<span class="ident">buf</span>).<span class="ident">freeze</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>FromBuf</span> <span class='kw'>for</span> <span class='ident'>BytesMut</span> {
-    <span class='kw'>fn</span> <span class='ident'>from_buf</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>IntoBuf</span>
+<span class="kw">impl</span> <span class="ident">FromBuf</span> <span class="kw">for</span> <span class="ident">BytesMut</span> {
+    <span class="kw">fn</span> <span class="ident">from_buf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">buf</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoBuf</span>
     {
-        <span class='kw'>let</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>buf</span>.<span class='ident'>into_buf</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>BytesMut</span>::<span class='ident'>with_capacity</span>(<span class='ident'>buf</span>.<span class='ident'>remaining</span>());
-        <span class='ident'>ret</span>.<span class='ident'>put</span>(<span class='ident'>buf</span>);
-        <span class='ident'>ret</span>
+        <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">into_buf</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">BytesMut</span>::<span class="ident">with_capacity</span>(<span class="ident">buf</span>.<span class="ident">remaining</span>());
+        <span class="ident">ret</span>.<span class="ident">put</span>(<span class="ident">buf</span>);
+        <span class="ident">ret</span>
     }
 }
 </pre>

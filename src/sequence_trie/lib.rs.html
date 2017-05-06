@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -505,467 +505,467 @@
 <span id="460">460</span>
 <span id="461">461</span>
 <span id="462">462</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Sequence Trie - a trie-like data-structure for storing sequences of values.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! See the `SequenceTrie` type for documentation.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Sequence Trie - a trie-like data-structure for storing sequences of values.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! See the `SequenceTrie` type for documentation.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>hash_map</span>::{<span class='self'>self</span>, <span class='ident'>HashMap</span>, <span class='ident'>Entry</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>IntoIterator</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::{<span class='ident'>Borrow</span>, <span class='ident'>ToOwned</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hash</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">hash_map</span>::{<span class="self">self</span>, <span class="ident">HashMap</span>, <span class="ident">Entry</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">IntoIterator</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">default</span>::<span class="ident">Default</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::{<span class="ident">Borrow</span>, <span class="ident">ToOwned</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span>;
 
-<span class='doccomment'>/// A `SequenceTrie` is recursively defined as a value and a map containing child Tries.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Typically, Tries are used to store strings, which can be thought of as lists of `char`s.</span>
-<span class='doccomment'>/// Generalising this to any key type, a Trie is a data structure storing values for keys</span>
-<span class='doccomment'>/// which are themselves lists. Let the parts of such a list-key be called &quot;key fragments&quot;.</span>
-<span class='doccomment'>/// In our representation of a Trie, `K` denotes the type of the key fragments.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The nesting of child Tries creates a tree structure which can be traversed by mapping</span>
-<span class='doccomment'>/// key fragments onto nodes. The structure is similar to a k-ary tree, except that the children</span>
-<span class='doccomment'>/// are stored in `HashMap`s, and there is no bound on the number of children a single node may</span>
-<span class='doccomment'>/// have (effectively k = ∞). In a `SequenceTrie` with `char` key fragments, the key</span>
-<span class='doccomment'>/// `[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]` might correspond to something like this:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```text</span>
-<span class='doccomment'>/// SequenceTrie {</span>
-<span class='doccomment'>///     value: Some(0),</span>
-<span class='doccomment'>///     children: &#39;a&#39; =&gt; SequenceTrie {</span>
-<span class='doccomment'>///         value: Some(1),</span>
-<span class='doccomment'>///         children: &#39;b&#39; =&gt; SequenceTrie {</span>
-<span class='doccomment'>///             value: None,</span>
-<span class='doccomment'>///             children: &#39;c&#39; =&gt; SequenceTrie {</span>
-<span class='doccomment'>///                 value: Some(3),</span>
-<span class='doccomment'>///                 children: Nil</span>
-<span class='doccomment'>///             }</span>
-<span class='doccomment'>///         }</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Values are stored optionally at each node because inserting a value for a list-key only inserts</span>
-<span class='doccomment'>/// a value for the last fragment of the key. The intermediate prefix nodes are created with value</span>
-<span class='doccomment'>/// `None` if they do not exist already.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The above `SequenceTrie` could be created using the following sequence of operations:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # use sequence_trie::SequenceTrie;</span>
-<span class='doccomment'>/// let mut trie: SequenceTrie&lt;char, i32&gt; = SequenceTrie::new();</span>
-<span class='doccomment'>/// trie.insert(&amp;[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;], 3);</span>
-<span class='doccomment'>/// trie.insert(&amp;[], 0);</span>
-<span class='doccomment'>/// trie.insert(&amp;[&#39;a&#39;], 1);</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The order of insertion is never important.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// One interesting thing about Tries is that every key is a *descendant* of the root, which itself</span>
-<span class='doccomment'>/// has no key fragment. Although this is a rather trivial observation, it means that every key</span>
-<span class='doccomment'>/// corresponds to a non-empty sequence of prefix nodes in the tree. This observation is the</span>
-<span class='doccomment'>/// motivation for the `get_prefix_nodes` method, which returns the nodes corresponding to the longest</span>
-<span class='doccomment'>/// prefix of a given key.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The empty list key, `[]`, always corresponds to the root node of the Trie.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # The Sequence Trie Invariant</span>
-<span class='doccomment'>/// All leaf nodes have non-trivial values (not equal to `None`). This invariant is maintained by</span>
-<span class='doccomment'>/// the insertion and removal methods and can be relied upon.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="doccomment">/// A `SequenceTrie` is recursively defined as a value and a map containing child Tries.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Typically, Tries are used to store strings, which can be thought of as lists of `char`s.</span>
+<span class="doccomment">/// Generalising this to any key type, a Trie is a data structure storing values for keys</span>
+<span class="doccomment">/// which are themselves lists. Let the parts of such a list-key be called &quot;key fragments&quot;.</span>
+<span class="doccomment">/// In our representation of a Trie, `K` denotes the type of the key fragments.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The nesting of child Tries creates a tree structure which can be traversed by mapping</span>
+<span class="doccomment">/// key fragments onto nodes. The structure is similar to a k-ary tree, except that the children</span>
+<span class="doccomment">/// are stored in `HashMap`s, and there is no bound on the number of children a single node may</span>
+<span class="doccomment">/// have (effectively k = ∞). In a `SequenceTrie` with `char` key fragments, the key</span>
+<span class="doccomment">/// `[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]` might correspond to something like this:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```text</span>
+<span class="doccomment">/// SequenceTrie {</span>
+<span class="doccomment">///     value: Some(0),</span>
+<span class="doccomment">///     children: &#39;a&#39; =&gt; SequenceTrie {</span>
+<span class="doccomment">///         value: Some(1),</span>
+<span class="doccomment">///         children: &#39;b&#39; =&gt; SequenceTrie {</span>
+<span class="doccomment">///             value: None,</span>
+<span class="doccomment">///             children: &#39;c&#39; =&gt; SequenceTrie {</span>
+<span class="doccomment">///                 value: Some(3),</span>
+<span class="doccomment">///                 children: Nil</span>
+<span class="doccomment">///             }</span>
+<span class="doccomment">///         }</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Values are stored optionally at each node because inserting a value for a list-key only inserts</span>
+<span class="doccomment">/// a value for the last fragment of the key. The intermediate prefix nodes are created with value</span>
+<span class="doccomment">/// `None` if they do not exist already.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The above `SequenceTrie` could be created using the following sequence of operations:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use sequence_trie::SequenceTrie;</span>
+<span class="doccomment">/// let mut trie: SequenceTrie&lt;char, i32&gt; = SequenceTrie::new();</span>
+<span class="doccomment">/// trie.insert(&amp;[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;], 3);</span>
+<span class="doccomment">/// trie.insert(&amp;[], 0);</span>
+<span class="doccomment">/// trie.insert(&amp;[&#39;a&#39;], 1);</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The order of insertion is never important.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// One interesting thing about Tries is that every key is a *descendant* of the root, which itself</span>
+<span class="doccomment">/// has no key fragment. Although this is a rather trivial observation, it means that every key</span>
+<span class="doccomment">/// corresponds to a non-empty sequence of prefix nodes in the tree. This observation is the</span>
+<span class="doccomment">/// motivation for the `get_prefix_nodes` method, which returns the nodes corresponding to the longest</span>
+<span class="doccomment">/// prefix of a given key.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The empty list key, `[]`, always corresponds to the root node of the Trie.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # The Sequence Trie Invariant</span>
+<span class="doccomment">/// All leaf nodes have non-trivial values (not equal to `None`). This invariant is maintained by</span>
+<span class="doccomment">/// the insertion and removal methods and can be relied upon.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='doccomment'>/// Node value.</span>
-    <span class='ident'>value</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>,
+    <span class="doccomment">/// Node value.</span>
+    <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>,
 
-    <span class='doccomment'>/// Node children as a hashmap keyed by key fragments.</span>
-    <span class='ident'>children</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>,
+    <span class="doccomment">/// Node children as a hashmap keyed by key fragments.</span>
+    <span class="ident">children</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>,
 }
 
-<span class='doccomment'>/// Aggregate trait for types which can be used to key a `SequenceTrie`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This trait is automatically implemented for all types implementing</span>
-<span class='doccomment'>/// the supertraits.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>TrieKey</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>PartialEq</span> <span class='op'>+</span> <span class='ident'>Eq</span> <span class='op'>+</span> <span class='ident'>Hash</span> <span class='op'>+</span> <span class='ident'>Clone</span> {}
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span><span class='op'>&gt;</span> <span class='ident'>TrieKey</span> <span class='kw'>for</span> <span class='ident'>K</span> <span class='kw'>where</span> <span class='ident'>K</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>PartialEq</span> <span class='op'>+</span> <span class='ident'>Eq</span> <span class='op'>+</span> <span class='ident'>Hash</span> <span class='op'>+</span> <span class='ident'>Clone</span> {}
+<span class="doccomment">/// Aggregate trait for types which can be used to key a `SequenceTrie`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This trait is automatically implemented for all types implementing</span>
+<span class="doccomment">/// the supertraits.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TrieKey</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> <span class="ident">TrieKey</span> <span class="kw">for</span> <span class="ident">K</span> <span class="kw">where</span> <span class="ident">K</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> {}
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='doccomment'>/// Creates a new `SequenceTrie` node with no value and an empty child map.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
-        <span class='ident'>SequenceTrie</span> {
-            <span class='ident'>value</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>children</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>(),
+    <span class="doccomment">/// Creates a new `SequenceTrie` node with no value and an empty child map.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
+        <span class="ident">SequenceTrie</span> {
+            <span class="ident">value</span>: <span class="prelude-val">None</span>,
+            <span class="ident">children</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>(),
         }
     }
 
-    <span class='doccomment'>/// Checks if this node is empty.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A node is considered empty when it has no value and no children.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_empty</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>children</span>.<span class='ident'>is_empty</span>() <span class='op'>&amp;&amp;</span> <span class='self'>self</span>.<span class='ident'>value</span>.<span class='ident'>is_none</span>()
+    <span class="doccomment">/// Checks if this node is empty.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A node is considered empty when it has no value and no children.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">is_none</span>()
     }
 
-    <span class='doccomment'>/// Inserts a key and value into the SequenceTrie.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` if the key did not already correspond to a value, otherwise the old value is</span>
-    <span class='doccomment'>/// returned.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span>, <span class='ident'>Q</span>: <span class='lifetime'>&#39;key</span> <span class='op'>+</span> <span class='question-mark'>?</span><span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>, <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>Q</span><span class='op'>&gt;</span>,
-              <span class='ident'>Q</span>: <span class='ident'>ToOwned</span><span class='op'>&lt;</span><span class='ident'>Owned</span> <span class='op'>=</span> <span class='ident'>K</span><span class='op'>&gt;</span>,
-              <span class='ident'>K</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Q</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Inserts a key and value into the SequenceTrie.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns `None` if the key did not already correspond to a value, otherwise the old value is</span>
+    <span class="doccomment">/// returned.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span>, <span class="ident">Q</span>: <span class="lifetime">&#39;key</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">Q</span><span class="op">&gt;</span>,
+              <span class="ident">Q</span>: <span class="ident">ToOwned</span><span class="op">&lt;</span><span class="ident">Owned</span> <span class="op">=</span> <span class="ident">K</span><span class="op">&gt;</span>,
+              <span class="ident">K</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>insert_owned</span>(<span class='ident'>key</span>.<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='ident'>ToOwned</span>::<span class='ident'>to_owned</span>), <span class='ident'>value</span>)
+        <span class="self">self</span>.<span class="ident">insert_owned</span>(<span class="ident">key</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">ToOwned</span>::<span class="ident">to_owned</span>), <span class="ident">value</span>)
     }
 
-    <span class='doccomment'>/// Version of `insert` that takes an owned sequence of key fragments.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This function is used internally by `insert`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert_owned</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>, <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Version of `insert` that takes an owned sequence of key fragments.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function is used internally by `insert`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert_owned</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='kw'>let</span> <span class='ident'>key_node</span> <span class='op'>=</span> <span class='ident'>key</span>.<span class='ident'>into_iter</span>().<span class='ident'>fold</span>(<span class='self'>self</span>, <span class='op'>|</span><span class='ident'>current_node</span>, <span class='ident'>fragment</span><span class='op'>|</span> {
-            <span class='ident'>current_node</span>.<span class='ident'>children</span>.<span class='ident'>entry</span>(<span class='ident'>fragment</span>).<span class='ident'>or_insert_with</span>(<span class='self'>Self</span>::<span class='ident'>new</span>)
+        <span class="kw">let</span> <span class="ident">key_node</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">into_iter</span>().<span class="ident">fold</span>(<span class="self">self</span>, <span class="op">|</span><span class="ident">current_node</span>, <span class="ident">fragment</span><span class="op">|</span> {
+            <span class="ident">current_node</span>.<span class="ident">children</span>.<span class="ident">entry</span>(<span class="ident">fragment</span>).<span class="ident">or_insert_with</span>(<span class="self">Self</span>::<span class="ident">new</span>)
         });
 
-        <span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>key_node</span>.<span class='ident'>value</span>, <span class='prelude-val'>Some</span>(<span class='ident'>value</span>))
+        <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">key_node</span>.<span class="ident">value</span>, <span class="prelude-val">Some</span>(<span class="ident">value</span>))
     }
 
-    <span class='doccomment'>/// Finds a reference to a key&#39;s value, if it has one.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>V</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Finds a reference to a key&#39;s value, if it has one.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">V</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>get_node</span>(<span class='ident'>key</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>node</span><span class='op'>|</span> <span class='ident'>node</span>.<span class='ident'>value</span>.<span class='ident'>as_ref</span>())
+        <span class="self">self</span>.<span class="ident">get_node</span>(<span class="ident">key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">value</span>.<span class="ident">as_ref</span>())
     }
 
-    <span class='doccomment'>/// Finds a reference to a key&#39;s node, if it has one.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_node</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Finds a reference to a key&#39;s node, if it has one.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_node</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>current_node</span> <span class='op'>=</span> <span class='self'>self</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_node</span> <span class="op">=</span> <span class="self">self</span>;
 
-        <span class='kw'>for</span> <span class='ident'>fragment</span> <span class='kw'>in</span> <span class='ident'>key</span> {
-            <span class='kw'>match</span> <span class='ident'>current_node</span>.<span class='ident'>children</span>.<span class='ident'>get</span>(<span class='ident'>fragment</span>) {
-                <span class='prelude-val'>Some</span>(<span class='ident'>node</span>) <span class='op'>=&gt;</span> <span class='ident'>current_node</span> <span class='op'>=</span> <span class='ident'>node</span>,
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>,
+        <span class="kw">for</span> <span class="ident">fragment</span> <span class="kw">in</span> <span class="ident">key</span> {
+            <span class="kw">match</span> <span class="ident">current_node</span>.<span class="ident">children</span>.<span class="ident">get</span>(<span class="ident">fragment</span>) {
+                <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=&gt;</span> <span class="ident">current_node</span> <span class="op">=</span> <span class="ident">node</span>,
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
             }
         }
 
-        <span class='prelude-val'>Some</span>(<span class='ident'>current_node</span>)
+        <span class="prelude-val">Some</span>(<span class="ident">current_node</span>)
     }
 
-    <span class='doccomment'>/// Finds a mutable reference to a key&#39;s value, if it has one.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Finds a mutable reference to a key&#39;s value, if it has one.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">V</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>get_node_mut</span>(<span class='ident'>key</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>node</span><span class='op'>|</span> <span class='ident'>node</span>.<span class='ident'>value</span>.<span class='ident'>as_mut</span>())
+        <span class="self">self</span>.<span class="ident">get_node_mut</span>(<span class="ident">key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">value</span>.<span class="ident">as_mut</span>())
     }
 
-    <span class='doccomment'>/// Finds a mutable reference to a key&#39;s node, if it has one.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_node_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Finds a mutable reference to a key&#39;s node, if it has one.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_node_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>current_node</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='self'>self</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_node</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>);
 
-        <span class='kw'>for</span> <span class='ident'>fragment</span> <span class='kw'>in</span> <span class='ident'>key</span> {
-            <span class='kw'>match</span> <span class='ident'>current_node</span>.<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>node</span><span class='op'>|</span> <span class='ident'>node</span>.<span class='ident'>children</span>.<span class='ident'>get_mut</span>(<span class='ident'>fragment</span>)) {
-                <span class='prelude-val'>Some</span>(<span class='ident'>node</span>) <span class='op'>=&gt;</span> <span class='ident'>current_node</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>node</span>),
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>,
+        <span class="kw">for</span> <span class="ident">fragment</span> <span class="kw">in</span> <span class="ident">key</span> {
+            <span class="kw">match</span> <span class="ident">current_node</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">children</span>.<span class="ident">get_mut</span>(<span class="ident">fragment</span>)) {
+                <span class="prelude-val">Some</span>(<span class="ident">node</span>) <span class="op">=&gt;</span> <span class="ident">current_node</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>),
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
             }
         }
 
-        <span class='ident'>current_node</span>
+        <span class="ident">current_node</span>
     }
 
-    <span class='doccomment'>/// Finds the longest prefix of nodes which match the given key.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_prefix_nodes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='lifetime'>&#39;key</span> <span class='op'>+</span> <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Finds the longest prefix of nodes which match the given key.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_prefix_nodes</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="lifetime">&#39;key</span> <span class="op">+</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>prefix_iter</span>(<span class='ident'>key</span>).<span class='ident'>collect</span>()
+        <span class="self">self</span>.<span class="ident">prefix_iter</span>(<span class="ident">key</span>).<span class="ident">collect</span>()
     }
 
-    <span class='doccomment'>/// Finds the value of the nearest ancestor with a non-empty value, if one exists.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If all ancestors have empty (`None`) values, `None` is returned.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_ancestor</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>V</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='lifetime'>&#39;key</span> <span class='op'>+</span> <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Finds the value of the nearest ancestor with a non-empty value, if one exists.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If all ancestors have empty (`None`) values, `None` is returned.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ancestor</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">V</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="lifetime">&#39;key</span> <span class="op">+</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>get_ancestor_node</span>(<span class='ident'>key</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>node</span><span class='op'>|</span> <span class='ident'>node</span>.<span class='ident'>value</span>.<span class='ident'>as_ref</span>())
+        <span class="self">self</span>.<span class="ident">get_ancestor_node</span>(<span class="ident">key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">value</span>.<span class="ident">as_ref</span>())
     }
 
-    <span class='doccomment'>/// Finds the nearest ancestor with a non-empty value, if one exists.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If all ancestors have empty (`None`) values, `None` is returned.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_ancestor_node</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='lifetime'>&#39;key</span> <span class='op'>+</span> <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Finds the nearest ancestor with a non-empty value, if one exists.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If all ancestors have empty (`None`) values, `None` is returned.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ancestor_node</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="lifetime">&#39;key</span> <span class="op">+</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>prefix_iter</span>(<span class='ident'>key</span>)
-            .<span class='ident'>filter</span>(<span class='op'>|</span><span class='ident'>node</span><span class='op'>|</span> <span class='ident'>node</span>.<span class='ident'>value</span>.<span class='ident'>is_some</span>())
-            .<span class='ident'>last</span>()
+        <span class="self">self</span>.<span class="ident">prefix_iter</span>(<span class="ident">key</span>)
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="ident">node</span>.<span class="ident">value</span>.<span class="ident">is_some</span>())
+            .<span class="ident">last</span>()
     }
 
-    <span class='doccomment'>/// Removes the node corresponding to the given key.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This operation is like the reverse of `insert` in that</span>
-    <span class='doccomment'>/// it also deletes extraneous nodes on the path from the root.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the key node has children, its value is set to `None` and no further</span>
-    <span class='doccomment'>/// action is taken. If the key node is a leaf, then it and its ancestors with</span>
-    <span class='doccomment'>/// empty values and no other children are deleted. Deletion proceeds up the tree</span>
-    <span class='doccomment'>/// from the key node until a node with a non-empty value or children is reached.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the key doesn&#39;t match a node in the Trie, no action is taken.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>remove</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>)
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Removes the node corresponding to the given key.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This operation is like the reverse of `insert` in that</span>
+    <span class="doccomment">/// it also deletes extraneous nodes on the path from the root.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the key node has children, its value is set to `None` and no further</span>
+    <span class="doccomment">/// action is taken. If the key node is a leaf, then it and its ancestors with</span>
+    <span class="doccomment">/// empty values and no other children are deleted. Deletion proceeds up the tree</span>
+    <span class="doccomment">/// from the key node until a node with a non-empty value or children is reached.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the key doesn&#39;t match a node in the Trie, no action is taken.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>)
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>remove_recursive</span>(<span class='ident'>key</span>);
+        <span class="self">self</span>.<span class="ident">remove_recursive</span>(<span class="ident">key</span>);
     }
 
-    <span class='doccomment'>/// Recursive remove method that uses the call stack to safely and</span>
-    <span class='doccomment'>/// efficiently remove a node and its extraneous ancestors.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Return `true` if the node should be deleted.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See `remove` above.</span>
-    <span class='kw'>fn</span> <span class='ident'>remove_recursive</span><span class='op'>&lt;</span><span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Recursive remove method that uses the call stack to safely and</span>
+    <span class="doccomment">/// efficiently remove a node and its extraneous ancestors.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Return `true` if the node should be deleted.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See `remove` above.</span>
+    <span class="kw">fn</span> <span class="ident">remove_recursive</span><span class="op">&lt;</span><span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>fragments</span> <span class='op'>=</span> <span class='ident'>key</span>.<span class='ident'>into_iter</span>();
-        <span class='kw'>match</span> <span class='ident'>fragments</span>.<span class='ident'>next</span>() {
-            <span class='comment'>// Base case: Leaf node, no key left to recurse on.</span>
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>value</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fragments</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">into_iter</span>();
+        <span class="kw">match</span> <span class="ident">fragments</span>.<span class="ident">next</span>() {
+            <span class="comment">// Base case: Leaf node, no key left to recurse on.</span>
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">value</span> <span class="op">=</span> <span class="prelude-val">None</span>;
             }
 
-            <span class='comment'>// Recursive case: Inner node, delete children.</span>
-            <span class='prelude-val'>Some</span>(<span class='ident'>fragment</span>) <span class='op'>=&gt;</span> {
-                <span class='comment'>// Find the child entry in the node&#39;s hashmap.</span>
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Entry</span>::<span class='ident'>Occupied</span>(<span class='kw-2'>mut</span> <span class='ident'>entry</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>children</span>.<span class='ident'>entry</span>(<span class='ident'>fragment</span>.<span class='ident'>clone</span>()) {
-                    <span class='comment'>// Work out whether to delete the child by calling remove recursively.</span>
-                    <span class='kw'>let</span> <span class='ident'>delete_child</span> <span class='op'>=</span> <span class='ident'>entry</span>.<span class='ident'>get_mut</span>().<span class='ident'>remove_recursive</span>(<span class='ident'>fragments</span>);
+            <span class="comment">// Recursive case: Inner node, delete children.</span>
+            <span class="prelude-val">Some</span>(<span class="ident">fragment</span>) <span class="op">=&gt;</span> {
+                <span class="comment">// Find the child entry in the node&#39;s hashmap.</span>
+                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Entry</span>::<span class="ident">Occupied</span>(<span class="kw-2">mut</span> <span class="ident">entry</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">children</span>.<span class="ident">entry</span>(<span class="ident">fragment</span>.<span class="ident">clone</span>()) {
+                    <span class="comment">// Work out whether to delete the child by calling remove recursively.</span>
+                    <span class="kw">let</span> <span class="ident">delete_child</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">get_mut</span>().<span class="ident">remove_recursive</span>(<span class="ident">fragments</span>);
 
-                    <span class='kw'>if</span> <span class='ident'>delete_child</span> {
-                        <span class='ident'>entry</span>.<span class='ident'>remove</span>();
+                    <span class="kw">if</span> <span class="ident">delete_child</span> {
+                        <span class="ident">entry</span>.<span class="ident">remove</span>();
                     }
                 }
-                <span class='comment'>// NB: If the child isn&#39;t found, false will be returned.</span>
-                <span class='comment'>// The `self` node is either a leaf, with a non-trivial value, or an</span>
-                <span class='comment'>// inner node (with children).</span>
+                <span class="comment">// NB: If the child isn&#39;t found, false will be returned.</span>
+                <span class="comment">// The `self` node is either a leaf, with a non-trivial value, or an</span>
+                <span class="comment">// inner node (with children).</span>
             }
         }
 
-        <span class='comment'>// If the node is childless and valueless, mark it for deletion.</span>
-        <span class='self'>self</span>.<span class='ident'>is_empty</span>()
+        <span class="comment">// If the node is childless and valueless, mark it for deletion.</span>
+        <span class="self">self</span>.<span class="ident">is_empty</span>()
     }
 
-    <span class='doccomment'>/// Returns an iterator over all the key-value pairs in the collection.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>iter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
-        <span class='ident'>Iter</span> {
-            <span class='ident'>root</span>: <span class='self'>self</span>,
-            <span class='ident'>root_visited</span>: <span class='bool-val'>false</span>,
-            <span class='ident'>key</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
-            <span class='ident'>stack</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
+    <span class="doccomment">/// Returns an iterator over all the key-value pairs in the collection.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
+        <span class="ident">Iter</span> {
+            <span class="ident">root</span>: <span class="self">self</span>,
+            <span class="ident">root_visited</span>: <span class="bool-val">false</span>,
+            <span class="ident">key</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">stack</span>: <span class="macro">vec</span><span class="macro">!</span>[],
         }
     }
 
-    <span class='doccomment'>/// Returns an iterator over all the keys in the trie.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
-        <span class='ident'>Keys</span> { <span class='ident'>inner</span>: <span class='self'>self</span>.<span class='ident'>iter</span>() }
+    <span class="doccomment">/// Returns an iterator over all the keys in the trie.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Keys</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
+        <span class="ident">Keys</span> { <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">iter</span>() }
     }
 
-    <span class='doccomment'>/// Returns an iterator over all the values stored in the trie.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>values</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Values</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> {
-        <span class='ident'>Values</span> { <span class='ident'>inner</span>: <span class='self'>self</span>.<span class='ident'>iter</span>() }
+    <span class="doccomment">/// Returns an iterator over all the values stored in the trie.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">values</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Values</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
+        <span class="ident">Values</span> { <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">iter</span>() }
     }
 
-    <span class='doccomment'>/// Returns an iterator over the longest prefix of nodes which match the given key.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>prefix_iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;trie</span>, <span class='lifetime'>&#39;key</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;trie</span> <span class='self'>self</span>,
-                                       <span class='ident'>key</span>: <span class='ident'>I</span>)
-                                       <span class='op'>-&gt;</span> <span class='ident'>PrefixIter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;trie</span>, <span class='lifetime'>&#39;key</span>, <span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>I</span>::<span class='ident'>IntoIter</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='lifetime'>&#39;key</span> <span class='op'>+</span> <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Returns an iterator over the longest prefix of nodes which match the given key.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prefix_iter</span><span class="op">&lt;</span><span class="lifetime">&#39;trie</span>, <span class="lifetime">&#39;key</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;trie</span> <span class="self">self</span>,
+                                       <span class="ident">key</span>: <span class="ident">I</span>)
+                                       <span class="op">-&gt;</span> <span class="ident">PrefixIter</span><span class="op">&lt;</span><span class="lifetime">&#39;trie</span>, <span class="lifetime">&#39;key</span>, <span class="ident">K</span>, <span class="ident">V</span>, <span class="ident">I</span>::<span class="ident">IntoIter</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="lifetime">&#39;key</span> <span class="op">+</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
     {
-        <span class='ident'>PrefixIter</span> {
-            <span class='ident'>next_node</span>: <span class='prelude-val'>Some</span>(<span class='self'>self</span>),
-            <span class='ident'>fragments</span>: <span class='ident'>key</span>.<span class='ident'>into_iter</span>(),
-            <span class='ident'>_phantom</span>: <span class='ident'>PhantomData</span>,
+        <span class="ident">PrefixIter</span> {
+            <span class="ident">next_node</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>),
+            <span class="ident">fragments</span>: <span class="ident">key</span>.<span class="ident">into_iter</span>(),
+            <span class="ident">_phantom</span>: <span class="ident">PhantomData</span>,
         }
     }
 }
 
-<span class='doccomment'>/// Iterator over the keys and values of a `SequenceTrie`.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>V</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="doccomment">/// Iterator over the keys and values of a `SequenceTrie`.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="lifetime">&#39;a</span>, <span class="ident">V</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='ident'>root</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>,
-    <span class='ident'>root_visited</span>: <span class='ident'>bool</span>,
-    <span class='ident'>key</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>K</span><span class='op'>&gt;</span>,
-    <span class='ident'>stack</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>StackItem</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>,
+    <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>,
+    <span class="ident">root_visited</span>: <span class="ident">bool</span>,
+    <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">K</span><span class="op">&gt;</span>,
+    <span class="ident">stack</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StackItem</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>,
 }
 
-<span class='doccomment'>/// Vector of key fragment references and values, yielded during iteration.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>KeyValuePair</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='op'>=</span> (<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>K</span><span class='op'>&gt;</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>V</span>);
+<span class="doccomment">/// Vector of key fragment references and values, yielded during iteration.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">KeyValuePair</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">K</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">V</span>);
 
-<span class='doccomment'>/// Iterator over the keys of a `SequenceTrie`.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>V</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="doccomment">/// Iterator over the keys of a `SequenceTrie`.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Keys</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="lifetime">&#39;a</span>, <span class="ident">V</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='ident'>inner</span>: <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>,
+    <span class="ident">inner</span>: <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>,
 }
 
-<span class='doccomment'>/// Iterator over the values of a `SequenceTrie`.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Values</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>V</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="doccomment">/// Iterator over the values of a `SequenceTrie`.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Values</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="lifetime">&#39;a</span>, <span class="ident">V</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='ident'>inner</span>: <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>,
+    <span class="ident">inner</span>: <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>,
 }
 
-<span class='doccomment'>/// Information stored on the iteration stack whilst exploring.</span>
-<span class='kw'>struct</span> <span class='ident'>StackItem</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>V</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="doccomment">/// Information stored on the iteration stack whilst exploring.</span>
+<span class="kw">struct</span> <span class="ident">StackItem</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="lifetime">&#39;a</span>, <span class="ident">V</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='ident'>child_iter</span>: <span class='ident'>hash_map</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>,
+    <span class="ident">child_iter</span>: <span class="ident">hash_map</span>::<span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>,
 }
 
-<span class='doccomment'>/// Delayed action type for iteration stack manipulation.</span>
-<span class='kw'>enum</span> <span class='ident'>IterAction</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>: <span class='lifetime'>&#39;a</span>, <span class='ident'>V</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="doccomment">/// Delayed action type for iteration stack manipulation.</span>
+<span class="kw">enum</span> <span class="ident">IterAction</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="lifetime">&#39;a</span>, <span class="ident">V</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='ident'>Push</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>K</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>),
-    <span class='ident'>Pop</span>,
+    <span class="ident">Push</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">K</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>),
+    <span class="ident">Pop</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>KeyValuePair</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">KeyValuePair</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>KeyValuePair</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>use</span> <span class='ident'>IterAction</span>::<span class='kw-2'>*</span>;
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyValuePair</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">use</span> <span class="ident">IterAction</span>::<span class="kw-2">*</span>;
 
-        <span class='comment'>// Special handling for the root.</span>
-        <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>root_visited</span> {
-            <span class='self'>self</span>.<span class='ident'>root_visited</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
-            <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>push</span>(<span class='ident'>StackItem</span> { <span class='ident'>child_iter</span>: <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>children</span>.<span class='ident'>iter</span>() });
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>root_val</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>root</span>.<span class='ident'>value</span> {
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>((<span class='macro'>vec</span><span class='macro'>!</span>[], <span class='ident'>root_val</span>));
+        <span class="comment">// Special handling for the root.</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">root_visited</span> {
+            <span class="self">self</span>.<span class="ident">root_visited</span> <span class="op">=</span> <span class="bool-val">true</span>;
+            <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">StackItem</span> { <span class="ident">child_iter</span>: <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">children</span>.<span class="ident">iter</span>() });
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">root_val</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">value</span> {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="macro">vec</span><span class="macro">!</span>[], <span class="ident">root_val</span>));
             }
         }
 
-        <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>action</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>last_mut</span>() {
-                <span class='prelude-val'>Some</span>(<span class='ident'>stack_top</span>) <span class='op'>=&gt;</span> {
-                    <span class='kw'>match</span> <span class='ident'>stack_top</span>.<span class='ident'>child_iter</span>.<span class='ident'>next</span>() {
-                        <span class='prelude-val'>Some</span>((<span class='ident'>fragment</span>, <span class='ident'>child_node</span>)) <span class='op'>=&gt;</span> <span class='ident'>Push</span>(<span class='ident'>fragment</span>, <span class='ident'>child_node</span>),
-                        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Pop</span>,
+        <span class="kw">loop</span> {
+            <span class="kw">let</span> <span class="ident">action</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">last_mut</span>() {
+                <span class="prelude-val">Some</span>(<span class="ident">stack_top</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">match</span> <span class="ident">stack_top</span>.<span class="ident">child_iter</span>.<span class="ident">next</span>() {
+                        <span class="prelude-val">Some</span>((<span class="ident">fragment</span>, <span class="ident">child_node</span>)) <span class="op">=&gt;</span> <span class="ident">Push</span>(<span class="ident">fragment</span>, <span class="ident">child_node</span>),
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">Pop</span>,
                     }
                 }
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>,
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
             };
 
-            <span class='kw'>match</span> <span class='ident'>action</span> {
-                <span class='ident'>Push</span>(<span class='ident'>fragment</span>, <span class='ident'>node</span>) <span class='op'>=&gt;</span> {
-                    <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>push</span>(<span class='ident'>StackItem</span> { <span class='ident'>child_iter</span>: <span class='ident'>node</span>.<span class='ident'>children</span>.<span class='ident'>iter</span>() });
-                    <span class='self'>self</span>.<span class='ident'>key</span>.<span class='ident'>push</span>(<span class='ident'>fragment</span>);
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=</span> <span class='ident'>node</span>.<span class='ident'>value</span> {
-                        <span class='kw'>return</span> <span class='prelude-val'>Some</span>((<span class='self'>self</span>.<span class='ident'>key</span>.<span class='ident'>clone</span>(), <span class='ident'>value</span>));
+            <span class="kw">match</span> <span class="ident">action</span> {
+                <span class="ident">Push</span>(<span class="ident">fragment</span>, <span class="ident">node</span>) <span class="op">=&gt;</span> {
+                    <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">StackItem</span> { <span class="ident">child_iter</span>: <span class="ident">node</span>.<span class="ident">children</span>.<span class="ident">iter</span>() });
+                    <span class="self">self</span>.<span class="ident">key</span>.<span class="ident">push</span>(<span class="ident">fragment</span>);
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=</span> <span class="ident">node</span>.<span class="ident">value</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="self">self</span>.<span class="ident">key</span>.<span class="ident">clone</span>(), <span class="ident">value</span>));
                     }
                 }
-                <span class='ident'>Pop</span> <span class='op'>=&gt;</span> {
-                    <span class='self'>self</span>.<span class='ident'>key</span>.<span class='ident'>pop</span>();
-                    <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>pop</span>();
+                <span class="ident">Pop</span> <span class="op">=&gt;</span> {
+                    <span class="self">self</span>.<span class="ident">key</span>.<span class="ident">pop</span>();
+                    <span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">pop</span>();
                 }
             }
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Keys</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Keys</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>K</span><span class='op'>&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">K</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>K</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span>(<span class='ident'>k</span>, _)<span class='op'>|</span> <span class='ident'>k</span>)
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">K</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, _)<span class="op">|</span> <span class="ident">k</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Values</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Values</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>V</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">V</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>V</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span>(_, <span class='ident'>v</span>)<span class='op'>|</span> <span class='ident'>v</span>)
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">V</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span>(_, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>PartialEq</span> <span class='kw'>for</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>,
-          <span class='ident'>V</span>: <span class='ident'>PartialEq</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>,
+          <span class="ident">V</span>: <span class="ident">PartialEq</span>
 {
-    <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>value</span> <span class='op'>==</span> <span class='ident'>other</span>.<span class='ident'>value</span> <span class='op'>&amp;&amp;</span> <span class='self'>self</span>.<span class='ident'>children</span> <span class='op'>==</span> <span class='ident'>other</span>.<span class='ident'>children</span>
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">value</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">value</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">children</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">children</span>
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Eq</span> <span class='kw'>for</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>,
-          <span class='ident'>V</span>: <span class='ident'>Eq</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>,
+          <span class="ident">V</span>: <span class="ident">Eq</span>
 {}
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>TrieKey</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">TrieKey</span>
 {
-    <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>SequenceTrie</span>::<span class='ident'>new</span>()
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">SequenceTrie</span>::<span class="ident">new</span>()
     }
 }
 
-<span class='doccomment'>/// Iterator over the longest prefix of nodes which matches a key.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PrefixIter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;trie</span>, <span class='lifetime'>&#39;key</span>, <span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>I</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='lifetime'>&#39;trie</span> <span class='op'>+</span> <span class='ident'>TrieKey</span>,
-          <span class='ident'>V</span>: <span class='lifetime'>&#39;trie</span>,
-          <span class='ident'>I</span>: <span class='lifetime'>&#39;key</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+<span class="doccomment">/// Iterator over the longest prefix of nodes which matches a key.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PrefixIter</span><span class="op">&lt;</span><span class="lifetime">&#39;trie</span>, <span class="lifetime">&#39;key</span>, <span class="ident">K</span>, <span class="ident">V</span>, <span class="ident">I</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="lifetime">&#39;trie</span> <span class="op">+</span> <span class="ident">TrieKey</span>,
+          <span class="ident">V</span>: <span class="lifetime">&#39;trie</span>,
+          <span class="ident">I</span>: <span class="lifetime">&#39;key</span> <span class="op">+</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
 {
-    <span class='ident'>next_node</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;trie</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>fragments</span>: <span class='ident'>I</span>,
-    <span class='ident'>_phantom</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>I</span><span class='op'>&gt;</span>,
+    <span class="ident">next_node</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;trie</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">fragments</span>: <span class="ident">I</span>,
+    <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">I</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;trie</span>, <span class='lifetime'>&#39;key</span>, <span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>PrefixIter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;trie</span>, <span class='lifetime'>&#39;key</span>, <span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>I</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>K</span>: <span class='lifetime'>&#39;trie</span> <span class='op'>+</span> <span class='ident'>TrieKey</span>,
-          <span class='ident'>V</span>: <span class='lifetime'>&#39;trie</span>,
-          <span class='ident'>I</span>: <span class='lifetime'>&#39;key</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;key</span> <span class='ident'>K</span><span class='op'>&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;trie</span>, <span class="lifetime">&#39;key</span>, <span class="ident">K</span>, <span class="ident">V</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">PrefixIter</span><span class="op">&lt;</span><span class="lifetime">&#39;trie</span>, <span class="lifetime">&#39;key</span>, <span class="ident">K</span>, <span class="ident">V</span>, <span class="ident">I</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">K</span>: <span class="lifetime">&#39;trie</span> <span class="op">+</span> <span class="ident">TrieKey</span>,
+          <span class="ident">V</span>: <span class="lifetime">&#39;trie</span>,
+          <span class="ident">I</span>: <span class="lifetime">&#39;key</span> <span class="op">+</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;key</span> <span class="ident">K</span><span class="op">&gt;</span>
 {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;trie</span> <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;trie</span> <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>current_node</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>next_node</span>.<span class='ident'>take</span>() {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>fragment</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>fragments</span>.<span class='ident'>next</span>() {
-                <span class='self'>self</span>.<span class='ident'>next_node</span> <span class='op'>=</span> <span class='ident'>current_node</span>.<span class='ident'>children</span>.<span class='ident'>get</span>(<span class='ident'>fragment</span>)
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">current_node</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_node</span>.<span class="ident">take</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">fragment</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">fragments</span>.<span class="ident">next</span>() {
+                <span class="self">self</span>.<span class="ident">next_node</span> <span class="op">=</span> <span class="ident">current_node</span>.<span class="ident">children</span>.<span class="ident">get</span>(<span class="ident">fragment</span>)
             }
 
-            <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>current_node</span>);
+            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">current_node</span>);
         }
 
-        <span class='prelude-val'>None</span>
+        <span class="prelude-val">None</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>size_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) {
-        <span class='kw'>let</span> <span class='ident'>lower</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>next_node</span>.<span class='ident'>is_some</span>() {
-            <span class='number'>1</span>
-        } <span class='kw'>else</span> {
-            <span class='number'>0</span>
+    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+        <span class="kw">let</span> <span class="ident">lower</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">next_node</span>.<span class="ident">is_some</span>() {
+            <span class="number">1</span>
+        } <span class="kw">else</span> {
+            <span class="number">0</span>
         };
 
-        (<span class='ident'>lower</span>, <span class='self'>self</span>.<span class='ident'>fragments</span>.<span class='ident'>size_hint</span>().<span class='number'>1</span>)
+        (<span class="ident">lower</span>, <span class="self">self</span>.<span class="ident">fragments</span>.<span class="ident">size_hint</span>().<span class="number">1</span>)
     }
 }
 </pre>

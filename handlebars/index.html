@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,8 +43,8 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>handlebars</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>handlebars</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -56,25 +56,25 @@
 <p>And this is handlebars Rust implementation, designed for general purpose text generation.</p>
 
 <h2 id='quick-start' class='section-header'><a href='#quick-start'>Quick Start</a></h2>
-<pre class='rust rust-example-rendered'>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
-<span class='kw'>use</span> <span class='ident'>handlebars</span>::<span class='ident'>Handlebars</span>;
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
+<span class="kw">use</span> <span class="ident">handlebars</span>::<span class="ident">Handlebars</span>;
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-  <span class='comment'>// create the handlebars registry</span>
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Handlebars</span>::<span class='ident'>new</span>();
+<span class="kw">fn</span> <span class="ident">main</span>() {
+  <span class="comment">// create the handlebars registry</span>
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Handlebars</span>::<span class="ident">new</span>();
 
-  <span class='comment'>// register the template. The template string will be verified and compiled.</span>
-  <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='string'>&quot;hello {{world}}&quot;</span>;
-  <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t1&quot;</span>, <span class='ident'>source</span>).<span class='ident'>is_ok</span>());
+  <span class="comment">// register the template. The template string will be verified and compiled.</span>
+  <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="string">&quot;hello {{world}}&quot;</span>;
+  <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t1&quot;</span>, <span class="ident">source</span>).<span class="ident">is_ok</span>());
 
-  <span class='comment'>// Prepare some data.</span>
-  <span class='comment'>//</span>
-  <span class='comment'>// The data type should implements `rustc_serialize::json::ToJson` or</span>
-  <span class='comment'>// `serde::Serialize`</span>
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
-  <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;world&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;世界!&quot;</span>.<span class='ident'>to_string</span>());
-  <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;t1&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;hello 世界!&quot;</span>);
+  <span class="comment">// Prepare some data.</span>
+  <span class="comment">//</span>
+  <span class="comment">// The data type should implements `rustc_serialize::json::ToJson` or</span>
+  <span class="comment">// `serde::Serialize`</span>
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
+  <span class="ident">data</span>.<span class="ident">insert</span>(<span class="string">&quot;world&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;世界!&quot;</span>.<span class="ident">to_string</span>());
+  <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;t1&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;hello 世界!&quot;</span>);
 }</pre>
 
 <p>In this example, we created a template registry and registered a template named <code>t1</code>.
@@ -144,16 +144,16 @@ of handlebars-rust and add <code>#[Serialize]</code> for your types.</p>
 <h3 id='template-creation-and-registration' class='section-header'><a href='#template-creation-and-registration'>Template Creation and Registration</a></h3>
 <p>Templates are created from String and registered to <code>Handlebars</code> with a name.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>handlebars</span>;
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">handlebars</span>;
 
-<span class='kw'>use</span> <span class='ident'>handlebars</span>::<span class='ident'>Handlebars</span>;
+<span class="kw">use</span> <span class="ident">handlebars</span>::<span class="ident">Handlebars</span>;
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Handlebars</span>::<span class='ident'>new</span>();
-  <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='string'>&quot;hello {{world}}&quot;</span>;
+<span class="kw">fn</span> <span class="ident">main</span>() {
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Handlebars</span>::<span class="ident">new</span>();
+  <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="string">&quot;hello {{world}}&quot;</span>;
 
-  <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;t1&quot;</span>, <span class='ident'>source</span>).<span class='ident'>is_ok</span>())
+  <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t1&quot;</span>, <span class="ident">source</span>).<span class="ident">is_ok</span>())
 }</pre>
 
 <p>On registeration, the template is parsed, compiled and cached in the registry. So further
@@ -164,17 +164,17 @@ a name so the registry can find it.</p>
 <p>If you template is small or just to expirement, you can use <code>template_render</code> API
 without registration.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='kw'>use</span> <span class='ident'>handlebars</span>::<span class='ident'>Handlebars</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">handlebars</span>::<span class="ident">Handlebars</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Handlebars</span>::<span class='ident'>new</span>();
-  <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='string'>&quot;hello {{world}}&quot;</span>;
+<span class="kw">fn</span> <span class="ident">main</span>() {
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Handlebars</span>::<span class="ident">new</span>();
+  <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="string">&quot;hello {{world}}&quot;</span>;
 
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
-  <span class='ident'>data</span>.<span class='ident'>insert</span>(<span class='string'>&quot;world&quot;</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;世界!&quot;</span>.<span class='ident'>to_string</span>());
-  <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>template_render</span>(<span class='ident'>source</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>).<span class='ident'>unwrap</span>(),<span class='string'>&quot;hello 世界!&quot;</span>.<span class='ident'>to_owned</span>());
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
+  <span class="ident">data</span>.<span class="ident">insert</span>(<span class="string">&quot;world&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;世界!&quot;</span>.<span class="ident">to_string</span>());
+  <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">template_render</span>(<span class="ident">source</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>).<span class="ident">unwrap</span>(),<span class="string">&quot;hello 世界!&quot;</span>.<span class="ident">to_owned</span>());
 }</pre>
 
 <h3 id='rendering-something' class='section-header'><a href='#rendering-something'>Rendering Something</a></h3>
@@ -184,55 +184,55 @@ without registration.</p>
 
 <p>You can use default <code>render</code> function to render a template into <code>String</code>. From 0.9, there&#39;s <code>renderw</code> to render text into anything of <code>std::io::Write</code>.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>::{<span class='ident'>Json</span>, <span class='ident'>ToJson</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">rustc_serialize</span>::<span class="ident">json</span>::{<span class="ident">Json</span>, <span class="ident">ToJson</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
-<span class='kw'>use</span> <span class='ident'>handlebars</span>::<span class='ident'>Handlebars</span>;
+<span class="kw">use</span> <span class="ident">handlebars</span>::<span class="ident">Handlebars</span>;
 
-<span class='kw'>struct</span> <span class='ident'>Person</span> {
-  <span class='ident'>name</span>: <span class='ident'>String</span>,
-  <span class='ident'>age</span>: <span class='ident'>i16</span>,
+<span class="kw">struct</span> <span class="ident">Person</span> {
+  <span class="ident">name</span>: <span class="ident">String</span>,
+  <span class="ident">age</span>: <span class="ident">i16</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>ToJson</span> <span class='kw'>for</span> <span class='ident'>Person</span> {
-  <span class='kw'>fn</span> <span class='ident'>to_json</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Json</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m</span>: <span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Json</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>BTreeMap</span>::<span class='ident'>new</span>();
-    <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>.<span class='ident'>to_string</span>(), <span class='self'>self</span>.<span class='ident'>name</span>.<span class='ident'>to_json</span>());
-    <span class='ident'>m</span>.<span class='ident'>insert</span>(<span class='string'>&quot;age&quot;</span>.<span class='ident'>to_string</span>(), <span class='self'>self</span>.<span class='ident'>age</span>.<span class='ident'>to_json</span>());
-    <span class='ident'>m</span>.<span class='ident'>to_json</span>()
+<span class="kw">impl</span> <span class="ident">ToJson</span> <span class="kw">for</span> <span class="ident">Person</span> {
+  <span class="kw">fn</span> <span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Json</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Json</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
+    <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;name&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_json</span>());
+    <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;age&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">age</span>.<span class="ident">to_json</span>());
+    <span class="ident">m</span>.<span class="ident">to_json</span>()
   }
 }
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-  <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='string'>&quot;Hello, {{name}}&quot;</span>;
+<span class="kw">fn</span> <span class="ident">main</span>() {
+  <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="string">&quot;Hello, {{name}}&quot;</span>;
 
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Handlebars</span>::<span class='ident'>new</span>();
-  <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>register_template_string</span>(<span class='string'>&quot;hello&quot;</span>, <span class='ident'>source</span>).<span class='ident'>is_ok</span>());
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Handlebars</span>::<span class="ident">new</span>();
+  <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;hello&quot;</span>, <span class="ident">source</span>).<span class="ident">is_ok</span>());
 
 
-  <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Person</span> {
-      <span class='ident'>name</span>: <span class='string'>&quot;Ning Sun&quot;</span>.<span class='ident'>to_string</span>(),
-      <span class='ident'>age</span>: <span class='number'>27</span>
+  <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Person</span> {
+      <span class="ident">name</span>: <span class="string">&quot;Ning Sun&quot;</span>.<span class="ident">to_string</span>(),
+      <span class="ident">age</span>: <span class="number">27</span>
   };
-  <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>render</span>(<span class='string'>&quot;hello&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>).<span class='ident'>unwrap</span>(), <span class='string'>&quot;Hello, Ning Sun&quot;</span>.<span class='ident'>to_owned</span>());
+  <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;hello&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>).<span class="ident">unwrap</span>(), <span class="string">&quot;Hello, Ning Sun&quot;</span>.<span class="ident">to_owned</span>());
 }</pre>
 
 <p>Or if you don&#39;t need the template to be cached or referenced by other ones, you can
 simply render it without registering.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-  <span class='kw'>let</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='string'>&quot;Hello, {{name}}&quot;</span>;
+<pre class="rust rust-example-rendered">
+<span class="kw">fn</span> <span class="ident">main</span>() {
+  <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="string">&quot;Hello, {{name}}&quot;</span>;
 
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Handlebars</span>::<span class='ident'>new</span>();
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Handlebars</span>::<span class="ident">new</span>();
 
-  <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Person</span> {
-      <span class='ident'>name</span>: <span class='string'>&quot;Ning Sun&quot;</span>.<span class='ident'>to_string</span>(),
-      <span class='ident'>age</span>: <span class='number'>27</span>
+  <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Person</span> {
+      <span class="ident">name</span>: <span class="string">&quot;Ning Sun&quot;</span>.<span class="ident">to_string</span>(),
+      <span class="ident">age</span>: <span class="number">27</span>
   };
-  <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>template_render</span>(<span class='string'>&quot;Hello, {{name}}&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>data</span>).<span class='ident'>unwrap</span>(),
-      <span class='string'>&quot;Hello, Ning Sun&quot;</span>.<span class='ident'>to_owned</span>());
+  <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">template_render</span>(<span class="string">&quot;Hello, {{name}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>).<span class="ident">unwrap</span>(),
+      <span class="string">&quot;Hello, Ning Sun&quot;</span>.<span class="ident">to_owned</span>());
 }</pre>
 
 <h4 id='escaping' class='section-header'><a href='#escaping'>Escaping</a></h4>
@@ -241,51 +241,51 @@ simply render it without registering.</p>
 <h3 id='custom-helper' class='section-header'><a href='#custom-helper'>Custom Helper</a></h3>
 <p>Handlebars is nothing without helpers. You can also create your own helpers with rust. Helpers in handlebars-rust are custom struct implements the <code>HelperDef</code> trait, concretely, the <code>call</code> function. For your convenience, most of stateless helpers can be implemented as bare functions.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
-<span class='kw'>use</span> <span class='ident'>handlebars</span>::{<span class='ident'>Handlebars</span>, <span class='ident'>HelperDef</span>, <span class='ident'>RenderError</span>, <span class='ident'>RenderContext</span>, <span class='ident'>Helper</span>, <span class='ident'>Context</span>, <span class='ident'>JsonRender</span>};
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
+<span class="kw">use</span> <span class="ident">handlebars</span>::{<span class="ident">Handlebars</span>, <span class="ident">HelperDef</span>, <span class="ident">RenderError</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>, <span class="ident">Context</span>, <span class="ident">JsonRender</span>};
 
-<span class='comment'>// implement by a structure impls HelperDef</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-<span class='kw'>struct</span> <span class='ident'>SimpleHelper</span>;
+<span class="comment">// implement by a structure impls HelperDef</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+<span class="kw">struct</span> <span class="ident">SimpleHelper</span>;
 
-<span class='kw'>impl</span> <span class='ident'>HelperDef</span> <span class='kw'>for</span> <span class='ident'>SimpleHelper</span> {
-  <span class='kw'>fn</span> <span class='ident'>call</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='ident'>Helper</span>, _: <span class='kw-2'>&amp;</span><span class='ident'>Handlebars</span>, <span class='ident'>rc</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>RenderContext</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>RenderError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>param</span> <span class='op'>=</span> <span class='ident'>h</span>.<span class='ident'>param</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>();
+<span class="kw">impl</span> <span class="ident">HelperDef</span> <span class="kw">for</span> <span class="ident">SimpleHelper</span> {
+  <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, _: <span class="kw-2">&amp;</span><span class="ident">Handlebars</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">param</span> <span class="op">=</span> <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
 
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='string'>&quot;1st helper: &quot;</span>.<span class='ident'>as_bytes</span>()));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='ident'>param</span>.<span class='ident'>value</span>().<span class='ident'>render</span>().<span class='ident'>into_bytes</span>().<span class='ident'>as_ref</span>()));
-    <span class='prelude-val'>Ok</span>(())
+    <span class="macro">try</span><span class="macro">!</span>(<span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write</span>(<span class="string">&quot;1st helper: &quot;</span>.<span class="ident">as_bytes</span>()));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write</span>(<span class="ident">param</span>.<span class="ident">value</span>().<span class="ident">render</span>().<span class="ident">into_bytes</span>().<span class="ident">as_ref</span>()));
+    <span class="prelude-val">Ok</span>(())
   }
 }
 
-<span class='comment'>// implement via bare function</span>
-<span class='kw'>fn</span> <span class='ident'>another_simple_helper</span> (<span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='ident'>Helper</span>, _: <span class='kw-2'>&amp;</span><span class='ident'>Handlebars</span>, <span class='ident'>rc</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>RenderContext</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>RenderError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>param</span> <span class='op'>=</span> <span class='ident'>h</span>.<span class='ident'>param</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>();
+<span class="comment">// implement via bare function</span>
+<span class="kw">fn</span> <span class="ident">another_simple_helper</span> (<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, _: <span class="kw-2">&amp;</span><span class="ident">Handlebars</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">param</span> <span class="op">=</span> <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
 
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='string'>&quot;2nd helper: &quot;</span>.<span class='ident'>as_bytes</span>()));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='ident'>param</span>.<span class='ident'>value</span>().<span class='ident'>render</span>().<span class='ident'>into_bytes</span>().<span class='ident'>as_ref</span>()));
-    <span class='prelude-val'>Ok</span>(())
+    <span class="macro">try</span><span class="macro">!</span>(<span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write</span>(<span class="string">&quot;2nd helper: &quot;</span>.<span class="ident">as_bytes</span>()));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write</span>(<span class="ident">param</span>.<span class="ident">value</span>().<span class="ident">render</span>().<span class="ident">into_bytes</span>().<span class="ident">as_ref</span>()));
+    <span class="prelude-val">Ok</span>(())
 }
 
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-  <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handlebars</span> <span class='op'>=</span> <span class='ident'>Handlebars</span>::<span class='ident'>new</span>();
-  <span class='ident'>handlebars</span>.<span class='ident'>register_helper</span>(<span class='string'>&quot;simple-helper&quot;</span>, <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>SimpleHelper</span>));
-  <span class='ident'>handlebars</span>.<span class='ident'>register_helper</span>(<span class='string'>&quot;another-simple-helper&quot;</span>, <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>another_simple_helper</span>));
-  <span class='comment'>// via closure</span>
-  <span class='ident'>handlebars</span>.<span class='ident'>register_helper</span>(<span class='string'>&quot;closure-helper&quot;</span>,
-      <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='ident'>Helper</span>, <span class='ident'>r</span>: <span class='kw-2'>&amp;</span><span class='ident'>Handlebars</span>, <span class='ident'>rc</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>RenderContext</span><span class='op'>|</span> <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>RenderError</span><span class='op'>&gt;</span>{
-          <span class='kw'>let</span> <span class='ident'>param</span> <span class='op'>=</span> <span class='ident'>h</span>.<span class='ident'>param</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>();
+<span class="kw">fn</span> <span class="ident">main</span>() {
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Handlebars</span>::<span class="ident">new</span>();
+  <span class="ident">handlebars</span>.<span class="ident">register_helper</span>(<span class="string">&quot;simple-helper&quot;</span>, <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">SimpleHelper</span>));
+  <span class="ident">handlebars</span>.<span class="ident">register_helper</span>(<span class="string">&quot;another-simple-helper&quot;</span>, <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">another_simple_helper</span>));
+  <span class="comment">// via closure</span>
+  <span class="ident">handlebars</span>.<span class="ident">register_helper</span>(<span class="string">&quot;closure-helper&quot;</span>,
+      <span class="ident">Box</span>::<span class="ident">new</span>(<span class="op">|</span><span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, <span class="ident">r</span>: <span class="kw-2">&amp;</span><span class="ident">Handlebars</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span><span class="op">|</span> <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span>{
+          <span class="kw">let</span> <span class="ident">param</span> <span class="op">=</span> <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
 
-          <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='string'>&quot;3rd helper: &quot;</span>.<span class='ident'>as_bytes</span>()));
-          <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rc</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='ident'>param</span>.<span class='ident'>value</span>().<span class='ident'>render</span>().<span class='ident'>into_bytes</span>().<span class='ident'>as_ref</span>()));
-          <span class='prelude-val'>Ok</span>(())
+          <span class="macro">try</span><span class="macro">!</span>(<span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write</span>(<span class="string">&quot;3rd helper: &quot;</span>.<span class="ident">as_bytes</span>()));
+          <span class="macro">try</span><span class="macro">!</span>(<span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write</span>(<span class="ident">param</span>.<span class="ident">value</span>().<span class="ident">render</span>().<span class="ident">into_bytes</span>().<span class="ident">as_ref</span>()));
+          <span class="prelude-val">Ok</span>(())
       }));
 
-  <span class='kw'>let</span> <span class='ident'>tpl</span> <span class='op'>=</span> <span class='string'>&quot;{{simple-helper 1}}\n{{another-simple-helper 2}}\n{{closure-helper 3}}&quot;</span>;
-  <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>handlebars</span>.<span class='ident'>template_render</span>(<span class='ident'>tpl</span>, <span class='kw-2'>&amp;</span>()).<span class='ident'>unwrap</span>(),
-      <span class='string'>&quot;1st helper: 1\n2nd helper: 2\n3rd helper: 3&quot;</span>.<span class='ident'>to_owned</span>());
+  <span class="kw">let</span> <span class="ident">tpl</span> <span class="op">=</span> <span class="string">&quot;{{simple-helper 1}}\n{{another-simple-helper 2}}\n{{closure-helper 3}}&quot;</span>;
+  <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">template_render</span>(<span class="ident">tpl</span>, <span class="kw-2">&amp;</span>()).<span class="ident">unwrap</span>(),
+      <span class="string">&quot;1st helper: 1\n2nd helper: 2\n3rd helper: 3&quot;</span>.<span class="ident">to_owned</span>());
 }</pre>
 
 <p>Data available to helper can be found in <a href="struct.Helper.html">Helper</a>. And there are more
@@ -311,147 +311,147 @@ Check <a href="https://github.com/sunng87/handlebars-rust/blob/master/examples/p
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Context.html'
-                                  title='handlebars::Context'>Context</a></td>
+                           <td><a class="struct" href="struct.Context.html"
+                                  title='struct handlebars::Context'>Context</a></td>
                            <td class='docblock-short'>
                                 <p>The context wrap data you render on your templates.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.ContextJson.html'
-                                  title='handlebars::ContextJson'>ContextJson</a></td>
+                           <td><a class="struct" href="struct.ContextJson.html"
+                                  title='struct handlebars::ContextJson'>ContextJson</a></td>
                            <td class='docblock-short'>
                                 <p>Json wrapper that holds the Json value and reference path information</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Decorator.html'
-                                  title='handlebars::Decorator'>Decorator</a></td>
+                           <td><a class="struct" href="struct.Decorator.html"
+                                  title='struct handlebars::Decorator'>Decorator</a></td>
                            <td class='docblock-short'>
                                 <p>Render-time Decorator data when using in a decorator definition</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Handlebars.html'
-                                  title='handlebars::Handlebars'>Handlebars</a></td>
+                           <td><a class="struct" href="struct.Handlebars.html"
+                                  title='struct handlebars::Handlebars'>Handlebars</a></td>
                            <td class='docblock-short'>
                                 <p>The single entry point of your Handlebars templates</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Helper.html'
-                                  title='handlebars::Helper'>Helper</a></td>
+                           <td><a class="struct" href="struct.Helper.html"
+                                  title='struct handlebars::Helper'>Helper</a></td>
                            <td class='docblock-short'>
                                 <p>Render-time Helper data when using in a helper definition</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.RenderContext.html'
-                                  title='handlebars::RenderContext'>RenderContext</a></td>
+                           <td><a class="struct" href="struct.RenderContext.html"
+                                  title='struct handlebars::RenderContext'>RenderContext</a></td>
                            <td class='docblock-short'>
                                 <p>The context of a render call</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.RenderError.html'
-                                  title='handlebars::RenderError'>RenderError</a></td>
+                           <td><a class="struct" href="struct.RenderError.html"
+                                  title='struct handlebars::RenderError'>RenderError</a></td>
                            <td class='docblock-short'>
                                 <p>Error when rendering data on template.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Template.html'
-                                  title='handlebars::Template'>Template</a></td>
+                           <td><a class="struct" href="struct.Template.html"
+                                  title='struct handlebars::Template'>Template</a></td>
                            <td class='docblock-short'>
                                 <p>A handlebars template</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.TemplateError.html'
-                                  title='handlebars::TemplateError'>TemplateError</a></td>
+                           <td><a class="struct" href="struct.TemplateError.html"
+                                  title='struct handlebars::TemplateError'>TemplateError</a></td>
                            <td class='docblock-short'>
                                 <p>Error on parsing template.</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.TemplateFileError.html'
-                                  title='handlebars::TemplateFileError'>TemplateFileError</a></td>
+                           <td><a class="enum" href="enum.TemplateFileError.html"
+                                  title='enum handlebars::TemplateFileError'>TemplateFileError</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.TemplateRenderError.html'
-                                  title='handlebars::TemplateRenderError'>TemplateRenderError</a></td>
+                           <td><a class="enum" href="enum.TemplateRenderError.html"
+                                  title='enum handlebars::TemplateRenderError'>TemplateRenderError</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.DecoratorDef.html'
-                                  title='handlebars::DecoratorDef'>DecoratorDef</a></td>
+                           <td><a class="trait" href="trait.DecoratorDef.html"
+                                  title='trait handlebars::DecoratorDef'>DecoratorDef</a></td>
                            <td class='docblock-short'>
                                 <p>Decorator Definition</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Evaluable.html'
-                                  title='handlebars::Evaluable'>Evaluable</a></td>
+                           <td><a class="trait" href="trait.Evaluable.html"
+                                  title='trait handlebars::Evaluable'>Evaluable</a></td>
                            <td class='docblock-short'>
                                 <p>Evaluate directive or decorator</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.HelperDef.html'
-                                  title='handlebars::HelperDef'>HelperDef</a></td>
+                           <td><a class="trait" href="trait.HelperDef.html"
+                                  title='trait handlebars::HelperDef'>HelperDef</a></td>
                            <td class='docblock-short'>
                                 <p>Helper Definition</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.JsonRender.html'
-                                  title='handlebars::JsonRender'>JsonRender</a></td>
+                           <td><a class="trait" href="trait.JsonRender.html"
+                                  title='trait handlebars::JsonRender'>JsonRender</a></td>
                            <td class='docblock-short'>
                                 <p>Render Json data with default format</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Renderable.html'
-                                  title='handlebars::Renderable'>Renderable</a></td>
+                           <td><a class="trait" href="trait.Renderable.html"
+                                  title='trait handlebars::Renderable'>Renderable</a></td>
                            <td class='docblock-short'>
                                 <p>Render trait</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.html_escape.html'
-                                  title='handlebars::html_escape'>html_escape</a></td>
+                           <td><a class="fn" href="fn.html_escape.html"
+                                  title='fn handlebars::html_escape'>html_escape</a></td>
                            <td class='docblock-short'>
                                 <p>The default <em>escape fn</em> replaces the characters <code>&amp;&quot;&lt;&gt;</code>
 with the equivalent html / xml entities.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.no_escape.html'
-                                  title='handlebars::no_escape'>no_escape</a></td>
+                           <td><a class="fn" href="fn.no_escape.html"
+                                  title='fn handlebars::no_escape'>no_escape</a></td>
                            <td class='docblock-short'>
                                 <p><code>EscapeFn</code> that do not change any thing. Useful when using in a non-html
 environment.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.to_json.html'
-                                  title='handlebars::to_json'>to_json</a></td>
+                           <td><a class="fn" href="fn.to_json.html"
+                                  title='fn handlebars::to_json'>to_json</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='type' href='type.EscapeFn.html'
-                                  title='handlebars::EscapeFn'>EscapeFn</a></td>
+                           <td><a class="type" href="type.EscapeFn.html"
+                                  title='type handlebars::EscapeFn'>EscapeFn</a></td>
                            <td class='docblock-short'>
                                 <p>This type represents an <em>escape fn</em>, that is a function who&#39;s purpose it is
 to escape potentially problematic characters in a string.</p>

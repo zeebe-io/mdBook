@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.2/src/buf/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.3/src/buf/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -80,44 +80,44 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Utilities for working with buffers.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A buffer is any structure that contains a sequence of bytes. The bytes may</span>
-<span class='doccomment'>//! or may not be stored in contiguous memory. This module contains traits used</span>
-<span class='doccomment'>//! to abstract over buffers as well as utilities for working with buffer types.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # `Buf`, `BufMut`</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! These are the two foundational traits for abstractly working with buffers.</span>
-<span class='doccomment'>//! They can be thought as iterators for byte structures. They offer additional</span>
-<span class='doccomment'>//! performance over `Iterator` by providing an API optimized for byte slices.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! See [`Buf`] and [`BufMut`] for more details.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! [rope]: https://en.wikipedia.org/wiki/Rope_(data_structure)</span>
-<span class='doccomment'>//! [`Buf`]: trait.Buf.html</span>
-<span class='doccomment'>//! [`BufMut`]: trait.BufMut.html</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Utilities for working with buffers.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A buffer is any structure that contains a sequence of bytes. The bytes may</span>
+<span class="doccomment">//! or may not be stored in contiguous memory. This module contains traits used</span>
+<span class="doccomment">//! to abstract over buffers as well as utilities for working with buffer types.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # `Buf`, `BufMut`</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! These are the two foundational traits for abstractly working with buffers.</span>
+<span class="doccomment">//! They can be thought as iterators for byte structures. They offer additional</span>
+<span class="doccomment">//! performance over `Iterator` by providing an API optimized for byte slices.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! See [`Buf`] and [`BufMut`] for more details.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [rope]: https://en.wikipedia.org/wiki/Rope_(data_structure)</span>
+<span class="doccomment">//! [`Buf`]: trait.Buf.html</span>
+<span class="doccomment">//! [`BufMut`]: trait.BufMut.html</span>
 
-<span class='kw'>mod</span> <span class='ident'>buf</span>;
-<span class='kw'>mod</span> <span class='ident'>buf_mut</span>;
-<span class='kw'>mod</span> <span class='ident'>from_buf</span>;
-<span class='kw'>mod</span> <span class='ident'>chain</span>;
-<span class='kw'>mod</span> <span class='ident'>into_buf</span>;
-<span class='kw'>mod</span> <span class='ident'>iter</span>;
-<span class='kw'>mod</span> <span class='ident'>reader</span>;
-<span class='kw'>mod</span> <span class='ident'>take</span>;
-<span class='kw'>mod</span> <span class='ident'>writer</span>;
+<span class="kw">mod</span> <span class="ident">buf</span>;
+<span class="kw">mod</span> <span class="ident">buf_mut</span>;
+<span class="kw">mod</span> <span class="ident">from_buf</span>;
+<span class="kw">mod</span> <span class="ident">chain</span>;
+<span class="kw">mod</span> <span class="ident">into_buf</span>;
+<span class="kw">mod</span> <span class="ident">iter</span>;
+<span class="kw">mod</span> <span class="ident">reader</span>;
+<span class="kw">mod</span> <span class="ident">take</span>;
+<span class="kw">mod</span> <span class="ident">writer</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>buf</span>::<span class='ident'>Buf</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>buf_mut</span>::<span class='ident'>BufMut</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>from_buf</span>::<span class='ident'>FromBuf</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>chain</span>::<span class='ident'>Chain</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>into_buf</span>::<span class='ident'>IntoBuf</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>iter</span>::<span class='ident'>Iter</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>reader</span>::<span class='ident'>Reader</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>take</span>::<span class='ident'>Take</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>writer</span>::<span class='ident'>Writer</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">buf</span>::<span class="ident">Buf</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">buf_mut</span>::<span class="ident">BufMut</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">from_buf</span>::<span class="ident">FromBuf</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">chain</span>::<span class="ident">Chain</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">into_buf</span>::<span class="ident">IntoBuf</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">iter</span>::<span class="ident">Iter</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">reader</span>::<span class="ident">Reader</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">take</span>::<span class="ident">Take</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">writer</span>::<span class="ident">Writer</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

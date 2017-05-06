@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.2/src/buf/writer.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.3/src/buf/writer.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>writer.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -131,93 +131,93 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>BufMut</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">BufMut</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>cmp</span>, <span class='ident'>io</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp</span>, <span class="ident">io</span>};
 
-<span class='doccomment'>/// A `BufMut` adapter which implements `io::Write` for the inner value.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This struct is generally created by calling `writer()` on `BufMut`. See</span>
-<span class='doccomment'>/// documentation of [`writer()`](trait.BufMut.html#method.writer) for more</span>
-<span class='doccomment'>/// details.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Writer</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span> {
-    <span class='ident'>buf</span>: <span class='ident'>B</span>,
+<span class="doccomment">/// A `BufMut` adapter which implements `io::Write` for the inner value.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This struct is generally created by calling `writer()` on `BufMut`. See</span>
+<span class="doccomment">/// documentation of [`writer()`](trait.BufMut.html#method.writer) for more</span>
+<span class="doccomment">/// details.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Writer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="ident">buf</span>: <span class="ident">B</span>,
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='ident'>Writer</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span> {
-    <span class='ident'>Writer</span> { <span class='ident'>buf</span>: <span class='ident'>buf</span> }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="ident">buf</span>: <span class="ident">B</span>) <span class="op">-&gt;</span> <span class="ident">Writer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="ident">Writer</span> { <span class="ident">buf</span>: <span class="ident">buf</span> }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>BufMut</span><span class='op'>&gt;</span> <span class='ident'>Writer</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Gets a reference to the underlying `BufMut`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// It is inadvisable to directly write to the underlying `BufMut`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::BufMut;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = Vec::with_capacity(1024).writer();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(1024, buf.get_ref().capacity());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>B</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>buf</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BufMut</span><span class="op">&gt;</span> <span class="ident">Writer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Gets a reference to the underlying `BufMut`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is inadvisable to directly write to the underlying `BufMut`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::BufMut;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = Vec::with_capacity(1024).writer();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(1024, buf.get_ref().capacity());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">B</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>
     }
 
-    <span class='doccomment'>/// Gets a mutable reference to the underlying `BufMut`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// It is inadvisable to directly write to the underlying `BufMut`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::BufMut;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = vec![].writer();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// buf.get_mut().reserve(1024);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(1024, buf.get_ref().capacity());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>B</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>buf</span>
+    <span class="doccomment">/// Gets a mutable reference to the underlying `BufMut`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is inadvisable to directly write to the underlying `BufMut`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::BufMut;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = vec![].writer();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// buf.get_mut().reserve(1024);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(1024, buf.get_ref().capacity());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">B</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">buf</span>
     }
 
-    <span class='doccomment'>/// Consumes this `Writer`, returning the underlying value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::BufMut;</span>
-    <span class='doccomment'>/// use std::io::{self, Cursor};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = vec![].writer();</span>
-    <span class='doccomment'>/// let mut src = Cursor::new(b&quot;hello world&quot;);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// io::copy(&amp;mut src, &amp;mut buf).unwrap();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let buf = buf.into_inner();</span>
-    <span class='doccomment'>/// assert_eq!(*buf, b&quot;hello world&quot;[..]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_inner</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>B</span> {
-        <span class='self'>self</span>.<span class='ident'>buf</span>
+    <span class="doccomment">/// Consumes this `Writer`, returning the underlying value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::BufMut;</span>
+    <span class="doccomment">/// use std::io::{self, Cursor};</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = vec![].writer();</span>
+    <span class="doccomment">/// let mut src = Cursor::new(b&quot;hello world&quot;);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// io::copy(&amp;mut src, &amp;mut buf).unwrap();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let buf = buf.into_inner();</span>
+    <span class="doccomment">/// assert_eq!(*buf, b&quot;hello world&quot;[..]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">B</span> {
+        <span class="self">self</span>.<span class="ident">buf</span>
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>B</span>: <span class='ident'>BufMut</span> <span class='op'>+</span> <span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>Writer</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>src</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>remaining_mut</span>(), <span class='ident'>src</span>.<span class='ident'>len</span>());
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BufMut</span> <span class="op">+</span> <span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">Writer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">remaining_mut</span>(), <span class="ident">src</span>.<span class="ident">len</span>());
 
-        <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>put</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>[<span class='number'>0</span>..<span class='ident'>n</span>]);
-        <span class='prelude-val'>Ok</span>(<span class='ident'>n</span>)
+        <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">put</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>[<span class="number">0</span>..<span class="ident">n</span>]);
+        <span class="prelude-val">Ok</span>(<span class="ident">n</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>flush</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(())
+    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </pre>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -147,110 +147,110 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> {<span class='ident'>Errno</span>, <span class='ident'>Error</span>, <span class='prelude-ty'>Result</span>};
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>pid_t</span>, <span class='ident'>c_void</span>, <span class='ident'>c_long</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> {<span class="ident">Errno</span>, <span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">pid_t</span>, <span class="ident">c_void</span>, <span class="ident">c_long</span>};
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>,
-          <span class='ident'>any</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86&quot;</span>,
-              <span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86_64&quot;</span>,
-              <span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;arm&quot;</span>)),
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>,
+          <span class="ident">any</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;x86&quot;</span>,
+              <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;x86_64&quot;</span>,
+              <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;arm&quot;</span>)),
           )]</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>ptrace</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ptrace</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='ident'>c_int</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="ident">c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_TRACEME</span>:     <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_PEEKTEXT</span>:    <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_PEEKDATA</span>:    <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_PEEKUSER</span>:    <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_POKETEXT</span>:    <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>4</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_POKEDATA</span>:    <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>5</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_POKEUSER</span>:    <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_CONT</span>:        <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>7</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_KILL</span>:        <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>8</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SINGLESTEP</span>:  <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>9</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_GETREGS</span>:     <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>12</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SETREGS</span>:     <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>13</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_GETFPREGS</span>:   <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>14</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SETFPREGS</span>:   <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>15</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_ATTACH</span>:      <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>16</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_DETACH</span>:      <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>17</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_GETFPXREGS</span>:  <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>18</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SETFPXREGS</span>:  <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>19</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SYSCALL</span>:     <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>24</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SETOPTIONS</span>:  <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4200</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_GETEVENTMSG</span>: <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4201</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_GETSIGINFO</span>:  <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4202</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SETSIGINFO</span>:  <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4203</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_GETREGSET</span>:   <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4204</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SETREGSET</span>:   <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4205</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_SEIZE</span>:       <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4206</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_INTERRUPT</span>:   <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4207</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_LISTEN</span>:      <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4208</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_PEEKSIGINFO</span>: <span class='ident'>PtraceRequest</span> <span class='op'>=</span> <span class='number'>0x4209</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_TRACEME</span>:     <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_PEEKTEXT</span>:    <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_PEEKDATA</span>:    <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_PEEKUSER</span>:    <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_POKETEXT</span>:    <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">4</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_POKEDATA</span>:    <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">5</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_POKEUSER</span>:    <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_CONT</span>:        <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">7</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_KILL</span>:        <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">8</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SINGLESTEP</span>:  <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">9</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_GETREGS</span>:     <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">12</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SETREGS</span>:     <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">13</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_GETFPREGS</span>:   <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">14</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SETFPREGS</span>:   <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">15</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_ATTACH</span>:      <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">16</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_DETACH</span>:      <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">17</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_GETFPXREGS</span>:  <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">18</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SETFPXREGS</span>:  <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">19</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SYSCALL</span>:     <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">24</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SETOPTIONS</span>:  <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4200</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_GETEVENTMSG</span>: <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4201</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_GETSIGINFO</span>:  <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4202</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SETSIGINFO</span>:  <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4203</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_GETREGSET</span>:   <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4204</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SETREGSET</span>:   <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4205</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_SEIZE</span>:       <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4206</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_INTERRUPT</span>:   <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4207</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_LISTEN</span>:      <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4208</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_PEEKSIGINFO</span>: <span class="ident">PtraceRequest</span> <span class="op">=</span> <span class="number">0x4209</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='ident'>c_int</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="ident">c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_FORK</span>:       <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_VFORK</span>:      <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_CLONE</span>:      <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_EXEC</span>:       <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>4</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_VFORK_DONE</span>: <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>5</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_EXIT</span>:       <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_SECCOMP</span>:    <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_EVENT_STOP</span>:       <span class='ident'>PtraceEvent</span> <span class='op'>=</span> <span class='number'>128</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_FORK</span>:       <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_VFORK</span>:      <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_CLONE</span>:      <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_EXEC</span>:       <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">4</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_VFORK_DONE</span>: <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">5</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_EXIT</span>:       <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_SECCOMP</span>:    <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_EVENT_STOP</span>:       <span class="ident">PtraceEvent</span> <span class="op">=</span> <span class="number">128</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>PtraceOptions</span> <span class='op'>=</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACESYSGOOD</span>: <span class='ident'>PtraceOptions</span>   <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACEFORK</span>: <span class='ident'>PtraceOptions</span>      <span class='op'>=</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>PTRACE_EVENT_FORK</span>);
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACEVFORK</span>: <span class='ident'>PtraceOptions</span>     <span class='op'>=</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>PTRACE_EVENT_VFORK</span>);
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACECLONE</span>: <span class='ident'>PtraceOptions</span>     <span class='op'>=</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>PTRACE_EVENT_CLONE</span>);
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACEEXEC</span>: <span class='ident'>PtraceOptions</span>      <span class='op'>=</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>PTRACE_EVENT_EXEC</span>);
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACEVFORKDONE</span>: <span class='ident'>PtraceOptions</span> <span class='op'>=</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>PTRACE_EVENT_VFORK_DONE</span>);
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACEEXIT</span>: <span class='ident'>PtraceOptions</span>      <span class='op'>=</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>PTRACE_EVENT_EXIT</span>);
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>PTRACE_O_TRACESECCOMP</span>: <span class='ident'>PtraceOptions</span>   <span class='op'>=</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='ident'>PTRACE_EVENT_SECCOMP</span>);
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">PtraceOptions</span> <span class="op">=</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACESYSGOOD</span>: <span class="ident">PtraceOptions</span>   <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACEFORK</span>: <span class="ident">PtraceOptions</span>      <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">PTRACE_EVENT_FORK</span>);
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACEVFORK</span>: <span class="ident">PtraceOptions</span>     <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">PTRACE_EVENT_VFORK</span>);
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACECLONE</span>: <span class="ident">PtraceOptions</span>     <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">PTRACE_EVENT_CLONE</span>);
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACEEXEC</span>: <span class="ident">PtraceOptions</span>      <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">PTRACE_EVENT_EXEC</span>);
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACEVFORKDONE</span>: <span class="ident">PtraceOptions</span> <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">PTRACE_EVENT_VFORK_DONE</span>);
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACEEXIT</span>: <span class="ident">PtraceOptions</span>      <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">PTRACE_EVENT_EXIT</span>);
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PTRACE_O_TRACESECCOMP</span>: <span class="ident">PtraceOptions</span>   <span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">PTRACE_EVENT_SECCOMP</span>);
 }
 
-<span class='kw'>mod</span> <span class='ident'>ffi</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>pid_t</span>, <span class='ident'>c_int</span>, <span class='ident'>c_long</span>, <span class='ident'>c_void</span>};
+<span class="kw">mod</span> <span class="ident">ffi</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">pid_t</span>, <span class="ident">c_int</span>, <span class="ident">c_long</span>, <span class="ident">c_void</span>};
 
-    <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptrace</span>(<span class='ident'>request</span>: <span class='ident'>c_int</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='op'>*</span> <span class='kw'>const</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='op'>*</span> <span class='kw'>const</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='ident'>c_long</span>;
+    <span class="kw">extern</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ptrace</span>(<span class="ident">request</span>: <span class="ident">c_int</span>, <span class="ident">pid</span>: <span class="ident">pid_t</span>, <span class="ident">addr</span>: <span class="op">*</span> <span class="kw">const</span> <span class="ident">c_void</span>, <span class="ident">data</span>: <span class="op">*</span> <span class="kw">const</span> <span class="ident">c_void</span>) <span class="op">-&gt;</span> <span class="ident">c_long</span>;
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptrace</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ptrace</span>::<span class='kw-2'>*</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ptrace</span>(<span class="ident">request</span>: <span class="ident">ptrace</span>::<span class="ident">PtraceRequest</span>, <span class="ident">pid</span>: <span class="ident">pid_t</span>, <span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">c_long</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ptrace</span>::<span class="kw-2">*</span>;
 
-    <span class='kw'>match</span> <span class='ident'>request</span> {
-        <span class='ident'>PTRACE_PEEKTEXT</span> <span class='op'>|</span> <span class='ident'>PTRACE_PEEKDATA</span> <span class='op'>|</span> <span class='ident'>PTRACE_PEEKUSER</span> <span class='op'>=&gt;</span> <span class='ident'>ptrace_peek</span>(<span class='ident'>request</span>, <span class='ident'>pid</span>, <span class='ident'>addr</span>, <span class='ident'>data</span>),
-        _ <span class='op'>=&gt;</span> <span class='ident'>ptrace_other</span>(<span class='ident'>request</span>, <span class='ident'>pid</span>, <span class='ident'>addr</span>, <span class='ident'>data</span>)
+    <span class="kw">match</span> <span class="ident">request</span> {
+        <span class="ident">PTRACE_PEEKTEXT</span> <span class="op">|</span> <span class="ident">PTRACE_PEEKDATA</span> <span class="op">|</span> <span class="ident">PTRACE_PEEKUSER</span> <span class="op">=&gt;</span> <span class="ident">ptrace_peek</span>(<span class="ident">request</span>, <span class="ident">pid</span>, <span class="ident">addr</span>, <span class="ident">data</span>),
+        _ <span class="op">=&gt;</span> <span class="ident">ptrace_other</span>(<span class="ident">request</span>, <span class="ident">pid</span>, <span class="ident">addr</span>, <span class="ident">data</span>)
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>ptrace_peek</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>Errno</span>::<span class='ident'>clear</span>();
-        <span class='ident'>ffi</span>::<span class='ident'>ptrace</span>(<span class='ident'>request</span>, <span class='ident'>pid</span>, <span class='ident'>addr</span>, <span class='ident'>data</span>)
+<span class="kw">fn</span> <span class="ident">ptrace_peek</span>(<span class="ident">request</span>: <span class="ident">ptrace</span>::<span class="ident">PtraceRequest</span>, <span class="ident">pid</span>: <span class="ident">pid_t</span>, <span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">c_long</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+        <span class="ident">Errno</span>::<span class="ident">clear</span>();
+        <span class="ident">ffi</span>::<span class="ident">ptrace</span>(<span class="ident">request</span>, <span class="ident">pid</span>, <span class="ident">addr</span>, <span class="ident">data</span>)
     };
-    <span class='kw'>match</span> <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>ret</span>) {
-        <span class='prelude-val'>Ok</span>(..) <span class='op'>|</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Sys</span>(<span class='ident'>Errno</span>::<span class='ident'>UnknownErrno</span>)) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>ret</span>),
-        <span class='ident'>err</span> @ <span class='prelude-val'>Err</span>(..) <span class='op'>=&gt;</span> <span class='ident'>err</span>,
+    <span class="kw">match</span> <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">ret</span>) {
+        <span class="prelude-val">Ok</span>(..) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Sys</span>(<span class="ident">Errno</span>::<span class="ident">UnknownErrno</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ret</span>),
+        <span class="ident">err</span> @ <span class="prelude-val">Err</span>(..) <span class="op">=&gt;</span> <span class="ident">err</span>,
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>ptrace_other</span>(<span class='ident'>request</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceRequest</span>, <span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>data</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_long</span><span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>ptrace</span>(<span class='ident'>request</span>, <span class='ident'>pid</span>, <span class='ident'>addr</span>, <span class='ident'>data</span>) }).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='number'>0</span>)
+<span class="kw">fn</span> <span class="ident">ptrace_other</span>(<span class="ident">request</span>: <span class="ident">ptrace</span>::<span class="ident">PtraceRequest</span>, <span class="ident">pid</span>: <span class="ident">pid_t</span>, <span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>, <span class="ident">data</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">c_long</span><span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">ptrace</span>(<span class="ident">request</span>, <span class="ident">pid</span>, <span class="ident">addr</span>, <span class="ident">data</span>) }).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="number">0</span>)
 }
 
-<span class='doccomment'>/// Set options, as with ptrace(PTRACE_SETOPTIONS,...).</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ptrace_setoptions</span>(<span class='ident'>pid</span>: <span class='ident'>pid_t</span>, <span class='ident'>options</span>: <span class='ident'>ptrace</span>::<span class='ident'>PtraceOptions</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ptrace</span>::<span class='kw-2'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
+<span class="doccomment">/// Set options, as with ptrace(PTRACE_SETOPTIONS,...).</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ptrace_setoptions</span>(<span class="ident">pid</span>: <span class="ident">pid_t</span>, <span class="ident">options</span>: <span class="ident">ptrace</span>::<span class="ident">PtraceOptions</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ptrace</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 
-    <span class='ident'>ptrace</span>(<span class='ident'>PTRACE_SETOPTIONS</span>, <span class='ident'>pid</span>, <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>options</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+    <span class="ident">ptrace</span>(<span class="ident">PTRACE_SETOPTIONS</span>, <span class="ident">pid</span>, <span class="ident">ptr</span>::<span class="ident">null_mut</span>(), <span class="ident">options</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 </pre>
 </section>

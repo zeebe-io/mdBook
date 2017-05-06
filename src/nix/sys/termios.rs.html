@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -538,501 +538,501 @@
 <span id="493">493</span>
 <span id="494">494</span>
 <span id="495">495</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> {<span class='ident'>Errno</span>, <span class='prelude-ty'>Result</span>};
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::<span class='ident'>RawFd</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> {<span class="ident">Errno</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::<span class="ident">RawFd</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ffi</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ffi</span>::<span class='ident'>consts</span>::<span class='ident'>SetArg</span>::<span class='kw-2'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ffi</span>::<span class='ident'>consts</span>::<span class='ident'>FlushArg</span>::<span class='kw-2'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ffi</span>::<span class='ident'>consts</span>::<span class='ident'>FlowArg</span>::<span class='kw-2'>*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ffi</span>::<span class="ident">consts</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ffi</span>::<span class="ident">consts</span>::<span class="ident">SetArg</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ffi</span>::<span class="ident">consts</span>::<span class="ident">FlushArg</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ffi</span>::<span class="ident">consts</span>::<span class="ident">FlowArg</span>::<span class="kw-2">*</span>;
 
-<span class='kw'>mod</span> <span class='ident'>ffi</span> {
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
+<span class="kw">mod</span> <span class="ident">ffi</span> {
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">consts</span>::<span class="kw-2">*</span>;
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>))]</span>
-    <span class='kw'>mod</span> <span class='ident'>non_android</span> {
-        <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
-        <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
+    <span class="kw">mod</span> <span class="ident">non_android</span> {
+        <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">consts</span>::<span class="kw-2">*</span>;
+        <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 
-        <span class='comment'>// `Termios` contains bitflags which are not considered</span>
-        <span class='comment'>// `foreign-function-safe` by the compiler.</span>
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>improper_ctypes</span>)]</span>
-        <span class='kw'>extern</span> {
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfgetispeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>speed_t</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfgetospeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>speed_t</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfsetispeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>, <span class='ident'>speed</span>: <span class='ident'>speed_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfsetospeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>, <span class='ident'>speed</span>: <span class='ident'>speed_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcgetattr</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcsetattr</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>,
-                             <span class='ident'>optional_actions</span>: <span class='ident'>c_int</span>,
-                             <span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcdrain</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcflow</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>action</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcflush</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>action</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcsendbreak</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>duration</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+        <span class="comment">// `Termios` contains bitflags which are not considered</span>
+        <span class="comment">// `foreign-function-safe` by the compiler.</span>
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">improper_ctypes</span>)]</span>
+        <span class="kw">extern</span> {
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfgetispeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">speed_t</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfgetospeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">speed_t</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfsetispeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Termios</span>, <span class="ident">speed</span>: <span class="ident">speed_t</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfsetospeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Termios</span>, <span class="ident">speed</span>: <span class="ident">speed_t</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcgetattr</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcsetattr</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>,
+                             <span class="ident">optional_actions</span>: <span class="ident">c_int</span>,
+                             <span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcdrain</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcflow</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">action</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcflush</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">action</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcsendbreak</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">duration</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>non_android</span>::<span class='kw-2'>*</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">non_android</span>::<span class="kw-2">*</span>;
 
-    <span class='comment'>// On Android before 5.0, Bionic directly inline these to ioctl() calls.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>, <span class='ident'>not</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;mips&quot;</span>)))]</span>
-    <span class='kw'>mod</span> <span class='ident'>android</span> {
-        <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>funcs</span>::<span class='ident'>bsd44</span>::<span class='ident'>ioctl</span>;
-        <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
-        <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
+    <span class="comment">// On Android before 5.0, Bionic directly inline these to ioctl() calls.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>, <span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;mips&quot;</span>)))]</span>
+    <span class="kw">mod</span> <span class="ident">android</span> {
+        <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">funcs</span>::<span class="ident">bsd44</span>::<span class="ident">ioctl</span>;
+        <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
+        <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">consts</span>::<span class="kw-2">*</span>;
 
-        <span class='kw'>const</span> <span class='ident'>TCGETS</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x5401</span>;
-        <span class='kw'>const</span> <span class='ident'>TCSBRK</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x5409</span>;
-        <span class='kw'>const</span> <span class='ident'>TCXONC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x540a</span>;
-        <span class='kw'>const</span> <span class='ident'>TCFLSH</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x540b</span>;
-        <span class='kw'>const</span> <span class='ident'>TCSBRKP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x5425</span>;
+        <span class="kw">const</span> <span class="ident">TCGETS</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x5401</span>;
+        <span class="kw">const</span> <span class="ident">TCSBRK</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x5409</span>;
+        <span class="kw">const</span> <span class="ident">TCXONC</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x540a</span>;
+        <span class="kw">const</span> <span class="ident">TCFLSH</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x540b</span>;
+        <span class="kw">const</span> <span class="ident">TCSBRKP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x5425</span>;
 
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>cfgetispeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>speed_t</span> {
-            ((<span class='kw-2'>*</span><span class='ident'>termios</span>).<span class='ident'>c_cflag</span> <span class='op'>&amp;</span> <span class='ident'>CBAUD</span>).<span class='ident'>bits</span>() <span class='kw'>as</span> <span class='ident'>speed_t</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">cfgetispeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">speed_t</span> {
+            ((<span class="kw-2">*</span><span class="ident">termios</span>).<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">CBAUD</span>).<span class="ident">bits</span>() <span class="kw">as</span> <span class="ident">speed_t</span>
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>cfgetospeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>speed_t</span> {
-            ((<span class='kw-2'>*</span><span class='ident'>termios</span>).<span class='ident'>c_cflag</span> <span class='op'>&amp;</span> <span class='ident'>CBAUD</span>).<span class='ident'>bits</span>() <span class='kw'>as</span> <span class='ident'>speed_t</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">cfgetospeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">speed_t</span> {
+            ((<span class="kw-2">*</span><span class="ident">termios</span>).<span class="ident">c_cflag</span> <span class="op">&amp;</span> <span class="ident">CBAUD</span>).<span class="ident">bits</span>() <span class="kw">as</span> <span class="ident">speed_t</span>
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>cfsetispeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>, <span class='ident'>speed</span>: <span class='ident'>speed_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            (<span class='kw-2'>*</span><span class='ident'>termios</span>).<span class='ident'>c_cflag</span>.<span class='ident'>remove</span>(<span class='ident'>CBAUD</span>);
-            (<span class='kw-2'>*</span><span class='ident'>termios</span>).<span class='ident'>c_cflag</span>.<span class='ident'>insert</span>(<span class='ident'>ControlFlags</span>::<span class='ident'>from_bits_truncate</span>(<span class='ident'>speed</span>) <span class='op'>&amp;</span> <span class='ident'>CBAUD</span>);
-            <span class='number'>0</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">cfsetispeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Termios</span>, <span class="ident">speed</span>: <span class="ident">speed_t</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            (<span class="kw-2">*</span><span class="ident">termios</span>).<span class="ident">c_cflag</span>.<span class="ident">remove</span>(<span class="ident">CBAUD</span>);
+            (<span class="kw-2">*</span><span class="ident">termios</span>).<span class="ident">c_cflag</span>.<span class="ident">insert</span>(<span class="ident">ControlFlags</span>::<span class="ident">from_bits_truncate</span>(<span class="ident">speed</span>) <span class="op">&amp;</span> <span class="ident">CBAUD</span>);
+            <span class="number">0</span>
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>cfsetospeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>, <span class='ident'>speed</span>: <span class='ident'>speed_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            (<span class='kw-2'>*</span><span class='ident'>termios</span>).<span class='ident'>c_cflag</span>.<span class='ident'>remove</span>(<span class='ident'>CBAUD</span>);
-            (<span class='kw-2'>*</span><span class='ident'>termios</span>).<span class='ident'>c_cflag</span>.<span class='ident'>insert</span>(<span class='ident'>ControlFlags</span>::<span class='ident'>from_bits_truncate</span>(<span class='ident'>speed</span>) <span class='op'>&amp;</span> <span class='ident'>CBAUD</span>);
-            <span class='number'>0</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">cfsetospeed</span>(<span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Termios</span>, <span class="ident">speed</span>: <span class="ident">speed_t</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            (<span class="kw-2">*</span><span class="ident">termios</span>).<span class="ident">c_cflag</span>.<span class="ident">remove</span>(<span class="ident">CBAUD</span>);
+            (<span class="kw-2">*</span><span class="ident">termios</span>).<span class="ident">c_cflag</span>.<span class="ident">insert</span>(<span class="ident">ControlFlags</span>::<span class="ident">from_bits_truncate</span>(<span class="ident">speed</span>) <span class="op">&amp;</span> <span class="ident">CBAUD</span>);
+            <span class="number">0</span>
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>tcgetattr</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            <span class='ident'>ioctl</span>(<span class='ident'>fd</span>, <span class='ident'>TCGETS</span>, <span class='ident'>termios</span>)
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tcgetattr</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            <span class="ident">ioctl</span>(<span class="ident">fd</span>, <span class="ident">TCGETS</span>, <span class="ident">termios</span>)
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>tcsetattr</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>,
-                                <span class='ident'>optional_actions</span>: <span class='ident'>c_int</span>,
-                                <span class='ident'>termios</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            <span class='ident'>ioctl</span>(<span class='ident'>fd</span>, <span class='ident'>optional_actions</span>, <span class='ident'>termios</span>)
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tcsetattr</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>,
+                                <span class="ident">optional_actions</span>: <span class="ident">c_int</span>,
+                                <span class="ident">termios</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            <span class="ident">ioctl</span>(<span class="ident">fd</span>, <span class="ident">optional_actions</span>, <span class="ident">termios</span>)
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>tcdrain</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            <span class='ident'>ioctl</span>(<span class='ident'>fd</span>, <span class='ident'>TCSBRK</span>, <span class='number'>1</span>)
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tcdrain</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            <span class="ident">ioctl</span>(<span class="ident">fd</span>, <span class="ident">TCSBRK</span>, <span class="number">1</span>)
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>tcflow</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>action</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            <span class='ident'>ioctl</span>(<span class='ident'>fd</span>, <span class='ident'>TCXONC</span>, <span class='ident'>action</span>)
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tcflow</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">action</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            <span class="ident">ioctl</span>(<span class="ident">fd</span>, <span class="ident">TCXONC</span>, <span class="ident">action</span>)
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>tcflush</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>action</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            <span class='ident'>ioctl</span>(<span class='ident'>fd</span>, <span class='ident'>TCFLSH</span>, <span class='ident'>action</span>)
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tcflush</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">action</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            <span class="ident">ioctl</span>(<span class="ident">fd</span>, <span class="ident">TCFLSH</span>, <span class="ident">action</span>)
         }
-        <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>tcsendbreak</span>(<span class='ident'>fd</span>: <span class='ident'>c_int</span>, <span class='ident'>duration</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-            <span class='ident'>ioctl</span>(<span class='ident'>fd</span>, <span class='ident'>TCSBRKP</span>, <span class='ident'>duration</span>)
-        }
-    }
-
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>android</span>::<span class='kw-2'>*</span>;
-
-
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>consts</span> {
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)))]</span>
-        <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_ulong</span>, <span class='ident'>c_uchar</span>};
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-        <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_uint</span>, <span class='ident'>c_uchar</span>};
-
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)))]</span>
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>tcflag_t</span> <span class='op'>=</span> <span class='ident'>c_ulong</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>tcflag_t</span> <span class='op'>=</span> <span class='ident'>c_uint</span>;
-
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cc_t</span> <span class='op'>=</span> <span class='ident'>c_uchar</span>;
-
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)))]</span>
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>speed_t</span> <span class='op'>=</span> <span class='ident'>c_ulong</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>speed_t</span> <span class='op'>=</span> <span class='ident'>c_uint</span>;
-
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Termios</span> {
-            <span class='kw'>pub</span> <span class='ident'>c_iflag</span>: <span class='ident'>InputFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_oflag</span>: <span class='ident'>OutputFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_cflag</span>: <span class='ident'>ControlFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_lflag</span>: <span class='ident'>LocalFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_cc</span>: [<span class='ident'>cc_t</span>; <span class='ident'>NCCS</span>],
-            <span class='kw'>pub</span> <span class='ident'>c_ispeed</span>: <span class='ident'>speed_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_ospeed</span>: <span class='ident'>speed_t</span>
-        }
-
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VEOF</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VEOL</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>1</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VEOL2</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>2</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VERASE</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>3</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VWERASE</span>: <span class='ident'>usize</span>  <span class='op'>=</span> <span class='number'>4</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VKILL</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>5</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VREPRINT</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>6</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VINTR</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>8</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VQUIT</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>9</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VSUSP</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>10</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VDSUSP</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>11</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VSTART</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>12</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VSTOP</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>13</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VLNEXT</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>14</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VDISCARD</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>15</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VMIN</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>16</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VTIME</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>17</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VSTATUS</span>: <span class='ident'>usize</span>  <span class='op'>=</span> <span class='number'>18</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NCCS</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>20</span>;
-
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>InputFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>IGNBRK</span>  <span class='op'>=</span> <span class='number'>0x00000001</span>,
-                <span class='kw'>const</span> <span class='ident'>BRKINT</span>  <span class='op'>=</span> <span class='number'>0x00000002</span>,
-                <span class='kw'>const</span> <span class='ident'>IGNPAR</span>  <span class='op'>=</span> <span class='number'>0x00000004</span>,
-                <span class='kw'>const</span> <span class='ident'>PARMRK</span>  <span class='op'>=</span> <span class='number'>0x00000008</span>,
-                <span class='kw'>const</span> <span class='ident'>INPCK</span>   <span class='op'>=</span> <span class='number'>0x00000010</span>,
-                <span class='kw'>const</span> <span class='ident'>ISTRIP</span>  <span class='op'>=</span> <span class='number'>0x00000020</span>,
-                <span class='kw'>const</span> <span class='ident'>INLCR</span>   <span class='op'>=</span> <span class='number'>0x00000040</span>,
-                <span class='kw'>const</span> <span class='ident'>IGNCR</span>   <span class='op'>=</span> <span class='number'>0x00000080</span>,
-                <span class='kw'>const</span> <span class='ident'>ICRNL</span>   <span class='op'>=</span> <span class='number'>0x00000100</span>,
-                <span class='kw'>const</span> <span class='ident'>IXON</span>    <span class='op'>=</span> <span class='number'>0x00000200</span>,
-                <span class='kw'>const</span> <span class='ident'>IXOFF</span>   <span class='op'>=</span> <span class='number'>0x00000400</span>,
-                <span class='kw'>const</span> <span class='ident'>IXANY</span>   <span class='op'>=</span> <span class='number'>0x00000800</span>,
-                <span class='kw'>const</span> <span class='ident'>IMAXBEL</span> <span class='op'>=</span> <span class='number'>0x00002000</span>,
-                <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>))]</span>
-                <span class='kw'>const</span> <span class='ident'>IUTF8</span>   <span class='op'>=</span> <span class='number'>0x00004000</span>,
-            }
-        }
-
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>OutputFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>OPOST</span>  <span class='op'>=</span> <span class='number'>0x00000001</span>,
-                <span class='kw'>const</span> <span class='ident'>ONLCR</span>  <span class='op'>=</span> <span class='number'>0x00000002</span>,
-                <span class='kw'>const</span> <span class='ident'>OXTABS</span> <span class='op'>=</span> <span class='number'>0x00000004</span>,
-                <span class='kw'>const</span> <span class='ident'>ONOEOT</span> <span class='op'>=</span> <span class='number'>0x00000008</span>,
-            }
-        }
-
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>ControlFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>CIGNORE</span>    <span class='op'>=</span> <span class='number'>0x00000001</span>,
-                <span class='kw'>const</span> <span class='ident'>CSIZE</span>      <span class='op'>=</span> <span class='number'>0x00000300</span>,
-                <span class='kw'>const</span> <span class='ident'>CS5</span>        <span class='op'>=</span> <span class='number'>0x00000000</span>,
-                <span class='kw'>const</span> <span class='ident'>CS6</span>        <span class='op'>=</span> <span class='number'>0x00000100</span>,
-                <span class='kw'>const</span> <span class='ident'>CS7</span>        <span class='op'>=</span> <span class='number'>0x00000200</span>,
-                <span class='kw'>const</span> <span class='ident'>CS8</span>        <span class='op'>=</span> <span class='number'>0x00000300</span>,
-                <span class='kw'>const</span> <span class='ident'>CSTOPB</span>     <span class='op'>=</span> <span class='number'>0x00000400</span>,
-                <span class='kw'>const</span> <span class='ident'>CREAD</span>      <span class='op'>=</span> <span class='number'>0x00000800</span>,
-                <span class='kw'>const</span> <span class='ident'>PARENB</span>     <span class='op'>=</span> <span class='number'>0x00001000</span>,
-                <span class='kw'>const</span> <span class='ident'>PARODD</span>     <span class='op'>=</span> <span class='number'>0x00002000</span>,
-                <span class='kw'>const</span> <span class='ident'>HUPCL</span>      <span class='op'>=</span> <span class='number'>0x00004000</span>,
-                <span class='kw'>const</span> <span class='ident'>CLOCAL</span>     <span class='op'>=</span> <span class='number'>0x00008000</span>,
-                <span class='kw'>const</span> <span class='ident'>CCTS_OFLOW</span> <span class='op'>=</span> <span class='number'>0x00010000</span>,
-                <span class='kw'>const</span> <span class='ident'>CRTSCTS</span>    <span class='op'>=</span> <span class='number'>0x00030000</span>,
-                <span class='kw'>const</span> <span class='ident'>CRTS_IFLOW</span> <span class='op'>=</span> <span class='number'>0x00020000</span>,
-                <span class='kw'>const</span> <span class='ident'>CDTR_IFLOW</span> <span class='op'>=</span> <span class='number'>0x00040000</span>,
-                <span class='kw'>const</span> <span class='ident'>CDSR_OFLOW</span> <span class='op'>=</span> <span class='number'>0x00080000</span>,
-                <span class='kw'>const</span> <span class='ident'>CCAR_OFLOW</span> <span class='op'>=</span> <span class='number'>0x00100000</span>,
-                <span class='kw'>const</span> <span class='ident'>MDMBUF</span>     <span class='op'>=</span> <span class='number'>0x00100000</span>,
-            }
-        }
-
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>LocalFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>ECHOKE</span>     <span class='op'>=</span> <span class='number'>0x00000001</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOE</span>      <span class='op'>=</span> <span class='number'>0x00000002</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOK</span>      <span class='op'>=</span> <span class='number'>0x00000004</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHO</span>       <span class='op'>=</span> <span class='number'>0x00000008</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHONL</span>     <span class='op'>=</span> <span class='number'>0x00000010</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOPRT</span>    <span class='op'>=</span> <span class='number'>0x00000020</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOCTL</span>    <span class='op'>=</span> <span class='number'>0x00000040</span>,
-                <span class='kw'>const</span> <span class='ident'>ISIG</span>       <span class='op'>=</span> <span class='number'>0x00000080</span>,
-                <span class='kw'>const</span> <span class='ident'>ICANON</span>     <span class='op'>=</span> <span class='number'>0x00000100</span>,
-                <span class='kw'>const</span> <span class='ident'>ALTWERASE</span>  <span class='op'>=</span> <span class='number'>0x00000200</span>,
-                <span class='kw'>const</span> <span class='ident'>IEXTEN</span>     <span class='op'>=</span> <span class='number'>0x00000400</span>,
-                <span class='kw'>const</span> <span class='ident'>EXTPROC</span>    <span class='op'>=</span> <span class='number'>0x00000800</span>,
-                <span class='kw'>const</span> <span class='ident'>TOSTOP</span>     <span class='op'>=</span> <span class='number'>0x00400000</span>,
-                <span class='kw'>const</span> <span class='ident'>FLUSHO</span>     <span class='op'>=</span> <span class='number'>0x00800000</span>,
-                <span class='kw'>const</span> <span class='ident'>NOKERNINFO</span> <span class='op'>=</span> <span class='number'>0x02000000</span>,
-                <span class='kw'>const</span> <span class='ident'>PENDIN</span>     <span class='op'>=</span> <span class='number'>0x20000000</span>,
-                <span class='kw'>const</span> <span class='ident'>NOFLSH</span>     <span class='op'>=</span> <span class='number'>0x80000000</span>,
-            }
-        }
-
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NL0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NL1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000100</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NL2</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000200</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NL3</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000300</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB0</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB1</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000400</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB2</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000800</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB3</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000004</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00001000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR2</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00002000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR3</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00003000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>FF0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>FF1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00004000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>BS0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>BS1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00008000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VT0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VT1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00010000</span>;
-
-        <span class='comment'>// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
-        <span class='comment'>// See https://github.com/rust-lang/rust/issues/10374.</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>SetArg</span> {
-            <span class='ident'>TCSANOW</span>   <span class='op'>=</span> <span class='number'>0</span>,
-            <span class='ident'>TCSADRAIN</span> <span class='op'>=</span> <span class='number'>1</span>,
-            <span class='ident'>TCSAFLUSH</span> <span class='op'>=</span> <span class='number'>2</span>,
-            <span class='ident'>TCSASOFT</span>  <span class='op'>=</span> <span class='number'>16</span>,
-        }
-
-        <span class='comment'>// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
-        <span class='comment'>// See https://github.com/rust-lang/rust/issues/10374.</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FlushArg</span> {
-            <span class='ident'>TCIFLUSH</span>  <span class='op'>=</span> <span class='number'>1</span>,
-            <span class='ident'>TCOFLUSH</span>  <span class='op'>=</span> <span class='number'>2</span>,
-            <span class='ident'>TCIOFLUSH</span> <span class='op'>=</span> <span class='number'>3</span>,
-        }
-
-        <span class='comment'>// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
-        <span class='comment'>// See https://github.com/rust-lang/rust/issues/10374.</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FlowArg</span> {
-            <span class='ident'>TCOOFF</span> <span class='op'>=</span> <span class='number'>1</span>,
-            <span class='ident'>TCOON</span>  <span class='op'>=</span> <span class='number'>2</span>,
-            <span class='ident'>TCIOFF</span> <span class='op'>=</span> <span class='number'>3</span>,
-            <span class='ident'>TCION</span>  <span class='op'>=</span> <span class='number'>4</span>,
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tcsendbreak</span>(<span class="ident">fd</span>: <span class="ident">c_int</span>, <span class="ident">duration</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span> {
+            <span class="ident">ioctl</span>(<span class="ident">fd</span>, <span class="ident">TCSBRKP</span>, <span class="ident">duration</span>)
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>consts</span> {
-        <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_uint</span>, <span class='ident'>c_uchar</span>};
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">android</span>::<span class="kw-2">*</span>;
 
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>tcflag_t</span> <span class='op'>=</span> <span class='ident'>c_uint</span>;
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>cc_t</span> <span class='op'>=</span> <span class='ident'>c_uchar</span>;
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>speed_t</span> <span class='op'>=</span> <span class='ident'>c_uint</span>;
 
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Termios</span> {
-            <span class='kw'>pub</span> <span class='ident'>c_iflag</span>: <span class='ident'>InputFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_oflag</span>: <span class='ident'>OutputFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_cflag</span>: <span class='ident'>ControlFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_lflag</span>: <span class='ident'>LocalFlags</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_line</span>: <span class='ident'>cc_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_cc</span>: [<span class='ident'>cc_t</span>; <span class='ident'>NCCS</span>],
-            <span class='kw'>pub</span> <span class='ident'>c_ispeed</span>: <span class='ident'>speed_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>c_ospeed</span>: <span class='ident'>speed_t</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">consts</span> {
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)))]</span>
+        <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_ulong</span>, <span class="ident">c_uchar</span>};
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+        <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_uint</span>, <span class="ident">c_uchar</span>};
+
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)))]</span>
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">tcflag_t</span> <span class="op">=</span> <span class="ident">c_ulong</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">tcflag_t</span> <span class="op">=</span> <span class="ident">c_uint</span>;
+
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cc_t</span> <span class="op">=</span> <span class="ident">c_uchar</span>;
+
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)))]</span>
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">speed_t</span> <span class="op">=</span> <span class="ident">c_ulong</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">speed_t</span> <span class="op">=</span> <span class="ident">c_uint</span>;
+
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Termios</span> {
+            <span class="kw">pub</span> <span class="ident">c_iflag</span>: <span class="ident">InputFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_oflag</span>: <span class="ident">OutputFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_cflag</span>: <span class="ident">ControlFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_lflag</span>: <span class="ident">LocalFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_cc</span>: [<span class="ident">cc_t</span>; <span class="ident">NCCS</span>],
+            <span class="kw">pub</span> <span class="ident">c_ispeed</span>: <span class="ident">speed_t</span>,
+            <span class="kw">pub</span> <span class="ident">c_ospeed</span>: <span class="ident">speed_t</span>
         }
 
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VEOF</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>4</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VEOL</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>11</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VEOL2</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>16</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VERASE</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>2</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VWERASE</span>: <span class='ident'>usize</span>  <span class='op'>=</span> <span class='number'>14</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VKILL</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>3</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VREPRINT</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>12</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VINTR</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VQUIT</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>1</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VSUSP</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>10</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VSTART</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>8</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VSTOP</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>9</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VLNEXT</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>15</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VDISCARD</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>13</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VMIN</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>6</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VTIME</span>: <span class='ident'>usize</span>    <span class='op'>=</span> <span class='number'>5</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NCCS</span>: <span class='ident'>usize</span>     <span class='op'>=</span> <span class='number'>32</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VEOF</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VEOL</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VEOL2</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">2</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VERASE</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">3</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VWERASE</span>: <span class="ident">usize</span>  <span class="op">=</span> <span class="number">4</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VKILL</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">5</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VREPRINT</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">6</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VINTR</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">8</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VQUIT</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">9</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VSUSP</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">10</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VDSUSP</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">11</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VSTART</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">12</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VSTOP</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">13</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VLNEXT</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">14</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VDISCARD</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">15</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VMIN</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">16</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VTIME</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">17</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VSTATUS</span>: <span class="ident">usize</span>  <span class="op">=</span> <span class="number">18</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NCCS</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">20</span>;
 
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>InputFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>IGNBRK</span>  <span class='op'>=</span> <span class='number'>0x00000001</span>,
-                <span class='kw'>const</span> <span class='ident'>BRKINT</span>  <span class='op'>=</span> <span class='number'>0x00000002</span>,
-                <span class='kw'>const</span> <span class='ident'>IGNPAR</span>  <span class='op'>=</span> <span class='number'>0x00000004</span>,
-                <span class='kw'>const</span> <span class='ident'>PARMRK</span>  <span class='op'>=</span> <span class='number'>0x00000008</span>,
-                <span class='kw'>const</span> <span class='ident'>INPCK</span>   <span class='op'>=</span> <span class='number'>0x00000010</span>,
-                <span class='kw'>const</span> <span class='ident'>ISTRIP</span>  <span class='op'>=</span> <span class='number'>0x00000020</span>,
-                <span class='kw'>const</span> <span class='ident'>INLCR</span>   <span class='op'>=</span> <span class='number'>0x00000040</span>,
-                <span class='kw'>const</span> <span class='ident'>IGNCR</span>   <span class='op'>=</span> <span class='number'>0x00000080</span>,
-                <span class='kw'>const</span> <span class='ident'>ICRNL</span>   <span class='op'>=</span> <span class='number'>0x00000100</span>,
-                <span class='kw'>const</span> <span class='ident'>IXON</span>    <span class='op'>=</span> <span class='number'>0x00000400</span>,
-                <span class='kw'>const</span> <span class='ident'>IXOFF</span>   <span class='op'>=</span> <span class='number'>0x00001000</span>,
-                <span class='kw'>const</span> <span class='ident'>IXANY</span>   <span class='op'>=</span> <span class='number'>0x00000800</span>,
-                <span class='kw'>const</span> <span class='ident'>IMAXBEL</span> <span class='op'>=</span> <span class='number'>0x00002000</span>,
-                <span class='kw'>const</span> <span class='ident'>IUTF8</span>   <span class='op'>=</span> <span class='number'>0x00004000</span>,
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">InputFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">IGNBRK</span>  <span class="op">=</span> <span class="number">0x00000001</span>,
+                <span class="kw">const</span> <span class="ident">BRKINT</span>  <span class="op">=</span> <span class="number">0x00000002</span>,
+                <span class="kw">const</span> <span class="ident">IGNPAR</span>  <span class="op">=</span> <span class="number">0x00000004</span>,
+                <span class="kw">const</span> <span class="ident">PARMRK</span>  <span class="op">=</span> <span class="number">0x00000008</span>,
+                <span class="kw">const</span> <span class="ident">INPCK</span>   <span class="op">=</span> <span class="number">0x00000010</span>,
+                <span class="kw">const</span> <span class="ident">ISTRIP</span>  <span class="op">=</span> <span class="number">0x00000020</span>,
+                <span class="kw">const</span> <span class="ident">INLCR</span>   <span class="op">=</span> <span class="number">0x00000040</span>,
+                <span class="kw">const</span> <span class="ident">IGNCR</span>   <span class="op">=</span> <span class="number">0x00000080</span>,
+                <span class="kw">const</span> <span class="ident">ICRNL</span>   <span class="op">=</span> <span class="number">0x00000100</span>,
+                <span class="kw">const</span> <span class="ident">IXON</span>    <span class="op">=</span> <span class="number">0x00000200</span>,
+                <span class="kw">const</span> <span class="ident">IXOFF</span>   <span class="op">=</span> <span class="number">0x00000400</span>,
+                <span class="kw">const</span> <span class="ident">IXANY</span>   <span class="op">=</span> <span class="number">0x00000800</span>,
+                <span class="kw">const</span> <span class="ident">IMAXBEL</span> <span class="op">=</span> <span class="number">0x00002000</span>,
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>))]</span>
+                <span class="kw">const</span> <span class="ident">IUTF8</span>   <span class="op">=</span> <span class="number">0x00004000</span>,
             }
         }
 
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>OutputFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>OPOST</span>  <span class='op'>=</span> <span class='number'>0x00000001</span>,
-                <span class='kw'>const</span> <span class='ident'>ONLCR</span>  <span class='op'>=</span> <span class='number'>0x00000004</span>,
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">OutputFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">OPOST</span>  <span class="op">=</span> <span class="number">0x00000001</span>,
+                <span class="kw">const</span> <span class="ident">ONLCR</span>  <span class="op">=</span> <span class="number">0x00000002</span>,
+                <span class="kw">const</span> <span class="ident">OXTABS</span> <span class="op">=</span> <span class="number">0x00000004</span>,
+                <span class="kw">const</span> <span class="ident">ONOEOT</span> <span class="op">=</span> <span class="number">0x00000008</span>,
             }
         }
 
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>ControlFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>CSIZE</span>      <span class='op'>=</span> <span class='number'>0x00000030</span>,
-                <span class='kw'>const</span> <span class='ident'>CS5</span>        <span class='op'>=</span> <span class='number'>0x00000000</span>,
-                <span class='kw'>const</span> <span class='ident'>CS6</span>        <span class='op'>=</span> <span class='number'>0x00000010</span>,
-                <span class='kw'>const</span> <span class='ident'>CS7</span>        <span class='op'>=</span> <span class='number'>0x00000020</span>,
-                <span class='kw'>const</span> <span class='ident'>CS8</span>        <span class='op'>=</span> <span class='number'>0x00000030</span>,
-                <span class='kw'>const</span> <span class='ident'>CSTOPB</span>     <span class='op'>=</span> <span class='number'>0x00000040</span>,
-                <span class='kw'>const</span> <span class='ident'>CREAD</span>      <span class='op'>=</span> <span class='number'>0x00000080</span>,
-                <span class='kw'>const</span> <span class='ident'>PARENB</span>     <span class='op'>=</span> <span class='number'>0x00000100</span>,
-                <span class='kw'>const</span> <span class='ident'>PARODD</span>     <span class='op'>=</span> <span class='number'>0x00000200</span>,
-                <span class='kw'>const</span> <span class='ident'>HUPCL</span>      <span class='op'>=</span> <span class='number'>0x00000400</span>,
-                <span class='kw'>const</span> <span class='ident'>CLOCAL</span>     <span class='op'>=</span> <span class='number'>0x00000800</span>,
-                <span class='kw'>const</span> <span class='ident'>CRTSCTS</span>    <span class='op'>=</span> <span class='number'>0x80000000</span>,
-                <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>)]</span>
-                <span class='kw'>const</span> <span class='ident'>CBAUD</span>      <span class='op'>=</span> <span class='number'>0o0010017</span>,
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">ControlFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">CIGNORE</span>    <span class="op">=</span> <span class="number">0x00000001</span>,
+                <span class="kw">const</span> <span class="ident">CSIZE</span>      <span class="op">=</span> <span class="number">0x00000300</span>,
+                <span class="kw">const</span> <span class="ident">CS5</span>        <span class="op">=</span> <span class="number">0x00000000</span>,
+                <span class="kw">const</span> <span class="ident">CS6</span>        <span class="op">=</span> <span class="number">0x00000100</span>,
+                <span class="kw">const</span> <span class="ident">CS7</span>        <span class="op">=</span> <span class="number">0x00000200</span>,
+                <span class="kw">const</span> <span class="ident">CS8</span>        <span class="op">=</span> <span class="number">0x00000300</span>,
+                <span class="kw">const</span> <span class="ident">CSTOPB</span>     <span class="op">=</span> <span class="number">0x00000400</span>,
+                <span class="kw">const</span> <span class="ident">CREAD</span>      <span class="op">=</span> <span class="number">0x00000800</span>,
+                <span class="kw">const</span> <span class="ident">PARENB</span>     <span class="op">=</span> <span class="number">0x00001000</span>,
+                <span class="kw">const</span> <span class="ident">PARODD</span>     <span class="op">=</span> <span class="number">0x00002000</span>,
+                <span class="kw">const</span> <span class="ident">HUPCL</span>      <span class="op">=</span> <span class="number">0x00004000</span>,
+                <span class="kw">const</span> <span class="ident">CLOCAL</span>     <span class="op">=</span> <span class="number">0x00008000</span>,
+                <span class="kw">const</span> <span class="ident">CCTS_OFLOW</span> <span class="op">=</span> <span class="number">0x00010000</span>,
+                <span class="kw">const</span> <span class="ident">CRTSCTS</span>    <span class="op">=</span> <span class="number">0x00030000</span>,
+                <span class="kw">const</span> <span class="ident">CRTS_IFLOW</span> <span class="op">=</span> <span class="number">0x00020000</span>,
+                <span class="kw">const</span> <span class="ident">CDTR_IFLOW</span> <span class="op">=</span> <span class="number">0x00040000</span>,
+                <span class="kw">const</span> <span class="ident">CDSR_OFLOW</span> <span class="op">=</span> <span class="number">0x00080000</span>,
+                <span class="kw">const</span> <span class="ident">CCAR_OFLOW</span> <span class="op">=</span> <span class="number">0x00100000</span>,
+                <span class="kw">const</span> <span class="ident">MDMBUF</span>     <span class="op">=</span> <span class="number">0x00100000</span>,
             }
         }
 
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>LocalFlags</span>: <span class='ident'>tcflag_t</span> {
-                <span class='kw'>const</span> <span class='ident'>ECHOKE</span>     <span class='op'>=</span> <span class='number'>0x00000800</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOE</span>      <span class='op'>=</span> <span class='number'>0x00000010</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOK</span>      <span class='op'>=</span> <span class='number'>0x00000020</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHO</span>       <span class='op'>=</span> <span class='number'>0x00000008</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHONL</span>     <span class='op'>=</span> <span class='number'>0x00000040</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOPRT</span>    <span class='op'>=</span> <span class='number'>0x00000400</span>,
-                <span class='kw'>const</span> <span class='ident'>ECHOCTL</span>    <span class='op'>=</span> <span class='number'>0x00000200</span>,
-                <span class='kw'>const</span> <span class='ident'>ISIG</span>       <span class='op'>=</span> <span class='number'>0x00000001</span>,
-                <span class='kw'>const</span> <span class='ident'>ICANON</span>     <span class='op'>=</span> <span class='number'>0x00000002</span>,
-                <span class='kw'>const</span> <span class='ident'>IEXTEN</span>     <span class='op'>=</span> <span class='number'>0x00008000</span>,
-                <span class='kw'>const</span> <span class='ident'>EXTPROC</span>    <span class='op'>=</span> <span class='number'>0x00010000</span>,
-                <span class='kw'>const</span> <span class='ident'>TOSTOP</span>     <span class='op'>=</span> <span class='number'>0x00000100</span>,
-                <span class='kw'>const</span> <span class='ident'>FLUSHO</span>     <span class='op'>=</span> <span class='number'>0x00001000</span>,
-                <span class='kw'>const</span> <span class='ident'>PENDIN</span>     <span class='op'>=</span> <span class='number'>0x00004000</span>,
-                <span class='kw'>const</span> <span class='ident'>NOFLSH</span>     <span class='op'>=</span> <span class='number'>0x00000080</span>,
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">LocalFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">ECHOKE</span>     <span class="op">=</span> <span class="number">0x00000001</span>,
+                <span class="kw">const</span> <span class="ident">ECHOE</span>      <span class="op">=</span> <span class="number">0x00000002</span>,
+                <span class="kw">const</span> <span class="ident">ECHOK</span>      <span class="op">=</span> <span class="number">0x00000004</span>,
+                <span class="kw">const</span> <span class="ident">ECHO</span>       <span class="op">=</span> <span class="number">0x00000008</span>,
+                <span class="kw">const</span> <span class="ident">ECHONL</span>     <span class="op">=</span> <span class="number">0x00000010</span>,
+                <span class="kw">const</span> <span class="ident">ECHOPRT</span>    <span class="op">=</span> <span class="number">0x00000020</span>,
+                <span class="kw">const</span> <span class="ident">ECHOCTL</span>    <span class="op">=</span> <span class="number">0x00000040</span>,
+                <span class="kw">const</span> <span class="ident">ISIG</span>       <span class="op">=</span> <span class="number">0x00000080</span>,
+                <span class="kw">const</span> <span class="ident">ICANON</span>     <span class="op">=</span> <span class="number">0x00000100</span>,
+                <span class="kw">const</span> <span class="ident">ALTWERASE</span>  <span class="op">=</span> <span class="number">0x00000200</span>,
+                <span class="kw">const</span> <span class="ident">IEXTEN</span>     <span class="op">=</span> <span class="number">0x00000400</span>,
+                <span class="kw">const</span> <span class="ident">EXTPROC</span>    <span class="op">=</span> <span class="number">0x00000800</span>,
+                <span class="kw">const</span> <span class="ident">TOSTOP</span>     <span class="op">=</span> <span class="number">0x00400000</span>,
+                <span class="kw">const</span> <span class="ident">FLUSHO</span>     <span class="op">=</span> <span class="number">0x00800000</span>,
+                <span class="kw">const</span> <span class="ident">NOKERNINFO</span> <span class="op">=</span> <span class="number">0x02000000</span>,
+                <span class="kw">const</span> <span class="ident">PENDIN</span>     <span class="op">=</span> <span class="number">0x20000000</span>,
+                <span class="kw">const</span> <span class="ident">NOFLSH</span>     <span class="op">=</span> <span class="number">0x80000000</span>,
             }
         }
 
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NL0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NL1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000100</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB0</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB1</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000800</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB2</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00001000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TAB3</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00001800</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000200</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR2</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000400</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CR3</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000600</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>FF0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>FF1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00008000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>BS0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>BS1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00002000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VT0</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00000000</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>VT1</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>0x00004000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NL0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NL1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000100</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NL2</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000200</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NL3</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000300</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB0</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB1</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00000400</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB2</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00000800</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB3</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00000004</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00001000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR2</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00002000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR3</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00003000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">FF0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">FF1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00004000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">BS0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">BS1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00008000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VT0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VT1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00010000</span>;
 
-        <span class='comment'>// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
-        <span class='comment'>// See https://github.com/rust-lang/rust/issues/10374.</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>SetArg</span> {
-            <span class='ident'>TCSANOW</span>   <span class='op'>=</span> <span class='number'>0</span>,
-            <span class='ident'>TCSADRAIN</span> <span class='op'>=</span> <span class='number'>1</span>,
-            <span class='ident'>TCSAFLUSH</span> <span class='op'>=</span> <span class='number'>2</span>,
+        <span class="comment">// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
+        <span class="comment">// See https://github.com/rust-lang/rust/issues/10374.</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SetArg</span> {
+            <span class="ident">TCSANOW</span>   <span class="op">=</span> <span class="number">0</span>,
+            <span class="ident">TCSADRAIN</span> <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">TCSAFLUSH</span> <span class="op">=</span> <span class="number">2</span>,
+            <span class="ident">TCSASOFT</span>  <span class="op">=</span> <span class="number">16</span>,
         }
 
-        <span class='comment'>// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
-        <span class='comment'>// See https://github.com/rust-lang/rust/issues/10374.</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FlushArg</span> {
-            <span class='ident'>TCIFLUSH</span>  <span class='op'>=</span> <span class='number'>0</span>,
-            <span class='ident'>TCOFLUSH</span>  <span class='op'>=</span> <span class='number'>1</span>,
-            <span class='ident'>TCIOFLUSH</span> <span class='op'>=</span> <span class='number'>2</span>,
+        <span class="comment">// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
+        <span class="comment">// See https://github.com/rust-lang/rust/issues/10374.</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FlushArg</span> {
+            <span class="ident">TCIFLUSH</span>  <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">TCOFLUSH</span>  <span class="op">=</span> <span class="number">2</span>,
+            <span class="ident">TCIOFLUSH</span> <span class="op">=</span> <span class="number">3</span>,
         }
 
-        <span class='comment'>// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
-        <span class='comment'>// See https://github.com/rust-lang/rust/issues/10374.</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FlowArg</span> {
-            <span class='ident'>TCOOFF</span> <span class='op'>=</span> <span class='number'>0</span>,
-            <span class='ident'>TCOON</span>  <span class='op'>=</span> <span class='number'>1</span>,
-            <span class='ident'>TCIOFF</span> <span class='op'>=</span> <span class='number'>2</span>,
-            <span class='ident'>TCION</span>  <span class='op'>=</span> <span class='number'>3</span>,
+        <span class="comment">// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
+        <span class="comment">// See https://github.com/rust-lang/rust/issues/10374.</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FlowArg</span> {
+            <span class="ident">TCOOFF</span> <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">TCOON</span>  <span class="op">=</span> <span class="number">2</span>,
+            <span class="ident">TCIOFF</span> <span class="op">=</span> <span class="number">3</span>,
+            <span class="ident">TCION</span>  <span class="op">=</span> <span class="number">4</span>,
         }
     }
-}
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfgetispeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>&amp;</span><span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>speed_t</span> {
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>cfgetispeed</span>(<span class='ident'>termios</span>)
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">consts</span> {
+        <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_uint</span>, <span class="ident">c_uchar</span>};
+
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">tcflag_t</span> <span class="op">=</span> <span class="ident">c_uint</span>;
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">cc_t</span> <span class="op">=</span> <span class="ident">c_uchar</span>;
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">speed_t</span> <span class="op">=</span> <span class="ident">c_uint</span>;
+
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Termios</span> {
+            <span class="kw">pub</span> <span class="ident">c_iflag</span>: <span class="ident">InputFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_oflag</span>: <span class="ident">OutputFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_cflag</span>: <span class="ident">ControlFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_lflag</span>: <span class="ident">LocalFlags</span>,
+            <span class="kw">pub</span> <span class="ident">c_line</span>: <span class="ident">cc_t</span>,
+            <span class="kw">pub</span> <span class="ident">c_cc</span>: [<span class="ident">cc_t</span>; <span class="ident">NCCS</span>],
+            <span class="kw">pub</span> <span class="ident">c_ispeed</span>: <span class="ident">speed_t</span>,
+            <span class="kw">pub</span> <span class="ident">c_ospeed</span>: <span class="ident">speed_t</span>
+        }
+
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VEOF</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">4</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VEOL</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">11</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VEOL2</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">16</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VERASE</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">2</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VWERASE</span>: <span class="ident">usize</span>  <span class="op">=</span> <span class="number">14</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VKILL</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">3</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VREPRINT</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">12</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VINTR</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VQUIT</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VSUSP</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">10</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VSTART</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">8</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VSTOP</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">9</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VLNEXT</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">15</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VDISCARD</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">13</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VMIN</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">6</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VTIME</span>: <span class="ident">usize</span>    <span class="op">=</span> <span class="number">5</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NCCS</span>: <span class="ident">usize</span>     <span class="op">=</span> <span class="number">32</span>;
+
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">InputFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">IGNBRK</span>  <span class="op">=</span> <span class="number">0x00000001</span>,
+                <span class="kw">const</span> <span class="ident">BRKINT</span>  <span class="op">=</span> <span class="number">0x00000002</span>,
+                <span class="kw">const</span> <span class="ident">IGNPAR</span>  <span class="op">=</span> <span class="number">0x00000004</span>,
+                <span class="kw">const</span> <span class="ident">PARMRK</span>  <span class="op">=</span> <span class="number">0x00000008</span>,
+                <span class="kw">const</span> <span class="ident">INPCK</span>   <span class="op">=</span> <span class="number">0x00000010</span>,
+                <span class="kw">const</span> <span class="ident">ISTRIP</span>  <span class="op">=</span> <span class="number">0x00000020</span>,
+                <span class="kw">const</span> <span class="ident">INLCR</span>   <span class="op">=</span> <span class="number">0x00000040</span>,
+                <span class="kw">const</span> <span class="ident">IGNCR</span>   <span class="op">=</span> <span class="number">0x00000080</span>,
+                <span class="kw">const</span> <span class="ident">ICRNL</span>   <span class="op">=</span> <span class="number">0x00000100</span>,
+                <span class="kw">const</span> <span class="ident">IXON</span>    <span class="op">=</span> <span class="number">0x00000400</span>,
+                <span class="kw">const</span> <span class="ident">IXOFF</span>   <span class="op">=</span> <span class="number">0x00001000</span>,
+                <span class="kw">const</span> <span class="ident">IXANY</span>   <span class="op">=</span> <span class="number">0x00000800</span>,
+                <span class="kw">const</span> <span class="ident">IMAXBEL</span> <span class="op">=</span> <span class="number">0x00002000</span>,
+                <span class="kw">const</span> <span class="ident">IUTF8</span>   <span class="op">=</span> <span class="number">0x00004000</span>,
+            }
+        }
+
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">OutputFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">OPOST</span>  <span class="op">=</span> <span class="number">0x00000001</span>,
+                <span class="kw">const</span> <span class="ident">ONLCR</span>  <span class="op">=</span> <span class="number">0x00000004</span>,
+            }
+        }
+
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">ControlFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">CSIZE</span>      <span class="op">=</span> <span class="number">0x00000030</span>,
+                <span class="kw">const</span> <span class="ident">CS5</span>        <span class="op">=</span> <span class="number">0x00000000</span>,
+                <span class="kw">const</span> <span class="ident">CS6</span>        <span class="op">=</span> <span class="number">0x00000010</span>,
+                <span class="kw">const</span> <span class="ident">CS7</span>        <span class="op">=</span> <span class="number">0x00000020</span>,
+                <span class="kw">const</span> <span class="ident">CS8</span>        <span class="op">=</span> <span class="number">0x00000030</span>,
+                <span class="kw">const</span> <span class="ident">CSTOPB</span>     <span class="op">=</span> <span class="number">0x00000040</span>,
+                <span class="kw">const</span> <span class="ident">CREAD</span>      <span class="op">=</span> <span class="number">0x00000080</span>,
+                <span class="kw">const</span> <span class="ident">PARENB</span>     <span class="op">=</span> <span class="number">0x00000100</span>,
+                <span class="kw">const</span> <span class="ident">PARODD</span>     <span class="op">=</span> <span class="number">0x00000200</span>,
+                <span class="kw">const</span> <span class="ident">HUPCL</span>      <span class="op">=</span> <span class="number">0x00000400</span>,
+                <span class="kw">const</span> <span class="ident">CLOCAL</span>     <span class="op">=</span> <span class="number">0x00000800</span>,
+                <span class="kw">const</span> <span class="ident">CRTSCTS</span>    <span class="op">=</span> <span class="number">0x80000000</span>,
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>)]</span>
+                <span class="kw">const</span> <span class="ident">CBAUD</span>      <span class="op">=</span> <span class="number">0o0010017</span>,
+            }
+        }
+
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">LocalFlags</span>: <span class="ident">tcflag_t</span> {
+                <span class="kw">const</span> <span class="ident">ECHOKE</span>     <span class="op">=</span> <span class="number">0x00000800</span>,
+                <span class="kw">const</span> <span class="ident">ECHOE</span>      <span class="op">=</span> <span class="number">0x00000010</span>,
+                <span class="kw">const</span> <span class="ident">ECHOK</span>      <span class="op">=</span> <span class="number">0x00000020</span>,
+                <span class="kw">const</span> <span class="ident">ECHO</span>       <span class="op">=</span> <span class="number">0x00000008</span>,
+                <span class="kw">const</span> <span class="ident">ECHONL</span>     <span class="op">=</span> <span class="number">0x00000040</span>,
+                <span class="kw">const</span> <span class="ident">ECHOPRT</span>    <span class="op">=</span> <span class="number">0x00000400</span>,
+                <span class="kw">const</span> <span class="ident">ECHOCTL</span>    <span class="op">=</span> <span class="number">0x00000200</span>,
+                <span class="kw">const</span> <span class="ident">ISIG</span>       <span class="op">=</span> <span class="number">0x00000001</span>,
+                <span class="kw">const</span> <span class="ident">ICANON</span>     <span class="op">=</span> <span class="number">0x00000002</span>,
+                <span class="kw">const</span> <span class="ident">IEXTEN</span>     <span class="op">=</span> <span class="number">0x00008000</span>,
+                <span class="kw">const</span> <span class="ident">EXTPROC</span>    <span class="op">=</span> <span class="number">0x00010000</span>,
+                <span class="kw">const</span> <span class="ident">TOSTOP</span>     <span class="op">=</span> <span class="number">0x00000100</span>,
+                <span class="kw">const</span> <span class="ident">FLUSHO</span>     <span class="op">=</span> <span class="number">0x00001000</span>,
+                <span class="kw">const</span> <span class="ident">PENDIN</span>     <span class="op">=</span> <span class="number">0x00004000</span>,
+                <span class="kw">const</span> <span class="ident">NOFLSH</span>     <span class="op">=</span> <span class="number">0x00000080</span>,
+            }
+        }
+
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NL0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NL1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000100</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB0</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB1</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00000800</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB2</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00001000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TAB3</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x00001800</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000200</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR2</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000400</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">CR3</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000600</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">FF0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">FF1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00008000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">BS0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">BS1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00002000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VT0</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00000000</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">VT1</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">0x00004000</span>;
+
+        <span class="comment">// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
+        <span class="comment">// See https://github.com/rust-lang/rust/issues/10374.</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SetArg</span> {
+            <span class="ident">TCSANOW</span>   <span class="op">=</span> <span class="number">0</span>,
+            <span class="ident">TCSADRAIN</span> <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">TCSAFLUSH</span> <span class="op">=</span> <span class="number">2</span>,
+        }
+
+        <span class="comment">// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
+        <span class="comment">// See https://github.com/rust-lang/rust/issues/10374.</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FlushArg</span> {
+            <span class="ident">TCIFLUSH</span>  <span class="op">=</span> <span class="number">0</span>,
+            <span class="ident">TCOFLUSH</span>  <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">TCIOFLUSH</span> <span class="op">=</span> <span class="number">2</span>,
+        }
+
+        <span class="comment">// XXX: We&#39;re using `repr(C)` because `c_int` doesn&#39;t work here.</span>
+        <span class="comment">// See https://github.com/rust-lang/rust/issues/10374.</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FlowArg</span> {
+            <span class="ident">TCOOFF</span> <span class="op">=</span> <span class="number">0</span>,
+            <span class="ident">TCOON</span>  <span class="op">=</span> <span class="number">1</span>,
+            <span class="ident">TCIOFF</span> <span class="op">=</span> <span class="number">2</span>,
+            <span class="ident">TCION</span>  <span class="op">=</span> <span class="number">3</span>,
+        }
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfgetospeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>&amp;</span><span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='ident'>speed_t</span> {
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>cfgetospeed</span>(<span class='ident'>termios</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfgetispeed</span>(<span class="ident">termios</span>: <span class="kw-2">&amp;</span><span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">speed_t</span> {
+    <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">cfgetispeed</span>(<span class="ident">termios</span>)
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfsetispeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>, <span class='ident'>speed</span>: <span class='ident'>speed_t</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>cfsetispeed</span>(<span class='ident'>termios</span>, <span class='ident'>speed</span>)
-    }).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfgetospeed</span>(<span class="ident">termios</span>: <span class="kw-2">&amp;</span><span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="ident">speed_t</span> {
+    <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">cfgetospeed</span>(<span class="ident">termios</span>)
+    }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cfsetospeed</span>(<span class='ident'>termios</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Termios</span>, <span class='ident'>speed</span>: <span class='ident'>speed_t</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>cfsetospeed</span>(<span class='ident'>termios</span>, <span class='ident'>speed</span>)
-    }).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfsetispeed</span>(<span class="ident">termios</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Termios</span>, <span class="ident">speed</span>: <span class="ident">speed_t</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">cfsetispeed</span>(<span class="ident">termios</span>, <span class="ident">speed</span>)
+    }).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcgetattr</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Termios</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>termios</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>() };
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cfsetospeed</span>(<span class="ident">termios</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Termios</span>, <span class="ident">speed</span>: <span class="ident">speed_t</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">cfsetospeed</span>(<span class="ident">termios</span>, <span class="ident">speed</span>)
+    }).<span class="ident">map</span>(<span class="ident">drop</span>)
+}
 
-    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>tcgetattr</span>(<span class='ident'>fd</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>termios</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcgetattr</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Termios</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">termios</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">mem</span>::<span class="ident">uninitialized</span>() };
+
+    <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">tcgetattr</span>(<span class="ident">fd</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">termios</span>)
     };
 
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">res</span>));
 
-    <span class='prelude-val'>Ok</span>(<span class='ident'>termios</span>)
+    <span class="prelude-val">Ok</span>(<span class="ident">termios</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcsetattr</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>,
-                 <span class='ident'>actions</span>: <span class='ident'>SetArg</span>,
-                 <span class='ident'>termios</span>: <span class='kw-2'>&amp;</span><span class='ident'>Termios</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>tcsetattr</span>(<span class='ident'>fd</span>, <span class='ident'>actions</span> <span class='kw'>as</span> <span class='ident'>c_int</span>, <span class='ident'>termios</span>)
-    }).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcsetattr</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>,
+                 <span class="ident">actions</span>: <span class="ident">SetArg</span>,
+                 <span class="ident">termios</span>: <span class="kw-2">&amp;</span><span class="ident">Termios</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">tcsetattr</span>(<span class="ident">fd</span>, <span class="ident">actions</span> <span class="kw">as</span> <span class="ident">c_int</span>, <span class="ident">termios</span>)
+    }).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcdrain</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>tcdrain</span>(<span class='ident'>fd</span>)
-    }).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcdrain</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">tcdrain</span>(<span class="ident">fd</span>)
+    }).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcflow</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>action</span>: <span class='ident'>FlowArg</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>tcflow</span>(<span class='ident'>fd</span>, <span class='ident'>action</span> <span class='kw'>as</span> <span class='ident'>c_int</span>)
-    }).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcflow</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">action</span>: <span class="ident">FlowArg</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">tcflow</span>(<span class="ident">fd</span>, <span class="ident">action</span> <span class="kw">as</span> <span class="ident">c_int</span>)
+    }).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcflush</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>action</span>: <span class='ident'>FlushArg</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>tcflush</span>(<span class='ident'>fd</span>, <span class='ident'>action</span> <span class='kw'>as</span> <span class='ident'>c_int</span>)
-    }).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcflush</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">action</span>: <span class="ident">FlushArg</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">tcflush</span>(<span class="ident">fd</span>, <span class="ident">action</span> <span class="kw">as</span> <span class="ident">c_int</span>)
+    }).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tcsendbreak</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>action</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>tcsendbreak</span>(<span class='ident'>fd</span>, <span class='ident'>action</span>)
-    }).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tcsendbreak</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">action</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">tcsendbreak</span>(<span class="ident">fd</span>, <span class="ident">action</span>)
+    }).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 </pre>
 </section>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.2/src/buf/into_buf.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.3/src/buf/into_buf.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>into_buf.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -181,143 +181,143 @@
 <span id="136">136</span>
 <span id="137">137</span>
 <span id="138">138</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Buf</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Buf</span>};
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
-<span class='doccomment'>/// Conversion into a `Buf`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// An `IntoBuf` implementation defines how to convert a value into a `Buf`.</span>
-<span class='doccomment'>/// This is common for types that represent byte storage of some kind. `IntoBuf`</span>
-<span class='doccomment'>/// may be implemented directly for types or on references for those types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use bytes::{Buf, IntoBuf, BigEndian};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let bytes = b&quot;\x00\x01hello world&quot;;</span>
-<span class='doccomment'>/// let mut buf = bytes.into_buf();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert_eq!(1, buf.get_u16::&lt;BigEndian&gt;());</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let mut rest = [0; 11];</span>
-<span class='doccomment'>/// buf.copy_to_slice(&amp;mut rest);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert_eq!(b&quot;hello world&quot;, &amp;rest);</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>IntoBuf</span> {
-    <span class='doccomment'>/// The `Buf` type that `self` is being converted into</span>
-    <span class='kw'>type</span> <span class='ident'>Buf</span>: <span class='ident'>Buf</span>;
+<span class="doccomment">/// Conversion into a `Buf`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// An `IntoBuf` implementation defines how to convert a value into a `Buf`.</span>
+<span class="doccomment">/// This is common for types that represent byte storage of some kind. `IntoBuf`</span>
+<span class="doccomment">/// may be implemented directly for types or on references for those types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use bytes::{Buf, IntoBuf, BigEndian};</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let bytes = b&quot;\x00\x01hello world&quot;;</span>
+<span class="doccomment">/// let mut buf = bytes.into_buf();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(1, buf.get_u16::&lt;BigEndian&gt;());</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut rest = [0; 11];</span>
+<span class="doccomment">/// buf.copy_to_slice(&amp;mut rest);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(b&quot;hello world&quot;, &amp;rest);</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">IntoBuf</span> {
+    <span class="doccomment">/// The `Buf` type that `self` is being converted into</span>
+    <span class="kw">type</span> <span class="ident">Buf</span>: <span class="ident">Buf</span>;
 
-    <span class='doccomment'>/// Creates a `Buf` from a value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use bytes::{Buf, IntoBuf, BigEndian};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let bytes = b&quot;\x00\x01hello world&quot;;</span>
-    <span class='doccomment'>/// let mut buf = bytes.into_buf();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(1, buf.get_u16::&lt;BigEndian&gt;());</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut rest = [0; 11];</span>
-    <span class='doccomment'>/// buf.copy_to_slice(&amp;mut rest);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(b&quot;hello world&quot;, &amp;rest);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span>;
+    <span class="doccomment">/// Creates a `Buf` from a value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use bytes::{Buf, IntoBuf, BigEndian};</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let bytes = b&quot;\x00\x01hello world&quot;;</span>
+    <span class="doccomment">/// let mut buf = bytes.into_buf();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(1, buf.get_u16::&lt;BigEndian&gt;());</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut rest = [0; 11];</span>
+    <span class="doccomment">/// buf.copy_to_slice(&amp;mut rest);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(b&quot;hello world&quot;, &amp;rest);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='ident'>T</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='self'>Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Buf</span><span class="op">&gt;</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="ident">T</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="self">Self</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='self'>self</span>
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>] {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>] {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='ident'>io</span>::<span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='self'>self</span>)
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='self'>self</span>.<span class='ident'>as_bytes</span>().<span class='ident'>into_buf</span>()
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="self">self</span>.<span class="ident">as_bytes</span>().<span class="ident">into_buf</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>;
+<span class="kw">impl</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='ident'>io</span>::<span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='self'>self</span>)
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='ident'>io</span>::<span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>[..])
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>[..])
     }
 }
 
-<span class='comment'>// Kind of annoying... but this impl is required to allow passing `&amp;&#39;static</span>
-<span class='comment'>// [u8]` where for&lt;&#39;a&gt; &amp;&#39;a T: IntoBuf is required.</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='ident'>u8</span>] {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+<span class="comment">// Kind of annoying... but this impl is required to allow passing `&amp;&#39;static</span>
+<span class="comment">// [u8]` where for&lt;&#39;a&gt; &amp;&#39;a T: IntoBuf is required.</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='ident'>io</span>::<span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='self'>self</span>)
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="ident">io</span>::<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='self'>self</span>.<span class='ident'>as_bytes</span>().<span class='ident'>into_buf</span>()
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="self">self</span>.<span class="ident">as_bytes</span>().<span class="ident">into_buf</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='ident'>String</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>;
+<span class="kw">impl</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="ident">String</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='self'>self</span>.<span class='ident'>into_bytes</span>().<span class='ident'>into_buf</span>()
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="self">self</span>.<span class="ident">into_bytes</span>().<span class="ident">into_buf</span>()
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>String</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Cursor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='self'>self</span>.<span class='ident'>as_bytes</span>().<span class='ident'>into_buf</span>()
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="self">self</span>.<span class="ident">as_bytes</span>().<span class="ident">into_buf</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='ident'>u8</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>; <span class='number'>1</span>]<span class='op'>&gt;</span>;
+<span class="kw">impl</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="ident">u8</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">u8</span>; <span class="number">1</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='prelude-val'>Some</span>([<span class='self'>self</span>])
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="prelude-val">Some</span>([<span class="self">self</span>])
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>IntoBuf</span> <span class='kw'>for</span> <span class='ident'>i8</span> {
-    <span class='kw'>type</span> <span class='ident'>Buf</span> <span class='op'>=</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>; <span class='number'>1</span>]<span class='op'>&gt;</span>;
+<span class="kw">impl</span> <span class="ident">IntoBuf</span> <span class="kw">for</span> <span class="ident">i8</span> {
+    <span class="kw">type</span> <span class="ident">Buf</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">u8</span>; <span class="number">1</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_buf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Buf</span> {
-        <span class='prelude-val'>Some</span>([<span class='self'>self</span> <span class='kw'>as</span> <span class='ident'>u8</span>; <span class='number'>1</span>])
+    <span class="kw">fn</span> <span class="ident">into_buf</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Buf</span> {
+        <span class="prelude-val">Some</span>([<span class="self">self</span> <span class="kw">as</span> <span class="ident">u8</span>; <span class="number">1</span>])
     }
 }
 </pre>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -190,154 +190,154 @@
 <span id="145">145</span>
 <span id="146">146</span>
 <span id="147">147</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Provide helpers for making ioctl system calls</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Currently supports Linux on all architectures. Other platforms welcome!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This library is pretty low-level and messy. `ioctl` is not fun.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! What is an `ioctl`?</span>
-<span class='doccomment'>//! ===================</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The `ioctl` syscall is the grab-bag syscall on POSIX systems. Don&#39;t want</span>
-<span class='doccomment'>//! to add a new syscall? Make it an `ioctl`! `ioctl` refers to both the syscall,</span>
-<span class='doccomment'>//! and the commands that can be send with it. `ioctl` stands for &quot;IO control&quot;,</span>
-<span class='doccomment'>//! and the commands are always sent to a file descriptor.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! It is common to see `ioctl`s used for the following purposes:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Provide read/write access to out-of-band data related</span>
-<span class='doccomment'>//!   to a device such as configuration (for instance, setting</span>
-<span class='doccomment'>//!   serial port options)</span>
-<span class='doccomment'>//! * Provide a mechanism for performing full-duplex data</span>
-<span class='doccomment'>//!   transfers (for instance, xfer on SPI devices).</span>
-<span class='doccomment'>//! * Provide access to control functions on a device (for example,</span>
-<span class='doccomment'>//!   on Linux you can send commands like pause, resume, and eject</span>
-<span class='doccomment'>//!   to the CDROM device.</span>
-<span class='doccomment'>//! * Do whatever else the device driver creator thought made most sense.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `ioctl`s are synchronous system calls and are similar to read and</span>
-<span class='doccomment'>//! write calls in that regard.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! What does this module support?</span>
-<span class='doccomment'>//! ===============================</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This library provides the `ioctl!` macro, for binding `ioctl`s.</span>
-<span class='doccomment'>//! Here&#39;s a few examples of how that can work for SPI under Linux</span>
-<span class='doccomment'>//! from [rust-spidev](https://github.com/posborne/rust-spidev).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! #[macro_use] extern crate nix;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #[allow(non_camel_case_types)]</span>
-<span class='doccomment'>//! pub struct spi_ioc_transfer {</span>
-<span class='doccomment'>//!     pub tx_buf: u64,</span>
-<span class='doccomment'>//!     pub rx_buf: u64,</span>
-<span class='doccomment'>//!     pub len: u32,</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // optional overrides</span>
-<span class='doccomment'>//!     pub speed_hz: u32,</span>
-<span class='doccomment'>//!     pub delay_usecs: u16,</span>
-<span class='doccomment'>//!     pub bits_per_word: u8,</span>
-<span class='doccomment'>//!     pub cs_change: u8,</span>
-<span class='doccomment'>//!     pub pad: u32,</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #[cfg(linux)]</span>
-<span class='doccomment'>//! mod ioctl {</span>
-<span class='doccomment'>//!     use super::*;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     const SPI_IOC_MAGIC: u8 = &#39;k&#39; as u8;</span>
-<span class='doccomment'>//!     const SPI_IOC_NR_TRANSFER: u8 = 0;</span>
-<span class='doccomment'>//!     const SPI_IOC_NR_MODE: u8 = 1;</span>
-<span class='doccomment'>//!     const SPI_IOC_NR_LSB_FIRST: u8 = 2;</span>
-<span class='doccomment'>//!     const SPI_IOC_NR_BITS_PER_WORD: u8 = 3;</span>
-<span class='doccomment'>//!     const SPI_IOC_NR_MAX_SPEED_HZ: u8 = 4;</span>
-<span class='doccomment'>//!     const SPI_IOC_NR_MODE32: u8 = 5;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     ioctl!(read  get_mode_u8 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE; u8);</span>
-<span class='doccomment'>//!     ioctl!(read  get_mode_u32 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE; u32);</span>
-<span class='doccomment'>//!     ioctl!(write set_mode_u8 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE; u8);</span>
-<span class='doccomment'>//!     ioctl!(write set_mode_u32 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE32; u32);</span>
-<span class='doccomment'>//!     ioctl!(read  get_lsb_first with SPI_IOC_MAGIC, SPI_IOC_NR_LSB_FIRST; u8);</span>
-<span class='doccomment'>//!     ioctl!(write set_lsb_first with SPI_IOC_MAGIC, SPI_IOC_NR_LSB_FIRST; u8);</span>
-<span class='doccomment'>//!     ioctl!(read  get_bits_per_word with SPI_IOC_MAGIC, SPI_IOC_NR_BITS_PER_WORD; u8);</span>
-<span class='doccomment'>//!     ioctl!(write set_bits_per_word with SPI_IOC_MAGIC, SPI_IOC_NR_BITS_PER_WORD; u8);</span>
-<span class='doccomment'>//!     ioctl!(read  get_max_speed_hz with SPI_IOC_MAGIC, SPI_IOC_NR_MAX_SPEED_HZ; u32);</span>
-<span class='doccomment'>//!     ioctl!(write set_max_speed_hz with SPI_IOC_MAGIC, SPI_IOC_NR_MAX_SPEED_HZ; u32);</span>
-<span class='doccomment'>//!     ioctl!(write spidev_transfer with SPI_IOC_MAGIC, SPI_IOC_NR_TRANSFER; spi_ioc_transfer);</span>
-<span class='doccomment'>//!     ioctl!(write buf spidev_transfer_buf with SPI_IOC_MAGIC, SPI_IOC_NR_TRANSFER; spi_ioc_transfer);</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // doctest workaround</span>
-<span class='doccomment'>//! fn main() {}</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Spidev uses the `_IOC` macros that are encouraged (as far as</span>
-<span class='doccomment'>//! `ioctl` can be encouraged at all) for newer drivers.  Many</span>
-<span class='doccomment'>//! drivers, however, just use magic numbers with no attached</span>
-<span class='doccomment'>//! semantics.  For those, the `ioctl!(bad ...)` variant should be</span>
-<span class='doccomment'>//! used (the &quot;bad&quot; terminology is from the Linux kernel).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! How do I get the magic numbers?</span>
-<span class='doccomment'>//! ===============================</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! For Linux, look at your system&#39;s headers. For example, `/usr/include/linxu/input.h` has a lot</span>
-<span class='doccomment'>//! of lines defining macros which use `_IOR`, `_IOW`, `_IOC`, and `_IORW`.  These macros</span>
-<span class='doccomment'>//! correspond to the `ior!`, `iow!`, `ioc!`, and `iorw!` macros defined in this crate.</span>
-<span class='doccomment'>//! Additionally, there is the `ioctl!` macro for creating a wrapper around `ioctl` that is</span>
-<span class='doccomment'>//! somewhat more type-safe.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Most `ioctl`s have no or little documentation. You&#39;ll need to scrounge through</span>
-<span class='doccomment'>//! the source to figure out what they do and how they should be used.</span>
-<span class='doccomment'>//!</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;platform/linux.rs&quot;</span>]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+</pre><pre class="rust ">
+<span class="doccomment">//! Provide helpers for making ioctl system calls</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Currently supports Linux on all architectures. Other platforms welcome!</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This library is pretty low-level and messy. `ioctl` is not fun.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! What is an `ioctl`?</span>
+<span class="doccomment">//! ===================</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `ioctl` syscall is the grab-bag syscall on POSIX systems. Don&#39;t want</span>
+<span class="doccomment">//! to add a new syscall? Make it an `ioctl`! `ioctl` refers to both the syscall,</span>
+<span class="doccomment">//! and the commands that can be send with it. `ioctl` stands for &quot;IO control&quot;,</span>
+<span class="doccomment">//! and the commands are always sent to a file descriptor.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! It is common to see `ioctl`s used for the following purposes:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! * Provide read/write access to out-of-band data related</span>
+<span class="doccomment">//!   to a device such as configuration (for instance, setting</span>
+<span class="doccomment">//!   serial port options)</span>
+<span class="doccomment">//! * Provide a mechanism for performing full-duplex data</span>
+<span class="doccomment">//!   transfers (for instance, xfer on SPI devices).</span>
+<span class="doccomment">//! * Provide access to control functions on a device (for example,</span>
+<span class="doccomment">//!   on Linux you can send commands like pause, resume, and eject</span>
+<span class="doccomment">//!   to the CDROM device.</span>
+<span class="doccomment">//! * Do whatever else the device driver creator thought made most sense.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `ioctl`s are synchronous system calls and are similar to read and</span>
+<span class="doccomment">//! write calls in that regard.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! What does this module support?</span>
+<span class="doccomment">//! ===============================</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This library provides the `ioctl!` macro, for binding `ioctl`s.</span>
+<span class="doccomment">//! Here&#39;s a few examples of how that can work for SPI under Linux</span>
+<span class="doccomment">//! from [rust-spidev](https://github.com/posborne/rust-spidev).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! #[macro_use] extern crate nix;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #[allow(non_camel_case_types)]</span>
+<span class="doccomment">//! pub struct spi_ioc_transfer {</span>
+<span class="doccomment">//!     pub tx_buf: u64,</span>
+<span class="doccomment">//!     pub rx_buf: u64,</span>
+<span class="doccomment">//!     pub len: u32,</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // optional overrides</span>
+<span class="doccomment">//!     pub speed_hz: u32,</span>
+<span class="doccomment">//!     pub delay_usecs: u16,</span>
+<span class="doccomment">//!     pub bits_per_word: u8,</span>
+<span class="doccomment">//!     pub cs_change: u8,</span>
+<span class="doccomment">//!     pub pad: u32,</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #[cfg(linux)]</span>
+<span class="doccomment">//! mod ioctl {</span>
+<span class="doccomment">//!     use super::*;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     const SPI_IOC_MAGIC: u8 = &#39;k&#39; as u8;</span>
+<span class="doccomment">//!     const SPI_IOC_NR_TRANSFER: u8 = 0;</span>
+<span class="doccomment">//!     const SPI_IOC_NR_MODE: u8 = 1;</span>
+<span class="doccomment">//!     const SPI_IOC_NR_LSB_FIRST: u8 = 2;</span>
+<span class="doccomment">//!     const SPI_IOC_NR_BITS_PER_WORD: u8 = 3;</span>
+<span class="doccomment">//!     const SPI_IOC_NR_MAX_SPEED_HZ: u8 = 4;</span>
+<span class="doccomment">//!     const SPI_IOC_NR_MODE32: u8 = 5;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     ioctl!(read  get_mode_u8 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE; u8);</span>
+<span class="doccomment">//!     ioctl!(read  get_mode_u32 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE; u32);</span>
+<span class="doccomment">//!     ioctl!(write set_mode_u8 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE; u8);</span>
+<span class="doccomment">//!     ioctl!(write set_mode_u32 with SPI_IOC_MAGIC, SPI_IOC_NR_MODE32; u32);</span>
+<span class="doccomment">//!     ioctl!(read  get_lsb_first with SPI_IOC_MAGIC, SPI_IOC_NR_LSB_FIRST; u8);</span>
+<span class="doccomment">//!     ioctl!(write set_lsb_first with SPI_IOC_MAGIC, SPI_IOC_NR_LSB_FIRST; u8);</span>
+<span class="doccomment">//!     ioctl!(read  get_bits_per_word with SPI_IOC_MAGIC, SPI_IOC_NR_BITS_PER_WORD; u8);</span>
+<span class="doccomment">//!     ioctl!(write set_bits_per_word with SPI_IOC_MAGIC, SPI_IOC_NR_BITS_PER_WORD; u8);</span>
+<span class="doccomment">//!     ioctl!(read  get_max_speed_hz with SPI_IOC_MAGIC, SPI_IOC_NR_MAX_SPEED_HZ; u32);</span>
+<span class="doccomment">//!     ioctl!(write set_max_speed_hz with SPI_IOC_MAGIC, SPI_IOC_NR_MAX_SPEED_HZ; u32);</span>
+<span class="doccomment">//!     ioctl!(write spidev_transfer with SPI_IOC_MAGIC, SPI_IOC_NR_TRANSFER; spi_ioc_transfer);</span>
+<span class="doccomment">//!     ioctl!(write buf spidev_transfer_buf with SPI_IOC_MAGIC, SPI_IOC_NR_TRANSFER; spi_ioc_transfer);</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // doctest workaround</span>
+<span class="doccomment">//! fn main() {}</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Spidev uses the `_IOC` macros that are encouraged (as far as</span>
+<span class="doccomment">//! `ioctl` can be encouraged at all) for newer drivers.  Many</span>
+<span class="doccomment">//! drivers, however, just use magic numbers with no attached</span>
+<span class="doccomment">//! semantics.  For those, the `ioctl!(bad ...)` variant should be</span>
+<span class="doccomment">//! used (the &quot;bad&quot; terminology is from the Linux kernel).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! How do I get the magic numbers?</span>
+<span class="doccomment">//! ===============================</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For Linux, look at your system&#39;s headers. For example, `/usr/include/linxu/input.h` has a lot</span>
+<span class="doccomment">//! of lines defining macros which use `_IOR`, `_IOW`, `_IOC`, and `_IORW`.  These macros</span>
+<span class="doccomment">//! correspond to the `ior!`, `iow!`, `ioc!`, and `iorw!` macros defined in this crate.</span>
+<span class="doccomment">//! Additionally, there is the `ioctl!` macro for creating a wrapper around `ioctl` that is</span>
+<span class="doccomment">//! somewhat more type-safe.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Most `ioctl`s have no or little documentation. You&#39;ll need to scrounge through</span>
+<span class="doccomment">//! the source to figure out what they do and how they should be used.</span>
+<span class="doccomment">//!</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;platform/linux.rs&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;platform/macos.rs&quot;</span>]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;platform/macos.rs&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;platform/ios.rs&quot;</span>]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;platform/ios.rs&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;platform/freebsd.rs&quot;</span>]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;platform/freebsd.rs&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;platform/netbsd.rs&quot;</span>]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;platform/netbsd.rs&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;platform/openbsd.rs&quot;</span>]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;platform/openbsd.rs&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>path</span> <span class='op'>=</span> <span class='string'>&quot;platform/dragonfly.rs&quot;</span>]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>platform</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;platform/dragonfly.rs&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">platform</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>platform</span>::<span class='kw-2'>*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">platform</span>::<span class="kw-2">*</span>;
 
-<span class='comment'>// liblibc has the wrong decl for linux :| hack until #26809 lands.</span>
-<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ioctl</span>(<span class='ident'>fd</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>, <span class='ident'>req</span>: <span class='ident'>libc</span>::<span class='ident'>c_ulong</span>, ...) <span class='op'>-&gt;</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
+<span class="comment">// liblibc has the wrong decl for linux :| hack until #26809 lands.</span>
+<span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ioctl</span>(<span class="ident">fd</span>: <span class="ident">libc</span>::<span class="ident">c_int</span>, <span class="ident">req</span>: <span class="ident">libc</span>::<span class="ident">c_ulong</span>, ...) <span class="op">-&gt;</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 }
 
-<span class='doccomment'>/// A hack to get the macros to work nicely.</span>
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> ::<span class='ident'>libc</span> <span class='kw'>as</span> <span class='ident'>libc</span>;
+<span class="doccomment">/// A hack to get the macros to work nicely.</span>
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> ::<span class="ident">libc</span> <span class="kw">as</span> <span class="ident">libc</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

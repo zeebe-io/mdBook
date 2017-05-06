@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,8 +43,8 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>nix</a>::<wbr><a href='../index.html'>sys</a>::<wbr><a class='mod' href=''>ioctl</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>nix</a>::<wbr><a href='../index.html'>sys</a>::<wbr><a class="mod" href=''>ioctl</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -83,51 +83,51 @@ write calls in that regard.</p>
 Here&#39;s a few examples of how that can work for SPI under Linux
 from <a href="https://github.com/posborne/rust-spidev">rust-spidev</a>.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>nix</span>;
+<pre class="rust rust-example-rendered">
+<span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">nix</span>;
 
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>spi_ioc_transfer</span> {
-    <span class='kw'>pub</span> <span class='ident'>tx_buf</span>: <span class='ident'>u64</span>,
-    <span class='kw'>pub</span> <span class='ident'>rx_buf</span>: <span class='ident'>u64</span>,
-    <span class='kw'>pub</span> <span class='ident'>len</span>: <span class='ident'>u32</span>,
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">spi_ioc_transfer</span> {
+    <span class="kw">pub</span> <span class="ident">tx_buf</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">rx_buf</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">len</span>: <span class="ident">u32</span>,
 
-    <span class='comment'>// optional overrides</span>
-    <span class='kw'>pub</span> <span class='ident'>speed_hz</span>: <span class='ident'>u32</span>,
-    <span class='kw'>pub</span> <span class='ident'>delay_usecs</span>: <span class='ident'>u16</span>,
-    <span class='kw'>pub</span> <span class='ident'>bits_per_word</span>: <span class='ident'>u8</span>,
-    <span class='kw'>pub</span> <span class='ident'>cs_change</span>: <span class='ident'>u8</span>,
-    <span class='kw'>pub</span> <span class='ident'>pad</span>: <span class='ident'>u32</span>,
+    <span class="comment">// optional overrides</span>
+    <span class="kw">pub</span> <span class="ident">speed_hz</span>: <span class="ident">u32</span>,
+    <span class="kw">pub</span> <span class="ident">delay_usecs</span>: <span class="ident">u16</span>,
+    <span class="kw">pub</span> <span class="ident">bits_per_word</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">cs_change</span>: <span class="ident">u8</span>,
+    <span class="kw">pub</span> <span class="ident">pad</span>: <span class="ident">u32</span>,
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>linux</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>ioctl</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">linux</span>)]</span>
+<span class="kw">mod</span> <span class="ident">ioctl</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class='kw'>const</span> <span class='ident'>SPI_IOC_MAGIC</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='string'>&#39;k&#39;</span> <span class='kw'>as</span> <span class='ident'>u8</span>;
-    <span class='kw'>const</span> <span class='ident'>SPI_IOC_NR_TRANSFER</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>const</span> <span class='ident'>SPI_IOC_NR_MODE</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>const</span> <span class='ident'>SPI_IOC_NR_LSB_FIRST</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>const</span> <span class='ident'>SPI_IOC_NR_BITS_PER_WORD</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>const</span> <span class='ident'>SPI_IOC_NR_MAX_SPEED_HZ</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>4</span>;
-    <span class='kw'>const</span> <span class='ident'>SPI_IOC_NR_MODE32</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>5</span>;
+    <span class="kw">const</span> <span class="ident">SPI_IOC_MAGIC</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="string">&#39;k&#39;</span> <span class="kw">as</span> <span class="ident">u8</span>;
+    <span class="kw">const</span> <span class="ident">SPI_IOC_NR_TRANSFER</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">const</span> <span class="ident">SPI_IOC_NR_MODE</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">const</span> <span class="ident">SPI_IOC_NR_LSB_FIRST</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">const</span> <span class="ident">SPI_IOC_NR_BITS_PER_WORD</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">const</span> <span class="ident">SPI_IOC_NR_MAX_SPEED_HZ</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">4</span>;
+    <span class="kw">const</span> <span class="ident">SPI_IOC_NR_MODE32</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">5</span>;
 
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>read</span>  <span class='ident'>get_mode_u8</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_MODE</span>; <span class='ident'>u8</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>read</span>  <span class='ident'>get_mode_u32</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_MODE</span>; <span class='ident'>u32</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>write</span> <span class='ident'>set_mode_u8</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_MODE</span>; <span class='ident'>u8</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>write</span> <span class='ident'>set_mode_u32</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_MODE32</span>; <span class='ident'>u32</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>read</span>  <span class='ident'>get_lsb_first</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_LSB_FIRST</span>; <span class='ident'>u8</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>write</span> <span class='ident'>set_lsb_first</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_LSB_FIRST</span>; <span class='ident'>u8</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>read</span>  <span class='ident'>get_bits_per_word</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_BITS_PER_WORD</span>; <span class='ident'>u8</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>write</span> <span class='ident'>set_bits_per_word</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_BITS_PER_WORD</span>; <span class='ident'>u8</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>read</span>  <span class='ident'>get_max_speed_hz</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_MAX_SPEED_HZ</span>; <span class='ident'>u32</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>write</span> <span class='ident'>set_max_speed_hz</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_MAX_SPEED_HZ</span>; <span class='ident'>u32</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>write</span> <span class='ident'>spidev_transfer</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_TRANSFER</span>; <span class='ident'>spi_ioc_transfer</span>);
-    <span class='macro'>ioctl</span><span class='macro'>!</span>(<span class='ident'>write</span> <span class='ident'>buf</span> <span class='ident'>spidev_transfer_buf</span> <span class='ident'>with</span> <span class='ident'>SPI_IOC_MAGIC</span>, <span class='ident'>SPI_IOC_NR_TRANSFER</span>; <span class='ident'>spi_ioc_transfer</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">read</span>  <span class="ident">get_mode_u8</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_MODE</span>; <span class="ident">u8</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">read</span>  <span class="ident">get_mode_u32</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_MODE</span>; <span class="ident">u32</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">write</span> <span class="ident">set_mode_u8</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_MODE</span>; <span class="ident">u8</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">write</span> <span class="ident">set_mode_u32</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_MODE32</span>; <span class="ident">u32</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">read</span>  <span class="ident">get_lsb_first</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_LSB_FIRST</span>; <span class="ident">u8</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">write</span> <span class="ident">set_lsb_first</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_LSB_FIRST</span>; <span class="ident">u8</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">read</span>  <span class="ident">get_bits_per_word</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_BITS_PER_WORD</span>; <span class="ident">u8</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">write</span> <span class="ident">set_bits_per_word</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_BITS_PER_WORD</span>; <span class="ident">u8</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">read</span>  <span class="ident">get_max_speed_hz</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_MAX_SPEED_HZ</span>; <span class="ident">u32</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">write</span> <span class="ident">set_max_speed_hz</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_MAX_SPEED_HZ</span>; <span class="ident">u32</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">write</span> <span class="ident">spidev_transfer</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_TRANSFER</span>; <span class="ident">spi_ioc_transfer</span>);
+    <span class="macro">ioctl</span><span class="macro">!</span>(<span class="ident">write</span> <span class="ident">buf</span> <span class="ident">spidev_transfer_buf</span> <span class="ident">with</span> <span class="ident">SPI_IOC_MAGIC</span>, <span class="ident">SPI_IOC_NR_TRANSFER</span>; <span class="ident">spi_ioc_transfer</span>);
 }
 
-<span class='comment'>// doctest workaround</span>
-<span class='kw'>fn</span> <span class='ident'>main</span>() {}</pre>
+<span class="comment">// doctest workaround</span>
+<span class="kw">fn</span> <span class="ident">main</span>() {}</pre>
 
 <p>Spidev uses the <code>_IOC</code> macros that are encouraged (as far as
 <code>ioctl</code> can be encouraged at all) for newer drivers.  Many
@@ -147,163 +147,163 @@ the source to figure out what they do and how they should be used.</p>
 </div><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.DIRBITS.html'
-                                  title='nix::sys::ioctl::DIRBITS'>DIRBITS</a></td>
+                           <td><a class="constant" href="constant.DIRBITS.html"
+                                  title='constant nix::sys::ioctl::DIRBITS'>DIRBITS</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.DIRMASK.html'
-                                  title='nix::sys::ioctl::DIRMASK'>DIRMASK</a></td>
+                           <td><a class="constant" href="constant.DIRMASK.html"
+                                  title='constant nix::sys::ioctl::DIRMASK'>DIRMASK</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.DIRSHIFT.html'
-                                  title='nix::sys::ioctl::DIRSHIFT'>DIRSHIFT</a></td>
+                           <td><a class="constant" href="constant.DIRSHIFT.html"
+                                  title='constant nix::sys::ioctl::DIRSHIFT'>DIRSHIFT</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.IN.html'
-                                  title='nix::sys::ioctl::IN'>IN</a></td>
+                           <td><a class="constant" href="constant.IN.html"
+                                  title='constant nix::sys::ioctl::IN'>IN</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.INOUT.html'
-                                  title='nix::sys::ioctl::INOUT'>INOUT</a></td>
+                           <td><a class="constant" href="constant.INOUT.html"
+                                  title='constant nix::sys::ioctl::INOUT'>INOUT</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.NONE.html'
-                                  title='nix::sys::ioctl::NONE'>NONE</a></td>
+                           <td><a class="constant" href="constant.NONE.html"
+                                  title='constant nix::sys::ioctl::NONE'>NONE</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.NRBITS.html'
-                                  title='nix::sys::ioctl::NRBITS'>NRBITS</a></td>
+                           <td><a class="constant" href="constant.NRBITS.html"
+                                  title='constant nix::sys::ioctl::NRBITS'>NRBITS</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.NRMASK.html'
-                                  title='nix::sys::ioctl::NRMASK'>NRMASK</a></td>
+                           <td><a class="constant" href="constant.NRMASK.html"
+                                  title='constant nix::sys::ioctl::NRMASK'>NRMASK</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.NRSHIFT.html'
-                                  title='nix::sys::ioctl::NRSHIFT'>NRSHIFT</a></td>
+                           <td><a class="constant" href="constant.NRSHIFT.html"
+                                  title='constant nix::sys::ioctl::NRSHIFT'>NRSHIFT</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.OUT.html'
-                                  title='nix::sys::ioctl::OUT'>OUT</a></td>
+                           <td><a class="constant" href="constant.OUT.html"
+                                  title='constant nix::sys::ioctl::OUT'>OUT</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.READ.html'
-                                  title='nix::sys::ioctl::READ'>READ</a></td>
+                           <td><a class="constant" href="constant.READ.html"
+                                  title='constant nix::sys::ioctl::READ'>READ</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.SIZEBITS.html'
-                                  title='nix::sys::ioctl::SIZEBITS'>SIZEBITS</a></td>
+                           <td><a class="constant" href="constant.SIZEBITS.html"
+                                  title='constant nix::sys::ioctl::SIZEBITS'>SIZEBITS</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.SIZEMASK.html'
-                                  title='nix::sys::ioctl::SIZEMASK'>SIZEMASK</a></td>
+                           <td><a class="constant" href="constant.SIZEMASK.html"
+                                  title='constant nix::sys::ioctl::SIZEMASK'>SIZEMASK</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.SIZESHIFT.html'
-                                  title='nix::sys::ioctl::SIZESHIFT'>SIZESHIFT</a></td>
+                           <td><a class="constant" href="constant.SIZESHIFT.html"
+                                  title='constant nix::sys::ioctl::SIZESHIFT'>SIZESHIFT</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.SIZE_MASK.html'
-                                  title='nix::sys::ioctl::SIZE_MASK'>SIZE_MASK</a></td>
+                           <td><a class="constant" href="constant.SIZE_MASK.html"
+                                  title='constant nix::sys::ioctl::SIZE_MASK'>SIZE_MASK</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.TYPEBITS.html'
-                                  title='nix::sys::ioctl::TYPEBITS'>TYPEBITS</a></td>
+                           <td><a class="constant" href="constant.TYPEBITS.html"
+                                  title='constant nix::sys::ioctl::TYPEBITS'>TYPEBITS</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.TYPEMASK.html'
-                                  title='nix::sys::ioctl::TYPEMASK'>TYPEMASK</a></td>
+                           <td><a class="constant" href="constant.TYPEMASK.html"
+                                  title='constant nix::sys::ioctl::TYPEMASK'>TYPEMASK</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.TYPESHIFT.html'
-                                  title='nix::sys::ioctl::TYPESHIFT'>TYPESHIFT</a></td>
+                           <td><a class="constant" href="constant.TYPESHIFT.html"
+                                  title='constant nix::sys::ioctl::TYPESHIFT'>TYPESHIFT</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='constant' href='constant.WRITE.html'
-                                  title='nix::sys::ioctl::WRITE'>WRITE</a></td>
+                           <td><a class="constant" href="constant.WRITE.html"
+                                  title='constant nix::sys::ioctl::WRITE'>WRITE</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.ioc_dir.html'
-                                  title='nix::sys::ioctl::ioc_dir'>ioc_dir</a></td>
+                           <td><a class="fn" href="fn.ioc_dir.html"
+                                  title='fn nix::sys::ioctl::ioc_dir'>ioc_dir</a></td>
                            <td class='docblock-short'>
                                 <p>Extracts the &quot;direction&quot; (read/write/none) from an encoded ioctl command.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.ioc_nr.html'
-                                  title='nix::sys::ioctl::ioc_nr'>ioc_nr</a></td>
+                           <td><a class="fn" href="fn.ioc_nr.html"
+                                  title='fn nix::sys::ioctl::ioc_nr'>ioc_nr</a></td>
                            <td class='docblock-short'>
                                 <p>Extracts the ioctl number from an encoded ioctl command.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.ioc_size.html'
-                                  title='nix::sys::ioctl::ioc_size'>ioc_size</a></td>
+                           <td><a class="fn" href="fn.ioc_size.html"
+                                  title='fn nix::sys::ioctl::ioc_size'>ioc_size</a></td>
                            <td class='docblock-short'>
                                 <p>Extracts the size from an encoded ioctl command.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.ioc_type.html'
-                                  title='nix::sys::ioctl::ioc_type'>ioc_type</a></td>
+                           <td><a class="fn" href="fn.ioc_type.html"
+                                  title='fn nix::sys::ioctl::ioc_type'>ioc_type</a></td>
                            <td class='docblock-short'>
                                 <p>Extracts the type from an encoded ioctl command.</p>
                            </td>

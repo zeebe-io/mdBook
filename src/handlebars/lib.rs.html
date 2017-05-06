@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -369,333 +369,333 @@
 <span id="324">324</span>
 <span id="325">325</span>
 <span id="326">326</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! # Handlebars</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! [Handlebars](http://handlebarsjs.com/) is a modern and extensible templating solution originally created in the JavaScript world. It&#39;s used by many popular frameworks like [Ember.js](http://emberjs.com) and Chaplin. It&#39;s also ported to some other platforms such as [Java](https://github.com/jknack/handlebars.java).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! And this is handlebars Rust implementation, designed for general purpose text generation.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Quick Start</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use std::collections::BTreeMap;</span>
-<span class='doccomment'>//! use handlebars::Handlebars;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!   // create the handlebars registry</span>
-<span class='doccomment'>//!   let mut handlebars = Handlebars::new();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   // register the template. The template string will be verified and compiled.</span>
-<span class='doccomment'>//!   let source = &quot;hello {{world}}&quot;;</span>
-<span class='doccomment'>//!   assert!(handlebars.register_template_string(&quot;t1&quot;, source).is_ok());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   // Prepare some data.</span>
-<span class='doccomment'>//!   //</span>
-<span class='doccomment'>//!   // The data type should implements `rustc_serialize::json::ToJson` or</span>
-<span class='doccomment'>//!   // `serde::Serialize`</span>
-<span class='doccomment'>//!   let mut data = BTreeMap::new();</span>
-<span class='doccomment'>//!   data.insert(&quot;world&quot;.to_string(), &quot;世界!&quot;.to_string());</span>
-<span class='doccomment'>//!   assert_eq!(handlebars.render(&quot;t1&quot;, &amp;data).unwrap(), &quot;hello 世界!&quot;);</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! In this example, we created a template registry and registered a template named `t1`.</span>
-<span class='doccomment'>//! Then we rendered a `BTreeMap` with an entry of key `world`, the result is just what</span>
-<span class='doccomment'>//! we expected.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! I recommend you to walk through handlebars.js&#39; [intro page](http://handlebarsjs.com)</span>
-<span class='doccomment'>//! if you are not quite familiar with the template language itself.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Rational: Why (this) Handlebars?</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Handlebars is a real-world templating system that you can use to build</span>
-<span class='doccomment'>//! your application without pain.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Features</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Isolation of Rust and HTML</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This library doesn&#39;t attempt to use some macro magic to allow you to</span>
-<span class='doccomment'>//! write your template within your rust code. I admit that it&#39;s fun (and feel cool) to do</span>
-<span class='doccomment'>//! that but it doesn&#39;t fit real-world use case in my opinion.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Limited but essential control structure built-in</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Only essential control directive `if` and `each` were built-in. This</span>
-<span class='doccomment'>//! prevents you to put too much application logic into your template.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Extensible helper system</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can write your own helper with Rust! It can be a block helper or</span>
-<span class='doccomment'>//! inline helper. Put you logic into the helper and don&#39;t repeat</span>
-<span class='doccomment'>//! yourself.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Template inheritance</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Every time I look into a templating system, I will investigate its</span>
-<span class='doccomment'>//! support for [template</span>
-<span class='doccomment'>//! inheritance](https://docs.djangoproject.com/en/1.9/ref/templates/language/#template-inh</span>
-<span class='doccomment'>//! eritance).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Template include is not enough. In most case you will need a skeleton</span>
-<span class='doccomment'>//! of page as parent (header, footer, etc.), and embed you page into this</span>
-<span class='doccomment'>//! parent.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can find a real example for template inheritance in</span>
-<span class='doccomment'>//! `examples/partials.rs`, and templates used by this file.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Limitations</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Compatibility with JavaScript version</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This implementation is **not fully compatible** with the original javascript version.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! First of all, mustache block is not supported. I suggest you to use `#if` and `#each` for</span>
-<span class='doccomment'>//! same functionality.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There are some other minor features missing:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Chained else [#12](https://github.com/sunng87/handlebars-rust/issues/12)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Feel free to fire an issue on [github](https://github.com/sunng87/handlebars-rust/issues) if</span>
-<span class='doccomment'>//! you find missing features.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Static typed</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! As a static typed language, it&#39;s a little verbose to use handlebars.</span>
-<span class='doccomment'>//! You will have to make your data `ToJson`-able, so we can render</span>
-<span class='doccomment'>//! it. If you are on nightly channel, we have [a syntax</span>
-<span class='doccomment'>//! extension](https://github.com/sunng87/tojson_macros) to generate</span>
-<span class='doccomment'>//! default `ToJson` implementation for you. If you prefer</span>
-<span class='doccomment'>//! [serde](https://github.com/serde-rs/serde), you can enable `serde_type` feature</span>
-<span class='doccomment'>//! of handlebars-rust and add `#[Serialize]` for your types.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Usage</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Template Creation and Registration</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Templates are created from String and registered to `Handlebars` with a name.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! extern crate handlebars;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! use handlebars::Handlebars;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!   let mut handlebars = Handlebars::new();</span>
-<span class='doccomment'>//!   let source = &quot;hello {{world}}&quot;;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   assert!(handlebars.register_template_string(&quot;t1&quot;, source).is_ok())</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! On registeration, the template is parsed, compiled and cached in the registry. So further</span>
-<span class='doccomment'>//! usage will benifite from the one-time work. Also features like include, inheritance</span>
-<span class='doccomment'>//! that involves template reference requires you to register those template first with</span>
-<span class='doccomment'>//! a name so the registry can find it.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! If you template is small or just to expirement, you can use `template_render` API</span>
-<span class='doccomment'>//! without registration.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use handlebars::Handlebars;</span>
-<span class='doccomment'>//! use std::collections::BTreeMap;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!   let mut handlebars = Handlebars::new();</span>
-<span class='doccomment'>//!   let source = &quot;hello {{world}}&quot;;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   let mut data = BTreeMap::new();</span>
-<span class='doccomment'>//!   data.insert(&quot;world&quot;.to_string(), &quot;世界!&quot;.to_string());</span>
-<span class='doccomment'>//!   assert_eq!(handlebars.template_render(source, &amp;data).unwrap(),&quot;hello 世界!&quot;.to_owned());</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Rendering Something</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Since handlebars is originally based on JavaScript type system. It supports dynamic features like duck-typing, truthy/falsey values. But for a static language like Rust, this is a little difficult. As a solution, we are using the `serialize::json::Json` internally for data rendering.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! That means, if you want to render something, you have to ensure the data type implements the `rustc_serialize::json::ToJson` trait (or serde&#39;s `Serialize`). Luckily, most rust internal types already have that trait. However, if you want to render your custom struct, you need to implement it manually, or use [tojson_macros](https://github.com/sunng87/tojson_macros) to generate default `ToJson` implementation.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can use default `render` function to render a template into `String`. From 0.9, there&#39;s `renderw` to render text into anything of `std::io::Write`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! use rustc_serialize::json::{Json, ToJson};</span>
-<span class='doccomment'>//! use std::collections::BTreeMap;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! use handlebars::Handlebars;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! struct Person {</span>
-<span class='doccomment'>//!   name: String,</span>
-<span class='doccomment'>//!   age: i16,</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl ToJson for Person {</span>
-<span class='doccomment'>//!   fn to_json(&amp;self) -&gt; Json {</span>
-<span class='doccomment'>//!     let mut m: BTreeMap&lt;String, Json&gt; = BTreeMap::new();</span>
-<span class='doccomment'>//!     m.insert(&quot;name&quot;.to_string(), self.name.to_json());</span>
-<span class='doccomment'>//!     m.insert(&quot;age&quot;.to_string(), self.age.to_json());</span>
-<span class='doccomment'>//!     m.to_json()</span>
-<span class='doccomment'>//!   }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!   let source = &quot;Hello, {{name}}&quot;;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   let mut handlebars = Handlebars::new();</span>
-<span class='doccomment'>//!   assert!(handlebars.register_template_string(&quot;hello&quot;, source).is_ok());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   let data = Person {</span>
-<span class='doccomment'>//!       name: &quot;Ning Sun&quot;.to_string(),</span>
-<span class='doccomment'>//!       age: 27</span>
-<span class='doccomment'>//!   };</span>
-<span class='doccomment'>//!   assert_eq!(handlebars.render(&quot;hello&quot;, &amp;data).unwrap(), &quot;Hello, Ning Sun&quot;.to_owned());</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Or if you don&#39;t need the template to be cached or referenced by other ones, you can</span>
-<span class='doccomment'>//! simply render it without registering.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!   let source = &quot;Hello, {{name}}&quot;;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   let mut handlebars = Handlebars::new();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   let data = Person {</span>
-<span class='doccomment'>//!       name: &quot;Ning Sun&quot;.to_string(),</span>
-<span class='doccomment'>//!       age: 27</span>
-<span class='doccomment'>//!   };</span>
-<span class='doccomment'>//!   assert_eq!(handlebars.template_render(&quot;Hello, {{name}}&quot;, &amp;data).unwrap(),</span>
-<span class='doccomment'>//!       &quot;Hello, Ning Sun&quot;.to_owned());</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Escaping</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! As per the handlebars spec, output using `{{expression}}` is escaped by default (to be precise, the characters `&amp;&quot;&lt;&gt;` are replaced by their respective html / xml entities). However, since the use cases of a rust template engine are probably a bit more diverse than those of a JavaScript one, this implementation allows the user to supply a custom escape function to be used instead. For more information see the `EscapeFn` type and `Handlebars::register_escape_fn()` method.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Custom Helper</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Handlebars is nothing without helpers. You can also create your own helpers with rust. Helpers in handlebars-rust are custom struct implements the `HelperDef` trait, concretely, the `call` function. For your convenience, most of stateless helpers can be implemented as bare functions.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use std::io::Write;</span>
-<span class='doccomment'>//! use handlebars::{Handlebars, HelperDef, RenderError, RenderContext, Helper, Context, JsonRender};</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // implement by a structure impls HelperDef</span>
-<span class='doccomment'>//! #[derive(Clone, Copy)]</span>
-<span class='doccomment'>//! struct SimpleHelper;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl HelperDef for SimpleHelper {</span>
-<span class='doccomment'>//!   fn call(&amp;self, h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
-<span class='doccomment'>//!     let param = h.param(0).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     try!(rc.writer.write(&quot;1st helper: &quot;.as_bytes()));</span>
-<span class='doccomment'>//!     try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
-<span class='doccomment'>//!     Ok(())</span>
-<span class='doccomment'>//!   }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // implement via bare function</span>
-<span class='doccomment'>//! fn another_simple_helper (h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
-<span class='doccomment'>//!     let param = h.param(0).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     try!(rc.writer.write(&quot;2nd helper: &quot;.as_bytes()));</span>
-<span class='doccomment'>//!     try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
-<span class='doccomment'>//!     Ok(())</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!   let mut handlebars = Handlebars::new();</span>
-<span class='doccomment'>//!   handlebars.register_helper(&quot;simple-helper&quot;, Box::new(SimpleHelper));</span>
-<span class='doccomment'>//!   handlebars.register_helper(&quot;another-simple-helper&quot;, Box::new(another_simple_helper));</span>
-<span class='doccomment'>//!   // via closure</span>
-<span class='doccomment'>//!   handlebars.register_helper(&quot;closure-helper&quot;,</span>
-<span class='doccomment'>//!       Box::new(|h: &amp;Helper, r: &amp;Handlebars, rc: &amp;mut RenderContext| -&gt; Result&lt;(), RenderError&gt;{</span>
-<span class='doccomment'>//!           let param = h.param(0).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!           try!(rc.writer.write(&quot;3rd helper: &quot;.as_bytes()));</span>
-<span class='doccomment'>//!           try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
-<span class='doccomment'>//!           Ok(())</span>
-<span class='doccomment'>//!       }));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   let tpl = &quot;{{simple-helper 1}}\n{{another-simple-helper 2}}\n{{closure-helper 3}}&quot;;</span>
-<span class='doccomment'>//!   assert_eq!(handlebars.template_render(tpl, &amp;()).unwrap(),</span>
-<span class='doccomment'>//!       &quot;1st helper: 1\n2nd helper: 2\n3rd helper: 3&quot;.to_owned());</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! Data available to helper can be found in [Helper](struct.Helper.html). And there are more</span>
-<span class='doccomment'>//! examples in [HelperDef](trait.HelperDef.html) page.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! You can learn more about helpers by looking into source code of built-in helpers.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #### Built-in Helpers</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * `{{#raw}} ... {{/raw}}` escape handlebars expression within the block</span>
-<span class='doccomment'>//! * `{{#if ...}} ... {{else}} ... {{/if}}` if-else block</span>
-<span class='doccomment'>//! * `{{#unless ...}} ... {{else}} .. {{/unless}}` if-not-else block</span>
-<span class='doccomment'>//! * `{{#each ...}} ... {{/each}}` iterates over an array or object. Handlebar-rust doesn&#39;t support mustach iteration syntax so use this instead.</span>
-<span class='doccomment'>//! * `{{#with ...}} ... {{/with}}` change current context. Similar to {{#each}}, used for replace corresponding mustach syntax.</span>
-<span class='doccomment'>//! * `{{lookup ... ...}}` get value from array by `@index` or `@key`</span>
-<span class='doccomment'>//! * `{{&gt; ...}}` include template with name</span>
-<span class='doccomment'>//! * `{{log ...}}` log value with rust logger, default level: INFO. Currently you cannot change the level.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Template inheritance</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Handlebarsjs partial system is fully supported in this implementation.</span>
-<span class='doccomment'>//! Check [example](https://github.com/sunng87/handlebars-rust/blob/master/examples/partials.rs#L49) for detail.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! # Handlebars</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [Handlebars](http://handlebarsjs.com/) is a modern and extensible templating solution originally created in the JavaScript world. It&#39;s used by many popular frameworks like [Ember.js](http://emberjs.com) and Chaplin. It&#39;s also ported to some other platforms such as [Java](https://github.com/jknack/handlebars.java).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! And this is handlebars Rust implementation, designed for general purpose text generation.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Quick Start</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use std::collections::BTreeMap;</span>
+<span class="doccomment">//! use handlebars::Handlebars;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!   // create the handlebars registry</span>
+<span class="doccomment">//!   let mut handlebars = Handlebars::new();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   // register the template. The template string will be verified and compiled.</span>
+<span class="doccomment">//!   let source = &quot;hello {{world}}&quot;;</span>
+<span class="doccomment">//!   assert!(handlebars.register_template_string(&quot;t1&quot;, source).is_ok());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   // Prepare some data.</span>
+<span class="doccomment">//!   //</span>
+<span class="doccomment">//!   // The data type should implements `rustc_serialize::json::ToJson` or</span>
+<span class="doccomment">//!   // `serde::Serialize`</span>
+<span class="doccomment">//!   let mut data = BTreeMap::new();</span>
+<span class="doccomment">//!   data.insert(&quot;world&quot;.to_string(), &quot;世界!&quot;.to_string());</span>
+<span class="doccomment">//!   assert_eq!(handlebars.render(&quot;t1&quot;, &amp;data).unwrap(), &quot;hello 世界!&quot;);</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! In this example, we created a template registry and registered a template named `t1`.</span>
+<span class="doccomment">//! Then we rendered a `BTreeMap` with an entry of key `world`, the result is just what</span>
+<span class="doccomment">//! we expected.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! I recommend you to walk through handlebars.js&#39; [intro page](http://handlebarsjs.com)</span>
+<span class="doccomment">//! if you are not quite familiar with the template language itself.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Rational: Why (this) Handlebars?</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Handlebars is a real-world templating system that you can use to build</span>
+<span class="doccomment">//! your application without pain.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Features</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Isolation of Rust and HTML</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This library doesn&#39;t attempt to use some macro magic to allow you to</span>
+<span class="doccomment">//! write your template within your rust code. I admit that it&#39;s fun (and feel cool) to do</span>
+<span class="doccomment">//! that but it doesn&#39;t fit real-world use case in my opinion.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Limited but essential control structure built-in</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Only essential control directive `if` and `each` were built-in. This</span>
+<span class="doccomment">//! prevents you to put too much application logic into your template.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Extensible helper system</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! You can write your own helper with Rust! It can be a block helper or</span>
+<span class="doccomment">//! inline helper. Put you logic into the helper and don&#39;t repeat</span>
+<span class="doccomment">//! yourself.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Template inheritance</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Every time I look into a templating system, I will investigate its</span>
+<span class="doccomment">//! support for [template</span>
+<span class="doccomment">//! inheritance](https://docs.djangoproject.com/en/1.9/ref/templates/language/#template-inh</span>
+<span class="doccomment">//! eritance).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Template include is not enough. In most case you will need a skeleton</span>
+<span class="doccomment">//! of page as parent (header, footer, etc.), and embed you page into this</span>
+<span class="doccomment">//! parent.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! You can find a real example for template inheritance in</span>
+<span class="doccomment">//! `examples/partials.rs`, and templates used by this file.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Limitations</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Compatibility with JavaScript version</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This implementation is **not fully compatible** with the original javascript version.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! First of all, mustache block is not supported. I suggest you to use `#if` and `#each` for</span>
+<span class="doccomment">//! same functionality.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! There are some other minor features missing:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! * Chained else [#12](https://github.com/sunng87/handlebars-rust/issues/12)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Feel free to fire an issue on [github](https://github.com/sunng87/handlebars-rust/issues) if</span>
+<span class="doccomment">//! you find missing features.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Static typed</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! As a static typed language, it&#39;s a little verbose to use handlebars.</span>
+<span class="doccomment">//! You will have to make your data `ToJson`-able, so we can render</span>
+<span class="doccomment">//! it. If you are on nightly channel, we have [a syntax</span>
+<span class="doccomment">//! extension](https://github.com/sunng87/tojson_macros) to generate</span>
+<span class="doccomment">//! default `ToJson` implementation for you. If you prefer</span>
+<span class="doccomment">//! [serde](https://github.com/serde-rs/serde), you can enable `serde_type` feature</span>
+<span class="doccomment">//! of handlebars-rust and add `#[Serialize]` for your types.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Usage</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Template Creation and Registration</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Templates are created from String and registered to `Handlebars` with a name.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! extern crate handlebars;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! use handlebars::Handlebars;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!   let mut handlebars = Handlebars::new();</span>
+<span class="doccomment">//!   let source = &quot;hello {{world}}&quot;;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   assert!(handlebars.register_template_string(&quot;t1&quot;, source).is_ok())</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! On registeration, the template is parsed, compiled and cached in the registry. So further</span>
+<span class="doccomment">//! usage will benifite from the one-time work. Also features like include, inheritance</span>
+<span class="doccomment">//! that involves template reference requires you to register those template first with</span>
+<span class="doccomment">//! a name so the registry can find it.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! If you template is small or just to expirement, you can use `template_render` API</span>
+<span class="doccomment">//! without registration.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use handlebars::Handlebars;</span>
+<span class="doccomment">//! use std::collections::BTreeMap;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!   let mut handlebars = Handlebars::new();</span>
+<span class="doccomment">//!   let source = &quot;hello {{world}}&quot;;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   let mut data = BTreeMap::new();</span>
+<span class="doccomment">//!   data.insert(&quot;world&quot;.to_string(), &quot;世界!&quot;.to_string());</span>
+<span class="doccomment">//!   assert_eq!(handlebars.template_render(source, &amp;data).unwrap(),&quot;hello 世界!&quot;.to_owned());</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Rendering Something</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Since handlebars is originally based on JavaScript type system. It supports dynamic features like duck-typing, truthy/falsey values. But for a static language like Rust, this is a little difficult. As a solution, we are using the `serialize::json::Json` internally for data rendering.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! That means, if you want to render something, you have to ensure the data type implements the `rustc_serialize::json::ToJson` trait (or serde&#39;s `Serialize`). Luckily, most rust internal types already have that trait. However, if you want to render your custom struct, you need to implement it manually, or use [tojson_macros](https://github.com/sunng87/tojson_macros) to generate default `ToJson` implementation.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! You can use default `render` function to render a template into `String`. From 0.9, there&#39;s `renderw` to render text into anything of `std::io::Write`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```ignore</span>
+<span class="doccomment">//! use rustc_serialize::json::{Json, ToJson};</span>
+<span class="doccomment">//! use std::collections::BTreeMap;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! use handlebars::Handlebars;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! struct Person {</span>
+<span class="doccomment">//!   name: String,</span>
+<span class="doccomment">//!   age: i16,</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl ToJson for Person {</span>
+<span class="doccomment">//!   fn to_json(&amp;self) -&gt; Json {</span>
+<span class="doccomment">//!     let mut m: BTreeMap&lt;String, Json&gt; = BTreeMap::new();</span>
+<span class="doccomment">//!     m.insert(&quot;name&quot;.to_string(), self.name.to_json());</span>
+<span class="doccomment">//!     m.insert(&quot;age&quot;.to_string(), self.age.to_json());</span>
+<span class="doccomment">//!     m.to_json()</span>
+<span class="doccomment">//!   }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!   let source = &quot;Hello, {{name}}&quot;;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   let mut handlebars = Handlebars::new();</span>
+<span class="doccomment">//!   assert!(handlebars.register_template_string(&quot;hello&quot;, source).is_ok());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   let data = Person {</span>
+<span class="doccomment">//!       name: &quot;Ning Sun&quot;.to_string(),</span>
+<span class="doccomment">//!       age: 27</span>
+<span class="doccomment">//!   };</span>
+<span class="doccomment">//!   assert_eq!(handlebars.render(&quot;hello&quot;, &amp;data).unwrap(), &quot;Hello, Ning Sun&quot;.to_owned());</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Or if you don&#39;t need the template to be cached or referenced by other ones, you can</span>
+<span class="doccomment">//! simply render it without registering.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```ignore</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!   let source = &quot;Hello, {{name}}&quot;;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   let mut handlebars = Handlebars::new();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   let data = Person {</span>
+<span class="doccomment">//!       name: &quot;Ning Sun&quot;.to_string(),</span>
+<span class="doccomment">//!       age: 27</span>
+<span class="doccomment">//!   };</span>
+<span class="doccomment">//!   assert_eq!(handlebars.template_render(&quot;Hello, {{name}}&quot;, &amp;data).unwrap(),</span>
+<span class="doccomment">//!       &quot;Hello, Ning Sun&quot;.to_owned());</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Escaping</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! As per the handlebars spec, output using `{{expression}}` is escaped by default (to be precise, the characters `&amp;&quot;&lt;&gt;` are replaced by their respective html / xml entities). However, since the use cases of a rust template engine are probably a bit more diverse than those of a JavaScript one, this implementation allows the user to supply a custom escape function to be used instead. For more information see the `EscapeFn` type and `Handlebars::register_escape_fn()` method.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Custom Helper</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Handlebars is nothing without helpers. You can also create your own helpers with rust. Helpers in handlebars-rust are custom struct implements the `HelperDef` trait, concretely, the `call` function. For your convenience, most of stateless helpers can be implemented as bare functions.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use std::io::Write;</span>
+<span class="doccomment">//! use handlebars::{Handlebars, HelperDef, RenderError, RenderContext, Helper, Context, JsonRender};</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // implement by a structure impls HelperDef</span>
+<span class="doccomment">//! #[derive(Clone, Copy)]</span>
+<span class="doccomment">//! struct SimpleHelper;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl HelperDef for SimpleHelper {</span>
+<span class="doccomment">//!   fn call(&amp;self, h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
+<span class="doccomment">//!     let param = h.param(0).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     try!(rc.writer.write(&quot;1st helper: &quot;.as_bytes()));</span>
+<span class="doccomment">//!     try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
+<span class="doccomment">//!     Ok(())</span>
+<span class="doccomment">//!   }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // implement via bare function</span>
+<span class="doccomment">//! fn another_simple_helper (h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
+<span class="doccomment">//!     let param = h.param(0).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     try!(rc.writer.write(&quot;2nd helper: &quot;.as_bytes()));</span>
+<span class="doccomment">//!     try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
+<span class="doccomment">//!     Ok(())</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!   let mut handlebars = Handlebars::new();</span>
+<span class="doccomment">//!   handlebars.register_helper(&quot;simple-helper&quot;, Box::new(SimpleHelper));</span>
+<span class="doccomment">//!   handlebars.register_helper(&quot;another-simple-helper&quot;, Box::new(another_simple_helper));</span>
+<span class="doccomment">//!   // via closure</span>
+<span class="doccomment">//!   handlebars.register_helper(&quot;closure-helper&quot;,</span>
+<span class="doccomment">//!       Box::new(|h: &amp;Helper, r: &amp;Handlebars, rc: &amp;mut RenderContext| -&gt; Result&lt;(), RenderError&gt;{</span>
+<span class="doccomment">//!           let param = h.param(0).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!           try!(rc.writer.write(&quot;3rd helper: &quot;.as_bytes()));</span>
+<span class="doccomment">//!           try!(rc.writer.write(param.value().render().into_bytes().as_ref()));</span>
+<span class="doccomment">//!           Ok(())</span>
+<span class="doccomment">//!       }));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   let tpl = &quot;{{simple-helper 1}}\n{{another-simple-helper 2}}\n{{closure-helper 3}}&quot;;</span>
+<span class="doccomment">//!   assert_eq!(handlebars.template_render(tpl, &amp;()).unwrap(),</span>
+<span class="doccomment">//!       &quot;1st helper: 1\n2nd helper: 2\n3rd helper: 3&quot;.to_owned());</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! Data available to helper can be found in [Helper](struct.Helper.html). And there are more</span>
+<span class="doccomment">//! examples in [HelperDef](trait.HelperDef.html) page.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! You can learn more about helpers by looking into source code of built-in helpers.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Built-in Helpers</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! * `{{#raw}} ... {{/raw}}` escape handlebars expression within the block</span>
+<span class="doccomment">//! * `{{#if ...}} ... {{else}} ... {{/if}}` if-else block</span>
+<span class="doccomment">//! * `{{#unless ...}} ... {{else}} .. {{/unless}}` if-not-else block</span>
+<span class="doccomment">//! * `{{#each ...}} ... {{/each}}` iterates over an array or object. Handlebar-rust doesn&#39;t support mustach iteration syntax so use this instead.</span>
+<span class="doccomment">//! * `{{#with ...}} ... {{/with}}` change current context. Similar to {{#each}}, used for replace corresponding mustach syntax.</span>
+<span class="doccomment">//! * `{{lookup ... ...}}` get value from array by `@index` or `@key`</span>
+<span class="doccomment">//! * `{{&gt; ...}}` include template with name</span>
+<span class="doccomment">//! * `{{log ...}}` log value with rust logger, default level: INFO. Currently you cannot change the level.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Template inheritance</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Handlebarsjs partial system is fully supported in this implementation.</span>
+<span class="doccomment">//! Check [example](https://github.com/sunng87/handlebars-rust/blob/master/examples/partials.rs#L49) for detail.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>recursion_limit</span> <span class='op'>=</span> <span class='string'>&quot;200&quot;</span>]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">recursion_limit</span> <span class="op">=</span> <span class="string">&quot;200&quot;</span>]</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>quick_error</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pest</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lazy_static</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quick_error</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pest</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">lazy_static</span>;
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>regex</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">regex</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>maplit</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">maplit</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc_ser_type&quot;</span>, <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde_type&quot;</span>)))]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span> <span class='kw'>as</span> <span class='ident'>serialize</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc_ser_type&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)))]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rustc_serialize</span> <span class="kw">as</span> <span class="ident">serialize</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde_type&quot;</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>template</span>::<span class='ident'>Template</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>error</span>::{<span class='ident'>TemplateError</span>, <span class='ident'>TemplateFileError</span>, <span class='ident'>TemplateRenderError</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>registry</span>::{<span class='ident'>EscapeFn</span>, <span class='ident'>no_escape</span>, <span class='ident'>html_escape</span>, <span class='ident'>Registry</span> <span class='kw'>as</span> <span class='ident'>Handlebars</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>render</span>::{<span class='ident'>Renderable</span>, <span class='ident'>Evaluable</span>, <span class='ident'>RenderError</span>, <span class='ident'>RenderContext</span>, <span class='ident'>Helper</span>, <span class='ident'>ContextJson</span>,
-                       <span class='ident'>Directive</span> <span class='kw'>as</span> <span class='ident'>Decorator</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>helpers</span>::<span class='ident'>HelperDef</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>directives</span>::<span class='ident'>DirectiveDef</span> <span class='kw'>as</span> <span class='ident'>DecoratorDef</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>context</span>::{<span class='ident'>Context</span>, <span class='ident'>JsonRender</span>, <span class='ident'>to_json</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">template</span>::<span class="ident">Template</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">error</span>::{<span class="ident">TemplateError</span>, <span class="ident">TemplateFileError</span>, <span class="ident">TemplateRenderError</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">registry</span>::{<span class="ident">EscapeFn</span>, <span class="ident">no_escape</span>, <span class="ident">html_escape</span>, <span class="ident">Registry</span> <span class="kw">as</span> <span class="ident">Handlebars</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">Evaluable</span>, <span class="ident">RenderError</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>, <span class="ident">ContextJson</span>,
+                       <span class="ident">Directive</span> <span class="kw">as</span> <span class="ident">Decorator</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">directives</span>::<span class="ident">DirectiveDef</span> <span class="kw">as</span> <span class="ident">DecoratorDef</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">context</span>::{<span class="ident">Context</span>, <span class="ident">JsonRender</span>, <span class="ident">to_json</span>};
 
-<span class='kw'>mod</span> <span class='ident'>grammar</span>;
-<span class='kw'>mod</span> <span class='ident'>template</span>;
-<span class='kw'>mod</span> <span class='ident'>error</span>;
-<span class='kw'>mod</span> <span class='ident'>registry</span>;
-<span class='kw'>mod</span> <span class='ident'>render</span>;
-<span class='kw'>mod</span> <span class='ident'>helpers</span>;
-<span class='kw'>mod</span> <span class='ident'>context</span>;
-<span class='kw'>mod</span> <span class='ident'>support</span>;
-<span class='kw'>mod</span> <span class='ident'>directives</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;partial_legacy&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>partial</span>;
+<span class="kw">mod</span> <span class="ident">grammar</span>;
+<span class="kw">mod</span> <span class="ident">template</span>;
+<span class="kw">mod</span> <span class="ident">error</span>;
+<span class="kw">mod</span> <span class="ident">registry</span>;
+<span class="kw">mod</span> <span class="ident">render</span>;
+<span class="kw">mod</span> <span class="ident">helpers</span>;
+<span class="kw">mod</span> <span class="ident">context</span>;
+<span class="kw">mod</span> <span class="ident">support</span>;
+<span class="kw">mod</span> <span class="ident">directives</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;partial_legacy&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">partial</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

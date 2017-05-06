@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -223,183 +223,183 @@
 <span id="178">178</span>
 <span id="179">179</span>
 <span id="180">180</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>Into</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">Into</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
-<span class='kw'>use</span> <span class='ident'>url</span>;
-<span class='kw'>use</span> <span class='ident'>mio</span>;
-<span class='kw'>use</span> <span class='ident'>mio</span>::<span class='ident'>Token</span>;
+<span class="kw">use</span> <span class="ident">url</span>;
+<span class="kw">use</span> <span class="ident">mio</span>;
+<span class="kw">use</span> <span class="ident">mio</span>::<span class="ident">Token</span>;
 
-<span class='kw'>use</span> <span class='ident'>message</span>;
-<span class='kw'>use</span> <span class='ident'>result</span>::{<span class='prelude-ty'>Result</span>, <span class='ident'>Error</span>};
-<span class='kw'>use</span> <span class='ident'>protocol</span>::<span class='ident'>CloseCode</span>;
-<span class='kw'>use</span> <span class='ident'>io</span>::<span class='ident'>ALL</span>;
+<span class="kw">use</span> <span class="ident">message</span>;
+<span class="kw">use</span> <span class="ident">result</span>::{<span class="prelude-ty">Result</span>, <span class="ident">Error</span>};
+<span class="kw">use</span> <span class="ident">protocol</span>::<span class="ident">CloseCode</span>;
+<span class="kw">use</span> <span class="ident">io</span>::<span class="ident">ALL</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Signal</span> {
-    <span class='ident'>Message</span>(<span class='ident'>message</span>::<span class='ident'>Message</span>),
-    <span class='ident'>Close</span>(<span class='ident'>CloseCode</span>, <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span>, <span class='ident'>str</span><span class='op'>&gt;</span>),
-    <span class='ident'>Ping</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
-    <span class='ident'>Pong</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
-    <span class='ident'>Connect</span>(<span class='ident'>url</span>::<span class='ident'>Url</span>),
-    <span class='ident'>Shutdown</span>,
-    <span class='ident'>Timeout</span> {
-        <span class='ident'>delay</span>: <span class='ident'>u64</span>,
-        <span class='ident'>token</span>: <span class='ident'>Token</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Signal</span> {
+    <span class="ident">Message</span>(<span class="ident">message</span>::<span class="ident">Message</span>),
+    <span class="ident">Close</span>(<span class="ident">CloseCode</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>),
+    <span class="ident">Ping</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
+    <span class="ident">Pong</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
+    <span class="ident">Connect</span>(<span class="ident">url</span>::<span class="ident">Url</span>),
+    <span class="ident">Shutdown</span>,
+    <span class="ident">Timeout</span> {
+        <span class="ident">delay</span>: <span class="ident">u64</span>,
+        <span class="ident">token</span>: <span class="ident">Token</span>,
     },
-    <span class='ident'>Cancel</span>(<span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>Timeout</span>),
+    <span class="ident">Cancel</span>(<span class="ident">mio</span>::<span class="ident">timer</span>::<span class="ident">Timeout</span>),
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Command</span> {
-    <span class='ident'>token</span>: <span class='ident'>Token</span>,
-    <span class='ident'>signal</span>: <span class='ident'>Signal</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Command</span> {
+    <span class="ident">token</span>: <span class="ident">Token</span>,
+    <span class="ident">signal</span>: <span class="ident">Signal</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Command</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>token</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Token</span> {
-        <span class='self'>self</span>.<span class='ident'>token</span>
+<span class="kw">impl</span> <span class="ident">Command</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Token</span> {
+        <span class="self">self</span>.<span class="ident">token</span>
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_signal</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Signal</span> {
-        <span class='self'>self</span>.<span class='ident'>signal</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_signal</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Signal</span> {
+        <span class="self">self</span>.<span class="ident">signal</span>
     }
 }
 
-<span class='doccomment'>/// A representation of the output of the WebSocket connection. Use this to send messages to the</span>
-<span class='doccomment'>/// other endpoint.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Sender</span> {
-    <span class='ident'>token</span>: <span class='ident'>Token</span>,
-    <span class='ident'>channel</span>: <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SyncSender</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// A representation of the output of the WebSocket connection. Use this to send messages to the</span>
+<span class="doccomment">/// other endpoint.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Sender</span> {
+    <span class="ident">token</span>: <span class="ident">Token</span>,
+    <span class="ident">channel</span>: <span class="ident">mio</span>::<span class="ident">channel</span>::<span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">Command</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Sender</span> {
+<span class="kw">impl</span> <span class="ident">Sender</span> {
 
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>token</span>: <span class='ident'>Token</span>, <span class='ident'>channel</span>: <span class='ident'>mio</span>::<span class='ident'>channel</span>::<span class='ident'>SyncSender</span><span class='op'>&lt;</span><span class='ident'>Command</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Sender</span> {
-        <span class='ident'>Sender</span> {
-            <span class='ident'>token</span>: <span class='ident'>token</span>,
-            <span class='ident'>channel</span>: <span class='ident'>channel</span>,
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">Token</span>, <span class="ident">channel</span>: <span class="ident">mio</span>::<span class="ident">channel</span>::<span class="ident">SyncSender</span><span class="op">&lt;</span><span class="ident">Command</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Sender</span> {
+        <span class="ident">Sender</span> {
+            <span class="ident">token</span>: <span class="ident">token</span>,
+            <span class="ident">channel</span>: <span class="ident">channel</span>,
         }
     }
 
-    <span class='doccomment'>/// A Token identifying this sender within the WebSocket.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>token</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Token</span> {
-        <span class='self'>self</span>.<span class='ident'>token</span>
+    <span class="doccomment">/// A Token identifying this sender within the WebSocket.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Token</span> {
+        <span class="self">self</span>.<span class="ident">token</span>
     }
 
-    <span class='doccomment'>/// Send a message over the connection.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>send</span><span class='op'>&lt;</span><span class='ident'>M</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>msg</span>: <span class='ident'>M</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>M</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>message</span>::<span class='ident'>Message</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Send a message over the connection.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="ident">M</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">M</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">message</span>::<span class="ident">Message</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Message</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Message</span>(<span class="ident">msg</span>.<span class="ident">into</span>()),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Send a message to the endpoints of all connections.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Be careful with this method. It does not discriminate between client and server connections.</span>
-    <span class='doccomment'>/// If your WebSocket is only functioning as a server, then usage is simple, this method will</span>
-    <span class='doccomment'>/// send a copy of the message to each connected client. However, if you have a WebSocket that</span>
-    <span class='doccomment'>/// is listening for connections and is also connected to another WebSocket, this method will</span>
-    <span class='doccomment'>/// broadcast a copy of the message to all the clients connected and to that WebSocket server.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>broadcast</span><span class='op'>&lt;</span><span class='ident'>M</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>msg</span>: <span class='ident'>M</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>M</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>message</span>::<span class='ident'>Message</span><span class='op'>&gt;</span>
+    <span class="doccomment">/// Send a message to the endpoints of all connections.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Be careful with this method. It does not discriminate between client and server connections.</span>
+    <span class="doccomment">/// If your WebSocket is only functioning as a server, then usage is simple, this method will</span>
+    <span class="doccomment">/// send a copy of the message to each connected client. However, if you have a WebSocket that</span>
+    <span class="doccomment">/// is listening for connections and is also connected to another WebSocket, this method will</span>
+    <span class="doccomment">/// broadcast a copy of the message to all the clients connected and to that WebSocket server.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">broadcast</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="ident">M</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">M</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">message</span>::<span class="ident">Message</span><span class="op">&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='ident'>ALL</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Message</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="ident">ALL</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Message</span>(<span class="ident">msg</span>.<span class="ident">into</span>()),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Send a close code to the other endpoint.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>close</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>code</span>: <span class='ident'>CloseCode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Close</span>(<span class='ident'>code</span>, <span class='string'>&quot;&quot;</span>.<span class='ident'>into</span>()),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+    <span class="doccomment">/// Send a close code to the other endpoint.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">close</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="ident">CloseCode</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Close</span>(<span class="ident">code</span>, <span class="string">&quot;&quot;</span>.<span class="ident">into</span>()),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Send a close code and provide a descriptive reason for closing.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>close_with_reason</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>code</span>: <span class='ident'>CloseCode</span>, <span class='ident'>reason</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span>, <span class='ident'>str</span><span class='op'>&gt;&gt;</span>
+    <span class="doccomment">/// Send a close code and provide a descriptive reason for closing.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">close_with_reason</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="ident">CloseCode</span>, <span class="ident">reason</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>
     {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Close</span>(<span class='ident'>code</span>, <span class='ident'>reason</span>.<span class='ident'>into</span>()),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Close</span>(<span class="ident">code</span>, <span class="ident">reason</span>.<span class="ident">into</span>()),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Send a ping to the other endpoint with the given test data.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ping</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>data</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Ping</span>(<span class='ident'>data</span>),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+    <span class="doccomment">/// Send a ping to the other endpoint with the given test data.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ping</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Ping</span>(<span class="ident">data</span>),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Send a pong to the other endpoint responding with the given test data.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>pong</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>data</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Pong</span>(<span class='ident'>data</span>),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+    <span class="doccomment">/// Send a pong to the other endpoint responding with the given test data.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pong</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Pong</span>(<span class="ident">data</span>),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Queue a new connection on this WebSocket to the specified URL.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>url</span>: <span class='ident'>url</span>::<span class='ident'>Url</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Connect</span>(<span class='ident'>url</span>),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+    <span class="doccomment">/// Queue a new connection on this WebSocket to the specified URL.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">url</span>::<span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Connect</span>(<span class="ident">url</span>),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Request that all connections terminate and that the WebSocket stop running.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Shutdown</span>,
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+    <span class="doccomment">/// Request that all connections terminate and that the WebSocket stop running.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Shutdown</span>,
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Schedule a `token` to be sent to the WebSocket Handler&#39;s `on_timeout` method</span>
-    <span class='doccomment'>/// after `ms` milliseconds</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ms</span>: <span class='ident'>u64</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Timeout</span> {
-                <span class='ident'>delay</span>: <span class='ident'>ms</span>,
-                <span class='ident'>token</span>: <span class='ident'>token</span>,
+    <span class="doccomment">/// Schedule a `token` to be sent to the WebSocket Handler&#39;s `on_timeout` method</span>
+    <span class="doccomment">/// after `ms` milliseconds</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ms</span>: <span class="ident">u64</span>, <span class="ident">token</span>: <span class="ident">Token</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Timeout</span> {
+                <span class="ident">delay</span>: <span class="ident">ms</span>,
+                <span class="ident">token</span>: <span class="ident">token</span>,
             },
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
-    <span class='doccomment'>/// Queue the cancellation of a previously scheduled timeout.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This method is not guaranteed to prevent the timeout from occuring, because it is</span>
-    <span class='doccomment'>/// possible to call this method after a timeout has already occured. It is still necessary to</span>
-    <span class='doccomment'>/// handle spurious timeouts.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cancel</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='ident'>mio</span>::<span class='ident'>timer</span>::<span class='ident'>Timeout</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>channel</span>.<span class='ident'>send</span>(<span class='ident'>Command</span> {
-            <span class='ident'>token</span>: <span class='self'>self</span>.<span class='ident'>token</span>,
-            <span class='ident'>signal</span>: <span class='ident'>Signal</span>::<span class='ident'>Cancel</span>(<span class='ident'>timeout</span>),
-        }).<span class='ident'>map_err</span>(<span class='ident'>Error</span>::<span class='ident'>from</span>)
+    <span class="doccomment">/// Queue the cancellation of a previously scheduled timeout.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method is not guaranteed to prevent the timeout from occuring, because it is</span>
+    <span class="doccomment">/// possible to call this method after a timeout has already occured. It is still necessary to</span>
+    <span class="doccomment">/// handle spurious timeouts.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cancel</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">mio</span>::<span class="ident">timer</span>::<span class="ident">Timeout</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">channel</span>.<span class="ident">send</span>(<span class="ident">Command</span> {
+            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
+            <span class="ident">signal</span>: <span class="ident">Signal</span>::<span class="ident">Cancel</span>(<span class="ident">timeout</span>),
+        }).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 
 }

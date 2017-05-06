@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -293,257 +293,257 @@
 <span id="248">248</span>
 <span id="249">249</span>
 <span id="250">250</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> {<span class='ident'>alloc</span>, <span class='ident'>Buf</span>, <span class='ident'>MutBuf</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>cmp</span>, <span class='ident'>fmt</span>, <span class='ident'>io</span>, <span class='ident'>ptr</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> {<span class="ident">alloc</span>, <span class="ident">Buf</span>, <span class="ident">MutBuf</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp</span>, <span class="ident">fmt</span>, <span class="ident">io</span>, <span class="ident">ptr</span>};
 
-<span class='kw'>enum</span> <span class='ident'>Mark</span> {
-    <span class='ident'>NoMark</span>,
-    <span class='ident'>At</span> { <span class='ident'>pos</span>: <span class='ident'>usize</span>, <span class='ident'>len</span>: <span class='ident'>usize</span> },
+<span class="kw">enum</span> <span class="ident">Mark</span> {
+    <span class="ident">NoMark</span>,
+    <span class="ident">At</span> { <span class="ident">pos</span>: <span class="ident">usize</span>, <span class="ident">len</span>: <span class="ident">usize</span> },
 }
 
-<span class='doccomment'>/// Buf backed by a continous chunk of memory. Maintains a read cursor and a</span>
-<span class='doccomment'>/// write cursor. When reads and writes reach the end of the allocated buffer,</span>
-<span class='doccomment'>/// wraps around to the start.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This type is suited for use cases where reads and writes are intermixed.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RingBuf</span> {
-    <span class='ident'>ptr</span>: <span class='ident'>alloc</span>::<span class='ident'>MemRef</span>,  <span class='comment'>// Pointer to the memory</span>
-    <span class='ident'>cap</span>: <span class='ident'>usize</span>,          <span class='comment'>// Capacity of the buffer</span>
-    <span class='ident'>pos</span>: <span class='ident'>usize</span>,          <span class='comment'>// Offset of read cursor</span>
-    <span class='ident'>len</span>: <span class='ident'>usize</span>,          <span class='comment'>// Number of bytes to read</span>
-    <span class='ident'>mark</span>: <span class='ident'>Mark</span>,          <span class='comment'>// Marked read position</span>
+<span class="doccomment">/// Buf backed by a continous chunk of memory. Maintains a read cursor and a</span>
+<span class="doccomment">/// write cursor. When reads and writes reach the end of the allocated buffer,</span>
+<span class="doccomment">/// wraps around to the start.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This type is suited for use cases where reads and writes are intermixed.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RingBuf</span> {
+    <span class="ident">ptr</span>: <span class="ident">alloc</span>::<span class="ident">MemRef</span>,  <span class="comment">// Pointer to the memory</span>
+    <span class="ident">cap</span>: <span class="ident">usize</span>,          <span class="comment">// Capacity of the buffer</span>
+    <span class="ident">pos</span>: <span class="ident">usize</span>,          <span class="comment">// Offset of read cursor</span>
+    <span class="ident">len</span>: <span class="ident">usize</span>,          <span class="comment">// Number of bytes to read</span>
+    <span class="ident">mark</span>: <span class="ident">Mark</span>,          <span class="comment">// Marked read position</span>
 }
 
-<span class='comment'>// TODO: There are most likely many optimizations that can be made</span>
-<span class='kw'>impl</span> <span class='ident'>RingBuf</span> {
-    <span class='doccomment'>/// Allocates a new `RingBuf` with the specified capacity.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='kw-2'>mut</span> <span class='ident'>capacity</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>RingBuf</span> {
-        <span class='comment'>// Handle the 0 length buffer case</span>
-        <span class='kw'>if</span> <span class='ident'>capacity</span> <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='ident'>RingBuf</span> {
-                <span class='ident'>ptr</span>: <span class='ident'>alloc</span>::<span class='ident'>MemRef</span>::<span class='ident'>none</span>(),
-                <span class='ident'>cap</span>: <span class='number'>0</span>,
-                <span class='ident'>pos</span>: <span class='number'>0</span>,
-                <span class='ident'>len</span>: <span class='number'>0</span>,
-                <span class='ident'>mark</span>: <span class='ident'>Mark</span>::<span class='ident'>NoMark</span>,
+<span class="comment">// TODO: There are most likely many optimizations that can be made</span>
+<span class="kw">impl</span> <span class="ident">RingBuf</span> {
+    <span class="doccomment">/// Allocates a new `RingBuf` with the specified capacity.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">capacity</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">RingBuf</span> {
+        <span class="comment">// Handle the 0 length buffer case</span>
+        <span class="kw">if</span> <span class="ident">capacity</span> <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="ident">RingBuf</span> {
+                <span class="ident">ptr</span>: <span class="ident">alloc</span>::<span class="ident">MemRef</span>::<span class="ident">none</span>(),
+                <span class="ident">cap</span>: <span class="number">0</span>,
+                <span class="ident">pos</span>: <span class="number">0</span>,
+                <span class="ident">len</span>: <span class="number">0</span>,
+                <span class="ident">mark</span>: <span class="ident">Mark</span>::<span class="ident">NoMark</span>,
             }
         }
 
-        <span class='comment'>// Round to the next power of 2 for better alignment</span>
-        <span class='ident'>capacity</span> <span class='op'>=</span> <span class='ident'>capacity</span>.<span class='ident'>next_power_of_two</span>();
+        <span class="comment">// Round to the next power of 2 for better alignment</span>
+        <span class="ident">capacity</span> <span class="op">=</span> <span class="ident">capacity</span>.<span class="ident">next_power_of_two</span>();
 
-        <span class='kw'>let</span> <span class='ident'>mem</span> <span class='op'>=</span> <span class='ident'>alloc</span>::<span class='ident'>heap</span>(<span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
+        <span class="kw">let</span> <span class="ident">mem</span> <span class="op">=</span> <span class="ident">alloc</span>::<span class="ident">heap</span>(<span class="ident">capacity</span> <span class="kw">as</span> <span class="ident">usize</span>);
 
-        <span class='ident'>RingBuf</span> {
-            <span class='ident'>ptr</span>: <span class='ident'>mem</span>,
-            <span class='ident'>cap</span>: <span class='ident'>capacity</span>,
-            <span class='ident'>pos</span>: <span class='number'>0</span>,
-            <span class='ident'>len</span>: <span class='number'>0</span>,
-            <span class='ident'>mark</span>: <span class='ident'>Mark</span>::<span class='ident'>NoMark</span>,
+        <span class="ident">RingBuf</span> {
+            <span class="ident">ptr</span>: <span class="ident">mem</span>,
+            <span class="ident">cap</span>: <span class="ident">capacity</span>,
+            <span class="ident">pos</span>: <span class="number">0</span>,
+            <span class="ident">len</span>: <span class="number">0</span>,
+            <span class="ident">mark</span>: <span class="ident">Mark</span>::<span class="ident">NoMark</span>,
         }
     }
 
-    <span class='doccomment'>/// Returns `true` if the buf cannot accept any further writes.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_full</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>cap</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>len</span>
+    <span class="doccomment">/// Returns `true` if the buf cannot accept any further writes.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_full</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">cap</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">len</span>
     }
 
-    <span class='doccomment'>/// Returns `true` if the buf cannot accept any further reads.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_empty</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>==</span> <span class='number'>0</span>
+    <span class="doccomment">/// Returns `true` if the buf cannot accept any further reads.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">len</span> <span class="op">==</span> <span class="number">0</span>
     }
 
-    <span class='doccomment'>/// Returns the number of bytes that the buf can hold.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>capacity</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>cap</span>
+    <span class="doccomment">/// Returns the number of bytes that the buf can hold.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">capacity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">cap</span>
     }
 
-    <span class='doccomment'>/// Marks the current read location.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Together with `reset`, this can be used to read from a section of the</span>
-    <span class='doccomment'>/// buffer multiple times. The mark will be cleared if it is overwritten</span>
-    <span class='doccomment'>/// during a write.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mark</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>mark</span> <span class='op'>=</span> <span class='ident'>Mark</span>::<span class='ident'>At</span> { <span class='ident'>pos</span>: <span class='self'>self</span>.<span class='ident'>pos</span>, <span class='ident'>len</span>: <span class='self'>self</span>.<span class='ident'>len</span> };
+    <span class="doccomment">/// Marks the current read location.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Together with `reset`, this can be used to read from a section of the</span>
+    <span class="doccomment">/// buffer multiple times. The mark will be cleared if it is overwritten</span>
+    <span class="doccomment">/// during a write.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mark</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">mark</span> <span class="op">=</span> <span class="ident">Mark</span>::<span class="ident">At</span> { <span class="ident">pos</span>: <span class="self">self</span>.<span class="ident">pos</span>, <span class="ident">len</span>: <span class="self">self</span>.<span class="ident">len</span> };
     }
 
-    <span class='doccomment'>/// Resets the read position to the previously marked position.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Together with `mark`, this can be used to read from a section of the</span>
-    <span class='doccomment'>/// buffer multiple times.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Panics</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This method will panic if no mark has been set,</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>reset</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>){
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>mark</span> {
-            <span class='ident'>Mark</span>::<span class='ident'>NoMark</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;no mark set&quot;</span>),
-            <span class='ident'>Mark</span>::<span class='ident'>At</span> {<span class='ident'>pos</span>, <span class='ident'>len</span>} <span class='op'>=&gt;</span> {
-                <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>pos</span>;
-                <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>len</span>;
-                <span class='self'>self</span>.<span class='ident'>mark</span> <span class='op'>=</span> <span class='ident'>Mark</span>::<span class='ident'>NoMark</span>;
+    <span class="doccomment">/// Resets the read position to the previously marked position.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Together with `mark`, this can be used to read from a section of the</span>
+    <span class="doccomment">/// buffer multiple times.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method will panic if no mark has been set,</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>){
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">mark</span> {
+            <span class="ident">Mark</span>::<span class="ident">NoMark</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;no mark set&quot;</span>),
+            <span class="ident">Mark</span>::<span class="ident">At</span> {<span class="ident">pos</span>, <span class="ident">len</span>} <span class="op">=&gt;</span> {
+                <span class="self">self</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="ident">pos</span>;
+                <span class="self">self</span>.<span class="ident">len</span> <span class="op">=</span> <span class="ident">len</span>;
+                <span class="self">self</span>.<span class="ident">mark</span> <span class="op">=</span> <span class="ident">Mark</span>::<span class="ident">NoMark</span>;
             }
         }
     }
 
-    <span class='doccomment'>/// Resets all internal state to the initial state.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clear</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='self'>self</span>.<span class='ident'>mark</span> <span class='op'>=</span> <span class='ident'>Mark</span>::<span class='ident'>NoMark</span>;
+    <span class="doccomment">/// Resets all internal state to the initial state.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="self">self</span>.<span class="ident">len</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="self">self</span>.<span class="ident">mark</span> <span class="op">=</span> <span class="ident">Mark</span>::<span class="ident">NoMark</span>;
     }
 
-    <span class='doccomment'>/// Returns the number of bytes remaining to read.</span>
-    <span class='kw'>fn</span> <span class='ident'>read_remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>len</span>
+    <span class="doccomment">/// Returns the number of bytes remaining to read.</span>
+    <span class="kw">fn</span> <span class="ident">read_remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">len</span>
     }
 
-    <span class='doccomment'>/// Returns the remaining write capacity until which the buf becomes full.</span>
-    <span class='kw'>fn</span> <span class='ident'>write_remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>cap</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>len</span>
+    <span class="doccomment">/// Returns the remaining write capacity until which the buf becomes full.</span>
+    <span class="kw">fn</span> <span class="ident">write_remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">cap</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">len</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>advance_reader</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>cap</span> <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span>;
+    <span class="kw">fn</span> <span class="ident">advance_reader</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">cnt</span>: <span class="ident">usize</span>) {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">cap</span> <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span>;
         }
-        <span class='ident'>cnt</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>cnt</span>, <span class='self'>self</span>.<span class='ident'>read_remaining</span>());
+        <span class="ident">cnt</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">min</span>(<span class="ident">cnt</span>, <span class="self">self</span>.<span class="ident">read_remaining</span>());
 
-        <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>+=</span> <span class='ident'>cnt</span>;
-        <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>%=</span> <span class='self'>self</span>.<span class='ident'>cap</span>;
-        <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>-=</span> <span class='ident'>cnt</span>;
+        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+=</span> <span class="ident">cnt</span>;
+        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">%=</span> <span class="self">self</span>.<span class="ident">cap</span>;
+        <span class="self">self</span>.<span class="ident">len</span> <span class="op">-=</span> <span class="ident">cnt</span>;
     }
 
-    <span class='kw'>fn</span> <span class='ident'>advance_writer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
-        <span class='ident'>cnt</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>cnt</span>, <span class='self'>self</span>.<span class='ident'>write_remaining</span>());
-        <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>+=</span> <span class='ident'>cnt</span>;
+    <span class="kw">fn</span> <span class="ident">advance_writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">cnt</span>: <span class="ident">usize</span>) {
+        <span class="ident">cnt</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">min</span>(<span class="ident">cnt</span>, <span class="self">self</span>.<span class="ident">write_remaining</span>());
+        <span class="self">self</span>.<span class="ident">len</span> <span class="op">+=</span> <span class="ident">cnt</span>;
 
-        <span class='comment'>// Adjust the mark to account for bytes written.</span>
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Mark</span>::<span class='ident'>At</span> { <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>len</span>, .. } <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>mark</span> {
-            <span class='kw-2'>*</span><span class='ident'>len</span> <span class='op'>+=</span> <span class='ident'>cnt</span>;
+        <span class="comment">// Adjust the mark to account for bytes written.</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Mark</span>::<span class="ident">At</span> { <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">len</span>, .. } <span class="op">=</span> <span class="self">self</span>.<span class="ident">mark</span> {
+            <span class="kw-2">*</span><span class="ident">len</span> <span class="op">+=</span> <span class="ident">cnt</span>;
         }
 
-        <span class='comment'>// Clear the mark if we&#39;ve written past it.</span>
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Mark</span>::<span class='ident'>At</span> { <span class='ident'>len</span>, .. } <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>mark</span> {
-            <span class='kw'>if</span> <span class='ident'>len</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>cap</span> {
-                <span class='self'>self</span>.<span class='ident'>mark</span> <span class='op'>=</span> <span class='ident'>Mark</span>::<span class='ident'>NoMark</span>;
+        <span class="comment">// Clear the mark if we&#39;ve written past it.</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Mark</span>::<span class="ident">At</span> { <span class="ident">len</span>, .. } <span class="op">=</span> <span class="self">self</span>.<span class="ident">mark</span> {
+            <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">cap</span> {
+                <span class="self">self</span>.<span class="ident">mark</span> <span class="op">=</span> <span class="ident">Mark</span>::<span class="ident">NoMark</span>;
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>RingBuf</span> {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>;
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">RingBuf</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">RingBuf</span> {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='ident'>RingBuf</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>cap</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">RingBuf</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">cap</span>);
 
-        <span class='ident'>ret</span>.<span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>pos</span>;
-        <span class='ident'>ret</span>.<span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>;
+        <span class="ident">ret</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pos</span>;
+        <span class="ident">ret</span>.<span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">len</span>;
 
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>to</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>len</span>;
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">to</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">len</span>;
 
-            <span class='kw'>if</span> <span class='ident'>to</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>cap</span> {
-                <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>ret</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>(), <span class='ident'>to</span> <span class='op'>%</span> <span class='self'>self</span>.<span class='ident'>cap</span>);
+            <span class="kw">if</span> <span class="ident">to</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">cap</span> {
+                <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">ret</span>.<span class="ident">ptr</span>.<span class="ident">ptr</span>(), <span class="ident">to</span> <span class="op">%</span> <span class="self">self</span>.<span class="ident">cap</span>);
             }
 
-            <span class='ident'>ptr</span>::<span class='ident'>copy</span>(
-                <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>().<span class='ident'>offset</span>(<span class='self'>self</span>.<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>isize</span>) <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-                <span class='ident'>ret</span>.<span class='ident'>ptr</span>.<span class='ident'>ptr</span>().<span class='ident'>offset</span>(<span class='self'>self</span>.<span class='ident'>pos</span> <span class='kw'>as</span> <span class='ident'>isize</span>),
-                <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>len</span>, <span class='self'>self</span>.<span class='ident'>cap</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>pos</span>));
+            <span class="ident">ptr</span>::<span class="ident">copy</span>(
+                <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">ptr</span>().<span class="ident">offset</span>(<span class="self">self</span>.<span class="ident">pos</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>,
+                <span class="ident">ret</span>.<span class="ident">ptr</span>.<span class="ident">ptr</span>().<span class="ident">offset</span>(<span class="self">self</span>.<span class="ident">pos</span> <span class="kw">as</span> <span class="ident">isize</span>),
+                <span class="ident">cmp</span>::<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">len</span>, <span class="self">self</span>.<span class="ident">cap</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">pos</span>));
         }
 
-        <span class='ident'>ret</span>
+        <span class="ident">ret</span>
     }
 
-    <span class='comment'>// TODO: an improved version of clone_from is possible that potentially</span>
-    <span class='comment'>// re-uses the buffer</span>
+    <span class="comment">// TODO: an improved version of clone_from is possible that potentially</span>
+    <span class="comment">// re-uses the buffer</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;RingBuf[.. {}]&quot;</span>, <span class='self'>self</span>.<span class='ident'>len</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Buf</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span> {
-
-    <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>read_remaining</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>to</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>len</span>;
-
-        <span class='kw'>if</span> <span class='ident'>to</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>cap</span> {
-            <span class='ident'>to</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>cap</span>
-        }
-
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>bytes</span>()[<span class='self'>self</span>.<span class='ident'>pos</span> .. <span class='ident'>to</span>]
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
-        <span class='self'>self</span>.<span class='ident'>advance_reader</span>(<span class='ident'>cnt</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">RingBuf</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;RingBuf[.. {}]&quot;</span>, <span class="self">self</span>.<span class="ident">len</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>MutBuf</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span> {
+<span class="kw">impl</span> <span class="ident">Buf</span> <span class="kw">for</span> <span class="ident">RingBuf</span> {
 
-    <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>write_remaining</span>()
+    <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">read_remaining</span>()
     }
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
-        <span class='self'>self</span>.<span class='ident'>advance_writer</span>(<span class='ident'>cnt</span>)
+    <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">to</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">len</span>;
+
+        <span class="kw">if</span> <span class="ident">to</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">cap</span> {
+            <span class="ident">to</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cap</span>
+        }
+
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">bytes</span>()[<span class="self">self</span>.<span class="ident">pos</span> .. <span class="ident">to</span>]
     }
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>mut_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>] {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>cap</span> <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>bytes_mut</span>();
-        }
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>from</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>to</span>;
-
-        <span class='ident'>from</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>pos</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>len</span>;
-        <span class='ident'>from</span> <span class='op'>%=</span> <span class='self'>self</span>.<span class='ident'>cap</span>;
-
-        <span class='ident'>to</span> <span class='op'>=</span> <span class='ident'>from</span> <span class='op'>+</span> <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>MutBuf</span><span class='op'>&gt;</span>::<span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>);
-
-        <span class='kw'>if</span> <span class='ident'>to</span> <span class='op'>&gt;=</span> <span class='self'>self</span>.<span class='ident'>cap</span> {
-            <span class='ident'>to</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>cap</span>;
-        }
-
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>ptr</span>.<span class='ident'>bytes_mut</span>()[<span class='ident'>from</span>..<span class='ident'>to</span>]
+    <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cnt</span>: <span class="ident">usize</span>) {
+        <span class="self">self</span>.<span class="ident">advance_reader</span>(<span class="ident">cnt</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span> {
-    <span class='kw'>fn</span> <span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>Buf</span>::<span class='ident'>has_remaining</span>(<span class='self'>self</span>) {
-            <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='number'>0</span>);
+<span class="kw">impl</span> <span class="ident">MutBuf</span> <span class="kw">for</span> <span class="ident">RingBuf</span> {
+
+    <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">write_remaining</span>()
+    }
+
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cnt</span>: <span class="ident">usize</span>) {
+        <span class="self">self</span>.<span class="ident">advance_writer</span>(<span class="ident">cnt</span>)
+    }
+
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">mut_bytes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">cap</span> <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">bytes_mut</span>();
+        }
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">from</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">to</span>;
+
+        <span class="ident">from</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">len</span>;
+        <span class="ident">from</span> <span class="op">%=</span> <span class="self">self</span>.<span class="ident">cap</span>;
+
+        <span class="ident">to</span> <span class="op">=</span> <span class="ident">from</span> <span class="op">+</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">MutBuf</span><span class="op">&gt;</span>::<span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
+
+        <span class="kw">if</span> <span class="ident">to</span> <span class="op">&gt;=</span> <span class="self">self</span>.<span class="ident">cap</span> {
+            <span class="ident">to</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cap</span>;
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='self'>self</span>.<span class='ident'>read_slice</span>(<span class='ident'>buf</span>))
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">ptr</span>.<span class="ident">bytes_mut</span>()[<span class="ident">from</span>..<span class="ident">to</span>]
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span> {
-    <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>MutBuf</span>::<span class='ident'>has_remaining</span>(<span class='self'>self</span>) {
-            <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='number'>0</span>);
+<span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Read</span> <span class="kw">for</span> <span class="ident">RingBuf</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">Buf</span>::<span class="ident">has_remaining</span>(<span class="self">self</span>) {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>);
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='self'>self</span>.<span class='ident'>write_slice</span>(<span class='ident'>buf</span>))
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>flush</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">read_slice</span>(<span class="ident">buf</span>))
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Send</span> <span class='kw'>for</span> <span class='ident'>RingBuf</span> { }
+<span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">RingBuf</span> {
+    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">MutBuf</span>::<span class="ident">has_remaining</span>(<span class="self">self</span>) {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>);
+        }
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">write_slice</span>(<span class="ident">buf</span>))
+    }
+
+    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">RingBuf</span> { }
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

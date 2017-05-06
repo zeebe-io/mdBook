@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -523,485 +523,485 @@
 <span id="478">478</span>
 <span id="479">479</span>
 <span id="480">480</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>token</span>::<span class='ident'>Token</span>;
-<span class='kw'>use</span> <span class='ident'>util</span>::<span class='ident'>Slab</span>;
-<span class='kw'>use</span> <span class='ident'>time</span>::<span class='ident'>precise_time_ns</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>usize</span>, <span class='ident'>iter</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>max</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">token</span>::<span class="ident">Token</span>;
+<span class="kw">use</span> <span class="ident">util</span>::<span class="ident">Slab</span>;
+<span class="kw">use</span> <span class="ident">time</span>::<span class="ident">precise_time_ns</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">usize</span>, <span class="ident">iter</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">max</span>;
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>TimerErrorKind</span>::<span class='ident'>TimerOverflow</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">TimerErrorKind</span>::<span class="ident">TimerOverflow</span>;
 
-<span class='kw'>const</span> <span class='ident'>EMPTY</span>: <span class='ident'>Token</span> <span class='op'>=</span> <span class='ident'>Token</span>(<span class='ident'>usize</span>::<span class='ident'>MAX</span>);
-<span class='kw'>const</span> <span class='ident'>NS_PER_MS</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='number'>1_000_000</span>;
+<span class="kw">const</span> <span class="ident">EMPTY</span>: <span class="ident">Token</span> <span class="op">=</span> <span class="ident">Token</span>(<span class="ident">usize</span>::<span class="ident">MAX</span>);
+<span class="kw">const</span> <span class="ident">NS_PER_MS</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">1_000_000</span>;
 
-<span class='comment'>// Implements coarse-grained timeouts using an algorithm based on hashed timing</span>
-<span class='comment'>// wheels by Varghese &amp; Lauck.</span>
-<span class='comment'>//</span>
-<span class='comment'>// TODO:</span>
-<span class='comment'>// * Handle the case when the timer falls more than an entire wheel behind. There</span>
-<span class='comment'>//   is no point to loop multiple times around the wheel in one go.</span>
-<span class='comment'>// * New type for tick, now() -&gt; Tick</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Timer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='comment'>// Size of each tick in milliseconds</span>
-    <span class='ident'>tick_ms</span>: <span class='ident'>u64</span>,
-    <span class='comment'>// Slab of timeout entries</span>
-    <span class='ident'>entries</span>: <span class='ident'>Slab</span><span class='op'>&lt;</span><span class='ident'>Entry</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
-    <span class='comment'>// Timeout wheel. Each tick, the timer will look at the next slot for</span>
-    <span class='comment'>// timeouts that match the current tick.</span>
-    <span class='ident'>wheel</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Token</span><span class='op'>&gt;</span>,
-    <span class='comment'>// Tick 0&#39;s time in milliseconds</span>
-    <span class='ident'>start</span>: <span class='ident'>u64</span>,
-    <span class='comment'>// The current tick</span>
-    <span class='ident'>tick</span>: <span class='ident'>u64</span>,
-    <span class='comment'>// The next entry to possibly timeout</span>
-    <span class='ident'>next</span>: <span class='ident'>Token</span>,
-    <span class='comment'>// Masks the target tick to get the slot</span>
-    <span class='ident'>mask</span>: <span class='ident'>u64</span>,
+<span class="comment">// Implements coarse-grained timeouts using an algorithm based on hashed timing</span>
+<span class="comment">// wheels by Varghese &amp; Lauck.</span>
+<span class="comment">//</span>
+<span class="comment">// TODO:</span>
+<span class="comment">// * Handle the case when the timer falls more than an entire wheel behind. There</span>
+<span class="comment">//   is no point to loop multiple times around the wheel in one go.</span>
+<span class="comment">// * New type for tick, now() -&gt; Tick</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Timer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="comment">// Size of each tick in milliseconds</span>
+    <span class="ident">tick_ms</span>: <span class="ident">u64</span>,
+    <span class="comment">// Slab of timeout entries</span>
+    <span class="ident">entries</span>: <span class="ident">Slab</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>,
+    <span class="comment">// Timeout wheel. Each tick, the timer will look at the next slot for</span>
+    <span class="comment">// timeouts that match the current tick.</span>
+    <span class="ident">wheel</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span>,
+    <span class="comment">// Tick 0&#39;s time in milliseconds</span>
+    <span class="ident">start</span>: <span class="ident">u64</span>,
+    <span class="comment">// The current tick</span>
+    <span class="ident">tick</span>: <span class="ident">u64</span>,
+    <span class="comment">// The next entry to possibly timeout</span>
+    <span class="ident">next</span>: <span class="ident">Token</span>,
+    <span class="comment">// Masks the target tick to get the slot</span>
+    <span class="ident">mask</span>: <span class="ident">u64</span>,
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Timeout</span> {
-    <span class='comment'>// Reference into the timer entry slab</span>
-    <span class='ident'>token</span>: <span class='ident'>Token</span>,
-    <span class='comment'>// Tick that it should matchup with</span>
-    <span class='ident'>tick</span>: <span class='ident'>u64</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Timeout</span> {
+    <span class="comment">// Reference into the timer entry slab</span>
+    <span class="ident">token</span>: <span class="ident">Token</span>,
+    <span class="comment">// Tick that it should matchup with</span>
+    <span class="ident">tick</span>: <span class="ident">u64</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Timer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>tick_ms</span>: <span class='ident'>u64</span>, <span class='kw-2'>mut</span> <span class='ident'>slots</span>: <span class='ident'>usize</span>, <span class='kw-2'>mut</span> <span class='ident'>capacity</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Timer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>slots</span> <span class='op'>=</span> <span class='ident'>slots</span>.<span class='ident'>next_power_of_two</span>();
-        <span class='ident'>capacity</span> <span class='op'>=</span> <span class='ident'>capacity</span>.<span class='ident'>next_power_of_two</span>();
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Timer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">tick_ms</span>: <span class="ident">u64</span>, <span class="kw-2">mut</span> <span class="ident">slots</span>: <span class="ident">usize</span>, <span class="kw-2">mut</span> <span class="ident">capacity</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Timer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">slots</span> <span class="op">=</span> <span class="ident">slots</span>.<span class="ident">next_power_of_two</span>();
+        <span class="ident">capacity</span> <span class="op">=</span> <span class="ident">capacity</span>.<span class="ident">next_power_of_two</span>();
 
-        <span class='ident'>Timer</span> {
-            <span class='ident'>tick_ms</span>: <span class='ident'>tick_ms</span>,
-            <span class='ident'>entries</span>: <span class='ident'>Slab</span>::<span class='ident'>new</span>(<span class='ident'>capacity</span>),
-            <span class='ident'>wheel</span>: <span class='ident'>iter</span>::<span class='ident'>repeat</span>(<span class='ident'>EMPTY</span>).<span class='ident'>take</span>(<span class='ident'>slots</span>).<span class='ident'>collect</span>(),
-            <span class='ident'>start</span>: <span class='number'>0</span>,
-            <span class='ident'>tick</span>: <span class='number'>0</span>,
-            <span class='ident'>next</span>: <span class='ident'>EMPTY</span>,
-            <span class='ident'>mask</span>: (<span class='ident'>slots</span> <span class='kw'>as</span> <span class='ident'>u64</span>) <span class='op'>-</span> <span class='number'>1</span>
+        <span class="ident">Timer</span> {
+            <span class="ident">tick_ms</span>: <span class="ident">tick_ms</span>,
+            <span class="ident">entries</span>: <span class="ident">Slab</span>::<span class="ident">new</span>(<span class="ident">capacity</span>),
+            <span class="ident">wheel</span>: <span class="ident">iter</span>::<span class="ident">repeat</span>(<span class="ident">EMPTY</span>).<span class="ident">take</span>(<span class="ident">slots</span>).<span class="ident">collect</span>(),
+            <span class="ident">start</span>: <span class="number">0</span>,
+            <span class="ident">tick</span>: <span class="number">0</span>,
+            <span class="ident">next</span>: <span class="ident">EMPTY</span>,
+            <span class="ident">mask</span>: (<span class="ident">slots</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">-</span> <span class="number">1</span>
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>count</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>entries</span>.<span class='ident'>count</span>()
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">count</span>()
     }
 
-    <span class='comment'>// Number of ms remaining until the next tick</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>next_tick_in_ms</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>entries</span>.<span class='ident'>count</span>() <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>None</span>;
+    <span class="comment">// Number of ms remaining until the next tick</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_tick_in_ms</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">count</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class='kw'>let</span> <span class='ident'>now</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>now_ms</span>();
-        <span class='kw'>let</span> <span class='ident'>nxt</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>start</span> <span class='op'>+</span> (<span class='self'>self</span>.<span class='ident'>tick</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>tick_ms</span>;
+        <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">now_ms</span>();
+        <span class="kw">let</span> <span class="ident">nxt</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">start</span> <span class="op">+</span> (<span class="self">self</span>.<span class="ident">tick</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">*</span> <span class="self">self</span>.<span class="ident">tick_ms</span>;
 
-        <span class='kw'>if</span> <span class='ident'>nxt</span> <span class='op'>&lt;=</span> <span class='ident'>now</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='number'>0</span>);
+        <span class="kw">if</span> <span class="ident">nxt</span> <span class="op">&lt;=</span> <span class="ident">now</span> {
+            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="number">0</span>);
         }
 
-        <span class='prelude-val'>Some</span>(<span class='ident'>nxt</span> <span class='op'>-</span> <span class='ident'>now</span>)
+        <span class="prelude-val">Some</span>(<span class="ident">nxt</span> <span class="op">-</span> <span class="ident">now</span>)
     }
 
-    <span class='comment'>/*
+    <span class="comment">/*
      *
      * ===== Initialization =====
      *
      */</span>
 
-    <span class='comment'>// Sets the starting time of the timer using the current system time</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>setup</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>let</span> <span class='ident'>now</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>now_ms</span>();
-        <span class='self'>self</span>.<span class='ident'>set_start_ms</span>(<span class='ident'>now</span>);
+    <span class="comment">// Sets the starting time of the timer using the current system time</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setup</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">now_ms</span>();
+        <span class="self">self</span>.<span class="ident">set_start_ms</span>(<span class="ident">now</span>);
     }
 
-    <span class='kw'>fn</span> <span class='ident'>set_start_ms</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>start</span>: <span class='ident'>u64</span>) {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='self'>self</span>.<span class='ident'>is_initialized</span>(), <span class='string'>&quot;the timer has already started&quot;</span>);
-        <span class='self'>self</span>.<span class='ident'>start</span> <span class='op'>=</span> <span class='ident'>start</span>;
+    <span class="kw">fn</span> <span class="ident">set_start_ms</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">start</span>: <span class="ident">u64</span>) {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="self">self</span>.<span class="ident">is_initialized</span>(), <span class="string">&quot;the timer has already started&quot;</span>);
+        <span class="self">self</span>.<span class="ident">start</span> <span class="op">=</span> <span class="ident">start</span>;
     }
 
-    <span class='comment'>/*
+    <span class="comment">/*
      *
      * ===== Timeout create / cancel =====
      *
      */</span>
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>timeout_ms</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>token</span>: <span class='ident'>T</span>, <span class='ident'>delay</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>TimerResult</span><span class='op'>&lt;</span><span class='ident'>Timeout</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>at</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>now_ms</span>() <span class='op'>+</span> <span class='ident'>max</span>(<span class='number'>0</span>, <span class='ident'>delay</span>);
-        <span class='self'>self</span>.<span class='ident'>timeout_at_ms</span>(<span class='ident'>token</span>, <span class='ident'>at</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timeout_ms</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">T</span>, <span class="ident">delay</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">TimerResult</span><span class="op">&lt;</span><span class="ident">Timeout</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">at</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">now_ms</span>() <span class="op">+</span> <span class="ident">max</span>(<span class="number">0</span>, <span class="ident">delay</span>);
+        <span class="self">self</span>.<span class="ident">timeout_at_ms</span>(<span class="ident">token</span>, <span class="ident">at</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>timeout_at_ms</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>token</span>: <span class='ident'>T</span>, <span class='kw-2'>mut</span> <span class='ident'>at</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>TimerResult</span><span class='op'>&lt;</span><span class='ident'>Timeout</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Make relative to start</span>
-        <span class='ident'>at</span> <span class='op'>-=</span> <span class='self'>self</span>.<span class='ident'>start</span>;
-        <span class='comment'>// Calculate tick</span>
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tick</span> <span class='op'>=</span> (<span class='ident'>at</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>tick_ms</span> <span class='op'>-</span> <span class='number'>1</span>) <span class='op'>/</span> <span class='self'>self</span>.<span class='ident'>tick_ms</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timeout_at_ms</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">T</span>, <span class="kw-2">mut</span> <span class="ident">at</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">TimerResult</span><span class="op">&lt;</span><span class="ident">Timeout</span><span class="op">&gt;</span> {
+        <span class="comment">// Make relative to start</span>
+        <span class="ident">at</span> <span class="op">-=</span> <span class="self">self</span>.<span class="ident">start</span>;
+        <span class="comment">// Calculate tick</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tick</span> <span class="op">=</span> (<span class="ident">at</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">tick_ms</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">tick_ms</span>;
 
-        <span class='comment'>// Always target at least 1 tick in the future</span>
-        <span class='kw'>if</span> <span class='ident'>tick</span> <span class='op'>&lt;=</span> <span class='self'>self</span>.<span class='ident'>tick</span> {
-            <span class='ident'>tick</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>tick</span> <span class='op'>+</span> <span class='number'>1</span>;
+        <span class="comment">// Always target at least 1 tick in the future</span>
+        <span class="kw">if</span> <span class="ident">tick</span> <span class="op">&lt;=</span> <span class="self">self</span>.<span class="ident">tick</span> {
+            <span class="ident">tick</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tick</span> <span class="op">+</span> <span class="number">1</span>;
         }
 
-        <span class='self'>self</span>.<span class='ident'>insert</span>(<span class='ident'>token</span>, <span class='ident'>tick</span>)
+        <span class="self">self</span>.<span class="ident">insert</span>(<span class="ident">token</span>, <span class="ident">tick</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>clear</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='ident'>Timeout</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>let</span> <span class='ident'>links</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>entries</span>.<span class='ident'>get</span>(<span class='ident'>timeout</span>.<span class='ident'>token</span>) {
-            <span class='prelude-val'>Some</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='ident'>e</span>.<span class='ident'>links</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='bool-val'>false</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Timeout</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="ident">links</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">get</span>(<span class="ident">timeout</span>.<span class="ident">token</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">links</span>,
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>
         };
 
-        <span class='comment'>// Sanity check</span>
-        <span class='kw'>if</span> <span class='ident'>links</span>.<span class='ident'>tick</span> <span class='op'>!=</span> <span class='ident'>timeout</span>.<span class='ident'>tick</span> {
-            <span class='kw'>return</span> <span class='bool-val'>false</span>;
+        <span class="comment">// Sanity check</span>
+        <span class="kw">if</span> <span class="ident">links</span>.<span class="ident">tick</span> <span class="op">!=</span> <span class="ident">timeout</span>.<span class="ident">tick</span> {
+            <span class="kw">return</span> <span class="bool-val">false</span>;
         }
 
-        <span class='self'>self</span>.<span class='ident'>unlink</span>(<span class='kw-2'>&amp;</span><span class='ident'>links</span>, <span class='ident'>timeout</span>.<span class='ident'>token</span>);
-        <span class='self'>self</span>.<span class='ident'>entries</span>.<span class='ident'>remove</span>(<span class='ident'>timeout</span>.<span class='ident'>token</span>);
-        <span class='bool-val'>true</span>
+        <span class="self">self</span>.<span class="ident">unlink</span>(<span class="kw-2">&amp;</span><span class="ident">links</span>, <span class="ident">timeout</span>.<span class="ident">token</span>);
+        <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">remove</span>(<span class="ident">timeout</span>.<span class="ident">token</span>);
+        <span class="bool-val">true</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>token</span>: <span class='ident'>T</span>, <span class='ident'>tick</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>TimerResult</span><span class='op'>&lt;</span><span class='ident'>Timeout</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Get the slot for the requested tick</span>
-        <span class='kw'>let</span> <span class='ident'>slot</span> <span class='op'>=</span> (<span class='ident'>tick</span> <span class='op'>&amp;</span> <span class='self'>self</span>.<span class='ident'>mask</span>) <span class='kw'>as</span> <span class='ident'>usize</span>;
-        <span class='kw'>let</span> <span class='ident'>curr</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>wheel</span>[<span class='ident'>slot</span>];
+    <span class="kw">fn</span> <span class="ident">insert</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">T</span>, <span class="ident">tick</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">TimerResult</span><span class="op">&lt;</span><span class="ident">Timeout</span><span class="op">&gt;</span> {
+        <span class="comment">// Get the slot for the requested tick</span>
+        <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> (<span class="ident">tick</span> <span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">mask</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">let</span> <span class="ident">curr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">wheel</span>[<span class="ident">slot</span>];
 
-        <span class='comment'>// Insert the new entry</span>
-        <span class='kw'>let</span> <span class='ident'>token</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(
-            <span class='self'>self</span>.<span class='ident'>entries</span>.<span class='ident'>insert</span>(<span class='ident'>Entry</span>::<span class='ident'>new</span>(<span class='ident'>token</span>, <span class='ident'>tick</span>, <span class='ident'>curr</span>))
-            .<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>TimerError</span>::<span class='ident'>overflow</span>()));
+        <span class="comment">// Insert the new entry</span>
+        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(
+            <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">insert</span>(<span class="ident">Entry</span>::<span class="ident">new</span>(<span class="ident">token</span>, <span class="ident">tick</span>, <span class="ident">curr</span>))
+            .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">TimerError</span>::<span class="ident">overflow</span>()));
 
-        <span class='kw'>if</span> <span class='ident'>curr</span> <span class='op'>!=</span> <span class='ident'>EMPTY</span> {
-            <span class='comment'>// If there was a previous entry, set its prev pointer to the new</span>
-            <span class='comment'>// entry</span>
-            <span class='self'>self</span>.<span class='ident'>entries</span>[<span class='ident'>curr</span>].<span class='ident'>links</span>.<span class='ident'>prev</span> <span class='op'>=</span> <span class='ident'>token</span>;
+        <span class="kw">if</span> <span class="ident">curr</span> <span class="op">!=</span> <span class="ident">EMPTY</span> {
+            <span class="comment">// If there was a previous entry, set its prev pointer to the new</span>
+            <span class="comment">// entry</span>
+            <span class="self">self</span>.<span class="ident">entries</span>[<span class="ident">curr</span>].<span class="ident">links</span>.<span class="ident">prev</span> <span class="op">=</span> <span class="ident">token</span>;
         }
 
-        <span class='comment'>// Update the head slot</span>
-        <span class='self'>self</span>.<span class='ident'>wheel</span>[<span class='ident'>slot</span>] <span class='op'>=</span> <span class='ident'>token</span>;
+        <span class="comment">// Update the head slot</span>
+        <span class="self">self</span>.<span class="ident">wheel</span>[<span class="ident">slot</span>] <span class="op">=</span> <span class="ident">token</span>;
 
-        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;inserted timout; slot={}; token={:?}&quot;</span>, <span class='ident'>slot</span>, <span class='ident'>token</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;inserted timout; slot={}; token={:?}&quot;</span>, <span class="ident">slot</span>, <span class="ident">token</span>);
 
-        <span class='comment'>// Return the new timeout</span>
-        <span class='prelude-val'>Ok</span>(<span class='ident'>Timeout</span> {
-            <span class='ident'>token</span>: <span class='ident'>token</span>,
-            <span class='ident'>tick</span>: <span class='ident'>tick</span>
+        <span class="comment">// Return the new timeout</span>
+        <span class="prelude-val">Ok</span>(<span class="ident">Timeout</span> {
+            <span class="ident">token</span>: <span class="ident">token</span>,
+            <span class="ident">tick</span>: <span class="ident">tick</span>
         })
     }
 
-    <span class='kw'>fn</span> <span class='ident'>unlink</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>links</span>: <span class='kw-2'>&amp;</span><span class='ident'>EntryLinks</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>) {
-       <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;unlinking timeout; slot={}; token={:?}&quot;</span>,
-               <span class='self'>self</span>.<span class='ident'>slot_for</span>(<span class='ident'>links</span>.<span class='ident'>tick</span>), <span class='ident'>token</span>);
+    <span class="kw">fn</span> <span class="ident">unlink</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">links</span>: <span class="kw-2">&amp;</span><span class="ident">EntryLinks</span>, <span class="ident">token</span>: <span class="ident">Token</span>) {
+       <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;unlinking timeout; slot={}; token={:?}&quot;</span>,
+               <span class="self">self</span>.<span class="ident">slot_for</span>(<span class="ident">links</span>.<span class="ident">tick</span>), <span class="ident">token</span>);
 
-        <span class='kw'>if</span> <span class='ident'>links</span>.<span class='ident'>prev</span> <span class='op'>==</span> <span class='ident'>EMPTY</span> {
-            <span class='kw'>let</span> <span class='ident'>slot</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>slot_for</span>(<span class='ident'>links</span>.<span class='ident'>tick</span>);
-            <span class='self'>self</span>.<span class='ident'>wheel</span>[<span class='ident'>slot</span>] <span class='op'>=</span> <span class='ident'>links</span>.<span class='ident'>next</span>;
-        } <span class='kw'>else</span> {
-            <span class='self'>self</span>.<span class='ident'>entries</span>[<span class='ident'>links</span>.<span class='ident'>prev</span>].<span class='ident'>links</span>.<span class='ident'>next</span> <span class='op'>=</span> <span class='ident'>links</span>.<span class='ident'>next</span>;
+        <span class="kw">if</span> <span class="ident">links</span>.<span class="ident">prev</span> <span class="op">==</span> <span class="ident">EMPTY</span> {
+            <span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">slot_for</span>(<span class="ident">links</span>.<span class="ident">tick</span>);
+            <span class="self">self</span>.<span class="ident">wheel</span>[<span class="ident">slot</span>] <span class="op">=</span> <span class="ident">links</span>.<span class="ident">next</span>;
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">entries</span>[<span class="ident">links</span>.<span class="ident">prev</span>].<span class="ident">links</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">links</span>.<span class="ident">next</span>;
         }
 
-        <span class='kw'>if</span> <span class='ident'>links</span>.<span class='ident'>next</span> <span class='op'>!=</span> <span class='ident'>EMPTY</span> {
-            <span class='self'>self</span>.<span class='ident'>entries</span>[<span class='ident'>links</span>.<span class='ident'>next</span>].<span class='ident'>links</span>.<span class='ident'>prev</span> <span class='op'>=</span> <span class='ident'>links</span>.<span class='ident'>prev</span>;
+        <span class="kw">if</span> <span class="ident">links</span>.<span class="ident">next</span> <span class="op">!=</span> <span class="ident">EMPTY</span> {
+            <span class="self">self</span>.<span class="ident">entries</span>[<span class="ident">links</span>.<span class="ident">next</span>].<span class="ident">links</span>.<span class="ident">prev</span> <span class="op">=</span> <span class="ident">links</span>.<span class="ident">prev</span>;
 
-            <span class='kw'>if</span> <span class='ident'>token</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>next</span> {
-                <span class='self'>self</span>.<span class='ident'>next</span> <span class='op'>=</span> <span class='ident'>links</span>.<span class='ident'>next</span>;
+            <span class="kw">if</span> <span class="ident">token</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">next</span> {
+                <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">links</span>.<span class="ident">next</span>;
             }
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>token</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>next</span> {
-            <span class='self'>self</span>.<span class='ident'>next</span> <span class='op'>=</span> <span class='ident'>EMPTY</span>;
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">token</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">next</span> {
+            <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">EMPTY</span>;
         }
     }
 
-    <span class='comment'>/*
+    <span class="comment">/*
      *
      * ===== Advance time =====
      *
      */</span>
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>now</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-        <span class='self'>self</span>.<span class='ident'>ms_to_tick</span>(<span class='self'>self</span>.<span class='ident'>now_ms</span>())
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">now</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+        <span class="self">self</span>.<span class="ident">ms_to_tick</span>(<span class="self">self</span>.<span class="ident">now_ms</span>())
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tick_to</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>now</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;tick_to; now={}; tick={}&quot;</span>, <span class='ident'>now</span>, <span class='self'>self</span>.<span class='ident'>tick</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tick_to</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">now</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;tick_to; now={}; tick={}&quot;</span>, <span class="ident">now</span>, <span class="self">self</span>.<span class="ident">tick</span>);
 
-        <span class='kw'>while</span> <span class='self'>self</span>.<span class='ident'>tick</span> <span class='op'>&lt;=</span> <span class='ident'>now</span> {
-            <span class='kw'>let</span> <span class='ident'>curr</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>next</span>;
+        <span class="kw">while</span> <span class="self">self</span>.<span class="ident">tick</span> <span class="op">&lt;=</span> <span class="ident">now</span> {
+            <span class="kw">let</span> <span class="ident">curr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>;
 
-            <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;ticking; curr={:?}&quot;</span>, <span class='ident'>curr</span>);
+            <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;ticking; curr={:?}&quot;</span>, <span class="ident">curr</span>);
 
-            <span class='kw'>if</span> <span class='ident'>curr</span> <span class='op'>==</span> <span class='ident'>EMPTY</span> {
-                <span class='self'>self</span>.<span class='ident'>tick</span> <span class='op'>+=</span> <span class='number'>1</span>;
-                <span class='self'>self</span>.<span class='ident'>next</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>wheel</span>[<span class='self'>self</span>.<span class='ident'>slot_for</span>(<span class='self'>self</span>.<span class='ident'>tick</span>)];
-            } <span class='kw'>else</span> {
-                <span class='kw'>let</span> <span class='ident'>links</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>entries</span>[<span class='ident'>curr</span>].<span class='ident'>links</span>;
+            <span class="kw">if</span> <span class="ident">curr</span> <span class="op">==</span> <span class="ident">EMPTY</span> {
+                <span class="self">self</span>.<span class="ident">tick</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">wheel</span>[<span class="self">self</span>.<span class="ident">slot_for</span>(<span class="self">self</span>.<span class="ident">tick</span>)];
+            } <span class="kw">else</span> {
+                <span class="kw">let</span> <span class="ident">links</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">entries</span>[<span class="ident">curr</span>].<span class="ident">links</span>;
 
-                <span class='kw'>if</span> <span class='ident'>links</span>.<span class='ident'>tick</span> <span class='op'>&lt;=</span> <span class='self'>self</span>.<span class='ident'>tick</span> {
-                    <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;triggering; token={:?}&quot;</span>, <span class='ident'>curr</span>);
+                <span class="kw">if</span> <span class="ident">links</span>.<span class="ident">tick</span> <span class="op">&lt;=</span> <span class="self">self</span>.<span class="ident">tick</span> {
+                    <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;triggering; token={:?}&quot;</span>, <span class="ident">curr</span>);
 
-                    <span class='comment'>// Unlink will also advance self.next</span>
-                    <span class='self'>self</span>.<span class='ident'>unlink</span>(<span class='kw-2'>&amp;</span><span class='ident'>links</span>, <span class='ident'>curr</span>);
+                    <span class="comment">// Unlink will also advance self.next</span>
+                    <span class="self">self</span>.<span class="ident">unlink</span>(<span class="kw-2">&amp;</span><span class="ident">links</span>, <span class="ident">curr</span>);
 
-                    <span class='comment'>// Remove and return the token</span>
-                    <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>entries</span>.<span class='ident'>remove</span>(<span class='ident'>curr</span>)
-                        .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>e</span>.<span class='ident'>token</span>);
-                } <span class='kw'>else</span> {
-                    <span class='self'>self</span>.<span class='ident'>next</span> <span class='op'>=</span> <span class='ident'>links</span>.<span class='ident'>next</span>;
+                    <span class="comment">// Remove and return the token</span>
+                    <span class="kw">return</span> <span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">remove</span>(<span class="ident">curr</span>)
+                        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">token</span>);
+                } <span class="kw">else</span> {
+                    <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="ident">links</span>.<span class="ident">next</span>;
                 }
             }
         }
 
-        <span class='prelude-val'>None</span>
+        <span class="prelude-val">None</span>
     }
 
-    <span class='comment'>/*
+    <span class="comment">/*
      *
      * ===== Misc =====
      *
      */</span>
 
-    <span class='comment'>// Timers are initialized when either the current time has been advanced or a timeout has been set</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>is_initialized</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>tick</span> <span class='op'>&gt;</span> <span class='number'>0</span> <span class='op'>||</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>entries</span>.<span class='ident'>is_empty</span>()
+    <span class="comment">// Timers are initialized when either the current time has been advanced or a timeout has been set</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_initialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">tick</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">||</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">entries</span>.<span class="ident">is_empty</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>slot_for</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>tick</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        (<span class='self'>self</span>.<span class='ident'>mask</span> <span class='op'>&amp;</span> <span class='ident'>tick</span>) <span class='kw'>as</span> <span class='ident'>usize</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">slot_for</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tick</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        (<span class="self">self</span>.<span class="ident">mask</span> <span class="op">&amp;</span> <span class="ident">tick</span>) <span class="kw">as</span> <span class="ident">usize</span>
     }
 
-    <span class='comment'>// Convert a ms duration into a number of ticks, rounds up</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>ms_to_tick</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ms</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-        (<span class='ident'>ms</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>start</span>) <span class='op'>/</span> <span class='self'>self</span>.<span class='ident'>tick_ms</span>
+    <span class="comment">// Convert a ms duration into a number of ticks, rounds up</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">ms_to_tick</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ms</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+        (<span class="ident">ms</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">start</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">tick_ms</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>now_ms</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-        <span class='ident'>precise_time_ns</span>() <span class='op'>/</span> <span class='ident'>NS_PER_MS</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">now_ms</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+        <span class="ident">precise_time_ns</span>() <span class="op">/</span> <span class="ident">NS_PER_MS</span>
     }
 }
 
-<span class='comment'>// Doubly linked list of timer entries. Allows for efficient insertion /</span>
-<span class='comment'>// removal of timeouts.</span>
-<span class='kw'>struct</span> <span class='ident'>Entry</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>token</span>: <span class='ident'>T</span>,
-    <span class='ident'>links</span>: <span class='ident'>EntryLinks</span>,
+<span class="comment">// Doubly linked list of timer entries. Allows for efficient insertion /</span>
+<span class="comment">// removal of timeouts.</span>
+<span class="kw">struct</span> <span class="ident">Entry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">token</span>: <span class="ident">T</span>,
+    <span class="ident">links</span>: <span class="ident">EntryLinks</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Entry</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>token</span>: <span class='ident'>T</span>, <span class='ident'>tick</span>: <span class='ident'>u64</span>, <span class='ident'>next</span>: <span class='ident'>Token</span>) <span class='op'>-&gt;</span> <span class='ident'>Entry</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>Entry</span> {
-            <span class='ident'>token</span>: <span class='ident'>token</span>,
-            <span class='ident'>links</span>: <span class='ident'>EntryLinks</span> {
-                <span class='ident'>tick</span>: <span class='ident'>tick</span>,
-                <span class='ident'>prev</span>: <span class='ident'>EMPTY</span>,
-                <span class='ident'>next</span>: <span class='ident'>next</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Entry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">T</span>, <span class="ident">tick</span>: <span class="ident">u64</span>, <span class="ident">next</span>: <span class="ident">Token</span>) <span class="op">-&gt;</span> <span class="ident">Entry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">Entry</span> {
+            <span class="ident">token</span>: <span class="ident">token</span>,
+            <span class="ident">links</span>: <span class="ident">EntryLinks</span> {
+                <span class="ident">tick</span>: <span class="ident">tick</span>,
+                <span class="ident">prev</span>: <span class="ident">EMPTY</span>,
+                <span class="ident">next</span>: <span class="ident">next</span>,
             },
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>struct</span> <span class='ident'>EntryLinks</span> {
-    <span class='ident'>tick</span>: <span class='ident'>u64</span>,
-    <span class='ident'>prev</span>: <span class='ident'>Token</span>,
-    <span class='ident'>next</span>: <span class='ident'>Token</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">struct</span> <span class="ident">EntryLinks</span> {
+    <span class="ident">tick</span>: <span class="ident">u64</span>,
+    <span class="ident">prev</span>: <span class="ident">Token</span>,
+    <span class="ident">next</span>: <span class="ident">Token</span>
 }
 
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>TimerResult</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>TimerError</span><span class='op'>&gt;</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">TimerResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">TimerError</span><span class="op">&gt;</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TimerError</span> {
-    <span class='ident'>kind</span>: <span class='ident'>TimerErrorKind</span>,
-    <span class='ident'>desc</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TimerError</span> {
+    <span class="ident">kind</span>: <span class="ident">TimerErrorKind</span>,
+    <span class="ident">desc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>TimerError</span> {
-    <span class='kw'>fn</span> <span class='ident'>overflow</span>() <span class='op'>-&gt;</span> <span class='ident'>TimerError</span> {
-        <span class='ident'>TimerError</span> {
-            <span class='ident'>kind</span>: <span class='ident'>TimerOverflow</span>,
-            <span class='ident'>desc</span>: <span class='string'>&quot;too many timer entries&quot;</span>
+<span class="kw">impl</span> <span class="ident">TimerError</span> {
+    <span class="kw">fn</span> <span class="ident">overflow</span>() <span class="op">-&gt;</span> <span class="ident">TimerError</span> {
+        <span class="ident">TimerError</span> {
+            <span class="ident">kind</span>: <span class="ident">TimerOverflow</span>,
+            <span class="ident">desc</span>: <span class="string">&quot;too many timer entries&quot;</span>
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>TimerErrorKind</span> {
-    <span class='ident'>TimerOverflow</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TimerErrorKind</span> {
+    <span class="ident">TimerOverflow</span>,
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Timer</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Timer</span>;
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_timeout_next_tick</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>timer</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tick</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_timeout_next_tick</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">timer</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tick</span>;
 
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>100</span>).<span class='ident'>unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;a&quot;</span>, <span class="number">100</span>).<span class="ident">unwrap</span>();
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>50</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">50</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>100</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">100</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>150</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">150</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>200</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">200</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>count</span>(), <span class='number'>0</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">count</span>(), <span class="number">0</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_clearing_timeout</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>timer</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tick</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_clearing_timeout</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">timer</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tick</span>;
 
-        <span class='kw'>let</span> <span class='ident'>to</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>100</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>clear</span>(<span class='ident'>to</span>));
+        <span class="kw">let</span> <span class="ident">to</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;a&quot;</span>, <span class="number">100</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">clear</span>(<span class="ident">to</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>100</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">100</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>200</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">200</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>count</span>(), <span class='number'>0</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">count</span>(), <span class="number">0</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_multiple_timeouts_same_tick</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>timer</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tick</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_multiple_timeouts_same_tick</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">timer</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tick</span>;
 
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>100</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>100</span>).<span class='ident'>unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;a&quot;</span>, <span class="number">100</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;b&quot;</span>, <span class="number">100</span>).<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rcv</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rcv</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>100</span>);
-        <span class='ident'>rcv</span>.<span class='ident'>push</span>(<span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>).<span class='ident'>unwrap</span>());
-        <span class='ident'>rcv</span>.<span class='ident'>push</span>(<span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>).<span class='ident'>unwrap</span>());
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">100</span>);
+        <span class="ident">rcv</span>.<span class="ident">push</span>(<span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>).<span class="ident">unwrap</span>());
+        <span class="ident">rcv</span>.<span class="ident">push</span>(<span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>).<span class="ident">unwrap</span>());
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>rcv</span>.<span class='ident'>sort</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>rcv</span> <span class='op'>==</span> [<span class='string'>&quot;a&quot;</span>, <span class='string'>&quot;b&quot;</span>], <span class='string'>&quot;actual={:?}&quot;</span>, <span class='ident'>rcv</span>);
+        <span class="ident">rcv</span>.<span class="ident">sort</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rcv</span> <span class="op">==</span> [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>], <span class="string">&quot;actual={:?}&quot;</span>, <span class="ident">rcv</span>);
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>200</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">200</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>count</span>(), <span class='number'>0</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">count</span>(), <span class="number">0</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_multiple_timeouts_diff_tick</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>timer</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tick</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_multiple_timeouts_diff_tick</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">timer</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tick</span>;
 
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>110</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>220</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>230</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;d&quot;</span>, <span class='number'>440</span>).<span class='ident'>unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;a&quot;</span>, <span class="number">110</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;b&quot;</span>, <span class="number">220</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;c&quot;</span>, <span class="number">230</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;d&quot;</span>, <span class="number">440</span>).<span class="ident">unwrap</span>();
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>100</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">100</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>200</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">200</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>300</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;c&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">300</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>400</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">400</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>500</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;d&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">500</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;d&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>600</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">600</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_catching_up</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>timer</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_catching_up</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">timer</span>();
 
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>110</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>220</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>230</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;d&quot;</span>, <span class='number'>440</span>).<span class='ident'>unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;a&quot;</span>, <span class="number">110</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;b&quot;</span>, <span class="number">220</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;c&quot;</span>, <span class="number">230</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;d&quot;</span>, <span class="number">440</span>).<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>600</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;c&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;d&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="kw">let</span> <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">600</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;d&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_timeout_hash_collision</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>timer</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tick</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_timeout_hash_collision</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">timer</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tick</span>;
 
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>100</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>100</span> <span class='op'>+</span> <span class='ident'>TICK</span> <span class='op'>*</span> <span class='ident'>SLOTS</span> <span class='kw'>as</span> <span class='ident'>u64</span>).<span class='ident'>unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;a&quot;</span>, <span class="number">100</span>).<span class="ident">unwrap</span>();
+        <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;b&quot;</span>, <span class="number">100</span> <span class="op">+</span> <span class="ident">TICK</span> <span class="op">*</span> <span class="ident">SLOTS</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">unwrap</span>();
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>100</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;a&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>1</span>, <span class='ident'>t</span>.<span class='ident'>count</span>());
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">100</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">1</span>, <span class="ident">t</span>.<span class="ident">count</span>());
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>200</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>1</span>, <span class='ident'>t</span>.<span class='ident'>count</span>());
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">200</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">1</span>, <span class="ident">t</span>.<span class="ident">count</span>());
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>100</span> <span class='op'>+</span> <span class='ident'>TICK</span> <span class='op'>*</span> <span class='ident'>SLOTS</span> <span class='kw'>as</span> <span class='ident'>u64</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>0</span>, <span class='ident'>t</span>.<span class='ident'>count</span>());
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">100</span> <span class="op">+</span> <span class="ident">TICK</span> <span class="op">*</span> <span class="ident">SLOTS</span> <span class="kw">as</span> <span class="ident">u64</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0</span>, <span class="ident">t</span>.<span class="ident">count</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_clearing_timeout_between_triggers</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>timer</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tick</span>;
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_clearing_timeout_between_triggers</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">timer</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tick</span>;
 
-        <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;a&quot;</span>, <span class='number'>100</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;b&quot;</span>, <span class='number'>100</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>timeout_at_ms</span>(<span class='string'>&quot;c&quot;</span>, <span class='number'>200</span>).<span class='ident'>unwrap</span>();
+        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;a&quot;</span>, <span class="number">100</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;b&quot;</span>, <span class="number">100</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">t</span>.<span class="ident">timeout_at_ms</span>(<span class="string">&quot;c&quot;</span>, <span class="number">200</span>).<span class="ident">unwrap</span>();
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>100</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>2</span>, <span class='ident'>t</span>.<span class='ident'>count</span>());
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">100</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">2</span>, <span class="ident">t</span>.<span class="ident">count</span>());
 
-        <span class='ident'>t</span>.<span class='ident'>clear</span>(<span class='ident'>a</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>1</span>, <span class='ident'>t</span>.<span class='ident'>count</span>());
+        <span class="ident">t</span>.<span class="ident">clear</span>(<span class="ident">a</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">1</span>, <span class="ident">t</span>.<span class="ident">count</span>());
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">None</span>, <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
 
-        <span class='ident'>tick</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>ms_to_tick</span>(<span class='number'>200</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;c&quot;</span>), <span class='ident'>t</span>.<span class='ident'>tick_to</span>(<span class='ident'>tick</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>0</span>, <span class='ident'>t</span>.<span class='ident'>count</span>());
+        <span class="ident">tick</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">ms_to_tick</span>(<span class="number">200</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="ident">t</span>.<span class="ident">tick_to</span>(<span class="ident">tick</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0</span>, <span class="ident">t</span>.<span class="ident">count</span>());
     }
 
-    <span class='kw'>const</span> <span class='ident'>TICK</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='number'>100</span>;
-    <span class='kw'>const</span> <span class='ident'>SLOTS</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>16</span>;
+    <span class="kw">const</span> <span class="ident">TICK</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">100</span>;
+    <span class="kw">const</span> <span class="ident">SLOTS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">16</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>timer</span>() <span class='op'>-&gt;</span> <span class='ident'>Timer</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='ident'>Timer</span>::<span class='ident'>new</span>(<span class='ident'>TICK</span>, <span class='ident'>SLOTS</span>, <span class='number'>32</span>)
+    <span class="kw">fn</span> <span class="ident">timer</span>() <span class="op">-&gt;</span> <span class="ident">Timer</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="ident">Timer</span>::<span class="ident">new</span>(<span class="ident">TICK</span>, <span class="ident">SLOTS</span>, <span class="number">32</span>)
     }
 }
 </pre>

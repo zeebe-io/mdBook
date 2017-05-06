@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -1010,8 +1010,8 @@
 <span id="965">965</span>
 <span id="966">966</span>
 <span id="967">967</span>
-</pre><pre class='rust '>
-<span class='doccomment'>/*!
+</pre><pre class="rust ">
+<span class="doccomment">/*!
 Crate `walkdir` provides an efficient and cross platform implementation
 of recursive directory traversal. Several options are exposed to control
 iteration, such as whether to follow symbolic links (default off), limit the
@@ -1097,883 +1097,883 @@ for entry in walker.filter_entry(|e| !is_hidden(e)) {
 ```
 
 */</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>kernel32</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>winapi</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>quickcheck</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rand</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">kernel32</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">winapi</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quickcheck</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rand</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::{<span class='ident'>Ordering</span>, <span class='ident'>min</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>::{<span class='self'>self</span>, <span class='ident'>FileType</span>, <span class='ident'>ReadDir</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>OsStr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>OsString</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>PathBuf</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>result</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>vec</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::{<span class="ident">Ordering</span>, <span class="ident">min</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::{<span class="self">self</span>, <span class="ident">FileType</span>, <span class="ident">ReadDir</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsStr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsString</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">result</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">vec</span>;
 
-<span class='kw'>use</span> <span class='ident'>same_file</span>::<span class='ident'>is_same_file</span>;
+<span class="kw">use</span> <span class="ident">same_file</span>::<span class="ident">is_same_file</span>;
 
-<span class='kw'>mod</span> <span class='ident'>same_file</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>mod</span> <span class='ident'>tests</span>;
+<span class="kw">mod</span> <span class="ident">same_file</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span> <span class="kw">mod</span> <span class="ident">tests</span>;
 
-<span class='doccomment'>/// Like try, but for iterators that return `Option&lt;Result&lt;_, _&gt;&gt;`.</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>itry</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
-        <span class='kw'>match</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span> {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>,
-            <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Err</span>(<span class='ident'>From</span>::<span class='ident'>from</span>(<span class='ident'>err</span>))),
+<span class="doccomment">/// Like try, but for iterators that return `Option&lt;Result&lt;_, _&gt;&gt;`.</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">itry</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> {
+        <span class="kw">match</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">From</span>::<span class="ident">from</span>(<span class="ident">err</span>))),
         }
     }
 }
 
-<span class='doccomment'>/// A result type for walkdir operations.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Note that this result type embeds the error type in this crate. This</span>
-<span class='doccomment'>/// is only useful if you care about the additional information provided by</span>
-<span class='doccomment'>/// the error (such as the path associated with the error or whether a loop</span>
-<span class='doccomment'>/// was dectected). If you want things to Just Work, then you can use</span>
-<span class='doccomment'>/// `io::Result` instead since the error type in this package will</span>
-<span class='doccomment'>/// automatically convert to an `io::Result` when using the `try!` macro.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> ::<span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Error</span><span class='op'>&gt;</span>;
+<span class="doccomment">/// A result type for walkdir operations.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Note that this result type embeds the error type in this crate. This</span>
+<span class="doccomment">/// is only useful if you care about the additional information provided by</span>
+<span class="doccomment">/// the error (such as the path associated with the error or whether a loop</span>
+<span class="doccomment">/// was dectected). If you want things to Just Work, then you can use</span>
+<span class="doccomment">/// `io::Result` instead since the error type in this package will</span>
+<span class="doccomment">/// automatically convert to an `io::Result` when using the `try!` macro.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
-<span class='doccomment'>/// A builder to create an iterator for recursively walking a directory.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Results are returned in depth first fashion, with directories yielded</span>
-<span class='doccomment'>/// before their contents. The order is unspecified. Directory entries `.`</span>
-<span class='doccomment'>/// and `..` are always omitted.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// If an error occurs at any point during iteration, then it is returned in</span>
-<span class='doccomment'>/// place of its corresponding directory entry and iteration continues as</span>
-<span class='doccomment'>/// normal. If an error occurs while opening a directory for reading, it</span>
-<span class='doccomment'>/// is skipped. Iteration may be stopped at any time. When the iterator is</span>
-<span class='doccomment'>/// destroyed, all resources associated with it are freed.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Usage</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This type implements `IntoIterator` so that it may be used as the subject</span>
-<span class='doccomment'>/// of a `for` loop. You may need to call `into_iter` explicitly if you want</span>
-<span class='doccomment'>/// to use iterator adapters such as `filter_entry`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Idiomatic use of this type should use method chaining to set desired</span>
-<span class='doccomment'>/// options. For example, this only shows entries with a depth of `1`, `2`</span>
-<span class='doccomment'>/// or `3` (relative to `foo`):</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,no_run</span>
-<span class='doccomment'>/// use walkdir::WalkDir;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// for entry in WalkDir::new(&quot;foo&quot;).min_depth(1).max_depth(3) {</span>
-<span class='doccomment'>///     let entry = entry.unwrap();</span>
-<span class='doccomment'>///     println!(&quot;{}&quot;, entry.path().display());</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Note that the iterator by default includes the top-most directory. Since</span>
-<span class='doccomment'>/// this is the only directory yielded with depth `0`, it is easy to ignore it</span>
-<span class='doccomment'>/// with the `min_depth` setting:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,no_run</span>
-<span class='doccomment'>/// use walkdir::WalkDir;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// for entry in WalkDir::new(&quot;foo&quot;).min_depth(1) {</span>
-<span class='doccomment'>///     let entry = entry.unwrap();</span>
-<span class='doccomment'>///     println!(&quot;{}&quot;, entry.path().display());</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This will only return descendents of the `foo` directory and not `foo`</span>
-<span class='doccomment'>/// itself.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Loops</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This iterator (like most/all recursive directory iterators) assumes that</span>
-<span class='doccomment'>/// no loops can be made with *hard* links on your file system. In particular,</span>
-<span class='doccomment'>/// this would require creating a hard link to a directory such that it creates</span>
-<span class='doccomment'>/// a loop. On most platforms, this operation is illegal.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Note that when following symbolic/soft links, loops are detected and an</span>
-<span class='doccomment'>/// error is reported.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>WalkDir</span> {
-    <span class='ident'>opts</span>: <span class='ident'>WalkDirOptions</span>,
-    <span class='ident'>root</span>: <span class='ident'>PathBuf</span>,
+<span class="doccomment">/// A builder to create an iterator for recursively walking a directory.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Results are returned in depth first fashion, with directories yielded</span>
+<span class="doccomment">/// before their contents. The order is unspecified. Directory entries `.`</span>
+<span class="doccomment">/// and `..` are always omitted.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If an error occurs at any point during iteration, then it is returned in</span>
+<span class="doccomment">/// place of its corresponding directory entry and iteration continues as</span>
+<span class="doccomment">/// normal. If an error occurs while opening a directory for reading, it</span>
+<span class="doccomment">/// is skipped. Iteration may be stopped at any time. When the iterator is</span>
+<span class="doccomment">/// destroyed, all resources associated with it are freed.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Usage</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This type implements `IntoIterator` so that it may be used as the subject</span>
+<span class="doccomment">/// of a `for` loop. You may need to call `into_iter` explicitly if you want</span>
+<span class="doccomment">/// to use iterator adapters such as `filter_entry`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Idiomatic use of this type should use method chaining to set desired</span>
+<span class="doccomment">/// options. For example, this only shows entries with a depth of `1`, `2`</span>
+<span class="doccomment">/// or `3` (relative to `foo`):</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,no_run</span>
+<span class="doccomment">/// use walkdir::WalkDir;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// for entry in WalkDir::new(&quot;foo&quot;).min_depth(1).max_depth(3) {</span>
+<span class="doccomment">///     let entry = entry.unwrap();</span>
+<span class="doccomment">///     println!(&quot;{}&quot;, entry.path().display());</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Note that the iterator by default includes the top-most directory. Since</span>
+<span class="doccomment">/// this is the only directory yielded with depth `0`, it is easy to ignore it</span>
+<span class="doccomment">/// with the `min_depth` setting:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,no_run</span>
+<span class="doccomment">/// use walkdir::WalkDir;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// for entry in WalkDir::new(&quot;foo&quot;).min_depth(1) {</span>
+<span class="doccomment">///     let entry = entry.unwrap();</span>
+<span class="doccomment">///     println!(&quot;{}&quot;, entry.path().display());</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This will only return descendents of the `foo` directory and not `foo`</span>
+<span class="doccomment">/// itself.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Loops</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This iterator (like most/all recursive directory iterators) assumes that</span>
+<span class="doccomment">/// no loops can be made with *hard* links on your file system. In particular,</span>
+<span class="doccomment">/// this would require creating a hard link to a directory such that it creates</span>
+<span class="doccomment">/// a loop. On most platforms, this operation is illegal.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Note that when following symbolic/soft links, loops are detected and an</span>
+<span class="doccomment">/// error is reported.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WalkDir</span> {
+    <span class="ident">opts</span>: <span class="ident">WalkDirOptions</span>,
+    <span class="ident">root</span>: <span class="ident">PathBuf</span>,
 }
 
-<span class='kw'>struct</span> <span class='ident'>WalkDirOptions</span> {
-    <span class='ident'>follow_links</span>: <span class='ident'>bool</span>,
-    <span class='ident'>max_open</span>: <span class='ident'>usize</span>,
-    <span class='ident'>min_depth</span>: <span class='ident'>usize</span>,
-    <span class='ident'>max_depth</span>: <span class='ident'>usize</span>,
-    <span class='ident'>sorter</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>OsString</span>,<span class='kw-2'>&amp;</span><span class='ident'>OsString</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;&gt;</span>,
+<span class="kw">struct</span> <span class="ident">WalkDirOptions</span> {
+    <span class="ident">follow_links</span>: <span class="ident">bool</span>,
+    <span class="ident">max_open</span>: <span class="ident">usize</span>,
+    <span class="ident">min_depth</span>: <span class="ident">usize</span>,
+    <span class="ident">max_depth</span>: <span class="ident">usize</span>,
+    <span class="ident">sorter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">OsString</span>,<span class="kw-2">&amp;</span><span class="ident">OsString</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>WalkDir</span> {
-    <span class='doccomment'>/// Create a builder for a recursive directory iterator starting at the</span>
-    <span class='doccomment'>/// file path `root`. If `root` is a directory, then it is the first item</span>
-    <span class='doccomment'>/// yielded by the iterator. If `root` is a file, then it is the first</span>
-    <span class='doccomment'>/// and only item yielded by the iterator.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>root</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>WalkDir</span> {
-            <span class='ident'>opts</span>: <span class='ident'>WalkDirOptions</span> {
-                <span class='ident'>follow_links</span>: <span class='bool-val'>false</span>,
-                <span class='ident'>max_open</span>: <span class='number'>10</span>,
-                <span class='ident'>min_depth</span>: <span class='number'>0</span>,
-                <span class='ident'>max_depth</span>: ::<span class='ident'>std</span>::<span class='ident'>usize</span>::<span class='ident'>MAX</span>,
-                <span class='ident'>sorter</span>: <span class='prelude-val'>None</span>,
+<span class="kw">impl</span> <span class="ident">WalkDir</span> {
+    <span class="doccomment">/// Create a builder for a recursive directory iterator starting at the</span>
+    <span class="doccomment">/// file path `root`. If `root` is a directory, then it is the first item</span>
+    <span class="doccomment">/// yielded by the iterator. If `root` is a file, then it is the first</span>
+    <span class="doccomment">/// and only item yielded by the iterator.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">root</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">WalkDir</span> {
+            <span class="ident">opts</span>: <span class="ident">WalkDirOptions</span> {
+                <span class="ident">follow_links</span>: <span class="bool-val">false</span>,
+                <span class="ident">max_open</span>: <span class="number">10</span>,
+                <span class="ident">min_depth</span>: <span class="number">0</span>,
+                <span class="ident">max_depth</span>: ::<span class="ident">std</span>::<span class="ident">usize</span>::<span class="ident">MAX</span>,
+                <span class="ident">sorter</span>: <span class="prelude-val">None</span>,
             },
-            <span class='ident'>root</span>: <span class='ident'>root</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_path_buf</span>(),
+            <span class="ident">root</span>: <span class="ident">root</span>.<span class="ident">as_ref</span>().<span class="ident">to_path_buf</span>(),
         }
     }
 
-    <span class='doccomment'>/// Set the minimum depth of entries yielded by the iterator.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The smallest depth is `0` and always corresponds to the path given</span>
-    <span class='doccomment'>/// to the `new` function on this type. Its direct descendents have depth</span>
-    <span class='doccomment'>/// `1`, and their descendents have depth `2`, and so on.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>min_depth</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>depth</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>min_depth</span> <span class='op'>=</span> <span class='ident'>depth</span>;
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>min_depth</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_depth</span> {
-            <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>min_depth</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_depth</span>;
+    <span class="doccomment">/// Set the minimum depth of entries yielded by the iterator.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The smallest depth is `0` and always corresponds to the path given</span>
+    <span class="doccomment">/// to the `new` function on this type. Its direct descendents have depth</span>
+    <span class="doccomment">/// `1`, and their descendents have depth `2`, and so on.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min_depth</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">depth</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">min_depth</span> <span class="op">=</span> <span class="ident">depth</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">min_depth</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_depth</span> {
+            <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">min_depth</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_depth</span>;
         }
-        <span class='self'>self</span>
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Set the maximum depth of entries yield by the iterator.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The smallest depth is `0` and always corresponds to the path given</span>
-    <span class='doccomment'>/// to the `new` function on this type. Its direct descendents have depth</span>
-    <span class='doccomment'>/// `1`, and their descendents have depth `2`, and so on.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that this will not simply filter the entries of the iterator, but</span>
-    <span class='doccomment'>/// it will actually avoid descending into directories when the depth is</span>
-    <span class='doccomment'>/// exceeded.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>max_depth</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>depth</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_depth</span> <span class='op'>=</span> <span class='ident'>depth</span>;
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_depth</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>min_depth</span> {
-            <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_depth</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>min_depth</span>;
+    <span class="doccomment">/// Set the maximum depth of entries yield by the iterator.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The smallest depth is `0` and always corresponds to the path given</span>
+    <span class="doccomment">/// to the `new` function on this type. Its direct descendents have depth</span>
+    <span class="doccomment">/// `1`, and their descendents have depth `2`, and so on.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that this will not simply filter the entries of the iterator, but</span>
+    <span class="doccomment">/// it will actually avoid descending into directories when the depth is</span>
+    <span class="doccomment">/// exceeded.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_depth</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">depth</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_depth</span> <span class="op">=</span> <span class="ident">depth</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_depth</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">min_depth</span> {
+            <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_depth</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">min_depth</span>;
         }
-        <span class='self'>self</span>
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Follow symbolic links. By default, this is disabled.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// When `yes` is `true`, symbolic links are followed as if they were</span>
-    <span class='doccomment'>/// normal directories and files. If a symbolic link is broken or is</span>
-    <span class='doccomment'>/// involved in a loop, an error is yielded.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// When enabled, the yielded `DirEntry` values represent the target of</span>
-    <span class='doccomment'>/// the link while the path corresponds to the link. See the `DirEntry`</span>
-    <span class='doccomment'>/// type for more details.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Warning: bug with junctions on Window</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// There [is a bug](https://github.com/rust-lang/rust/issues/28528)</span>
-    <span class='doccomment'>/// that may affect following symbolic links on Windows when using</span>
-    <span class='doccomment'>/// junctions.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>follow_links</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>yes</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>follow_links</span> <span class='op'>=</span> <span class='ident'>yes</span>;
-        <span class='self'>self</span>
+    <span class="doccomment">/// Follow symbolic links. By default, this is disabled.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When `yes` is `true`, symbolic links are followed as if they were</span>
+    <span class="doccomment">/// normal directories and files. If a symbolic link is broken or is</span>
+    <span class="doccomment">/// involved in a loop, an error is yielded.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When enabled, the yielded `DirEntry` values represent the target of</span>
+    <span class="doccomment">/// the link while the path corresponds to the link. See the `DirEntry`</span>
+    <span class="doccomment">/// type for more details.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Warning: bug with junctions on Window</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// There [is a bug](https://github.com/rust-lang/rust/issues/28528)</span>
+    <span class="doccomment">/// that may affect following symbolic links on Windows when using</span>
+    <span class="doccomment">/// junctions.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">follow_links</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">yes</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">follow_links</span> <span class="op">=</span> <span class="ident">yes</span>;
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Set the maximum number of simultaneously open file descriptors used</span>
-    <span class='doccomment'>/// by the iterator.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// `n` must be greater than or equal to `1`. If `n` is `0`, then it is set</span>
-    <span class='doccomment'>/// to `1` automatically. If this is not set, then it defaults to some</span>
-    <span class='doccomment'>/// reasonably low number.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This setting has no impact on the results yielded by the iterator</span>
-    <span class='doccomment'>/// (even when `n` is `1`). Instead, this setting represents a trade off</span>
-    <span class='doccomment'>/// between scarce resources (file descriptors) and memory. Namely, when</span>
-    <span class='doccomment'>/// the maximum number of file descriptors is reached and a new directory</span>
-    <span class='doccomment'>/// needs to be opened to continue iteration, then a previous directory</span>
-    <span class='doccomment'>/// handle is closed and has its unyielded entries stored in memory. In</span>
-    <span class='doccomment'>/// practice, this is a satisfying trade off because it scales with respect</span>
-    <span class='doccomment'>/// to the *depth* of your file tree. Therefore, low values (even `1`) are</span>
-    <span class='doccomment'>/// acceptable.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that this value does not impact the number of system calls made by</span>
-    <span class='doccomment'>/// an exhausted iterator.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>max_open</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='ident'>n</span> <span class='op'>=</span> <span class='number'>1</span>;
+    <span class="doccomment">/// Set the maximum number of simultaneously open file descriptors used</span>
+    <span class="doccomment">/// by the iterator.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// `n` must be greater than or equal to `1`. If `n` is `0`, then it is set</span>
+    <span class="doccomment">/// to `1` automatically. If this is not set, then it defaults to some</span>
+    <span class="doccomment">/// reasonably low number.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This setting has no impact on the results yielded by the iterator</span>
+    <span class="doccomment">/// (even when `n` is `1`). Instead, this setting represents a trade off</span>
+    <span class="doccomment">/// between scarce resources (file descriptors) and memory. Namely, when</span>
+    <span class="doccomment">/// the maximum number of file descriptors is reached and a new directory</span>
+    <span class="doccomment">/// needs to be opened to continue iteration, then a previous directory</span>
+    <span class="doccomment">/// handle is closed and has its unyielded entries stored in memory. In</span>
+    <span class="doccomment">/// practice, this is a satisfying trade off because it scales with respect</span>
+    <span class="doccomment">/// to the *depth* of your file tree. Therefore, low values (even `1`) are</span>
+    <span class="doccomment">/// acceptable.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that this value does not impact the number of system calls made by</span>
+    <span class="doccomment">/// an exhausted iterator.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_open</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">n</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="ident">n</span> <span class="op">==</span> <span class="number">0</span> {
+            <span class="ident">n</span> <span class="op">=</span> <span class="number">1</span>;
         }
-        <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_open</span> <span class='op'>=</span> <span class='ident'>n</span>;
-        <span class='self'>self</span>
+        <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_open</span> <span class="op">=</span> <span class="ident">n</span>;
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Set a function for sorting directory entries.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If a compare function is set, the resulting iterator will return all</span>
-    <span class='doccomment'>/// paths in sorted order. The compare function will be called to compare</span>
-    <span class='doccomment'>/// names from entries from the same directory using only the name of the</span>
-    <span class='doccomment'>/// entry.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,no-run</span>
-    <span class='doccomment'>/// use std::cmp;</span>
-    <span class='doccomment'>/// use std::ffi::OsString;</span>
-    <span class='doccomment'>/// use walkdir::WalkDir;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// WalkDir::new(&quot;foo&quot;).sort_by(|a,b| a.cmp(b));</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sort_by</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cmp</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>OsString</span>, <span class='kw-2'>&amp;</span><span class='ident'>OsString</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> {
-        <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>sorter</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>cmp</span>));
-        <span class='self'>self</span>
+    <span class="doccomment">/// Set a function for sorting directory entries.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If a compare function is set, the resulting iterator will return all</span>
+    <span class="doccomment">/// paths in sorted order. The compare function will be called to compare</span>
+    <span class="doccomment">/// names from entries from the same directory using only the name of the</span>
+    <span class="doccomment">/// entry.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,no-run</span>
+    <span class="doccomment">/// use std::cmp;</span>
+    <span class="doccomment">/// use std::ffi::OsString;</span>
+    <span class="doccomment">/// use walkdir::WalkDir;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// WalkDir::new(&quot;foo&quot;).sort_by(|a,b| a.cmp(b));</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sort_by</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cmp</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">OsString</span>, <span class="kw-2">&amp;</span><span class="ident">OsString</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
+        <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">sorter</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">cmp</span>));
+        <span class="self">self</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>IntoIterator</span> <span class='kw'>for</span> <span class='ident'>WalkDir</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;</span>;
-    <span class='kw'>type</span> <span class='ident'>IntoIter</span> <span class='op'>=</span> <span class='ident'>Iter</span>;
+<span class="kw">impl</span> <span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="ident">WalkDir</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">Iter</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_iter</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Iter</span> {
-        <span class='ident'>Iter</span> {
-            <span class='ident'>opts</span>: <span class='self'>self</span>.<span class='ident'>opts</span>,
-            <span class='ident'>start</span>: <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>root</span>),
-            <span class='ident'>stack_list</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
-            <span class='ident'>stack_path</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
-            <span class='ident'>oldest_opened</span>: <span class='number'>0</span>,
-            <span class='ident'>depth</span>: <span class='number'>0</span>,
+    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Iter</span> {
+        <span class="ident">Iter</span> {
+            <span class="ident">opts</span>: <span class="self">self</span>.<span class="ident">opts</span>,
+            <span class="ident">start</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">root</span>),
+            <span class="ident">stack_list</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">stack_path</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">oldest_opened</span>: <span class="number">0</span>,
+            <span class="ident">depth</span>: <span class="number">0</span>,
         }
     }
 }
 
-<span class='doccomment'>/// A trait for recursive directory iterators.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>WalkDirIterator</span>: <span class='ident'>Iterator</span> {
-    <span class='doccomment'>/// Skips the current directory.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This causes the iterator to stop traversing the contents of the least</span>
-    <span class='doccomment'>/// recently yielded directory. This means any remaining entries in that</span>
-    <span class='doccomment'>/// directory will be skipped (including sub-directories).</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that the ergnomics of this method are questionable since it</span>
-    <span class='doccomment'>/// borrows the iterator mutably. Namely, you must write out the looping</span>
-    <span class='doccomment'>/// condition manually. For example, to skip hidden entries efficiently on</span>
-    <span class='doccomment'>/// unix systems:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,no_run</span>
-    <span class='doccomment'>/// use walkdir::{DirEntry, WalkDir, WalkDirIterator};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// fn is_hidden(entry: &amp;DirEntry) -&gt; bool {</span>
-    <span class='doccomment'>///     entry.file_name()</span>
-    <span class='doccomment'>///          .to_str()</span>
-    <span class='doccomment'>///          .map(|s| s.starts_with(&quot;.&quot;))</span>
-    <span class='doccomment'>///          .unwrap_or(false)</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut it = WalkDir::new(&quot;foo&quot;).into_iter();</span>
-    <span class='doccomment'>/// loop {</span>
-    <span class='doccomment'>///     let entry = match it.next() {</span>
-    <span class='doccomment'>///         None =&gt; break,</span>
-    <span class='doccomment'>///         Some(Err(err)) =&gt; panic!(&quot;ERROR: {}&quot;, err),</span>
-    <span class='doccomment'>///         Some(Ok(entry)) =&gt; entry,</span>
-    <span class='doccomment'>///     };</span>
-    <span class='doccomment'>///     if is_hidden(&amp;entry) {</span>
-    <span class='doccomment'>///         if entry.file_type().is_dir() {</span>
-    <span class='doccomment'>///             it.skip_current_dir();</span>
-    <span class='doccomment'>///         }</span>
-    <span class='doccomment'>///         continue;</span>
-    <span class='doccomment'>///     }</span>
-    <span class='doccomment'>///     println!(&quot;{}&quot;, entry.path().display());</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You may find it more convenient to use the `filter_entry` iterator</span>
-    <span class='doccomment'>/// adapter. (See its documentation for the same example functionality as</span>
-    <span class='doccomment'>/// above.)</span>
-    <span class='kw'>fn</span> <span class='ident'>skip_current_dir</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>);
+<span class="doccomment">/// A trait for recursive directory iterators.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">WalkDirIterator</span>: <span class="ident">Iterator</span> {
+    <span class="doccomment">/// Skips the current directory.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This causes the iterator to stop traversing the contents of the least</span>
+    <span class="doccomment">/// recently yielded directory. This means any remaining entries in that</span>
+    <span class="doccomment">/// directory will be skipped (including sub-directories).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that the ergnomics of this method are questionable since it</span>
+    <span class="doccomment">/// borrows the iterator mutably. Namely, you must write out the looping</span>
+    <span class="doccomment">/// condition manually. For example, to skip hidden entries efficiently on</span>
+    <span class="doccomment">/// unix systems:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,no_run</span>
+    <span class="doccomment">/// use walkdir::{DirEntry, WalkDir, WalkDirIterator};</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// fn is_hidden(entry: &amp;DirEntry) -&gt; bool {</span>
+    <span class="doccomment">///     entry.file_name()</span>
+    <span class="doccomment">///          .to_str()</span>
+    <span class="doccomment">///          .map(|s| s.starts_with(&quot;.&quot;))</span>
+    <span class="doccomment">///          .unwrap_or(false)</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut it = WalkDir::new(&quot;foo&quot;).into_iter();</span>
+    <span class="doccomment">/// loop {</span>
+    <span class="doccomment">///     let entry = match it.next() {</span>
+    <span class="doccomment">///         None =&gt; break,</span>
+    <span class="doccomment">///         Some(Err(err)) =&gt; panic!(&quot;ERROR: {}&quot;, err),</span>
+    <span class="doccomment">///         Some(Ok(entry)) =&gt; entry,</span>
+    <span class="doccomment">///     };</span>
+    <span class="doccomment">///     if is_hidden(&amp;entry) {</span>
+    <span class="doccomment">///         if entry.file_type().is_dir() {</span>
+    <span class="doccomment">///             it.skip_current_dir();</span>
+    <span class="doccomment">///         }</span>
+    <span class="doccomment">///         continue;</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">///     println!(&quot;{}&quot;, entry.path().display());</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You may find it more convenient to use the `filter_entry` iterator</span>
+    <span class="doccomment">/// adapter. (See its documentation for the same example functionality as</span>
+    <span class="doccomment">/// above.)</span>
+    <span class="kw">fn</span> <span class="ident">skip_current_dir</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>);
 
-    <span class='doccomment'>/// Yields only entries which satisfy the given predicate and skips</span>
-    <span class='doccomment'>/// descending into directories that do not satisfy the given predicate.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The predicate is applied to all entries. If the predicate is</span>
-    <span class='doccomment'>/// true, iteration carries on as normal. If the predicate is false, the</span>
-    <span class='doccomment'>/// entry is ignored and if it is a directory, it is not descended into.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is often more convenient to use than `skip_current_dir`. For</span>
-    <span class='doccomment'>/// example, to skip hidden files and directories efficiently on unix</span>
-    <span class='doccomment'>/// systems:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,no_run</span>
-    <span class='doccomment'>/// use walkdir::{DirEntry, WalkDir, WalkDirIterator};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// fn is_hidden(entry: &amp;DirEntry) -&gt; bool {</span>
-    <span class='doccomment'>///     entry.file_name()</span>
-    <span class='doccomment'>///          .to_str()</span>
-    <span class='doccomment'>///          .map(|s| s.starts_with(&quot;.&quot;))</span>
-    <span class='doccomment'>///          .unwrap_or(false)</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// for entry in WalkDir::new(&quot;foo&quot;)</span>
-    <span class='doccomment'>///                      .into_iter()</span>
-    <span class='doccomment'>///                      .filter_entry(|e| !is_hidden(e)) {</span>
-    <span class='doccomment'>///     let entry = entry.unwrap();</span>
-    <span class='doccomment'>///     println!(&quot;{}&quot;, entry.path().display());</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that the iterator will still yield errors for reading entries that</span>
-    <span class='doccomment'>/// may not satisfy the predicate.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that entries skipped with `min_depth` and `max_depth` are not</span>
-    <span class='doccomment'>/// passed to this predicate.</span>
-    <span class='kw'>fn</span> <span class='ident'>filter_entry</span><span class='op'>&lt;</span><span class='ident'>P</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>predicate</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>IterFilterEntry</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> <span class='self'>Self</span>: <span class='ident'>Sized</span>, <span class='ident'>P</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>DirEntry</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='ident'>IterFilterEntry</span> { <span class='ident'>it</span>: <span class='self'>self</span>, <span class='ident'>predicate</span>: <span class='ident'>predicate</span> }
+    <span class="doccomment">/// Yields only entries which satisfy the given predicate and skips</span>
+    <span class="doccomment">/// descending into directories that do not satisfy the given predicate.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The predicate is applied to all entries. If the predicate is</span>
+    <span class="doccomment">/// true, iteration carries on as normal. If the predicate is false, the</span>
+    <span class="doccomment">/// entry is ignored and if it is a directory, it is not descended into.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is often more convenient to use than `skip_current_dir`. For</span>
+    <span class="doccomment">/// example, to skip hidden files and directories efficiently on unix</span>
+    <span class="doccomment">/// systems:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,no_run</span>
+    <span class="doccomment">/// use walkdir::{DirEntry, WalkDir, WalkDirIterator};</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// fn is_hidden(entry: &amp;DirEntry) -&gt; bool {</span>
+    <span class="doccomment">///     entry.file_name()</span>
+    <span class="doccomment">///          .to_str()</span>
+    <span class="doccomment">///          .map(|s| s.starts_with(&quot;.&quot;))</span>
+    <span class="doccomment">///          .unwrap_or(false)</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// for entry in WalkDir::new(&quot;foo&quot;)</span>
+    <span class="doccomment">///                      .into_iter()</span>
+    <span class="doccomment">///                      .filter_entry(|e| !is_hidden(e)) {</span>
+    <span class="doccomment">///     let entry = entry.unwrap();</span>
+    <span class="doccomment">///     println!(&quot;{}&quot;, entry.path().display());</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that the iterator will still yield errors for reading entries that</span>
+    <span class="doccomment">/// may not satisfy the predicate.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that entries skipped with `min_depth` and `max_depth` are not</span>
+    <span class="doccomment">/// passed to this predicate.</span>
+    <span class="kw">fn</span> <span class="ident">filter_entry</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">predicate</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">IterFilterEntry</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span><span class="op">&gt;</span>
+            <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span>, <span class="ident">P</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">DirEntry</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="ident">IterFilterEntry</span> { <span class="ident">it</span>: <span class="self">self</span>, <span class="ident">predicate</span>: <span class="ident">predicate</span> }
     }
 }
 
-<span class='doccomment'>/// An iterator for recursively descending into a directory.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A value with this type must be constructed with the `WalkDir` type, which</span>
-<span class='doccomment'>/// uses a builder pattern to set options such as min/max depth, max open file</span>
-<span class='doccomment'>/// descriptors and whether the iterator should follow symbolic links.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The order of elements yielded by this iterator is unspecified.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span> {
-    <span class='doccomment'>/// Options specified in the builder. Depths, max fds, etc.</span>
-    <span class='ident'>opts</span>: <span class='ident'>WalkDirOptions</span>,
-    <span class='doccomment'>/// The start path.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is only `Some(...)` at the beginning. After the first iteration,</span>
-    <span class='doccomment'>/// this is always `None`.</span>
-    <span class='ident'>start</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;</span>,
-    <span class='doccomment'>/// A stack of open (up to max fd) or closed handles to directories.</span>
-    <span class='doccomment'>/// An open handle is a plain `fs::ReadDir` while a closed handle is</span>
-    <span class='doccomment'>/// a `Vec&lt;fs::DirEntry&gt;` corresponding to the as-of-yet consumed entries.</span>
-    <span class='ident'>stack_list</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>DirList</span><span class='op'>&gt;</span>,
-    <span class='doccomment'>/// A stack of file paths.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is *only* used when `follow_links` is enabled. In all other cases</span>
-    <span class='doccomment'>/// this stack is empty.</span>
-    <span class='ident'>stack_path</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;</span>,
-    <span class='doccomment'>/// An index into `stack_list` that points to the oldest open directory</span>
-    <span class='doccomment'>/// handle. If the maximum fd limit is reached and a new directory needs</span>
-    <span class='doccomment'>/// to be read, the handle at this index is closed before the new directory</span>
-    <span class='doccomment'>/// is opened.</span>
-    <span class='ident'>oldest_opened</span>: <span class='ident'>usize</span>,
-    <span class='doccomment'>/// The current depth of iteration (the length of the stack at the</span>
-    <span class='doccomment'>/// beginning of each iteration).</span>
-    <span class='ident'>depth</span>: <span class='ident'>usize</span>,
+<span class="doccomment">/// An iterator for recursively descending into a directory.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A value with this type must be constructed with the `WalkDir` type, which</span>
+<span class="doccomment">/// uses a builder pattern to set options such as min/max depth, max open file</span>
+<span class="doccomment">/// descriptors and whether the iterator should follow symbolic links.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The order of elements yielded by this iterator is unspecified.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Iter</span> {
+    <span class="doccomment">/// Options specified in the builder. Depths, max fds, etc.</span>
+    <span class="ident">opts</span>: <span class="ident">WalkDirOptions</span>,
+    <span class="doccomment">/// The start path.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is only `Some(...)` at the beginning. After the first iteration,</span>
+    <span class="doccomment">/// this is always `None`.</span>
+    <span class="ident">start</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// A stack of open (up to max fd) or closed handles to directories.</span>
+    <span class="doccomment">/// An open handle is a plain `fs::ReadDir` while a closed handle is</span>
+    <span class="doccomment">/// a `Vec&lt;fs::DirEntry&gt;` corresponding to the as-of-yet consumed entries.</span>
+    <span class="ident">stack_list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DirList</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// A stack of file paths.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is *only* used when `follow_links` is enabled. In all other cases</span>
+    <span class="doccomment">/// this stack is empty.</span>
+    <span class="ident">stack_path</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// An index into `stack_list` that points to the oldest open directory</span>
+    <span class="doccomment">/// handle. If the maximum fd limit is reached and a new directory needs</span>
+    <span class="doccomment">/// to be read, the handle at this index is closed before the new directory</span>
+    <span class="doccomment">/// is opened.</span>
+    <span class="ident">oldest_opened</span>: <span class="ident">usize</span>,
+    <span class="doccomment">/// The current depth of iteration (the length of the stack at the</span>
+    <span class="doccomment">/// beginning of each iteration).</span>
+    <span class="ident">depth</span>: <span class="ident">usize</span>,
 }
 
-<span class='doccomment'>/// A sequence of unconsumed directory entries.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This represents the opened or closed state of a directory handle. When</span>
-<span class='doccomment'>/// open, future entries are read by iterating over the raw `fs::ReadDir`.</span>
-<span class='doccomment'>/// When closed, all future entries are read into memory. Iteration then</span>
-<span class='doccomment'>/// proceeds over a `Vec&lt;fs::DirEntry&gt;`.</span>
-<span class='kw'>enum</span> <span class='ident'>DirList</span> {
-    <span class='doccomment'>/// An opened handle.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This includes the depth of the handle itself.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If there was an error with the initial `fs::read_dir` call, then it is</span>
-    <span class='doccomment'>/// stored here. (We use an `Option&lt;...&gt;` to make yielding the error</span>
-    <span class='doccomment'>/// exactly once simpler.)</span>
-    <span class='ident'>Opened</span> { <span class='ident'>depth</span>: <span class='ident'>usize</span>, <span class='ident'>it</span>: <span class='ident'>result</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ReadDir</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;&gt;</span> },
-    <span class='doccomment'>/// A closed handle.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// All remaining directory entries are read into memory.</span>
-    <span class='ident'>Closed</span>(<span class='ident'>vec</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>fs</span>::<span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span>),
+<span class="doccomment">/// A sequence of unconsumed directory entries.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This represents the opened or closed state of a directory handle. When</span>
+<span class="doccomment">/// open, future entries are read by iterating over the raw `fs::ReadDir`.</span>
+<span class="doccomment">/// When closed, all future entries are read into memory. Iteration then</span>
+<span class="doccomment">/// proceeds over a `Vec&lt;fs::DirEntry&gt;`.</span>
+<span class="kw">enum</span> <span class="ident">DirList</span> {
+    <span class="doccomment">/// An opened handle.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This includes the depth of the handle itself.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If there was an error with the initial `fs::read_dir` call, then it is</span>
+    <span class="doccomment">/// stored here. (We use an `Option&lt;...&gt;` to make yielding the error</span>
+    <span class="doccomment">/// exactly once simpler.)</span>
+    <span class="ident">Opened</span> { <span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">it</span>: <span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ReadDir</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> },
+    <span class="doccomment">/// A closed handle.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// All remaining directory entries are read into memory.</span>
+    <span class="ident">Closed</span>(<span class="ident">vec</span>::<span class="ident">IntoIter</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">DirEntry</span><span class="op">&gt;&gt;</span>),
 }
 
-<span class='doccomment'>/// A directory entry.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This is the type of value that is yielded from the iterators defined in</span>
-<span class='doccomment'>/// this crate.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Differences with `std::fs::DirEntry`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This type mostly mirrors the type by the same name in `std::fs`. There are</span>
-<span class='doccomment'>/// some differences however:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// * All recursive directory iterators must inspect the entry&#39;s type.</span>
-<span class='doccomment'>/// Therefore, the value is stored and its access is guaranteed to be cheap and</span>
-<span class='doccomment'>/// successful.</span>
-<span class='doccomment'>/// * `path` and `file_name` return borrowed variants.</span>
-<span class='doccomment'>/// * If `follow_links` was enabled on the originating iterator, then all</span>
-<span class='doccomment'>/// operations except for `path` operate on the link target. Otherwise, all</span>
-<span class='doccomment'>/// operations operate on the symbolic link.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DirEntry</span> {
-    <span class='doccomment'>/// The path as reported by the `fs::ReadDir` iterator (even if it&#39;s a</span>
-    <span class='doccomment'>/// symbolic link).</span>
-    <span class='ident'>path</span>: <span class='ident'>PathBuf</span>,
-    <span class='doccomment'>/// The file type. Necessary for recursive iteration, so store it.</span>
-    <span class='ident'>ty</span>: <span class='ident'>FileType</span>,
-    <span class='doccomment'>/// Is set when this entry was created from a symbolic link and the user</span>
-    <span class='doccomment'>/// excepts the iterator to follow symbolic links.</span>
-    <span class='ident'>follow_link</span>: <span class='ident'>bool</span>,
-    <span class='doccomment'>/// The depth at which this entry was generated relative to the root.</span>
-    <span class='ident'>depth</span>: <span class='ident'>usize</span>,
+<span class="doccomment">/// A directory entry.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is the type of value that is yielded from the iterators defined in</span>
+<span class="doccomment">/// this crate.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Differences with `std::fs::DirEntry`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This type mostly mirrors the type by the same name in `std::fs`. There are</span>
+<span class="doccomment">/// some differences however:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * All recursive directory iterators must inspect the entry&#39;s type.</span>
+<span class="doccomment">/// Therefore, the value is stored and its access is guaranteed to be cheap and</span>
+<span class="doccomment">/// successful.</span>
+<span class="doccomment">/// * `path` and `file_name` return borrowed variants.</span>
+<span class="doccomment">/// * If `follow_links` was enabled on the originating iterator, then all</span>
+<span class="doccomment">/// operations except for `path` operate on the link target. Otherwise, all</span>
+<span class="doccomment">/// operations operate on the symbolic link.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DirEntry</span> {
+    <span class="doccomment">/// The path as reported by the `fs::ReadDir` iterator (even if it&#39;s a</span>
+    <span class="doccomment">/// symbolic link).</span>
+    <span class="ident">path</span>: <span class="ident">PathBuf</span>,
+    <span class="doccomment">/// The file type. Necessary for recursive iteration, so store it.</span>
+    <span class="ident">ty</span>: <span class="ident">FileType</span>,
+    <span class="doccomment">/// Is set when this entry was created from a symbolic link and the user</span>
+    <span class="doccomment">/// excepts the iterator to follow symbolic links.</span>
+    <span class="ident">follow_link</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// The depth at which this entry was generated relative to the root.</span>
+    <span class="ident">depth</span>: <span class="ident">usize</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Iter</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;</span>;
+<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Iter</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>start</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>start</span>.<span class='ident'>take</span>() {
-            <span class='kw'>let</span> <span class='ident'>dent</span> <span class='op'>=</span> <span class='macro'>itry</span><span class='macro'>!</span>(<span class='ident'>DirEntry</span>::<span class='ident'>from_path</span>(<span class='number'>0</span>, <span class='ident'>start</span>));
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>result</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>handle_entry</span>(<span class='ident'>dent</span>) {
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>result</span>);
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">start</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">start</span>.<span class="ident">take</span>() {
+            <span class="kw">let</span> <span class="ident">dent</span> <span class="op">=</span> <span class="macro">itry</span><span class="macro">!</span>(<span class="ident">DirEntry</span>::<span class="ident">from_path</span>(<span class="number">0</span>, <span class="ident">start</span>));
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">handle_entry</span>(<span class="ident">dent</span>) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>);
             }
         }
-        <span class='kw'>while</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>is_empty</span>() {
-            <span class='self'>self</span>.<span class='ident'>depth</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>len</span>();
-            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>depth</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_depth</span> {
-                <span class='comment'>// If we&#39;ve exceeded the max depth, pop the current dir</span>
-                <span class='comment'>// so that we don&#39;t descend.</span>
-                <span class='self'>self</span>.<span class='ident'>pop</span>();
-                <span class='kw'>continue</span>;
+        <span class="kw">while</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">depth</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">len</span>();
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">depth</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_depth</span> {
+                <span class="comment">// If we&#39;ve exceeded the max depth, pop the current dir</span>
+                <span class="comment">// so that we don&#39;t descend.</span>
+                <span class="self">self</span>.<span class="ident">pop</span>();
+                <span class="kw">continue</span>;
             }
-            <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>last_mut</span>().<span class='ident'>unwrap</span>().<span class='ident'>next</span>() {
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>pop</span>(),
-                <span class='prelude-val'>Some</span>(<span class='prelude-val'>Err</span>(<span class='ident'>err</span>)) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Err</span>(<span class='ident'>err</span>)),
-                <span class='prelude-val'>Some</span>(<span class='prelude-val'>Ok</span>(<span class='ident'>dent</span>)) <span class='op'>=&gt;</span> {
-                    <span class='kw'>let</span> <span class='ident'>dent</span> <span class='op'>=</span> <span class='macro'>itry</span><span class='macro'>!</span>(<span class='ident'>DirEntry</span>::<span class='ident'>from_entry</span>(<span class='self'>self</span>.<span class='ident'>depth</span>, <span class='kw-2'>&amp;</span><span class='ident'>dent</span>));
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>result</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>handle_entry</span>(<span class='ident'>dent</span>) {
-                        <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>result</span>);
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="ident">next</span>() {
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">pop</span>(),
+                <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)),
+                <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">dent</span>)) <span class="op">=&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">dent</span> <span class="op">=</span> <span class="macro">itry</span><span class="macro">!</span>(<span class="ident">DirEntry</span>::<span class="ident">from_entry</span>(<span class="self">self</span>.<span class="ident">depth</span>, <span class="kw-2">&amp;</span><span class="ident">dent</span>));
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">handle_entry</span>(<span class="ident">dent</span>) {
+                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>);
                     }
                 }
             }
         }
-        <span class='prelude-val'>None</span>
+        <span class="prelude-val">None</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>WalkDirIterator</span> <span class='kw'>for</span> <span class='ident'>Iter</span> {
-    <span class='kw'>fn</span> <span class='ident'>skip_current_dir</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>is_empty</span>() {
-            <span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>pop</span>();
+<span class="kw">impl</span> <span class="ident">WalkDirIterator</span> <span class="kw">for</span> <span class="ident">Iter</span> {
+    <span class="kw">fn</span> <span class="ident">skip_current_dir</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">pop</span>();
         }
-        <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>stack_path</span>.<span class='ident'>is_empty</span>() {
-            <span class='self'>self</span>.<span class='ident'>stack_path</span>.<span class='ident'>pop</span>();
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">stack_path</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">stack_path</span>.<span class="ident">pop</span>();
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Iter</span> {
-    <span class='kw'>fn</span> <span class='ident'>handle_entry</span>(
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='kw-2'>mut</span> <span class='ident'>dent</span>: <span class='ident'>DirEntry</span>,
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>follow_links</span> <span class='op'>&amp;&amp;</span> <span class='ident'>dent</span>.<span class='ident'>file_type</span>().<span class='ident'>is_symlink</span>() {
-            <span class='ident'>dent</span> <span class='op'>=</span> <span class='macro'>itry</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>follow</span>(<span class='ident'>dent</span>));
+<span class="kw">impl</span> <span class="ident">Iter</span> {
+    <span class="kw">fn</span> <span class="ident">handle_entry</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="kw-2">mut</span> <span class="ident">dent</span>: <span class="ident">DirEntry</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">follow_links</span> <span class="op">&amp;&amp;</span> <span class="ident">dent</span>.<span class="ident">file_type</span>().<span class="ident">is_symlink</span>() {
+            <span class="ident">dent</span> <span class="op">=</span> <span class="macro">itry</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">follow</span>(<span class="ident">dent</span>));
         }
-        <span class='kw'>if</span> <span class='ident'>dent</span>.<span class='ident'>file_type</span>().<span class='ident'>is_dir</span>() {
-            <span class='self'>self</span>.<span class='ident'>push</span>(<span class='kw-2'>&amp;</span><span class='ident'>dent</span>);
+        <span class="kw">if</span> <span class="ident">dent</span>.<span class="ident">file_type</span>().<span class="ident">is_dir</span>() {
+            <span class="self">self</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">dent</span>);
         }
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>skippable</span>() { <span class='prelude-val'>None</span> } <span class='kw'>else</span> { <span class='prelude-val'>Some</span>(<span class='prelude-val'>Ok</span>(<span class='ident'>dent</span>)) }
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">skippable</span>() { <span class="prelude-val">None</span> } <span class="kw">else</span> { <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">dent</span>)) }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>push</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dent</span>: <span class='kw-2'>&amp;</span><span class='ident'>DirEntry</span>) {
-        <span class='comment'>// Make room for another open file descriptor if we&#39;ve hit the max.</span>
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>oldest_opened</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_open</span> {
-            <span class='self'>self</span>.<span class='ident'>stack_list</span>[<span class='self'>self</span>.<span class='ident'>oldest_opened</span>].<span class='ident'>close</span>();
-            <span class='self'>self</span>.<span class='ident'>oldest_opened</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>oldest_opened</span>.<span class='ident'>checked_add</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dent</span>: <span class="kw-2">&amp;</span><span class="ident">DirEntry</span>) {
+        <span class="comment">// Make room for another open file descriptor if we&#39;ve hit the max.</span>
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="self">self</span>.<span class="ident">oldest_opened</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_open</span> {
+            <span class="self">self</span>.<span class="ident">stack_list</span>[<span class="self">self</span>.<span class="ident">oldest_opened</span>].<span class="ident">close</span>();
+            <span class="self">self</span>.<span class="ident">oldest_opened</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">oldest_opened</span>.<span class="ident">checked_add</span>(<span class="number">1</span>).<span class="ident">unwrap</span>();
         }
-        <span class='comment'>// Open a handle to reading the directory&#39;s entries.</span>
-        <span class='kw'>let</span> <span class='ident'>rd</span> <span class='op'>=</span> <span class='ident'>fs</span>::<span class='ident'>read_dir</span>(<span class='ident'>dent</span>.<span class='ident'>path</span>()).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>Error</span>::<span class='ident'>from_path</span>(<span class='self'>self</span>.<span class='ident'>depth</span>, <span class='ident'>dent</span>.<span class='ident'>path</span>().<span class='ident'>to_path_buf</span>(), <span class='ident'>err</span>))
+        <span class="comment">// Open a handle to reading the directory&#39;s entries.</span>
+        <span class="kw">let</span> <span class="ident">rd</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">read_dir</span>(<span class="ident">dent</span>.<span class="ident">path</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">Error</span>::<span class="ident">from_path</span>(<span class="self">self</span>.<span class="ident">depth</span>, <span class="ident">dent</span>.<span class="ident">path</span>().<span class="ident">to_path_buf</span>(), <span class="ident">err</span>))
         });
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>list</span> <span class='op'>=</span> <span class='ident'>DirList</span>::<span class='ident'>Opened</span> { <span class='ident'>depth</span>: <span class='self'>self</span>.<span class='ident'>depth</span>, <span class='ident'>it</span>: <span class='ident'>rd</span> };
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>cmp</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>sorter</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>entries</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>list</span>.<span class='ident'>collect</span>();
-            <span class='ident'>entries</span>.<span class='ident'>sort_by</span>(<span class='op'>|</span><span class='ident'>a</span>, <span class='ident'>b</span><span class='op'>|</span> {
-                <span class='kw'>match</span> (<span class='ident'>a</span>, <span class='ident'>b</span>) {
-                    (<span class='kw-2'>&amp;</span><span class='prelude-val'>Ok</span>(<span class='kw-2'>ref</span> <span class='ident'>a</span>), <span class='kw-2'>&amp;</span><span class='prelude-val'>Ok</span>(<span class='kw-2'>ref</span> <span class='ident'>b</span>)) <span class='op'>=&gt;</span> {
-                        <span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>a</span>.<span class='ident'>file_name</span>(), <span class='kw-2'>&amp;</span><span class='ident'>b</span>.<span class='ident'>file_name</span>())
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">DirList</span>::<span class="ident">Opened</span> { <span class="ident">depth</span>: <span class="self">self</span>.<span class="ident">depth</span>, <span class="ident">it</span>: <span class="ident">rd</span> };
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">cmp</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">sorter</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entries</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">collect</span>();
+            <span class="ident">entries</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> {
+                <span class="kw">match</span> (<span class="ident">a</span>, <span class="ident">b</span>) {
+                    (<span class="kw-2">&amp;</span><span class="prelude-val">Ok</span>(<span class="kw-2">ref</span> <span class="ident">a</span>), <span class="kw-2">&amp;</span><span class="prelude-val">Ok</span>(<span class="kw-2">ref</span> <span class="ident">b</span>)) <span class="op">=&gt;</span> {
+                        <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">file_name</span>(), <span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">file_name</span>())
                     }
-                    (<span class='kw-2'>&amp;</span><span class='prelude-val'>Err</span>(_), <span class='kw-2'>&amp;</span><span class='prelude-val'>Err</span>(_)) <span class='op'>=&gt;</span> <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>,
-                    (<span class='kw-2'>&amp;</span><span class='prelude-val'>Ok</span>(_), <span class='kw-2'>&amp;</span><span class='prelude-val'>Err</span>(_)) <span class='op'>=&gt;</span> <span class='ident'>Ordering</span>::<span class='ident'>Greater</span>,
-                    (<span class='kw-2'>&amp;</span><span class='prelude-val'>Err</span>(_), <span class='kw-2'>&amp;</span><span class='prelude-val'>Ok</span>(_)) <span class='op'>=&gt;</span> <span class='ident'>Ordering</span>::<span class='ident'>Less</span>,
+                    (<span class="kw-2">&amp;</span><span class="prelude-val">Err</span>(_), <span class="kw-2">&amp;</span><span class="prelude-val">Err</span>(_)) <span class="op">=&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Equal</span>,
+                    (<span class="kw-2">&amp;</span><span class="prelude-val">Ok</span>(_), <span class="kw-2">&amp;</span><span class="prelude-val">Err</span>(_)) <span class="op">=&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Greater</span>,
+                    (<span class="kw-2">&amp;</span><span class="prelude-val">Err</span>(_), <span class="kw-2">&amp;</span><span class="prelude-val">Ok</span>(_)) <span class="op">=&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Less</span>,
                 }
             });
-            <span class='ident'>list</span> <span class='op'>=</span> <span class='ident'>DirList</span>::<span class='ident'>Closed</span>(<span class='ident'>entries</span>.<span class='ident'>into_iter</span>());
+            <span class="ident">list</span> <span class="op">=</span> <span class="ident">DirList</span>::<span class="ident">Closed</span>(<span class="ident">entries</span>.<span class="ident">into_iter</span>());
         }
-        <span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>push</span>(<span class='ident'>list</span>);
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>follow_links</span> {
-            <span class='self'>self</span>.<span class='ident'>stack_path</span>.<span class='ident'>push</span>(<span class='ident'>dent</span>.<span class='ident'>path</span>().<span class='ident'>to_path_buf</span>());
+        <span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">push</span>(<span class="ident">list</span>);
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">follow_links</span> {
+            <span class="self">self</span>.<span class="ident">stack_path</span>.<span class="ident">push</span>(<span class="ident">dent</span>.<span class="ident">path</span>().<span class="ident">to_path_buf</span>());
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>pop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>pop</span>().<span class='ident'>expect</span>(<span class='string'>&quot;cannot pop from empty stack&quot;</span>);
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>follow_links</span> {
-            <span class='self'>self</span>.<span class='ident'>stack_path</span>.<span class='ident'>pop</span>().<span class='ident'>expect</span>(<span class='string'>&quot;BUG: list/path stacks out of sync&quot;</span>);
+    <span class="kw">fn</span> <span class="ident">pop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">pop</span>().<span class="ident">expect</span>(<span class="string">&quot;cannot pop from empty stack&quot;</span>);
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">follow_links</span> {
+            <span class="self">self</span>.<span class="ident">stack_path</span>.<span class="ident">pop</span>().<span class="ident">expect</span>(<span class="string">&quot;BUG: list/path stacks out of sync&quot;</span>);
         }
-        <span class='comment'>// If everything in the stack is already closed, then there is</span>
-        <span class='comment'>// room for at least one more open descriptor and it will</span>
-        <span class='comment'>// always be at the top of the stack.</span>
-        <span class='self'>self</span>.<span class='ident'>oldest_opened</span> <span class='op'>=</span> <span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>oldest_opened</span>, <span class='self'>self</span>.<span class='ident'>stack_list</span>.<span class='ident'>len</span>());
+        <span class="comment">// If everything in the stack is already closed, then there is</span>
+        <span class="comment">// room for at least one more open descriptor and it will</span>
+        <span class="comment">// always be at the top of the stack.</span>
+        <span class="self">self</span>.<span class="ident">oldest_opened</span> <span class="op">=</span> <span class="ident">min</span>(<span class="self">self</span>.<span class="ident">oldest_opened</span>, <span class="self">self</span>.<span class="ident">stack_list</span>.<span class="ident">len</span>());
     }
 
-    <span class='kw'>fn</span> <span class='ident'>follow</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>dent</span>: <span class='ident'>DirEntry</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;</span> {
-        <span class='ident'>dent</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>DirEntry</span>::<span class='ident'>from_link</span>(<span class='self'>self</span>.<span class='ident'>depth</span>,
-                                        <span class='ident'>dent</span>.<span class='ident'>path</span>().<span class='ident'>to_path_buf</span>()));
-        <span class='comment'>// The only way a symlink can cause a loop is if it points</span>
-        <span class='comment'>// to a directory. Otherwise, it always points to a leaf</span>
-        <span class='comment'>// and we can omit any loop checks.</span>
-        <span class='kw'>if</span> <span class='ident'>dent</span>.<span class='ident'>file_type</span>().<span class='ident'>is_dir</span>() {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>check_loop</span>(<span class='ident'>dent</span>.<span class='ident'>path</span>()));
+    <span class="kw">fn</span> <span class="ident">follow</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">dent</span>: <span class="ident">DirEntry</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;</span> {
+        <span class="ident">dent</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">DirEntry</span>::<span class="ident">from_link</span>(<span class="self">self</span>.<span class="ident">depth</span>,
+                                        <span class="ident">dent</span>.<span class="ident">path</span>().<span class="ident">to_path_buf</span>()));
+        <span class="comment">// The only way a symlink can cause a loop is if it points</span>
+        <span class="comment">// to a directory. Otherwise, it always points to a leaf</span>
+        <span class="comment">// and we can omit any loop checks.</span>
+        <span class="kw">if</span> <span class="ident">dent</span>.<span class="ident">file_type</span>().<span class="ident">is_dir</span>() {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">check_loop</span>(<span class="ident">dent</span>.<span class="ident">path</span>()));
         }
-        <span class='prelude-val'>Ok</span>(<span class='ident'>dent</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">dent</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>check_loop</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>child</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='kw'>for</span> <span class='ident'>ancestor</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>stack_path</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>() {
-            <span class='kw'>let</span> <span class='ident'>same</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>is_same_file</span>(<span class='ident'>ancestor</span>, <span class='kw-2'>&amp;</span><span class='ident'>child</span>).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
-                <span class='ident'>Error</span>::<span class='ident'>from_io</span>(<span class='self'>self</span>.<span class='ident'>depth</span>, <span class='ident'>err</span>)
+    <span class="kw">fn</span> <span class="ident">check_loop</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">for</span> <span class="ident">ancestor</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">stack_path</span>.<span class="ident">iter</span>().<span class="ident">rev</span>() {
+            <span class="kw">let</span> <span class="ident">same</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">is_same_file</span>(<span class="ident">ancestor</span>, <span class="kw-2">&amp;</span><span class="ident">child</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                <span class="ident">Error</span>::<span class="ident">from_io</span>(<span class="self">self</span>.<span class="ident">depth</span>, <span class="ident">err</span>)
             }));
-            <span class='kw'>if</span> <span class='ident'>same</span> {
-                <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span> {
-                    <span class='ident'>depth</span>: <span class='self'>self</span>.<span class='ident'>depth</span>,
-                    <span class='ident'>inner</span>: <span class='ident'>ErrorInner</span>::<span class='ident'>Loop</span> {
-                        <span class='ident'>ancestor</span>: <span class='ident'>ancestor</span>.<span class='ident'>to_path_buf</span>(),
-                        <span class='ident'>child</span>: <span class='ident'>child</span>.<span class='ident'>as_ref</span>().<span class='ident'>to_path_buf</span>(),
+            <span class="kw">if</span> <span class="ident">same</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span> {
+                    <span class="ident">depth</span>: <span class="self">self</span>.<span class="ident">depth</span>,
+                    <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> {
+                        <span class="ident">ancestor</span>: <span class="ident">ancestor</span>.<span class="ident">to_path_buf</span>(),
+                        <span class="ident">child</span>: <span class="ident">child</span>.<span class="ident">as_ref</span>().<span class="ident">to_path_buf</span>(),
                     },
                 });
             }
         }
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>skippable</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>depth</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>min_depth</span> <span class='op'>||</span> <span class='self'>self</span>.<span class='ident'>depth</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>opts</span>.<span class='ident'>max_depth</span>
+    <span class="kw">fn</span> <span class="ident">skippable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">depth</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">min_depth</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">depth</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">opts</span>.<span class="ident">max_depth</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>DirList</span> {
-    <span class='kw'>fn</span> <span class='ident'>close</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>DirList</span>::<span class='ident'>Opened</span> { .. } <span class='op'>=</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='kw-2'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>DirList</span>::<span class='ident'>Closed</span>(<span class='self'>self</span>.<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>().<span class='ident'>into_iter</span>());
+<span class="kw">impl</span> <span class="ident">DirList</span> {
+    <span class="kw">fn</span> <span class="ident">close</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">DirList</span>::<span class="ident">Opened</span> { .. } <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="ident">DirList</span>::<span class="ident">Closed</span>(<span class="self">self</span>.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>().<span class="ident">into_iter</span>());
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>DirList</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>fs</span>::<span class='ident'>DirEntry</span><span class='op'>&gt;</span>;
+<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">DirList</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">DirEntry</span><span class="op">&gt;</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>fs</span>::<span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>DirList</span>::<span class='ident'>Closed</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>it</span>) <span class='op'>=&gt;</span> <span class='ident'>it</span>.<span class='ident'>next</span>(),
-            <span class='ident'>DirList</span>::<span class='ident'>Opened</span> { <span class='ident'>depth</span>, <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>it</span> } <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>it</span> {
-                <span class='prelude-val'>Err</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>err</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='prelude-val'>Err</span>),
-                <span class='prelude-val'>Ok</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>rd</span>) <span class='op'>=&gt;</span> <span class='ident'>rd</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span>.<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
-                    <span class='ident'>Error</span>::<span class='ident'>from_io</span>(<span class='ident'>depth</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>err</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">DirEntry</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">DirList</span>::<span class="ident">Closed</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">it</span>) <span class="op">=&gt;</span> <span class="ident">it</span>.<span class="ident">next</span>(),
+            <span class="ident">DirList</span>::<span class="ident">Opened</span> { <span class="ident">depth</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">it</span> } <span class="op">=&gt;</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">it</span> {
+                <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="prelude-val">Err</span>),
+                <span class="prelude-val">Ok</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">rd</span>) <span class="op">=&gt;</span> <span class="ident">rd</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                    <span class="ident">Error</span>::<span class="ident">from_io</span>(<span class="ident">depth</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">err</span>)
                 })),
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>DirEntry</span> {
-    <span class='doccomment'>/// The full path that this entry represents.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The full path is created by joining the parents of this entry up to the</span>
-    <span class='doccomment'>/// root initially given to `WalkDir::new` with the file name of this</span>
-    <span class='doccomment'>/// entry.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that this *always* returns the path reported by the underlying</span>
-    <span class='doccomment'>/// directory entry, even when symbolic links are followed. To get the</span>
-    <span class='doccomment'>/// target path, use `path_is_symbolic_link` to (cheaply) check if</span>
-    <span class='doccomment'>/// this entry corresponds to a symbolic link, and `std::fs::read_link` to</span>
-    <span class='doccomment'>/// resolve the target.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>path</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Path</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>path</span>
+<span class="kw">impl</span> <span class="ident">DirEntry</span> {
+    <span class="doccomment">/// The full path that this entry represents.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The full path is created by joining the parents of this entry up to the</span>
+    <span class="doccomment">/// root initially given to `WalkDir::new` with the file name of this</span>
+    <span class="doccomment">/// entry.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that this *always* returns the path reported by the underlying</span>
+    <span class="doccomment">/// directory entry, even when symbolic links are followed. To get the</span>
+    <span class="doccomment">/// target path, use `path_is_symbolic_link` to (cheaply) check if</span>
+    <span class="doccomment">/// this entry corresponds to a symbolic link, and `std::fs::read_link` to</span>
+    <span class="doccomment">/// resolve the target.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>
     }
 
-    <span class='doccomment'>/// Returns `true` if and only if this entry was created from a symbolic</span>
-    <span class='doccomment'>/// link. This is unaffected by the `follow_links` setting.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// When `true`, the value returned by the `path` method is a</span>
-    <span class='doccomment'>/// symbolic link name. To get the full target path, you must call</span>
-    <span class='doccomment'>/// `std::fs::read_link(entry.path())`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>path_is_symbolic_link</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>ty</span>.<span class='ident'>is_symlink</span>() <span class='op'>||</span> <span class='self'>self</span>.<span class='ident'>follow_link</span>
+    <span class="doccomment">/// Returns `true` if and only if this entry was created from a symbolic</span>
+    <span class="doccomment">/// link. This is unaffected by the `follow_links` setting.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When `true`, the value returned by the `path` method is a</span>
+    <span class="doccomment">/// symbolic link name. To get the full target path, you must call</span>
+    <span class="doccomment">/// `std::fs::read_link(entry.path())`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path_is_symbolic_link</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">ty</span>.<span class="ident">is_symlink</span>() <span class="op">||</span> <span class="self">self</span>.<span class="ident">follow_link</span>
     }
 
-    <span class='doccomment'>/// Return the metadata for the file that this entry points to.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This will follow symbolic links if and only if the `WalkDir` value</span>
-    <span class='doccomment'>/// has `follow_links` enabled.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Platform behavior</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This always calls `std::fs::symlink_metadata`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If this entry is a symbolic link and `follow_links` is enabled, then</span>
-    <span class='doccomment'>/// `std::fs::metadata` is called instead.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>metadata</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>fs</span>::<span class='ident'>Metadata</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>follow_link</span> {
-            <span class='ident'>fs</span>::<span class='ident'>metadata</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>path</span>)
-        } <span class='kw'>else</span> {
-            <span class='ident'>fs</span>::<span class='ident'>symlink_metadata</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>path</span>)
-        }.<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> <span class='ident'>Error</span>::<span class='ident'>from_entry</span>(<span class='self'>self</span>, <span class='ident'>err</span>))
+    <span class="doccomment">/// Return the metadata for the file that this entry points to.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This will follow symbolic links if and only if the `WalkDir` value</span>
+    <span class="doccomment">/// has `follow_links` enabled.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Platform behavior</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This always calls `std::fs::symlink_metadata`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If this entry is a symbolic link and `follow_links` is enabled, then</span>
+    <span class="doccomment">/// `std::fs::metadata` is called instead.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">fs</span>::<span class="ident">Metadata</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">follow_link</span> {
+            <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>)
+        } <span class="kw">else</span> {
+            <span class="ident">fs</span>::<span class="ident">symlink_metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>)
+        }.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">from_entry</span>(<span class="self">self</span>, <span class="ident">err</span>))
     }
 
-    <span class='doccomment'>/// Return the file type for the file that this entry points to.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If this is a symbolic link and `follow_links` is `true`, then this</span>
-    <span class='doccomment'>/// returns the type of the target.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This never makes any system calls.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>file_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>fs</span>::<span class='ident'>FileType</span> {
-        <span class='self'>self</span>.<span class='ident'>ty</span>
+    <span class="doccomment">/// Return the file type for the file that this entry points to.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If this is a symbolic link and `follow_links` is `true`, then this</span>
+    <span class="doccomment">/// returns the type of the target.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This never makes any system calls.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">fs</span>::<span class="ident">FileType</span> {
+        <span class="self">self</span>.<span class="ident">ty</span>
     }
 
-    <span class='doccomment'>/// Return the file name of this entry.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If this entry has no file name (e.g., `/`), then the full path is</span>
-    <span class='doccomment'>/// returned.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>file_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>OsStr</span> {
-        <span class='self'>self</span>.<span class='ident'>path</span>.<span class='ident'>file_name</span>().<span class='ident'>unwrap_or_else</span>(<span class='op'>||</span> <span class='self'>self</span>.<span class='ident'>path</span>.<span class='ident'>as_os_str</span>())
+    <span class="doccomment">/// Return the file name of this entry.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If this entry has no file name (e.g., `/`), then the full path is</span>
+    <span class="doccomment">/// returned.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">OsStr</span> {
+        <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">file_name</span>().<span class="ident">unwrap_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">as_os_str</span>())
     }
 
-    <span class='doccomment'>/// Returns the depth at which this entry was created relative to the root.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The smallest depth is `0` and always corresponds to the path given</span>
-    <span class='doccomment'>/// to the `new` function on `WalkDir`. Its direct descendents have depth</span>
-    <span class='doccomment'>/// `1`, and their descendents have depth `2`, and so on.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>depth</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>depth</span>
+    <span class="doccomment">/// Returns the depth at which this entry was created relative to the root.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The smallest depth is `0` and always corresponds to the path given</span>
+    <span class="doccomment">/// to the `new` function on `WalkDir`. Its direct descendents have depth</span>
+    <span class="doccomment">/// `1`, and their descendents have depth `2`, and so on.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">depth</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">depth</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_entry</span>(<span class='ident'>depth</span>: <span class='ident'>usize</span>, <span class='ident'>ent</span>: <span class='kw-2'>&amp;</span><span class='ident'>fs</span>::<span class='ident'>DirEntry</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>ty</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ent</span>.<span class='ident'>file_type</span>().<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
-            <span class='ident'>Error</span>::<span class='ident'>from_path</span>(<span class='ident'>depth</span>, <span class='ident'>ent</span>.<span class='ident'>path</span>(), <span class='ident'>err</span>)
+    <span class="kw">fn</span> <span class="ident">from_entry</span>(<span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">ent</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">DirEntry</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">ent</span>.<span class="ident">file_type</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+            <span class="ident">Error</span>::<span class="ident">from_path</span>(<span class="ident">depth</span>, <span class="ident">ent</span>.<span class="ident">path</span>(), <span class="ident">err</span>)
         }));
-        <span class='prelude-val'>Ok</span>(<span class='ident'>DirEntry</span> {
-            <span class='ident'>path</span>: <span class='ident'>ent</span>.<span class='ident'>path</span>(),
-            <span class='ident'>ty</span>: <span class='ident'>ty</span>,
-            <span class='ident'>follow_link</span>: <span class='bool-val'>false</span>,
-            <span class='ident'>depth</span>: <span class='ident'>depth</span>,
+        <span class="prelude-val">Ok</span>(<span class="ident">DirEntry</span> {
+            <span class="ident">path</span>: <span class="ident">ent</span>.<span class="ident">path</span>(),
+            <span class="ident">ty</span>: <span class="ident">ty</span>,
+            <span class="ident">follow_link</span>: <span class="bool-val">false</span>,
+            <span class="ident">depth</span>: <span class="ident">depth</span>,
         })
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_link</span>(<span class='ident'>depth</span>: <span class='ident'>usize</span>, <span class='ident'>pb</span>: <span class='ident'>PathBuf</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>md</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>metadata</span>(<span class='kw-2'>&amp;</span><span class='ident'>pb</span>).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
-            <span class='ident'>Error</span>::<span class='ident'>from_path</span>(<span class='ident'>depth</span>, <span class='ident'>pb</span>.<span class='ident'>clone</span>(), <span class='ident'>err</span>)
+    <span class="kw">fn</span> <span class="ident">from_link</span>(<span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">pb</span>: <span class="ident">PathBuf</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">md</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">pb</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+            <span class="ident">Error</span>::<span class="ident">from_path</span>(<span class="ident">depth</span>, <span class="ident">pb</span>.<span class="ident">clone</span>(), <span class="ident">err</span>)
         }));
-        <span class='prelude-val'>Ok</span>(<span class='ident'>DirEntry</span> {
-            <span class='ident'>path</span>: <span class='ident'>pb</span>,
-            <span class='ident'>ty</span>: <span class='ident'>md</span>.<span class='ident'>file_type</span>(),
-            <span class='ident'>follow_link</span>: <span class='bool-val'>true</span>,
-            <span class='ident'>depth</span>: <span class='ident'>depth</span>,
+        <span class="prelude-val">Ok</span>(<span class="ident">DirEntry</span> {
+            <span class="ident">path</span>: <span class="ident">pb</span>,
+            <span class="ident">ty</span>: <span class="ident">md</span>.<span class="ident">file_type</span>(),
+            <span class="ident">follow_link</span>: <span class="bool-val">true</span>,
+            <span class="ident">depth</span>: <span class="ident">depth</span>,
         })
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_path</span>(<span class='ident'>depth</span>: <span class='ident'>usize</span>, <span class='ident'>pb</span>: <span class='ident'>PathBuf</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>md</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>symlink_metadata</span>(<span class='kw-2'>&amp;</span><span class='ident'>pb</span>).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> {
-            <span class='ident'>Error</span>::<span class='ident'>from_path</span>(<span class='ident'>depth</span>, <span class='ident'>pb</span>.<span class='ident'>clone</span>(), <span class='ident'>err</span>)
+    <span class="kw">fn</span> <span class="ident">from_path</span>(<span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">pb</span>: <span class="ident">PathBuf</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">md</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">symlink_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">pb</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+            <span class="ident">Error</span>::<span class="ident">from_path</span>(<span class="ident">depth</span>, <span class="ident">pb</span>.<span class="ident">clone</span>(), <span class="ident">err</span>)
         }));
-        <span class='prelude-val'>Ok</span>(<span class='ident'>DirEntry</span> {
-            <span class='ident'>path</span>: <span class='ident'>pb</span>,
-            <span class='ident'>ty</span>: <span class='ident'>md</span>.<span class='ident'>file_type</span>(),
-            <span class='ident'>follow_link</span>: <span class='bool-val'>false</span>,
-            <span class='ident'>depth</span>: <span class='ident'>depth</span>,
+        <span class="prelude-val">Ok</span>(<span class="ident">DirEntry</span> {
+            <span class="ident">path</span>: <span class="ident">pb</span>,
+            <span class="ident">ty</span>: <span class="ident">md</span>.<span class="ident">file_type</span>(),
+            <span class="ident">follow_link</span>: <span class="bool-val">false</span>,
+            <span class="ident">depth</span>: <span class="ident">depth</span>,
         })
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>DirEntry</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>DirEntry</span> {
-        <span class='ident'>DirEntry</span> {
-            <span class='ident'>path</span>: <span class='self'>self</span>.<span class='ident'>path</span>.<span class='ident'>clone</span>(),
-            <span class='ident'>ty</span>: <span class='self'>self</span>.<span class='ident'>ty</span>,
-            <span class='ident'>follow_link</span>: <span class='self'>self</span>.<span class='ident'>follow_link</span>,
-            <span class='ident'>depth</span>: <span class='self'>self</span>.<span class='ident'>depth</span>,
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">DirEntry</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">DirEntry</span> {
+        <span class="ident">DirEntry</span> {
+            <span class="ident">path</span>: <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">clone</span>(),
+            <span class="ident">ty</span>: <span class="self">self</span>.<span class="ident">ty</span>,
+            <span class="ident">follow_link</span>: <span class="self">self</span>.<span class="ident">follow_link</span>,
+            <span class="ident">depth</span>: <span class="self">self</span>.<span class="ident">depth</span>,
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>DirEntry</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;DirEntry({:?})&quot;</span>, <span class='self'>self</span>.<span class='ident'>path</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">DirEntry</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;DirEntry({:?})&quot;</span>, <span class="self">self</span>.<span class="ident">path</span>)
     }
 }
 
-<span class='doccomment'>/// A recursive directory iterator that skips entries.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Directories that fail the predicate `P` are skipped. Namely, they are</span>
-<span class='doccomment'>/// never yielded and never descended into.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Entries that are skipped with the `min_depth` and `max_depth` options are</span>
-<span class='doccomment'>/// not passed through this filter.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// If opening a handle to a directory resulted in an error, then it is yielded</span>
-<span class='doccomment'>/// and no corresponding call to the predicate is made.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Type parameter `I` refers to the underlying iterator and `P` refers to the</span>
-<span class='doccomment'>/// predicate, which is usually `FnMut(&amp;DirEntry) -&gt; bool`.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IterFilterEntry</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span> {
-    <span class='ident'>it</span>: <span class='ident'>I</span>,
-    <span class='ident'>predicate</span>: <span class='ident'>P</span>,
+<span class="doccomment">/// A recursive directory iterator that skips entries.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Directories that fail the predicate `P` are skipped. Namely, they are</span>
+<span class="doccomment">/// never yielded and never descended into.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Entries that are skipped with the `min_depth` and `max_depth` options are</span>
+<span class="doccomment">/// not passed through this filter.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If opening a handle to a directory resulted in an error, then it is yielded</span>
+<span class="doccomment">/// and no corresponding call to the predicate is made.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Type parameter `I` refers to the underlying iterator and `P` refers to the</span>
+<span class="doccomment">/// predicate, which is usually `FnMut(&amp;DirEntry) -&gt; bool`.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IterFilterEntry</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">P</span><span class="op">&gt;</span> {
+    <span class="ident">it</span>: <span class="ident">I</span>,
+    <span class="ident">predicate</span>: <span class="ident">P</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>IterFilterEntry</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>WalkDirIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span>,
-              <span class='ident'>P</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>DirEntry</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">P</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">IterFilterEntry</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">P</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">WalkDirIterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;&gt;</span>,
+              <span class="ident">P</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">DirEntry</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>dent</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>it</span>.<span class='ident'>next</span>() {
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>,
-                <span class='prelude-val'>Some</span>(<span class='ident'>result</span>) <span class='op'>=&gt;</span> <span class='macro'>itry</span><span class='macro'>!</span>(<span class='ident'>result</span>),
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">loop</span> {
+            <span class="kw">let</span> <span class="ident">dent</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">it</span>.<span class="ident">next</span>() {
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">result</span>) <span class="op">=&gt;</span> <span class="macro">itry</span><span class="macro">!</span>(<span class="ident">result</span>),
             };
-            <span class='kw'>if</span> <span class='op'>!</span>(<span class='self'>self</span>.<span class='ident'>predicate</span>)(<span class='kw-2'>&amp;</span><span class='ident'>dent</span>) {
-                <span class='kw'>if</span> <span class='ident'>dent</span>.<span class='ident'>file_type</span>().<span class='ident'>is_dir</span>() {
-                    <span class='self'>self</span>.<span class='ident'>it</span>.<span class='ident'>skip_current_dir</span>();
+            <span class="kw">if</span> <span class="op">!</span>(<span class="self">self</span>.<span class="ident">predicate</span>)(<span class="kw-2">&amp;</span><span class="ident">dent</span>) {
+                <span class="kw">if</span> <span class="ident">dent</span>.<span class="ident">file_type</span>().<span class="ident">is_dir</span>() {
+                    <span class="self">self</span>.<span class="ident">it</span>.<span class="ident">skip_current_dir</span>();
                 }
-                <span class='kw'>continue</span>;
+                <span class="kw">continue</span>;
             }
-            <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Ok</span>(<span class='ident'>dent</span>));
+            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">dent</span>));
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span> <span class='ident'>WalkDirIterator</span> <span class='kw'>for</span> <span class='ident'>IterFilterEntry</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>WalkDirIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirEntry</span><span class='op'>&gt;&gt;</span>,
-              <span class='ident'>P</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='ident'>DirEntry</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>fn</span> <span class='ident'>skip_current_dir</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>it</span>.<span class='ident'>skip_current_dir</span>();
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">P</span><span class="op">&gt;</span> <span class="ident">WalkDirIterator</span> <span class="kw">for</span> <span class="ident">IterFilterEntry</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">P</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">WalkDirIterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DirEntry</span><span class="op">&gt;&gt;</span>,
+              <span class="ident">P</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="ident">DirEntry</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">skip_current_dir</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">it</span>.<span class="ident">skip_current_dir</span>();
     }
 }
 
-<span class='doccomment'>/// An error produced by recursively walking a directory.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This error type is a light wrapper around `std::io::Error`. In particular,</span>
-<span class='doccomment'>/// it adds the following information:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// * The depth at which the error occurred in the file tree, relative to the</span>
-<span class='doccomment'>/// root.</span>
-<span class='doccomment'>/// * The path, if any, associated with the IO error.</span>
-<span class='doccomment'>/// * An indication that a loop occurred when following symbolic links. In this</span>
-<span class='doccomment'>/// case, there is no underlying IO error.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// To maintain good ergnomics, this type has a</span>
-<span class='doccomment'>/// `impl From&lt;Error&gt; for std::io::Error` defined so that you may use an</span>
-<span class='doccomment'>/// `io::Result` with methods in this crate if you don&#39;t care about accessing</span>
-<span class='doccomment'>/// the underlying error data in a structured form.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Error</span> {
-    <span class='ident'>depth</span>: <span class='ident'>usize</span>,
-    <span class='ident'>inner</span>: <span class='ident'>ErrorInner</span>,
+<span class="doccomment">/// An error produced by recursively walking a directory.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This error type is a light wrapper around `std::io::Error`. In particular,</span>
+<span class="doccomment">/// it adds the following information:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * The depth at which the error occurred in the file tree, relative to the</span>
+<span class="doccomment">/// root.</span>
+<span class="doccomment">/// * The path, if any, associated with the IO error.</span>
+<span class="doccomment">/// * An indication that a loop occurred when following symbolic links. In this</span>
+<span class="doccomment">/// case, there is no underlying IO error.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// To maintain good ergnomics, this type has a</span>
+<span class="doccomment">/// `impl From&lt;Error&gt; for std::io::Error` defined so that you may use an</span>
+<span class="doccomment">/// `io::Result` with methods in this crate if you don&#39;t care about accessing</span>
+<span class="doccomment">/// the underlying error data in a structured form.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
+    <span class="ident">depth</span>: <span class="ident">usize</span>,
+    <span class="ident">inner</span>: <span class="ident">ErrorInner</span>,
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>enum</span> <span class='ident'>ErrorInner</span> {
-    <span class='ident'>Io</span> { <span class='ident'>path</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;</span>, <span class='ident'>err</span>: <span class='ident'>io</span>::<span class='ident'>Error</span> },
-    <span class='ident'>Loop</span> { <span class='ident'>ancestor</span>: <span class='ident'>PathBuf</span>, <span class='ident'>child</span>: <span class='ident'>PathBuf</span> },
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">enum</span> <span class="ident">ErrorInner</span> {
+    <span class="ident">Io</span> { <span class="ident">path</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>, <span class="ident">err</span>: <span class="ident">io</span>::<span class="ident">Error</span> },
+    <span class="ident">Loop</span> { <span class="ident">ancestor</span>: <span class="ident">PathBuf</span>, <span class="ident">child</span>: <span class="ident">PathBuf</span> },
 }
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> {
-    <span class='doccomment'>/// Returns the path associated with this error if one exists.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// For example, if an error occurred while opening a directory handle,</span>
-    <span class='doccomment'>/// the error will include the path passed to `std::fs::read_dir`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>path</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Path</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>inner</span> {
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='ident'>path</span>: <span class='prelude-val'>None</span>, .. } <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='ident'>path</span>: <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>path</span>), .. } <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>path</span>),
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Loop</span> { <span class='kw-2'>ref</span> <span class='ident'>child</span>, .. } <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>child</span>),
+<span class="kw">impl</span> <span class="ident">Error</span> {
+    <span class="doccomment">/// Returns the path associated with this error if one exists.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For example, if an error occurred while opening a directory handle,</span>
+    <span class="doccomment">/// the error will include the path passed to `std::fs::read_dir`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Path</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">path</span>: <span class="prelude-val">None</span>, .. } <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+            <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">path</span>), .. } <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>),
+            <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { <span class="kw-2">ref</span> <span class="ident">child</span>, .. } <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">child</span>),
         }
     }
 
-    <span class='doccomment'>/// Returns the path at which a cycle was detected.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If no cycle was detected, `None` is returned.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A cycle is detected when a directory entry is equivalent to one of</span>
-    <span class='doccomment'>/// its ancestors.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// To get the path to the child directory entry in the cycle, use the</span>
-    <span class='doccomment'>/// `path` method.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>loop_ancestor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Path</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>inner</span> {
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Loop</span> { <span class='kw-2'>ref</span> <span class='ident'>ancestor</span>, .. } <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>ancestor</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+    <span class="doccomment">/// Returns the path at which a cycle was detected.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If no cycle was detected, `None` is returned.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A cycle is detected when a directory entry is equivalent to one of</span>
+    <span class="doccomment">/// its ancestors.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// To get the path to the child directory entry in the cycle, use the</span>
+    <span class="doccomment">/// `path` method.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">loop_ancestor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Path</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { <span class="kw-2">ref</span> <span class="ident">ancestor</span>, .. } <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">ancestor</span>),
+            _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 
-    <span class='doccomment'>/// Returns the depth at which this error occurred relative to the root.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The smallest depth is `0` and always corresponds to the path given</span>
-    <span class='doccomment'>/// to the `new` function on `WalkDir`. Its direct descendents have depth</span>
-    <span class='doccomment'>/// `1`, and their descendents have depth `2`, and so on.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>depth</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>depth</span>
+    <span class="doccomment">/// Returns the depth at which this error occurred relative to the root.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The smallest depth is `0` and always corresponds to the path given</span>
+    <span class="doccomment">/// to the `new` function on `WalkDir`. Its direct descendents have depth</span>
+    <span class="doccomment">/// `1`, and their descendents have depth `2`, and so on.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">depth</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">depth</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_path</span>(<span class='ident'>depth</span>: <span class='ident'>usize</span>, <span class='ident'>pb</span>: <span class='ident'>PathBuf</span>, <span class='ident'>err</span>: <span class='ident'>io</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>Error</span> {
-            <span class='ident'>depth</span>: <span class='ident'>depth</span>,
-            <span class='ident'>inner</span>: <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='ident'>path</span>: <span class='prelude-val'>Some</span>(<span class='ident'>pb</span>), <span class='ident'>err</span>: <span class='ident'>err</span> },
+    <span class="kw">fn</span> <span class="ident">from_path</span>(<span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">pb</span>: <span class="ident">PathBuf</span>, <span class="ident">err</span>: <span class="ident">io</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Error</span> {
+            <span class="ident">depth</span>: <span class="ident">depth</span>,
+            <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="ident">pb</span>), <span class="ident">err</span>: <span class="ident">err</span> },
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_entry</span>(<span class='ident'>dent</span>: <span class='kw-2'>&amp;</span><span class='ident'>DirEntry</span>, <span class='ident'>err</span>: <span class='ident'>io</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>Error</span> {
-            <span class='ident'>depth</span>: <span class='ident'>dent</span>.<span class='ident'>depth</span>,
-            <span class='ident'>inner</span>: <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> {
-                <span class='ident'>path</span>: <span class='prelude-val'>Some</span>(<span class='ident'>dent</span>.<span class='ident'>path</span>().<span class='ident'>to_path_buf</span>()),
-                <span class='ident'>err</span>: <span class='ident'>err</span>,
+    <span class="kw">fn</span> <span class="ident">from_entry</span>(<span class="ident">dent</span>: <span class="kw-2">&amp;</span><span class="ident">DirEntry</span>, <span class="ident">err</span>: <span class="ident">io</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Error</span> {
+            <span class="ident">depth</span>: <span class="ident">dent</span>.<span class="ident">depth</span>,
+            <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Io</span> {
+                <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="ident">dent</span>.<span class="ident">path</span>().<span class="ident">to_path_buf</span>()),
+                <span class="ident">err</span>: <span class="ident">err</span>,
             },
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_io</span>(<span class='ident'>depth</span>: <span class='ident'>usize</span>, <span class='ident'>err</span>: <span class='ident'>io</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>Error</span> {
-            <span class='ident'>depth</span>: <span class='ident'>depth</span>,
-            <span class='ident'>inner</span>: <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='ident'>path</span>: <span class='prelude-val'>None</span>, <span class='ident'>err</span>: <span class='ident'>err</span> },
+    <span class="kw">fn</span> <span class="ident">from_io</span>(<span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">err</span>: <span class="ident">io</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Error</span> {
+            <span class="ident">depth</span>: <span class="ident">depth</span>,
+            <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">path</span>: <span class="prelude-val">None</span>, <span class="ident">err</span>: <span class="ident">err</span> },
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>inner</span> {
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='kw-2'>ref</span> <span class='ident'>err</span>, .. } <span class='op'>=&gt;</span> <span class='ident'>err</span>.<span class='ident'>description</span>(),
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Loop</span> { .. } <span class='op'>=&gt;</span> <span class='string'>&quot;file system loop found&quot;</span>,
+<span class="kw">impl</span> <span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="kw-2">ref</span> <span class="ident">err</span>, .. } <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">description</span>(),
+            <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { .. } <span class="op">=&gt;</span> <span class="string">&quot;file system loop found&quot;</span>,
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>error</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>inner</span> {
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='kw-2'>ref</span> <span class='ident'>err</span>, .. } <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>err</span>),
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Loop</span> { .. } <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+    <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">error</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="kw-2">ref</span> <span class="ident">err</span>, .. } <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>),
+            <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { .. } <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>inner</span> {
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='ident'>path</span>: <span class='prelude-val'>None</span>, <span class='kw-2'>ref</span> <span class='ident'>err</span> } <span class='op'>=&gt;</span> {
-                <span class='ident'>err</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">path</span>: <span class="prelude-val">None</span>, <span class="kw-2">ref</span> <span class="ident">err</span> } <span class="op">=&gt;</span> {
+                <span class="ident">err</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
             }
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='ident'>path</span>: <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>path</span>), <span class='kw-2'>ref</span> <span class='ident'>err</span> } <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;IO error for operation on {}: {}&quot;</span>,
-                       <span class='ident'>path</span>.<span class='ident'>display</span>(), <span class='ident'>err</span>)
+            <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">path</span>), <span class="kw-2">ref</span> <span class="ident">err</span> } <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;IO error for operation on {}: {}&quot;</span>,
+                       <span class="ident">path</span>.<span class="ident">display</span>(), <span class="ident">err</span>)
             }
-            <span class='ident'>ErrorInner</span>::<span class='ident'>Loop</span> { <span class='kw-2'>ref</span> <span class='ident'>ancestor</span>, <span class='kw-2'>ref</span> <span class='ident'>child</span> } <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;File system loop found: \
+            <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { <span class="kw-2">ref</span> <span class="ident">ancestor</span>, <span class="kw-2">ref</span> <span class="ident">child</span> } <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;File system loop found: \
                            {} points to an ancestor {}&quot;</span>,
-                       <span class='ident'>child</span>.<span class='ident'>display</span>(), <span class='ident'>ancestor</span>.<span class='ident'>display</span>())
+                       <span class="ident">child</span>.<span class="ident">display</span>(), <span class="ident">ancestor</span>.<span class="ident">display</span>())
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>io</span>::<span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='ident'>Error</span> {
-        <span class='kw'>match</span> <span class='ident'>err</span> {
-            <span class='ident'>Error</span> { <span class='ident'>inner</span>: <span class='ident'>ErrorInner</span>::<span class='ident'>Io</span> { <span class='ident'>err</span>, .. }, .. } <span class='op'>=&gt;</span> <span class='ident'>err</span>,
-            <span class='ident'>err</span> @ <span class='ident'>Error</span> { <span class='ident'>inner</span>: <span class='ident'>ErrorInner</span>::<span class='ident'>Loop</span> { .. }, .. } <span class='op'>=&gt;</span> {
-                <span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>, <span class='ident'>err</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">io</span>::<span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="ident">Error</span> {
+        <span class="kw">match</span> <span class="ident">err</span> {
+            <span class="ident">Error</span> { <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">err</span>, .. }, .. } <span class="op">=&gt;</span> <span class="ident">err</span>,
+            <span class="ident">err</span> @ <span class="ident">Error</span> { <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { .. }, .. } <span class="op">=&gt;</span> {
+                <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">err</span>)
             }
         }
     }

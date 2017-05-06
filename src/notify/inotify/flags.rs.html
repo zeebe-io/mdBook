@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -221,183 +221,183 @@
 <span id="176">176</span>
 <span id="177">177</span>
 <span id="178">178</span>
-</pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
+</pre><pre class="rust ">
+<span class="attribute">#<span class="op">!</span>[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 
-<span class='macro'>bitflags</span><span class='macro'>!</span> {
-  <span class='kw'>pub</span> <span class='ident'>flags</span> <span class='ident'>Mask</span>: <span class='ident'>u32</span> {
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File was accessed.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; directory itself and the files within.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_ACCESS</span>         <span class='op'>=</span> <span class='number'>0x00000001</span>,
+<span class="macro">bitflags</span><span class="macro">!</span> {
+  <span class="kw">pub</span> <span class="ident">flags</span> <span class="ident">Mask</span>: <span class="ident">u32</span> {
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File was accessed.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; directory itself and the files within.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_ACCESS</span>         <span class="op">=</span> <span class="number">0x00000001</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;Event: File was modified.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; the files within, not the directory itself.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_MODIFY</span>         <span class='op'>=</span> <span class='number'>0x00000002</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot;Event: File was modified.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; the files within, not the directory itself.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_MODIFY</span>         <span class="op">=</span> <span class="number">0x00000002</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: Metadata has changed.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; This can include e.g.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; - permissions, see [chmod(2)];&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; - timestamps, see [utimensat(2)];&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; - extended attributes, see [setxattr(s)];&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; - link count, see [link(2)] and [unlink(2)];&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; - user/group, see [chown(2)].&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; directory itself and the files within.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [chmod(2)]: http://man7.org/linux/man-pages/man2/chmod.2.html&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [utimensat(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [setxattr(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [link(2)]: http://man7.org/linux/man-pages/man2/link.2.html&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [unlink(2)]: http://man7.org/linux/man-pages/man2/link.2.html&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [chown(2)]: http://man7.org/linux/man-pages/man2/link.2.html&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_ATTRIB</span>         <span class='op'>=</span> <span class='number'>0x00000004</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: Metadata has changed.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; This can include e.g.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; - permissions, see [chmod(2)];&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; - timestamps, see [utimensat(2)];&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; - extended attributes, see [setxattr(s)];&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; - link count, see [link(2)] and [unlink(2)];&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; - user/group, see [chown(2)].&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; directory itself and the files within.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [chmod(2)]: http://man7.org/linux/man-pages/man2/chmod.2.html&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [utimensat(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [setxattr(2)]: http://man7.org/linux/man-pages/man2/utimensat.2.html&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [link(2)]: http://man7.org/linux/man-pages/man2/link.2.html&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [unlink(2)]: http://man7.org/linux/man-pages/man2/link.2.html&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [chown(2)]: http://man7.org/linux/man-pages/man2/link.2.html&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_ATTRIB</span>         <span class="op">=</span> <span class="number">0x00000004</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File opened for writing was closed.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; directory itself and the files within.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_CLOSE_WRITE</span>    <span class='op'>=</span> <span class='number'>0x00000008</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File opened for writing was closed.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; directory itself and the files within.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_CLOSE_WRITE</span>    <span class="op">=</span> <span class="number">0x00000008</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File not opened for writing was closed.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; directory itself and the files within.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_CLOSE_NOWRITE</span>  <span class='op'>=</span> <span class='number'>0x00000010</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File not opened for writing was closed.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; directory itself and the files within.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_CLOSE_NOWRITE</span>  <span class="op">=</span> <span class="number">0x00000010</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File was opened.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; directory itself and the files within.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_OPEN</span>           <span class='op'>=</span> <span class='number'>0x00000020</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File was opened.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; directory itself and the files within.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_OPEN</span>           <span class="op">=</span> <span class="number">0x00000020</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File or directory was moved away.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; the files within, not the directory itself.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_MOVED_FROM</span>     <span class='op'>=</span> <span class='number'>0x00000040</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File or directory was moved away.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; the files within, not the directory itself.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_MOVED_FROM</span>     <span class="op">=</span> <span class="number">0x00000040</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File or directory was moved in.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; the files within, not the directory itself.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_MOVED_TO</span>       <span class='op'>=</span> <span class='number'>0x00000080</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File or directory was moved in.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; the files within, not the directory itself.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_MOVED_TO</span>       <span class="op">=</span> <span class="number">0x00000080</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File or directory was created.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; This may also include hard links, symlinks, and UNIX sockets.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; the files within, not the directory itself.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_CREATE</span>         <span class='op'>=</span> <span class='number'>0x00000100</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File or directory was created.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; This may also include hard links, symlinks, and UNIX sockets.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; the files within, not the directory itself.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_CREATE</span>         <span class="op">=</span> <span class="number">0x00000100</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File or directory was deleted.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; This may also include hard links, symlinks, and UNIX sockets.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; the files within, not the directory itself.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_DELETE</span>         <span class='op'>=</span> <span class='number'>0x00000200</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File or directory was deleted.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; This may also include hard links, symlinks, and UNIX sockets.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; the files within, not the directory itself.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_DELETE</span>         <span class="op">=</span> <span class="number">0x00000200</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: Watched file or directory was deleted.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; This may also occur if the object is moved to another&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; filesystem, since [mv(1)] in effect copies the file to the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; other filesystem and then deletes it from the original.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; An IN_IGNORED event will subsequently be generated.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [mv(1)]: http://man7.org/linux/man-pages/man1/mv.1.html&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_DELETE_SELF</span>    <span class='op'>=</span> <span class='number'>0x00000400</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: Watched file or directory was deleted.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; This may also occur if the object is moved to another&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; filesystem, since [mv(1)] in effect copies the file to the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; other filesystem and then deletes it from the original.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; An IN_IGNORED event will subsequently be generated.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [mv(1)]: http://man7.org/linux/man-pages/man1/mv.1.html&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_DELETE_SELF</span>    <span class="op">=</span> <span class="number">0x00000400</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: Watched file or directory was moved.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_MOVE_SELF</span>      <span class='op'>=</span> <span class='number'>0x00000800</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: Watched file or directory was moved.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_MOVE_SELF</span>      <span class="op">=</span> <span class="number">0x00000800</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File or directory was moved away or in.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; the files within, not the directory itself.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_MOVE</span>           <span class='op'>=</span> <span class='ident'>IN_MOVED_FROM</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_MOVED_TO</span>.<span class='ident'>bits</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File or directory was moved away or in.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur *only* for&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; the files within, not the directory itself.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_MOVE</span>           <span class="op">=</span> <span class="ident">IN_MOVED_FROM</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_MOVED_TO</span>.<span class="ident">bits</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: File opened was closed.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; directory itself and the files within.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_CLOSE</span>          <span class='op'>=</span> <span class='ident'>IN_CLOSE_WRITE</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_CLOSE_NOWRITE</span>.<span class='ident'>bits</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: File opened was closed.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; When monitoring a directory, the event may occur both for the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; directory itself and the files within.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_CLOSE</span>          <span class="op">=</span> <span class="ident">IN_CLOSE_WRITE</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_CLOSE_NOWRITE</span>.<span class="ident">bits</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Event: Any event occured.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_ALL_EVENTS</span>     <span class='op'>=</span> <span class='ident'>IN_ACCESS</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_MODIFY</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_ATTRIB</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_CLOSE_WRITE</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_CLOSE_NOWRITE</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_OPEN</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_MOVED_FROM</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_MOVED_TO</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_CREATE</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_DELETE</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_DELETE_SELF</span>.<span class='ident'>bits</span>
-                            <span class='op'>|</span> <span class='ident'>IN_MOVE_SELF</span>.<span class='ident'>bits</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Event: Any event occured.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_ALL_EVENTS</span>     <span class="op">=</span> <span class="ident">IN_ACCESS</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_MODIFY</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_ATTRIB</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_CLOSE_WRITE</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_CLOSE_NOWRITE</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_OPEN</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_MOVED_FROM</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_MOVED_TO</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_CREATE</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_DELETE</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_DELETE_SELF</span>.<span class="ident">bits</span>
+                            <span class="op">|</span> <span class="ident">IN_MOVE_SELF</span>.<span class="ident">bits</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Option: Don&#39;t watch children (if self is a directory).&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_ONLYDIR</span>       <span class='op'>=</span> <span class='number'>0x01000000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Option: Don&#39;t watch children (if self is a directory).&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_ONLYDIR</span>       <span class="op">=</span> <span class="number">0x01000000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Option: Don&#39;t dereference (if self is a symlink).&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_DONT_FOLLOW</span>   <span class='op'>=</span> <span class='number'>0x02000000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Option: Don&#39;t dereference (if self is a symlink).&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_DONT_FOLLOW</span>   <span class="op">=</span> <span class="number">0x02000000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Option: Don&#39;t watch unlinked children.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; By default, when watching events on the children of a&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; directory, events are generated for children even after&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; they have been unlinked from the directory.  This can&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; result in large numbers of uninteresting events for some&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; applications (e.g., if watching /tmp, in which many&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; applications create temporary files whose names are&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; immediately unlinked).&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; IN_EXCL_UNLINK changes this behavior, so that events are&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; not generated for children after they have been unlinked&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; from the watched directory.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_EXCL_UNLINK</span>   <span class='op'>=</span> <span class='number'>0x04000000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Option: Don&#39;t watch unlinked children.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; By default, when watching events on the children of a&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; directory, events are generated for children even after&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; they have been unlinked from the directory.  This can&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; result in large numbers of uninteresting events for some&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; applications (e.g., if watching /tmp, in which many&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; applications create temporary files whose names are&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; immediately unlinked).&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; IN_EXCL_UNLINK changes this behavior, so that events are&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; not generated for children after they have been unlinked&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; from the watched directory.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_EXCL_UNLINK</span>   <span class="op">=</span> <span class="number">0x04000000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Option: Add events to an existing watch instead of replacing it.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; If a watch instance already exists for the filesystem&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; object corresponding to self, add (|) the events to the&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &gt; watch mask instead of replacing it.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_MASK_ADD</span>      <span class='op'>=</span> <span class='number'>0x20000000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Option: Add events to an existing watch instead of replacing it.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; If a watch instance already exists for the filesystem&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; object corresponding to self, add (|) the events to the&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &gt; watch mask instead of replacing it.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_MASK_ADD</span>      <span class="op">=</span> <span class="number">0x20000000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Option: Listen for one event, then remove the watch.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_ONESHOT</span>       <span class='op'>=</span> <span class='number'>0x80000000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Option: Listen for one event, then remove the watch.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_ONESHOT</span>       <span class="op">=</span> <span class="number">0x80000000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Info: Subject of this event is a directory.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_ISDIR</span>         <span class='op'>=</span> <span class='number'>0x40000000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Info: Subject of this event is a directory.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_ISDIR</span>         <span class="op">=</span> <span class="number">0x40000000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Info: Filesystem containing self was unmounted.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; An IN_IGNORED event will subsequently be generated.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_UNMOUNT</span>       <span class='op'>=</span> <span class='number'>0x00002000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Info: Filesystem containing self was unmounted.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; An IN_IGNORED event will subsequently be generated.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_UNMOUNT</span>       <span class="op">=</span> <span class="number">0x00002000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Info: Event queue overflowed.&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_Q_OVERFLOW</span>    <span class='op'>=</span> <span class='number'>0x00004000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Info: Event queue overflowed.&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_Q_OVERFLOW</span>    <span class="op">=</span> <span class="number">0x00004000</span>,
 
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; Info: Watch was removed.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; This can occur either as a result of `inotify_rm_watch()`,&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; or because self was deleted or the containing filesystem&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; was unmounted, or after an IN_ONESHOT watch is complete.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; See the BUGS section of [inotify(7)] for more details.&quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; &quot;</span>]</span>
-    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot; [inotify(7)]: http://man7.org/linux/man-pages/man7/inotify.7.html&quot;</span>]</span>
-    <span class='kw'>const</span> <span class='ident'>IN_IGNORED</span>       <span class='op'>=</span> <span class='number'>0x00008000</span>,
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; Info: Watch was removed.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; This can occur either as a result of `inotify_rm_watch()`,&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; or because self was deleted or the containing filesystem&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; was unmounted, or after an IN_ONESHOT watch is complete.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; See the BUGS section of [inotify(7)] for more details.&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot; [inotify(7)]: http://man7.org/linux/man-pages/man7/inotify.7.html&quot;</span>]</span>
+    <span class="kw">const</span> <span class="ident">IN_IGNORED</span>       <span class="op">=</span> <span class="number">0x00008000</span>,
   }
 }
 </pre>

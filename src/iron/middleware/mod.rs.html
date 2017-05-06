@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="https://avatars0.githubusercontent.com/u/7853871?s=256">
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -427,391 +427,391 @@
 <span id="382">382</span>
 <span id="383">383</span>
 <span id="384">384</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Iron&#39;s Middleware and Handler System</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Iron&#39;s Middleware system is best modeled with a diagram.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```plain</span>
-<span class='doccomment'>//! [b] = BeforeMiddleware</span>
-<span class='doccomment'>//! [a] = AfterMiddleware</span>
-<span class='doccomment'>//! [[h]] = AroundMiddleware</span>
-<span class='doccomment'>//! [h] = Handler</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! With no errors, the flow looks like:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```plain</span>
-<span class='doccomment'>//! [b] -&gt; [b] -&gt; [b] -&gt; [[[[h]]]] -&gt; [a] -&gt; [a] -&gt; [a] -&gt; [a]</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A request first travels through all BeforeMiddleware, then a Response is generated</span>
-<span class='doccomment'>//! by the Handler, which can be an arbitrary nesting of AroundMiddleware, then all</span>
-<span class='doccomment'>//! AfterMiddleware are called with both the Request and Response. After all AfterMiddleware</span>
-<span class='doccomment'>//! have been fired, the response is written back to the client.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Iron&#39;s error handling system is pragmatic and focuses on tracking two pieces</span>
-<span class='doccomment'>//! of information for error receivers (other middleware):</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * The cause of the error</span>
-<span class='doccomment'>//! * The result (what to do about) the error.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The cause of the error is represented simply by the error itself, and the result</span>
-<span class='doccomment'>//! of the error, representing the action to take in response to the error, is a complete</span>
-<span class='doccomment'>//! Response, which will be sent at the end of the error flow.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! When an error is thrown in Iron by any middleware or handler returning an `Err`</span>
-<span class='doccomment'>//! variant with an `IronError`, the flow of the Request switches to the error flow,</span>
-<span class='doccomment'>//! which proceeds to just call the `catch` method of middleware and sidesteps the</span>
-<span class='doccomment'>//! `Handler` entirely, since there is already a Response in the error.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A Request can exit the error flow by returning an Ok from any of the catch methods.</span>
-<span class='doccomment'>//! This resumes the flow at the middleware immediately following the middleware which</span>
-<span class='doccomment'>//! handled the error. It is impossible to &quot;go back&quot; to an earlier middleware that was</span>
-<span class='doccomment'>//! skipped.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Generally speaking, returning a 5XX error code means that the error flow should be</span>
-<span class='doccomment'>//! entered by raising an explicit error. Dealing with 4XX errors is trickier, since</span>
-<span class='doccomment'>//! the server may not want to recognize an error that is entirely the clients fault;</span>
-<span class='doccomment'>//! handling of 4XX error codes is up to to each application and middleware author.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Middleware authors should be cognizant that their middleware may be skipped during</span>
-<span class='doccomment'>//! the error flow. Anything that *must* be done to each Request or Response should</span>
-<span class='doccomment'>//! be run during both the normal and error flow by implementing the `catch` method to</span>
-<span class='doccomment'>//! also do the necessary action.</span>
-<span class='doccomment'>//!</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Iron&#39;s Middleware and Handler System</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Iron&#39;s Middleware system is best modeled with a diagram.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```plain</span>
+<span class="doccomment">//! [b] = BeforeMiddleware</span>
+<span class="doccomment">//! [a] = AfterMiddleware</span>
+<span class="doccomment">//! [[h]] = AroundMiddleware</span>
+<span class="doccomment">//! [h] = Handler</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! With no errors, the flow looks like:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```plain</span>
+<span class="doccomment">//! [b] -&gt; [b] -&gt; [b] -&gt; [[[[h]]]] -&gt; [a] -&gt; [a] -&gt; [a] -&gt; [a]</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A request first travels through all BeforeMiddleware, then a Response is generated</span>
+<span class="doccomment">//! by the Handler, which can be an arbitrary nesting of AroundMiddleware, then all</span>
+<span class="doccomment">//! AfterMiddleware are called with both the Request and Response. After all AfterMiddleware</span>
+<span class="doccomment">//! have been fired, the response is written back to the client.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Iron&#39;s error handling system is pragmatic and focuses on tracking two pieces</span>
+<span class="doccomment">//! of information for error receivers (other middleware):</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! * The cause of the error</span>
+<span class="doccomment">//! * The result (what to do about) the error.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The cause of the error is represented simply by the error itself, and the result</span>
+<span class="doccomment">//! of the error, representing the action to take in response to the error, is a complete</span>
+<span class="doccomment">//! Response, which will be sent at the end of the error flow.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! When an error is thrown in Iron by any middleware or handler returning an `Err`</span>
+<span class="doccomment">//! variant with an `IronError`, the flow of the Request switches to the error flow,</span>
+<span class="doccomment">//! which proceeds to just call the `catch` method of middleware and sidesteps the</span>
+<span class="doccomment">//! `Handler` entirely, since there is already a Response in the error.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A Request can exit the error flow by returning an Ok from any of the catch methods.</span>
+<span class="doccomment">//! This resumes the flow at the middleware immediately following the middleware which</span>
+<span class="doccomment">//! handled the error. It is impossible to &quot;go back&quot; to an earlier middleware that was</span>
+<span class="doccomment">//! skipped.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Generally speaking, returning a 5XX error code means that the error flow should be</span>
+<span class="doccomment">//! entered by raising an explicit error. Dealing with 4XX errors is trickier, since</span>
+<span class="doccomment">//! the server may not want to recognize an error that is entirely the clients fault;</span>
+<span class="doccomment">//! handling of 4XX error codes is up to to each application and middleware author.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Middleware authors should be cognizant that their middleware may be skipped during</span>
+<span class="doccomment">//! the error flow. Anything that *must* be done to each Request or Response should</span>
+<span class="doccomment">//! be run during both the normal and error flow by implementing the `catch` method to</span>
+<span class="doccomment">//! also do the necessary action.</span>
+<span class="doccomment">//!</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
-<span class='kw'>use</span> {<span class='ident'>Request</span>, <span class='ident'>Response</span>, <span class='ident'>IronResult</span>, <span class='ident'>IronError</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
+<span class="kw">use</span> {<span class="ident">Request</span>, <span class="ident">Response</span>, <span class="ident">IronResult</span>, <span class="ident">IronError</span>};
 
-<span class='doccomment'>/// `Handler`s are responsible for handling requests by creating Responses from Requests.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Handler</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> {
-    <span class='doccomment'>/// Produce a `Response` from a Request, with the possibility of error.</span>
-    <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span>;
+<span class="doccomment">/// `Handler`s are responsible for handling requests by creating Responses from Requests.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Handler</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
+    <span class="doccomment">/// Produce a `Response` from a Request, with the possibility of error.</span>
+    <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// `BeforeMiddleware` are fired before a `Handler` is called inside of a Chain.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// `BeforeMiddleware` are responsible for doing request pre-processing that requires</span>
-<span class='doccomment'>/// the ability to change control-flow, such as authorization middleware, or for editing</span>
-<span class='doccomment'>/// the request by modifying the headers.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// `BeforeMiddleware` only have access to the Request, if you need to modify or read</span>
-<span class='doccomment'>/// a Response, you will need `AfterMiddleware`. Middleware which wishes to send an</span>
-<span class='doccomment'>/// early response that is not an error cannot be `BeforeMiddleware`, but should</span>
-<span class='doccomment'>/// instead be `AroundMiddleware`.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>BeforeMiddleware</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> {
-    <span class='doccomment'>/// Do whatever work this middleware should do with a `Request` object.</span>
-    <span class='kw'>fn</span> <span class='ident'>before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> { <span class='prelude-val'>Ok</span>(()) }
+<span class="doccomment">/// `BeforeMiddleware` are fired before a `Handler` is called inside of a Chain.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `BeforeMiddleware` are responsible for doing request pre-processing that requires</span>
+<span class="doccomment">/// the ability to change control-flow, such as authorization middleware, or for editing</span>
+<span class="doccomment">/// the request by modifying the headers.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `BeforeMiddleware` only have access to the Request, if you need to modify or read</span>
+<span class="doccomment">/// a Response, you will need `AfterMiddleware`. Middleware which wishes to send an</span>
+<span class="doccomment">/// early response that is not an error cannot be `BeforeMiddleware`, but should</span>
+<span class="doccomment">/// instead be `AroundMiddleware`.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">BeforeMiddleware</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
+    <span class="doccomment">/// Do whatever work this middleware should do with a `Request` object.</span>
+    <span class="kw">fn</span> <span class="ident">before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, _: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="prelude-val">Ok</span>(()) }
 
-    <span class='doccomment'>/// Respond to an error thrown by a previous `BeforeMiddleware`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returning a `Ok` will cause the request to resume the normal flow at the</span>
-    <span class='doccomment'>/// next `BeforeMiddleware`, or if this was the last `BeforeMiddleware`,</span>
-    <span class='doccomment'>/// at the `Handler`.</span>
-    <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> { <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) }
+    <span class="doccomment">/// Respond to an error thrown by a previous `BeforeMiddleware`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returning a `Ok` will cause the request to resume the normal flow at the</span>
+    <span class="doccomment">/// next `BeforeMiddleware`, or if this was the last `BeforeMiddleware`,</span>
+    <span class="doccomment">/// at the `Handler`.</span>
+    <span class="kw">fn</span> <span class="ident">catch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, _: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="prelude-val">Err</span>(<span class="ident">err</span>) }
 }
 
-<span class='doccomment'>/// `AfterMiddleware` are fired after a `Handler` is called inside of a Chain.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// `AfterMiddleware` receive both a `Request` and a `Response` and are responsible for doing</span>
-<span class='doccomment'>/// any response post-processing.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// `AfterMiddleware` should *not* overwrite the contents of a Response. In</span>
-<span class='doccomment'>/// the common case, a complete response is generated by the Chain&#39;s `Handler` and</span>
-<span class='doccomment'>/// `AfterMiddleware` simply do post-processing of that Response, such as</span>
-<span class='doccomment'>/// adding headers or logging.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>AfterMiddleware</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> {
-    <span class='doccomment'>/// Do whatever post-processing this middleware should do.</span>
-    <span class='kw'>fn</span> <span class='ident'>after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>res</span>)
+<span class="doccomment">/// `AfterMiddleware` are fired after a `Handler` is called inside of a Chain.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `AfterMiddleware` receive both a `Request` and a `Response` and are responsible for doing</span>
+<span class="doccomment">/// any response post-processing.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `AfterMiddleware` should *not* overwrite the contents of a Response. In</span>
+<span class="doccomment">/// the common case, a complete response is generated by the Chain&#39;s `Handler` and</span>
+<span class="doccomment">/// `AfterMiddleware` simply do post-processing of that Response, such as</span>
+<span class="doccomment">/// adding headers or logging.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AfterMiddleware</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
+    <span class="doccomment">/// Do whatever post-processing this middleware should do.</span>
+    <span class="kw">fn</span> <span class="ident">after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, _: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">res</span>: <span class="ident">Response</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">res</span>)
     }
 
-    <span class='doccomment'>/// Respond to an error thrown by previous `AfterMiddleware`, the `Handler`,</span>
-    <span class='doccomment'>/// or a `BeforeMiddleware`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returning `Ok` will cause the request to resume the normal flow at the</span>
-    <span class='doccomment'>/// next `AfterMiddleware`.</span>
-    <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Err</span>(<span class='ident'>err</span>)
+    <span class="doccomment">/// Respond to an error thrown by previous `AfterMiddleware`, the `Handler`,</span>
+    <span class="doccomment">/// or a `BeforeMiddleware`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returning `Ok` will cause the request to resume the normal flow at the</span>
+    <span class="doccomment">/// next `AfterMiddleware`.</span>
+    <span class="kw">fn</span> <span class="ident">catch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, _: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">err</span>)
     }
 }
 
-<span class='doccomment'>/// AroundMiddleware are used to wrap and replace the `Handler` in a `Chain`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// AroundMiddleware produce `Handler`s through their `around` method, which is</span>
-<span class='doccomment'>/// called once on insertion into a Chain or can be called manually outside of a</span>
-<span class='doccomment'>/// `Chain`.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>AroundMiddleware</span> {
-    <span class='doccomment'>/// Produce a `Handler` from this `AroundMiddleware` given another `Handler`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Usually this means wrapping the handler and editing the `Request` on the</span>
-    <span class='doccomment'>/// way in and the `Response` on the way out.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is called only once, when an `AroundMiddleware` is added to a `Chain`</span>
-    <span class='doccomment'>/// using `Chain::around`, it is passed the `Chain`&#39;s current `Handler`.</span>
-    <span class='kw'>fn</span> <span class='ident'>around</span>(<span class='self'>self</span>, <span class='ident'>handler</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span>;
+<span class="doccomment">/// AroundMiddleware are used to wrap and replace the `Handler` in a `Chain`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// AroundMiddleware produce `Handler`s through their `around` method, which is</span>
+<span class="doccomment">/// called once on insertion into a Chain or can be called manually outside of a</span>
+<span class="doccomment">/// `Chain`.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AroundMiddleware</span> {
+    <span class="doccomment">/// Produce a `Handler` from this `AroundMiddleware` given another `Handler`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Usually this means wrapping the handler and editing the `Request` on the</span>
+    <span class="doccomment">/// way in and the `Response` on the way out.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is called only once, when an `AroundMiddleware` is added to a `Chain`</span>
+    <span class="doccomment">/// using `Chain::around`, it is passed the `Chain`&#39;s current `Handler`.</span>
+    <span class="kw">fn</span> <span class="ident">around</span>(<span class="self">self</span>, <span class="ident">handler</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// The middleware chain used in Iron.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This is a canonical implementation of Iron&#39;s middleware system,</span>
-<span class='doccomment'>/// but Iron&#39;s infrastructure is flexible enough to allow alternate</span>
-<span class='doccomment'>/// systems.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Chain</span> {
-    <span class='ident'>befores</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>BeforeMiddleware</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>afters</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>AfterMiddleware</span><span class='op'>&gt;&gt;</span>,
+<span class="doccomment">/// The middleware chain used in Iron.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is a canonical implementation of Iron&#39;s middleware system,</span>
+<span class="doccomment">/// but Iron&#39;s infrastructure is flexible enough to allow alternate</span>
+<span class="doccomment">/// systems.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Chain</span> {
+    <span class="ident">befores</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BeforeMiddleware</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">afters</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AfterMiddleware</span><span class="op">&gt;&gt;</span>,
 
-    <span class='comment'>// Internal invariant: this is always Some</span>
-    <span class='ident'>handler</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;&gt;</span>
+    <span class="comment">// Internal invariant: this is always Some</span>
+    <span class="ident">handler</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;&gt;</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>Chain</span> {
-    <span class='doccomment'>/// Construct a new ChainBuilder from a `Handler`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>H</span>: <span class='ident'>Handler</span><span class='op'>&gt;</span>(<span class='ident'>handler</span>: <span class='ident'>H</span>) <span class='op'>-&gt;</span> <span class='ident'>Chain</span> {
-        <span class='ident'>Chain</span> {
-            <span class='ident'>befores</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
-            <span class='ident'>afters</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
-            <span class='ident'>handler</span>: <span class='prelude-val'>Some</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>handler</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span>)
+<span class="kw">impl</span> <span class="ident">Chain</span> {
+    <span class="doccomment">/// Construct a new ChainBuilder from a `Handler`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Handler</span><span class="op">&gt;</span>(<span class="ident">handler</span>: <span class="ident">H</span>) <span class="op">-&gt;</span> <span class="ident">Chain</span> {
+        <span class="ident">Chain</span> {
+            <span class="ident">befores</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">afters</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">handler</span>: <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">handler</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span>)
         }
     }
 
-    <span class='doccomment'>/// Link both a before and after middleware to the chain at once.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Middleware that have a Before and After piece should have a constructor</span>
-    <span class='doccomment'>/// which returns both as a tuple, so it can be passed directly to link.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>link</span><span class='op'>&lt;</span><span class='ident'>B</span>, <span class='ident'>A</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>link</span>: (<span class='ident'>B</span>, <span class='ident'>A</span>)) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Chain</span>
-    <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>AfterMiddleware</span>, <span class='ident'>B</span>: <span class='ident'>BeforeMiddleware</span> {
-        <span class='kw'>let</span> (<span class='ident'>before</span>, <span class='ident'>after</span>) <span class='op'>=</span> <span class='ident'>link</span>;
-        <span class='self'>self</span>.<span class='ident'>befores</span>.<span class='ident'>push</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>before</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>BeforeMiddleware</span><span class='op'>&gt;</span>);
-        <span class='self'>self</span>.<span class='ident'>afters</span>.<span class='ident'>push</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>after</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>AfterMiddleware</span><span class='op'>&gt;</span>);
-        <span class='self'>self</span>
+    <span class="doccomment">/// Link both a before and after middleware to the chain at once.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Middleware that have a Before and After piece should have a constructor</span>
+    <span class="doccomment">/// which returns both as a tuple, so it can be passed directly to link.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">link</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">A</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">link</span>: (<span class="ident">B</span>, <span class="ident">A</span>)) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Chain</span>
+    <span class="kw">where</span> <span class="ident">A</span>: <span class="ident">AfterMiddleware</span>, <span class="ident">B</span>: <span class="ident">BeforeMiddleware</span> {
+        <span class="kw">let</span> (<span class="ident">before</span>, <span class="ident">after</span>) <span class="op">=</span> <span class="ident">link</span>;
+        <span class="self">self</span>.<span class="ident">befores</span>.<span class="ident">push</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">before</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BeforeMiddleware</span><span class="op">&gt;</span>);
+        <span class="self">self</span>.<span class="ident">afters</span>.<span class="ident">push</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">after</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AfterMiddleware</span><span class="op">&gt;</span>);
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Link a `BeforeMiddleware` to the `Chain`, after all previously linked</span>
-    <span class='doccomment'>/// `BeforeMiddleware`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>link_before</span><span class='op'>&lt;</span><span class='ident'>B</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>before</span>: <span class='ident'>B</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Chain</span>
-    <span class='kw'>where</span> <span class='ident'>B</span>: <span class='ident'>BeforeMiddleware</span> {
-        <span class='self'>self</span>.<span class='ident'>befores</span>.<span class='ident'>push</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>before</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>BeforeMiddleware</span><span class='op'>&gt;</span>);
-        <span class='self'>self</span>
+    <span class="doccomment">/// Link a `BeforeMiddleware` to the `Chain`, after all previously linked</span>
+    <span class="doccomment">/// `BeforeMiddleware`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">link_before</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">before</span>: <span class="ident">B</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Chain</span>
+    <span class="kw">where</span> <span class="ident">B</span>: <span class="ident">BeforeMiddleware</span> {
+        <span class="self">self</span>.<span class="ident">befores</span>.<span class="ident">push</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">before</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BeforeMiddleware</span><span class="op">&gt;</span>);
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Link a `AfterMiddleware` to the `Chain`, after all previously linked</span>
-    <span class='doccomment'>/// `AfterMiddleware`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>link_after</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>after</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Chain</span>
-    <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>AfterMiddleware</span> {
-        <span class='self'>self</span>.<span class='ident'>afters</span>.<span class='ident'>push</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>after</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>AfterMiddleware</span><span class='op'>&gt;</span>);
-        <span class='self'>self</span>
+    <span class="doccomment">/// Link a `AfterMiddleware` to the `Chain`, after all previously linked</span>
+    <span class="doccomment">/// `AfterMiddleware`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">link_after</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">after</span>: <span class="ident">A</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Chain</span>
+    <span class="kw">where</span> <span class="ident">A</span>: <span class="ident">AfterMiddleware</span> {
+        <span class="self">self</span>.<span class="ident">afters</span>.<span class="ident">push</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">after</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AfterMiddleware</span><span class="op">&gt;</span>);
+        <span class="self">self</span>
     }
 
-    <span class='doccomment'>/// Apply an `AroundMiddleware` to the `Handler` in this `Chain`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note: This function is being renamed `link_around()`, and will</span>
-    <span class='doccomment'>/// eventually be removed.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>around</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>around</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Chain</span>
-    <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>AroundMiddleware</span> {
-        <span class='self'>self</span>.<span class='ident'>link_around</span>(<span class='ident'>around</span>)
+    <span class="doccomment">/// Apply an `AroundMiddleware` to the `Handler` in this `Chain`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note: This function is being renamed `link_around()`, and will</span>
+    <span class="doccomment">/// eventually be removed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">around</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">around</span>: <span class="ident">A</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Chain</span>
+    <span class="kw">where</span> <span class="ident">A</span>: <span class="ident">AroundMiddleware</span> {
+        <span class="self">self</span>.<span class="ident">link_around</span>(<span class="ident">around</span>)
     }
 
-    <span class='doccomment'>/// Apply an `AroundMiddleware` to the `Handler` in this `Chain`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>link_around</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>around</span>: <span class='ident'>A</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Chain</span>
-    <span class='kw'>where</span> <span class='ident'>A</span>: <span class='ident'>AroundMiddleware</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>handler</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>handler</span>.<span class='ident'>take</span>().<span class='ident'>unwrap</span>();
-        <span class='ident'>handler</span> <span class='op'>=</span> <span class='ident'>around</span>.<span class='ident'>around</span>(<span class='ident'>handler</span>);
-        <span class='self'>self</span>.<span class='ident'>handler</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>handler</span>);
-        <span class='self'>self</span>
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>Chain</span> {
-    <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Kick off at befores, which will continue into handler</span>
-        <span class='comment'>// then afters.</span>
-        <span class='self'>self</span>.<span class='ident'>continue_from_before</span>(<span class='ident'>req</span>, <span class='number'>0</span>)
+    <span class="doccomment">/// Apply an `AroundMiddleware` to the `Handler` in this `Chain`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">link_around</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">around</span>: <span class="ident">A</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Chain</span>
+    <span class="kw">where</span> <span class="ident">A</span>: <span class="ident">AroundMiddleware</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handler</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">handler</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+        <span class="ident">handler</span> <span class="op">=</span> <span class="ident">around</span>.<span class="ident">around</span>(<span class="ident">handler</span>);
+        <span class="self">self</span>.<span class="ident">handler</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">handler</span>);
+        <span class="self">self</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Chain</span> {
-    <span class='comment'>///////////////// Implementation Helpers /////////////////</span>
+<span class="kw">impl</span> <span class="ident">Handler</span> <span class="kw">for</span> <span class="ident">Chain</span> {
+    <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// Kick off at befores, which will continue into handler</span>
+        <span class="comment">// then afters.</span>
+        <span class="self">self</span>.<span class="ident">continue_from_before</span>(<span class="ident">req</span>, <span class="number">0</span>)
+    }
+}
 
-    <span class='comment'>// Enter the error flow from a before middleware, starting</span>
-    <span class='comment'>// at the passed index.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// If the index is out of bounds for the before middleware Vec,</span>
-    <span class='comment'>// this instead behaves the same as fail_from_handler.</span>
-    <span class='kw'>fn</span> <span class='ident'>fail_from_before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>,
-                        <span class='kw-2'>mut</span> <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// If this was the last before, yield to next phase.</span>
-        <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>&gt;=</span> <span class='self'>self</span>.<span class='ident'>befores</span>.<span class='ident'>len</span>() {
-            <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>fail_from_handler</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+<span class="kw">impl</span> <span class="ident">Chain</span> {
+    <span class="comment">///////////////// Implementation Helpers /////////////////</span>
+
+    <span class="comment">// Enter the error flow from a before middleware, starting</span>
+    <span class="comment">// at the passed index.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If the index is out of bounds for the before middleware Vec,</span>
+    <span class="comment">// this instead behaves the same as fail_from_handler.</span>
+    <span class="kw">fn</span> <span class="ident">fail_from_before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">index</span>: <span class="ident">usize</span>,
+                        <span class="kw-2">mut</span> <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// If this was the last before, yield to next phase.</span>
+        <span class="kw">if</span> <span class="ident">index</span> <span class="op">&gt;=</span> <span class="self">self</span>.<span class="ident">befores</span>.<span class="ident">len</span>() {
+            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">fail_from_handler</span>(<span class="ident">req</span>, <span class="ident">err</span>)
         }
 
-        <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>before</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>befores</span>[<span class='ident'>index</span>..].<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
-            <span class='ident'>err</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>before</span>.<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>) {
-                <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>err</span>,
-                <span class='prelude-val'>Ok</span>(()) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>continue_from_before</span>(<span class='ident'>req</span>, <span class='ident'>index</span> <span class='op'>+</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>)
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">before</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">befores</span>[<span class="ident">index</span>..].<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="ident">err</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">before</span>.<span class="ident">catch</span>(<span class="ident">req</span>, <span class="ident">err</span>) {
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">err</span>,
+                <span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">continue_from_before</span>(<span class="ident">req</span>, <span class="ident">index</span> <span class="op">+</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>)
             };
         }
 
-        <span class='comment'>// Next phase</span>
-        <span class='self'>self</span>.<span class='ident'>fail_from_handler</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+        <span class="comment">// Next phase</span>
+        <span class="self">self</span>.<span class="ident">fail_from_handler</span>(<span class="ident">req</span>, <span class="ident">err</span>)
     }
 
-    <span class='comment'>// Enter the error flow from an errored handle, starting with the</span>
-    <span class='comment'>// first AfterMiddleware.</span>
-    <span class='kw'>fn</span> <span class='ident'>fail_from_handler</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>,
-                         <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Yield to next phase, nothing to do here.</span>
-        <span class='self'>self</span>.<span class='ident'>fail_from_after</span>(<span class='ident'>req</span>, <span class='number'>0</span>, <span class='ident'>err</span>)
+    <span class="comment">// Enter the error flow from an errored handle, starting with the</span>
+    <span class="comment">// first AfterMiddleware.</span>
+    <span class="kw">fn</span> <span class="ident">fail_from_handler</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>,
+                         <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// Yield to next phase, nothing to do here.</span>
+        <span class="self">self</span>.<span class="ident">fail_from_after</span>(<span class="ident">req</span>, <span class="number">0</span>, <span class="ident">err</span>)
     }
 
-    <span class='comment'>// Enter the error flow from an errored after middleware, starting</span>
-    <span class='comment'>// with the passed index.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// If the index is out of bounds for the after middleware Vec,</span>
-    <span class='comment'>// this instead just returns the passed error.</span>
-    <span class='kw'>fn</span> <span class='ident'>fail_from_after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>,
-                       <span class='kw-2'>mut</span> <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// If this was the last after, we&#39;re done.</span>
-        <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>afters</span>.<span class='ident'>len</span>() { <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) }
+    <span class="comment">// Enter the error flow from an errored after middleware, starting</span>
+    <span class="comment">// with the passed index.</span>
+    <span class="comment">//</span>
+    <span class="comment">// If the index is out of bounds for the after middleware Vec,</span>
+    <span class="comment">// this instead just returns the passed error.</span>
+    <span class="kw">fn</span> <span class="ident">fail_from_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">index</span>: <span class="ident">usize</span>,
+                       <span class="kw-2">mut</span> <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// If this was the last after, we&#39;re done.</span>
+        <span class="kw">if</span> <span class="ident">index</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">afters</span>.<span class="ident">len</span>() { <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) }
 
-        <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>after</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>afters</span>[<span class='ident'>index</span>..].<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
-            <span class='ident'>err</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>after</span>.<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>) {
-                <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='ident'>err</span>,
-                <span class='prelude-val'>Ok</span>(<span class='ident'>res</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>continue_from_after</span>(<span class='ident'>req</span>, <span class='ident'>index</span> <span class='op'>+</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>res</span>)
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">after</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">afters</span>[<span class="ident">index</span>..].<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="ident">err</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">after</span>.<span class="ident">catch</span>(<span class="ident">req</span>, <span class="ident">err</span>) {
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">err</span>,
+                <span class="prelude-val">Ok</span>(<span class="ident">res</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">continue_from_after</span>(<span class="ident">req</span>, <span class="ident">index</span> <span class="op">+</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">res</span>)
             }
         }
 
-        <span class='comment'>// Done</span>
-        <span class='prelude-val'>Err</span>(<span class='ident'>err</span>)
+        <span class="comment">// Done</span>
+        <span class="prelude-val">Err</span>(<span class="ident">err</span>)
     }
 
-    <span class='comment'>// Enter the normal flow in the before middleware, starting with the passed</span>
-    <span class='comment'>// index.</span>
-    <span class='kw'>fn</span> <span class='ident'>continue_from_before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>,
-                            <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// If this was the last beforemiddleware, start at the handler.</span>
-        <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>&gt;=</span> <span class='self'>self</span>.<span class='ident'>befores</span>.<span class='ident'>len</span>() {
-            <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>continue_from_handler</span>(<span class='ident'>req</span>)
+    <span class="comment">// Enter the normal flow in the before middleware, starting with the passed</span>
+    <span class="comment">// index.</span>
+    <span class="kw">fn</span> <span class="ident">continue_from_before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>,
+                            <span class="ident">index</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// If this was the last beforemiddleware, start at the handler.</span>
+        <span class="kw">if</span> <span class="ident">index</span> <span class="op">&gt;=</span> <span class="self">self</span>.<span class="ident">befores</span>.<span class="ident">len</span>() {
+            <span class="kw">return</span> <span class="self">self</span>.<span class="ident">continue_from_handler</span>(<span class="ident">req</span>)
         }
 
-        <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>before</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>befores</span>[<span class='ident'>index</span>..].<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
-            <span class='kw'>match</span> <span class='ident'>before</span>.<span class='ident'>before</span>(<span class='ident'>req</span>) {
-                <span class='prelude-val'>Ok</span>(()) <span class='op'>=&gt;</span> {},
-                <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>fail_from_before</span>(<span class='ident'>req</span>, <span class='ident'>index</span> <span class='op'>+</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>err</span>)
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">before</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">befores</span>[<span class="ident">index</span>..].<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="kw">match</span> <span class="ident">before</span>.<span class="ident">before</span>(<span class="ident">req</span>) {
+                <span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span> {},
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">fail_from_before</span>(<span class="ident">req</span>, <span class="ident">index</span> <span class="op">+</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">err</span>)
             }
         }
 
-        <span class='comment'>// Yield to next phase.</span>
-        <span class='self'>self</span>.<span class='ident'>continue_from_handler</span>(<span class='ident'>req</span>)
+        <span class="comment">// Yield to next phase.</span>
+        <span class="self">self</span>.<span class="ident">continue_from_handler</span>(<span class="ident">req</span>)
     }
 
-    <span class='comment'>// Enter the normal flow at the handler.</span>
-    <span class='kw'>fn</span> <span class='ident'>continue_from_handler</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// unwrap is safe because it&#39;s always Some</span>
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>handler</span>.<span class='ident'>as_ref</span>().<span class='ident'>unwrap</span>().<span class='ident'>handle</span>(<span class='ident'>req</span>) {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>res</span>) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>continue_from_after</span>(<span class='ident'>req</span>, <span class='number'>0</span>, <span class='ident'>res</span>),
-            <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>fail_from_handler</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+    <span class="comment">// Enter the normal flow at the handler.</span>
+    <span class="kw">fn</span> <span class="ident">continue_from_handler</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// unwrap is safe because it&#39;s always Some</span>
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">handler</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">handle</span>(<span class="ident">req</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">res</span>) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">continue_from_after</span>(<span class="ident">req</span>, <span class="number">0</span>, <span class="ident">res</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">fail_from_handler</span>(<span class="ident">req</span>, <span class="ident">err</span>)
         }
     }
 
-    <span class='comment'>// Enter the normal flow in the after middleware, starting with the passed</span>
-    <span class='comment'>// index.</span>
-    <span class='kw'>fn</span> <span class='ident'>continue_from_after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>,
-                            <span class='kw-2'>mut</span> <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// If this was the last after middleware, we&#39;re done.</span>
-        <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>&gt;=</span> <span class='self'>self</span>.<span class='ident'>afters</span>.<span class='ident'>len</span>() {
-            <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>res</span>);
+    <span class="comment">// Enter the normal flow in the after middleware, starting with the passed</span>
+    <span class="comment">// index.</span>
+    <span class="kw">fn</span> <span class="ident">continue_from_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">index</span>: <span class="ident">usize</span>,
+                            <span class="kw-2">mut</span> <span class="ident">res</span>: <span class="ident">Response</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// If this was the last after middleware, we&#39;re done.</span>
+        <span class="kw">if</span> <span class="ident">index</span> <span class="op">&gt;=</span> <span class="self">self</span>.<span class="ident">afters</span>.<span class="ident">len</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">res</span>);
         }
 
-        <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>after</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>afters</span>[<span class='ident'>index</span>..].<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
-            <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>after</span>.<span class='ident'>after</span>(<span class='ident'>req</span>, <span class='ident'>res</span>) {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>r</span>) <span class='op'>=&gt;</span> <span class='ident'>r</span>,
-                <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>fail_from_after</span>(<span class='ident'>req</span>, <span class='ident'>index</span> <span class='op'>+</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>err</span>)
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">after</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">afters</span>[<span class="ident">index</span>..].<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="ident">res</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">after</span>.<span class="ident">after</span>(<span class="ident">req</span>, <span class="ident">res</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">r</span>) <span class="op">=&gt;</span> <span class="ident">r</span>,
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">fail_from_after</span>(<span class="ident">req</span>, <span class="ident">index</span> <span class="op">+</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">err</span>)
             }
         }
 
-        <span class='comment'>// We made it with no error!</span>
-        <span class='prelude-val'>Ok</span>(<span class='ident'>res</span>)
+        <span class="comment">// We made it with no error!</span>
+        <span class="prelude-val">Ok</span>(<span class="ident">res</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>F</span>
-<span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="ident">Handler</span> <span class="kw">for</span> <span class="ident">F</span>
+<span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="self">self</span>)(<span class="ident">req</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>handle</span>(<span class='ident'>req</span>)
+<span class="kw">impl</span> <span class="ident">Handler</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">handle</span>(<span class="ident">req</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>BeforeMiddleware</span> <span class='kw'>for</span> <span class='ident'>F</span>
-<span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="ident">BeforeMiddleware</span> <span class="kw">for</span> <span class="ident">F</span>
+<span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="self">self</span>)(<span class="ident">req</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>BeforeMiddleware</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>BeforeMiddleware</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>before</span>(<span class='ident'>req</span>)
+<span class="kw">impl</span> <span class="ident">BeforeMiddleware</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">BeforeMiddleware</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">before</span>(<span class="ident">req</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>BeforeMiddleware</span> <span class='kw'>for</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>BeforeMiddleware</span> {
-    <span class='kw'>fn</span> <span class='ident'>before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>before</span>(<span class='ident'>req</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+    <span class="kw">fn</span> <span class="ident">catch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">catch</span>(<span class="ident">req</span>, <span class="ident">err</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>AfterMiddleware</span> <span class='kw'>for</span> <span class='ident'>F</span>
-<span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='self'>self</span>)(<span class='ident'>req</span>, <span class='ident'>res</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">BeforeMiddleware</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">BeforeMiddleware</span> {
+    <span class="kw">fn</span> <span class="ident">before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">before</span>(<span class="ident">req</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">catch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">catch</span>(<span class="ident">req</span>, <span class="ident">err</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>AfterMiddleware</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>AfterMiddleware</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>after</span>(<span class='ident'>req</span>, <span class='ident'>res</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="ident">AfterMiddleware</span> <span class="kw">for</span> <span class="ident">F</span>
+<span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">Response</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">res</span>: <span class="ident">Response</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="self">self</span>)(<span class="ident">req</span>, <span class="ident">res</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>AfterMiddleware</span> <span class='kw'>for</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>AfterMiddleware</span> {
-    <span class='kw'>fn</span> <span class='ident'>after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>res</span>: <span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>after</span>(<span class='ident'>req</span>, <span class='ident'>res</span>)
+<span class="kw">impl</span> <span class="ident">AfterMiddleware</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AfterMiddleware</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">res</span>: <span class="ident">Response</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">after</span>(<span class="ident">req</span>, <span class="ident">res</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>catch</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>err</span>: <span class='ident'>IronError</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        (<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='self'>self</span>).<span class='ident'>catch</span>(<span class='ident'>req</span>, <span class='ident'>err</span>)
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> <span class='ident'>AroundMiddleware</span> <span class='kw'>for</span> <span class='ident'>F</span>
-<span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>around</span>(<span class='self'>self</span>, <span class='ident'>handler</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>(<span class='ident'>handler</span>)
+    <span class="kw">fn</span> <span class="ident">catch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">catch</span>(<span class="ident">req</span>, <span class="ident">err</span>)
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AfterMiddleware</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">AfterMiddleware</span> {
+    <span class="kw">fn</span> <span class="ident">after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">res</span>: <span class="ident">Response</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">after</span>(<span class="ident">req</span>, <span class="ident">res</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">catch</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">err</span>: <span class="ident">IronError</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        (<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">catch</span>(<span class="ident">req</span>, <span class="ident">err</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="ident">AroundMiddleware</span> <span class="kw">for</span> <span class="ident">F</span>
+<span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">around</span>(<span class="self">self</span>, <span class="ident">handler</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span> {
+        <span class="self">self</span>(<span class="ident">handler</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

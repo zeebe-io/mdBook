@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mio-0.6.6/src/sys/unix/ready.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mio-0.6.7/src/sys/unix/ready.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ready.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -312,274 +312,274 @@
 <span id="267">267</span>
 <span id="268">268</span>
 <span id="269">269</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>event_imp</span>::{<span class='ident'>Ready</span>, <span class='ident'>ready_from_usize</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">event_imp</span>::{<span class="ident">Ready</span>, <span class="ident">ready_from_usize</span>};
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>;
 
-<span class='doccomment'>/// Unix specific extensions to `Ready`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Provides additional readiness event kinds that are available on unix</span>
-<span class='doccomment'>/// platforms. Unix platforms are able to provide readiness events for</span>
-<span class='doccomment'>/// additional socket events, such as HUP and error.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// HUP events occur when the remote end of a socket hangs up. In the TCP case,</span>
-<span class='doccomment'>/// this occurs when the remote end of a TCP socket shuts down writes.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Error events occur when the socket enters an error state. In this case, the</span>
-<span class='doccomment'>/// socket will also receive a readable or writable event. Reading or writing to</span>
-<span class='doccomment'>/// the socket will result in an error.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Conversion traits are implemented between `Ready` and `UnixReady`. See the</span>
-<span class='doccomment'>/// examples.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// For high level documentation on polling and readiness, see [`Poll`].</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Most of the time, all that is needed is using bit operations</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use mio::Ready;</span>
-<span class='doccomment'>/// use mio::unix::UnixReady;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let ready = Ready::readable() | UnixReady::hup();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert!(ready.is_readable());</span>
-<span class='doccomment'>/// assert!(UnixReady::from(ready).is_hup());</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Basic conversion between ready types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use mio::Ready;</span>
-<span class='doccomment'>/// use mio::unix::UnixReady;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // Start with a portable ready</span>
-<span class='doccomment'>/// let ready = Ready::readable();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // Convert to a unix ready, adding HUP</span>
-<span class='doccomment'>/// let mut unix_ready = UnixReady::from(ready) | UnixReady::hup();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// unix_ready.insert(UnixReady::error());</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // `unix_ready` maintains readable interest</span>
-<span class='doccomment'>/// assert!(unix_ready.is_readable());</span>
-<span class='doccomment'>/// assert!(unix_ready.is_hup());</span>
-<span class='doccomment'>/// assert!(unix_ready.is_error());</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // Convert back to `Ready`</span>
-<span class='doccomment'>/// let ready = Ready::from(unix_ready);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // Readable is maintained</span>
-<span class='doccomment'>/// assert!(ready.is_readable());</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Registering readable and error interest on a socket</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use mio::{Ready, Poll, PollOpt, Token};</span>
-<span class='doccomment'>/// use mio::tcp::TcpStream;</span>
-<span class='doccomment'>/// use mio::unix::UnixReady;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let addr = &quot;216.58.193.68:80&quot;.parse().unwrap();</span>
-<span class='doccomment'>/// let socket = TcpStream::connect(&amp;addr).unwrap();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let poll = Poll::new().unwrap();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// poll.register(&amp;socket,</span>
-<span class='doccomment'>///               Token(0),</span>
-<span class='doccomment'>///               Ready::readable() | UnixReady::error(),</span>
-<span class='doccomment'>///               PollOpt::edge()).unwrap();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [`Poll`]: struct.Poll.html</span>
-<span class='doccomment'>/// [readiness]: struct.Poll.html#readiness-operations</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Copy</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>UnixReady</span>(<span class='ident'>Ready</span>);
+<span class="doccomment">/// Unix specific extensions to `Ready`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Provides additional readiness event kinds that are available on unix</span>
+<span class="doccomment">/// platforms. Unix platforms are able to provide readiness events for</span>
+<span class="doccomment">/// additional socket events, such as HUP and error.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// HUP events occur when the remote end of a socket hangs up. In the TCP case,</span>
+<span class="doccomment">/// this occurs when the remote end of a TCP socket shuts down writes.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Error events occur when the socket enters an error state. In this case, the</span>
+<span class="doccomment">/// socket will also receive a readable or writable event. Reading or writing to</span>
+<span class="doccomment">/// the socket will result in an error.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Conversion traits are implemented between `Ready` and `UnixReady`. See the</span>
+<span class="doccomment">/// examples.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For high level documentation on polling and readiness, see [`Poll`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Most of the time, all that is needed is using bit operations</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use mio::Ready;</span>
+<span class="doccomment">/// use mio::unix::UnixReady;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let ready = Ready::readable() | UnixReady::hup();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert!(ready.is_readable());</span>
+<span class="doccomment">/// assert!(UnixReady::from(ready).is_hup());</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Basic conversion between ready types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use mio::Ready;</span>
+<span class="doccomment">/// use mio::unix::UnixReady;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Start with a portable ready</span>
+<span class="doccomment">/// let ready = Ready::readable();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Convert to a unix ready, adding HUP</span>
+<span class="doccomment">/// let mut unix_ready = UnixReady::from(ready) | UnixReady::hup();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// unix_ready.insert(UnixReady::error());</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // `unix_ready` maintains readable interest</span>
+<span class="doccomment">/// assert!(unix_ready.is_readable());</span>
+<span class="doccomment">/// assert!(unix_ready.is_hup());</span>
+<span class="doccomment">/// assert!(unix_ready.is_error());</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Convert back to `Ready`</span>
+<span class="doccomment">/// let ready = Ready::from(unix_ready);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Readable is maintained</span>
+<span class="doccomment">/// assert!(ready.is_readable());</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Registering readable and error interest on a socket</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use mio::{Ready, Poll, PollOpt, Token};</span>
+<span class="doccomment">/// use mio::tcp::TcpStream;</span>
+<span class="doccomment">/// use mio::unix::UnixReady;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let addr = &quot;216.58.193.68:80&quot;.parse().unwrap();</span>
+<span class="doccomment">/// let socket = TcpStream::connect(&amp;addr).unwrap();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let poll = Poll::new().unwrap();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// poll.register(&amp;socket,</span>
+<span class="doccomment">///               Token(0),</span>
+<span class="doccomment">///               Ready::readable() | UnixReady::error(),</span>
+<span class="doccomment">///               PollOpt::edge()).unwrap();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`Poll`]: struct.Poll.html</span>
+<span class="doccomment">/// [readiness]: struct.Poll.html#readiness-operations</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnixReady</span>(<span class="ident">Ready</span>);
 
-<span class='kw'>const</span> <span class='ident'>ERROR</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>0b0100</span>;
-<span class='kw'>const</span> <span class='ident'>HUP</span>: <span class='ident'>usize</span>   <span class='op'>=</span> <span class='number'>0b1000</span>;
+<span class="kw">const</span> <span class="ident">ERROR</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0b0100</span>;
+<span class="kw">const</span> <span class="ident">HUP</span>: <span class="ident">usize</span>   <span class="op">=</span> <span class="number">0b1000</span>;
 
-<span class='kw'>impl</span> <span class='ident'>UnixReady</span> {
-    <span class='doccomment'>/// Returns a `Ready` representing error readiness.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// **Note that only readable and writable readiness is guaranteed to be</span>
-    <span class='doccomment'>/// supported on all platforms**. This means that `error` readiness</span>
-    <span class='doccomment'>/// should be treated as a hint. For more details, see [readiness] in the</span>
-    <span class='doccomment'>/// poll documentation.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See [`Poll`] for more documentation on polling.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use mio::Ready;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let ready = Ready::error();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert!(ready.is_error());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [`Poll`]: struct.Poll.html</span>
-    <span class='doccomment'>/// [readiness]: struct.Poll.html#readiness-operations</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>error</span>() <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        <span class='ident'>UnixReady</span>(<span class='ident'>ready_from_usize</span>(<span class='ident'>ERROR</span>))
+<span class="kw">impl</span> <span class="ident">UnixReady</span> {
+    <span class="doccomment">/// Returns a `Ready` representing error readiness.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **Note that only readable and writable readiness is guaranteed to be</span>
+    <span class="doccomment">/// supported on all platforms**. This means that `error` readiness</span>
+    <span class="doccomment">/// should be treated as a hint. For more details, see [readiness] in the</span>
+    <span class="doccomment">/// poll documentation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [`Poll`] for more documentation on polling.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use mio::Ready;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let ready = Ready::error();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert!(ready.is_error());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Poll`]: struct.Poll.html</span>
+    <span class="doccomment">/// [readiness]: struct.Poll.html#readiness-operations</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error</span>() <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        <span class="ident">UnixReady</span>(<span class="ident">ready_from_usize</span>(<span class="ident">ERROR</span>))
     }
 
-    <span class='doccomment'>/// Returns a `Ready` representing HUP readiness.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A HUP (or hang-up) signifies that a stream socket **peer** closed the</span>
-    <span class='doccomment'>/// connection, or shut down the writing half of the connection.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// **Note that only readable and writable readiness is guaranteed to be</span>
-    <span class='doccomment'>/// supported on all platforms**. This means that `hup` readiness</span>
-    <span class='doccomment'>/// should be treated as a hint. For more details, see [readiness] in the</span>
-    <span class='doccomment'>/// poll documentation.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See [`Poll`] for more documentation on polling.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use mio::Ready;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let ready = Ready::hup();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert!(ready.is_hup());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [`Poll`]: struct.Poll.html</span>
-    <span class='doccomment'>/// [readiness]: struct.Poll.html#readiness-operations</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>hup</span>() <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        <span class='ident'>UnixReady</span>(<span class='ident'>ready_from_usize</span>(<span class='ident'>HUP</span>))
+    <span class="doccomment">/// Returns a `Ready` representing HUP readiness.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A HUP (or hang-up) signifies that a stream socket **peer** closed the</span>
+    <span class="doccomment">/// connection, or shut down the writing half of the connection.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **Note that only readable and writable readiness is guaranteed to be</span>
+    <span class="doccomment">/// supported on all platforms**. This means that `hup` readiness</span>
+    <span class="doccomment">/// should be treated as a hint. For more details, see [readiness] in the</span>
+    <span class="doccomment">/// poll documentation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [`Poll`] for more documentation on polling.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use mio::Ready;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let ready = Ready::hup();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert!(ready.is_hup());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Poll`]: struct.Poll.html</span>
+    <span class="doccomment">/// [readiness]: struct.Poll.html#readiness-operations</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hup</span>() <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        <span class="ident">UnixReady</span>(<span class="ident">ready_from_usize</span>(<span class="ident">HUP</span>))
     }
 
-    <span class='doccomment'>/// Returns true if the value includes error readiness</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// **Note that only readable and writable readiness is guaranteed to be</span>
-    <span class='doccomment'>/// supported on all platforms**. This means that `error` readiness should</span>
-    <span class='doccomment'>/// be treated as a hint. For more details, see [readiness] in the poll</span>
-    <span class='doccomment'>/// documentation.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See [`Poll`] for more documentation on polling.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use mio::Ready;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let ready = Ready::error();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert!(ready.is_error());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [`Poll`]: struct.Poll.html</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>contains</span>(<span class='ident'>ready_from_usize</span>(<span class='ident'>ERROR</span>))
+    <span class="doccomment">/// Returns true if the value includes error readiness</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **Note that only readable and writable readiness is guaranteed to be</span>
+    <span class="doccomment">/// supported on all platforms**. This means that `error` readiness should</span>
+    <span class="doccomment">/// be treated as a hint. For more details, see [readiness] in the poll</span>
+    <span class="doccomment">/// documentation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [`Poll`] for more documentation on polling.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use mio::Ready;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let ready = Ready::error();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert!(ready.is_error());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Poll`]: struct.Poll.html</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident">ready_from_usize</span>(<span class="ident">ERROR</span>))
     }
 
-    <span class='doccomment'>/// Returns true if the value includes HUP readiness</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A HUP (or hang-up) signifies that a stream socket **peer** closed the</span>
-    <span class='doccomment'>/// connection, or shut down the writing half of the connection.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// **Note that only readable and writable readiness is guaranteed to be</span>
-    <span class='doccomment'>/// supported on all platforms**. This means that `hup` readiness</span>
-    <span class='doccomment'>/// should be treated as a hint. For more details, see [readiness] in the</span>
-    <span class='doccomment'>/// poll documentation.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See [`Poll`] for more documentation on polling.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use mio::Ready;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let ready = Ready::hup();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert!(ready.is_hup());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [`Poll`]: struct.Poll.html</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_hup</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>self</span>.<span class='ident'>contains</span>(<span class='ident'>ready_from_usize</span>(<span class='ident'>HUP</span>))
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Ready</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>src</span>: <span class='ident'>Ready</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        <span class='ident'>UnixReady</span>(<span class='ident'>src</span>)
+    <span class="doccomment">/// Returns true if the value includes HUP readiness</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A HUP (or hang-up) signifies that a stream socket **peer** closed the</span>
+    <span class="doccomment">/// connection, or shut down the writing half of the connection.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **Note that only readable and writable readiness is guaranteed to be</span>
+    <span class="doccomment">/// supported on all platforms**. This means that `hup` readiness</span>
+    <span class="doccomment">/// should be treated as a hint. For more details, see [readiness] in the</span>
+    <span class="doccomment">/// poll documentation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [`Poll`] for more documentation on polling.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use mio::Ready;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let ready = Ready::hup();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert!(ready.is_hup());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Poll`]: struct.Poll.html</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_hup</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident">ready_from_usize</span>(<span class="ident">HUP</span>))
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>UnixReady</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Ready</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>src</span>: <span class='ident'>UnixReady</span>) <span class='op'>-&gt;</span> <span class='ident'>Ready</span> {
-        <span class='ident'>src</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Ready</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">src</span>: <span class="ident">Ready</span>) <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        <span class="ident">UnixReady</span>(<span class="ident">src</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ops</span>::<span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>Ready</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Ready</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">UnixReady</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Ready</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">src</span>: <span class="ident">UnixReady</span>) <span class="op">-&gt;</span> <span class="ident">Ready</span> {
+        <span class="ident">src</span>.<span class="number">0</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ops</span>::<span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>fn</span> <span class='ident'>deref_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Ready</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">ops</span>::<span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Ready</span>;
+
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Ready</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ops</span>::<span class='ident'>BitOr</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>UnixReady</span>;
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bitor</span>(<span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>UnixReady</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        (<span class='self'>self</span>.<span class='number'>0</span> <span class='op'>|</span> <span class='ident'>other</span>.<span class='number'>0</span>).<span class='ident'>into</span>()
+<span class="kw">impl</span> <span class="ident">ops</span>::<span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Ready</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ops</span>::<span class='ident'>BitXor</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>UnixReady</span>;
+<span class="kw">impl</span> <span class="ident">ops</span>::<span class="ident">BitOr</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">UnixReady</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bitxor</span>(<span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>UnixReady</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        (<span class='self'>self</span>.<span class='number'>0</span> <span class='op'>^</span> <span class='ident'>other</span>.<span class='number'>0</span>).<span class='ident'>into</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">bitor</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">UnixReady</span>) <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        (<span class="self">self</span>.<span class="number">0</span> <span class="op">|</span> <span class="ident">other</span>.<span class="number">0</span>).<span class="ident">into</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ops</span>::<span class='ident'>BitAnd</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>UnixReady</span>;
+<span class="kw">impl</span> <span class="ident">ops</span>::<span class="ident">BitXor</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">UnixReady</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bitand</span>(<span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>UnixReady</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        (<span class='self'>self</span>.<span class='number'>0</span> <span class='op'>&amp;</span> <span class='ident'>other</span>.<span class='number'>0</span>).<span class='ident'>into</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">bitxor</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">UnixReady</span>) <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        (<span class="self">self</span>.<span class="number">0</span> <span class="op">^</span> <span class="ident">other</span>.<span class="number">0</span>).<span class="ident">into</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ops</span>::<span class='ident'>Sub</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>UnixReady</span>;
+<span class="kw">impl</span> <span class="ident">ops</span>::<span class="ident">BitAnd</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">UnixReady</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>sub</span>(<span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>UnixReady</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        (<span class='self'>self</span>.<span class='number'>0</span> <span class='op'>&amp;</span> <span class='op'>!</span><span class='ident'>other</span>.<span class='number'>0</span>).<span class='ident'>into</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">bitand</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">UnixReady</span>) <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        (<span class="self">self</span>.<span class="number">0</span> <span class="op">&amp;</span> <span class="ident">other</span>.<span class="number">0</span>).<span class="ident">into</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>ops</span>::<span class='ident'>Not</span> <span class='kw'>for</span> <span class='ident'>UnixReady</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>UnixReady</span>;
+<span class="kw">impl</span> <span class="ident">ops</span>::<span class="ident">Sub</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">UnixReady</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>not</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixReady</span> {
-        (<span class='op'>!</span><span class='self'>self</span>.<span class='number'>0</span>).<span class='ident'>into</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">sub</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">UnixReady</span>) <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        (<span class="self">self</span>.<span class="number">0</span> <span class="op">&amp;</span> <span class="op">!</span><span class="ident">other</span>.<span class="number">0</span>).<span class="ident">into</span>()
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">ops</span>::<span class="ident">Not</span> <span class="kw">for</span> <span class="ident">UnixReady</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">UnixReady</span>;
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">not</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">UnixReady</span> {
+        (<span class="op">!</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">into</span>()
     }
 }
 </pre>

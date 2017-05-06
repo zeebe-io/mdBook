@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -111,74 +111,74 @@
 <span id="66">66</span>
 <span id="67">67</span>
 <span id="68">68</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! IoVec extensions for Unix platforms.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! These functions provide conversions to unix specific representations of the</span>
-<span class='doccomment'>//! vectored data.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Examples</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use iovec::IoVec;</span>
-<span class='doccomment'>//! use iovec::unix;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let a = b&quot;hello&quot;.to_vec();</span>
-<span class='doccomment'>//! let b = b&quot;world&quot;.to_vec();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let bufs: &amp;[&amp;IoVec] = &amp;[(&amp;a[..]).into(), (&amp;b[..]).into()];</span>
-<span class='doccomment'>//! let os_bufs = unix::as_os_slice(&amp;bufs[..]);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Use the `os_bufs` slice with `writev`.</span>
-<span class='doccomment'>//! ```</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! IoVec extensions for Unix platforms.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! These functions provide conversions to unix specific representations of the</span>
+<span class="doccomment">//! vectored data.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Examples</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use iovec::IoVec;</span>
+<span class="doccomment">//! use iovec::unix;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let a = b&quot;hello&quot;.to_vec();</span>
+<span class="doccomment">//! let b = b&quot;world&quot;.to_vec();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let bufs: &amp;[&amp;IoVec] = &amp;[(&amp;a[..]).into(), (&amp;b[..]).into()];</span>
+<span class="doccomment">//! let os_bufs = unix::as_os_slice(&amp;bufs[..]);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Use the `os_bufs` slice with `writev`.</span>
+<span class="doccomment">//! ```</span>
 
-<span class='kw'>use</span> <span class='ident'>IoVec</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>;
+<span class="kw">use</span> <span class="ident">IoVec</span>;
+<span class="kw">use</span> <span class="ident">libc</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 
-<span class='doccomment'>/// Convert a slice of `IoVec` refs to a slice of `libc::iovec`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The return value can be passed to `writev` bindings.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use iovec::IoVec;</span>
-<span class='doccomment'>/// use iovec::unix;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let a = b&quot;hello&quot;.to_vec();</span>
-<span class='doccomment'>/// let b = b&quot;world&quot;.to_vec();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let bufs: &amp;[&amp;IoVec] = &amp;[a[..].into(), b[..].into()];</span>
-<span class='doccomment'>/// let os_bufs = unix::as_os_slice(bufs);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // Use the `os_bufs` slice with `writev`.</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_os_slice</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>iov</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='kw-2'>&amp;</span><span class='ident'>IoVec</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>libc</span>::<span class='ident'>iovec</span>] {
-    <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>iov</span>) }
+<span class="doccomment">/// Convert a slice of `IoVec` refs to a slice of `libc::iovec`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The return value can be passed to `writev` bindings.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use iovec::IoVec;</span>
+<span class="doccomment">/// use iovec::unix;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let a = b&quot;hello&quot;.to_vec();</span>
+<span class="doccomment">/// let b = b&quot;world&quot;.to_vec();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let bufs: &amp;[&amp;IoVec] = &amp;[a[..].into(), b[..].into()];</span>
+<span class="doccomment">/// let os_bufs = unix::as_os_slice(bufs);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Use the `os_bufs` slice with `writev`.</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_os_slice</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">iov</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="kw-2">&amp;</span><span class="ident">IoVec</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">libc</span>::<span class="ident">iovec</span>] {
+    <span class="kw">unsafe</span> { <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">iov</span>) }
 }
 
-<span class='doccomment'>/// Convert a mutable slice of `IoVec` refs to a mutable slice of `libc::iovec`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The return value can be passed to `readv` bindings.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// use iovec::IoVec;</span>
-<span class='doccomment'>/// use iovec::unix;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let mut a = [0; 10];</span>
-<span class='doccomment'>/// let mut b = [0; 10];</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let bufs: &amp;mut [&amp;mut IoVec] = &amp;mut [(&amp;mut a[..]).into(), (&amp;mut b[..]).into()];</span>
-<span class='doccomment'>/// let os_bufs = unix::as_os_slice_mut(bufs);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // Use the `os_bufs` slice with `readv`.</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_os_slice_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>iov</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>IoVec</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>libc</span>::<span class='ident'>iovec</span>] {
-    <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>iov</span>) }
+<span class="doccomment">/// Convert a mutable slice of `IoVec` refs to a mutable slice of `libc::iovec`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The return value can be passed to `readv` bindings.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use iovec::IoVec;</span>
+<span class="doccomment">/// use iovec::unix;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut a = [0; 10];</span>
+<span class="doccomment">/// let mut b = [0; 10];</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let bufs: &amp;mut [&amp;mut IoVec] = &amp;mut [(&amp;mut a[..]).into(), (&amp;mut b[..]).into()];</span>
+<span class="doccomment">/// let os_bufs = unix::as_os_slice_mut(bufs);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // Use the `os_bufs` slice with `readv`.</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_os_slice_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">iov</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> [<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">IoVec</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> [<span class="ident">libc</span>::<span class="ident">iovec</span>] {
+    <span class="kw">unsafe</span> { <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">iov</span>) }
 }
 </pre>
 </section>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -526,489 +526,489 @@
 <span id="481">481</span>
 <span id="482">482</span>
 <span id="483">483</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright © 2015, Peter Atashian</span>
-<span class='comment'>// Licensed under the MIT License &lt;LICENSE.md&gt;</span>
-<span class='doccomment'>//! FFI bindings to ws2_32.</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>winapi</span>;
-<span class='kw'>use</span> <span class='ident'>winapi</span>::<span class='kw-2'>*</span>;
-<span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FreeAddrInfoEx</span>(<span class='ident'>pAddrInfoEx</span>: <span class='ident'>PADDRINFOEXA</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FreeAddrInfoExW</span>(<span class='ident'>pAddrInfoEx</span>: <span class='ident'>PADDRINFOEXW</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FreeAddrInfoW</span>(<span class='ident'>pAddrInfo</span>: <span class='ident'>PADDRINFOW</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetAddrInfoExA</span>(
-        <span class='ident'>pName</span>: <span class='ident'>PCSTR</span>, <span class='ident'>pServiceName</span>: <span class='ident'>PCSTR</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNspId</span>: <span class='ident'>LPGUID</span>,
-        <span class='ident'>hints</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ADDRINFOEXA</span>, <span class='ident'>ppResult</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>PADDRINFOEXA</span>, <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>timeval</span>,
-        <span class='ident'>lpOverlapped</span>: <span class='ident'>LPOVERLAPPED</span>, <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
-        <span class='ident'>lpNameHandle</span>: <span class='ident'>LPHANDLE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetAddrInfoExCancel</span>(<span class='ident'>lpHandle</span>: <span class='ident'>LPHANDLE</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetAddrInfoExOverlappedResult</span>(<span class='ident'>lpOverlapped</span>: <span class='ident'>LPOVERLAPPED</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetAddrInfoExW</span>(
-        <span class='ident'>pName</span>: <span class='ident'>PCWSTR</span>, <span class='ident'>pServiceName</span>: <span class='ident'>PCWSTR</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNspId</span>: <span class='ident'>LPGUID</span>,
-        <span class='ident'>hints</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ADDRINFOEXW</span>, <span class='ident'>ppResult</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>PADDRINFOEXW</span>, <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>timeval</span>,
-        <span class='ident'>lpOverlapped</span>: <span class='ident'>LPOVERLAPPED</span>, <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
-        <span class='ident'>lpNameHandle</span>: <span class='ident'>LPHANDLE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetAddrInfoW</span>(
-        <span class='ident'>pNodeName</span>: <span class='ident'>PCWSTR</span>, <span class='ident'>pServiceName</span>: <span class='ident'>PCWSTR</span>, <span class='ident'>pHints</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ADDRINFOW</span>,
-        <span class='ident'>ppResult</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>PADDRINFOW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetHostNameW</span>(<span class='ident'>name</span>: <span class='ident'>PWSTR</span>, <span class='ident'>namelen</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>GetNameInfoW</span>(
-        <span class='ident'>pSockaddr</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>SockaddrLength</span>: <span class='ident'>socklen_t</span>, <span class='ident'>pNodeBuffer</span>: <span class='ident'>PWCHAR</span>,
-        <span class='ident'>NodeBufferSize</span>: <span class='ident'>DWORD</span>, <span class='ident'>pServiceBuffer</span>: <span class='ident'>PWCHAR</span>, <span class='ident'>ServiceBufferSize</span>: <span class='ident'>DWORD</span>, <span class='ident'>Flags</span>: <span class='ident'>INT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>InetNtopW</span>(<span class='ident'>Family</span>: <span class='ident'>INT</span>, <span class='ident'>pAddr</span>: <span class='ident'>PVOID</span>, <span class='ident'>pStringBuf</span>: <span class='ident'>PWSTR</span>, <span class='ident'>StringBufSize</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>PCWSTR</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>InetPtonW</span>(<span class='ident'>Family</span>: <span class='ident'>INT</span>, <span class='ident'>pszAddrString</span>: <span class='ident'>PCWSTR</span>, <span class='ident'>pAddrBuf</span>: <span class='ident'>PVOID</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>SetAddrInfoExA</span>(
-        <span class='ident'>pName</span>: <span class='ident'>PCSTR</span>, <span class='ident'>pServiceName</span>: <span class='ident'>PCSTR</span>, <span class='ident'>pAddresses</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKET_ADDRESS</span>, <span class='ident'>dwAddressCount</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpBlob</span>: <span class='ident'>LPBLOB</span>, <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNspId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>timeval</span>,
-        <span class='ident'>lpOverlapped</span>: <span class='ident'>LPOVERLAPPED</span>, <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
-        <span class='ident'>lpNameHandle</span>: <span class='ident'>LPHANDLE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>SetAddrInfoExW</span>(
-        <span class='ident'>pName</span>: <span class='ident'>PCWSTR</span>, <span class='ident'>pServiceName</span>: <span class='ident'>PCWSTR</span>, <span class='ident'>pAddresses</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKET_ADDRESS</span>, <span class='ident'>dwAddressCount</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpBlob</span>: <span class='ident'>LPBLOB</span>, <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNspId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>timeval</span>,
-        <span class='ident'>lpOverlapped</span>: <span class='ident'>LPOVERLAPPED</span>, <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
-        <span class='ident'>lpNameHandle</span>: <span class='ident'>LPHANDLE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='comment'>// pub fn WEP();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WPUCompleteOverlappedRequest</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>, <span class='ident'>dwError</span>: <span class='ident'>DWORD</span>, <span class='ident'>cbTransferred</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WPUGetProviderPathEx();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAccept</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>addrlen</span>: <span class='ident'>LPINT</span>, <span class='ident'>lpfnCondition</span>: <span class='ident'>LPCONDITIONPROC</span>,
-        <span class='ident'>dwCallbackData</span>: <span class='ident'>DWORD_PTR</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>SOCKET</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAddressToStringA</span>(
-        <span class='ident'>lpsaAddress</span>: <span class='ident'>LPSOCKADDR</span>, <span class='ident'>dwAddressLength</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOA</span>,
-        <span class='ident'>lpszAddressString</span>: <span class='ident'>LPSTR</span>, <span class='ident'>lpdwAddressStringLength</span>: <span class='ident'>LPDWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAddressToStringW</span>(
-        <span class='ident'>lpsaAddress</span>: <span class='ident'>LPSOCKADDR</span>, <span class='ident'>dwAddressLength</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>,
-        <span class='ident'>lpszAddressString</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpdwAddressStringLength</span>: <span class='ident'>LPDWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAdvertiseProvider</span>(
-        <span class='ident'>puuidProviderId</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>GUID</span>, <span class='ident'>pNSPv2Routine</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>LPCNSPV2_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAsyncGetHostByAddr</span>(
-        <span class='ident'>hWnd</span>: <span class='ident'>HWND</span>, <span class='ident'>wMsg</span>: <span class='ident'>u_int</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>c_int</span>, <span class='ident'>_type</span>: <span class='ident'>c_int</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
-        <span class='ident'>buflen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>HANDLE</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAsyncGetHostByName</span>(
-        <span class='ident'>hWnd</span>: <span class='ident'>HWND</span>, <span class='ident'>wMsg</span>: <span class='ident'>u_int</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>buflen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>HANDLE</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAsyncGetProtoByName</span>(
-        <span class='ident'>hWnd</span>: <span class='ident'>HWND</span>, <span class='ident'>wMsg</span>: <span class='ident'>u_int</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>buflen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>HANDLE</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAsyncGetProtoByNumber</span>(
-        <span class='ident'>hWnd</span>: <span class='ident'>HWND</span>, <span class='ident'>wMsg</span>: <span class='ident'>u_int</span>, <span class='ident'>number</span>: <span class='ident'>c_int</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>buflen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>HANDLE</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAsyncGetServByName</span>(
-        <span class='ident'>hWnd</span>: <span class='ident'>HWND</span>, <span class='ident'>wMsg</span>: <span class='ident'>u_int</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>proto</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
-        <span class='ident'>buflen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>HANDLE</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAsyncGetServByPort</span>(
-        <span class='ident'>hWnd</span>: <span class='ident'>HWND</span>, <span class='ident'>wMsg</span>: <span class='ident'>u_int</span>, <span class='ident'>port</span>: <span class='ident'>c_int</span>, <span class='ident'>proto</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>buflen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>HANDLE</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAAsyncSelect</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>hWnd</span>: <span class='ident'>HWND</span>, <span class='ident'>wMsg</span>: <span class='ident'>u_int</span>, <span class='ident'>lEvent</span>: <span class='ident'>c_long</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSACancelAsyncRequest</span>(<span class='ident'>hAsyncTaskHandle</span>: <span class='ident'>HANDLE</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSACancelBlockingCall</span>() <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSACleanup</span>() <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSACloseEvent</span>(<span class='ident'>hEvent</span>: <span class='ident'>WSAEVENT</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAConnect</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>namelen</span>: <span class='ident'>c_int</span>, <span class='ident'>lpCallerData</span>: <span class='ident'>LPWSABUF</span>,
-        <span class='ident'>lpCalleeData</span>: <span class='ident'>LPWSABUF</span>, <span class='ident'>lpSQOS</span>: <span class='ident'>LPQOS</span>, <span class='ident'>lpGQOS</span>: <span class='ident'>LPQOS</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAConnectByList</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>SocketAddress</span>: <span class='ident'>PSOCKET_ADDRESS_LIST</span>, <span class='ident'>LocalAddressLength</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>LocalAddress</span>: <span class='ident'>LPSOCKADDR</span>, <span class='ident'>RemoteAddressLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>RemoteAddress</span>: <span class='ident'>LPSOCKADDR</span>,
-        <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>timeval</span>, <span class='ident'>Reserved</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAConnectByNameA</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>nodename</span>: <span class='ident'>LPCSTR</span>, <span class='ident'>servicename</span>: <span class='ident'>LPCSTR</span>, <span class='ident'>LocalAddressLength</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>LocalAddress</span>: <span class='ident'>LPSOCKADDR</span>, <span class='ident'>RemoteAddressLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>RemoteAddress</span>: <span class='ident'>LPSOCKADDR</span>,
-        <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>timeval</span>, <span class='ident'>Reserved</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAConnectByNameW</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>nodename</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>servicename</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>LocalAddressLength</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>LocalAddress</span>: <span class='ident'>LPSOCKADDR</span>, <span class='ident'>RemoteAddressLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>RemoteAddress</span>: <span class='ident'>LPSOCKADDR</span>,
-        <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>timeval</span>, <span class='ident'>Reserved</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSACreateEvent</span>() <span class='op'>-&gt;</span> <span class='ident'>WSAEVENT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSADuplicateSocketA</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>dwProcessId</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOA</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSADuplicateSocketW</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>dwProcessId</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEnumNameSpaceProvidersA</span>(
-        <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpnspBuffer</span>: <span class='ident'>LPWSANAMESPACE_INFOA</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEnumNameSpaceProvidersExA</span>(
-        <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpnspBuffer</span>: <span class='ident'>LPWSANAMESPACE_INFOEXA</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEnumNameSpaceProvidersExW</span>(
-        <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpnspBuffer</span>: <span class='ident'>LPWSANAMESPACE_INFOEXW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEnumNameSpaceProvidersW</span>(
-        <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpnspBuffer</span>: <span class='ident'>LPWSANAMESPACE_INFOW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEnumNetworkEvents</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>hEventObject</span>: <span class='ident'>WSAEVENT</span>, <span class='ident'>lpNetworkEvents</span>: <span class='ident'>LPWSANETWORKEVENTS</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEnumProtocolsA</span>(
-        <span class='ident'>lpiProtocols</span>: <span class='ident'>LPINT</span>, <span class='ident'>lpProtocolBuffer</span>: <span class='ident'>LPWSAPROTOCOL_INFOA</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEnumProtocolsW</span>(
-        <span class='ident'>lpiProtocols</span>: <span class='ident'>LPINT</span>, <span class='ident'>lpProtocolBuffer</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAEventSelect</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>hEventObject</span>: <span class='ident'>WSAEVENT</span>, <span class='ident'>lNetworkEvents</span>: <span class='ident'>c_long</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAGetLastError</span>() <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAGetOverlappedResult</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>, <span class='ident'>lpcbTransfer</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>fWait</span>: <span class='ident'>BOOL</span>,
-        <span class='ident'>lpdwFlags</span>: <span class='ident'>LPDWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAGetQOSByName</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpQOSName</span>: <span class='ident'>LPWSABUF</span>, <span class='ident'>lpQOS</span>: <span class='ident'>LPQOS</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAGetServiceClassInfoA</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpServiceClassId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpdwBufSize</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpServiceClassInfo</span>: <span class='ident'>LPWSASERVICECLASSINFOA</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAGetServiceClassInfoW</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpServiceClassId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpdwBufSize</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpServiceClassInfo</span>: <span class='ident'>LPWSASERVICECLASSINFOW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAGetServiceClassNameByClassIdA</span>(
-        <span class='ident'>lpServiceClassId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszServiceClassName</span>: <span class='ident'>LPSTR</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAGetServiceClassNameByClassIdW</span>(
-        <span class='ident'>lpServiceClassId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszServiceClassName</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAHtonl</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>hostlong</span>: <span class='ident'>u_long</span>, <span class='ident'>lpnetlong</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u_long</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAHtons</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>hostshort</span>: <span class='ident'>u_short</span>, <span class='ident'>lpnetshort</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u_short</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAInstallServiceClassA</span>(<span class='ident'>lpServiceClassInfo</span>: <span class='ident'>LPWSASERVICECLASSINFOA</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAInstallServiceClassW</span>(<span class='ident'>lpServiceClassInfo</span>: <span class='ident'>LPWSASERVICECLASSINFOW</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAIoctl</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>dwIoControlCode</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpvInBuffer</span>: <span class='ident'>LPVOID</span>, <span class='ident'>cbInBuffer</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpvOutBuffer</span>: <span class='ident'>LPVOID</span>, <span class='ident'>cbOutBuffer</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpcbBytesReturned</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>, <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAIsBlocking</span>() <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAJoinLeaf</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>namelen</span>: <span class='ident'>c_int</span>, <span class='ident'>lpCallerData</span>: <span class='ident'>LPWSABUF</span>,
-        <span class='ident'>lpCalleeData</span>: <span class='ident'>LPWSABUF</span>, <span class='ident'>lpSQOS</span>: <span class='ident'>LPQOS</span>, <span class='ident'>lpGQOS</span>: <span class='ident'>LPQOS</span>, <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>SOCKET</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSALookupServiceBeginA</span>(
-        <span class='ident'>lpqsRestrictions</span>: <span class='ident'>LPWSAQUERYSETA</span>, <span class='ident'>dwControlFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lphLookup</span>: <span class='ident'>LPHANDLE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSALookupServiceBeginW</span>(
-        <span class='ident'>lpqsRestrictions</span>: <span class='ident'>LPWSAQUERYSETW</span>, <span class='ident'>dwControlFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lphLookup</span>: <span class='ident'>LPHANDLE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSALookupServiceEnd</span>(<span class='ident'>hLookup</span>: <span class='ident'>HANDLE</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSALookupServiceNextA</span>(
-        <span class='ident'>hLookup</span>: <span class='ident'>HANDLE</span>, <span class='ident'>dwControlFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpqsResults</span>: <span class='ident'>LPWSAQUERYSETA</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSALookupServiceNextW</span>(
-        <span class='ident'>hLookup</span>: <span class='ident'>HANDLE</span>, <span class='ident'>dwControlFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpqsResults</span>: <span class='ident'>LPWSAQUERYSETW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSANSPIoctl</span>(
-        <span class='ident'>hLookup</span>: <span class='ident'>HANDLE</span>, <span class='ident'>dwControlFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpvInBuffer</span>: <span class='ident'>LPVOID</span>, <span class='ident'>cbInBuffer</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpvOutBuffer</span>: <span class='ident'>LPVOID</span>, <span class='ident'>cbOutBuffer</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpcbBytesReturned</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpCompletion</span>: <span class='ident'>LPWSACOMPLETION</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSANtohl</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>netlong</span>: <span class='ident'>u_long</span>, <span class='ident'>lphostlong</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_long</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSANtohs</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>netshort</span>: <span class='ident'>u_short</span>, <span class='ident'>lphostshort</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_short</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAPoll</span>(<span class='ident'>fdArray</span>: <span class='ident'>LPWSAPOLLFD</span>, <span class='ident'>fds</span>: <span class='ident'>ULONG</span>, <span class='ident'>timeout</span>: <span class='ident'>INT</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAProviderCompleteAsyncCall</span>(<span class='ident'>hAsyncCall</span>: <span class='ident'>HANDLE</span>, <span class='ident'>iRetCode</span>: <span class='ident'>INT</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAProviderConfigChange</span>(
-        <span class='ident'>lpNotificationHandle</span>: <span class='ident'>LPHANDLE</span>, <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-        <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSARecv</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpBuffers</span>: <span class='ident'>LPWSABUF</span>, <span class='ident'>dwBufferCount</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNumberOfBytesRecvd</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpFlags</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-        <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSARecvDisconnect</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpInboundDisconnectData</span>: <span class='ident'>LPWSABUF</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSARecvFrom</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpBuffers</span>: <span class='ident'>LPWSABUF</span>, <span class='ident'>dwBufferCount</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNumberOfBytesRecvd</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpFlags</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpFrom</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>lpFromlen</span>: <span class='ident'>LPINT</span>, <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-        <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSARemoveServiceClass</span>(<span class='ident'>lpServiceClassId</span>: <span class='ident'>LPGUID</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAResetEvent</span>(<span class='ident'>hEvent</span>: <span class='ident'>WSAEVENT</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASend</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpBuffers</span>: <span class='ident'>LPWSABUF</span>, <span class='ident'>dwBufferCount</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNumberOfBytesSent</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-        <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASendDisconnect</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpOutboundDisconnectData</span>: <span class='ident'>LPWSABUF</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASendMsg</span>(
-        <span class='ident'>Handle</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpMsg</span>: <span class='ident'>LPWSAMSG</span>, <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNumberOfBytesSent</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>, <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASendTo</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>lpBuffers</span>: <span class='ident'>LPWSABUF</span>, <span class='ident'>dwBufferCount</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpNumberOfBytesSent</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpTo</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>iToLen</span>: <span class='ident'>c_int</span>, <span class='ident'>lpOverlapped</span>: <span class='ident'>LPWSAOVERLAPPED</span>,
-        <span class='ident'>lpCompletionRoutine</span>: <span class='ident'>LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASetBlockingHook</span>(<span class='ident'>lpBlockFunc</span>: <span class='ident'>FARPROC</span>) <span class='op'>-&gt;</span> <span class='ident'>FARPROC</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASetEvent</span>(<span class='ident'>hEvent</span>: <span class='ident'>WSAEVENT</span>) <span class='op'>-&gt;</span> <span class='ident'>BOOL</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASetLastError</span>(<span class='ident'>iError</span>: <span class='ident'>c_int</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASetServiceA</span>(
-        <span class='ident'>lpqsRegInfo</span>: <span class='ident'>LPWSAQUERYSETA</span>, <span class='ident'>essoperation</span>: <span class='ident'>WSAESETSERVICEOP</span>, <span class='ident'>dwControlFlags</span>: <span class='ident'>DWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASetServiceW</span>(
-        <span class='ident'>lpqsRegInfo</span>: <span class='ident'>LPWSAQUERYSETW</span>, <span class='ident'>essoperation</span>: <span class='ident'>WSAESETSERVICEOP</span>, <span class='ident'>dwControlFlags</span>: <span class='ident'>DWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASocketA</span>(
-        <span class='ident'>af</span>: <span class='ident'>c_int</span>, <span class='ident'>_type</span>: <span class='ident'>c_int</span>, <span class='ident'>protocol</span>: <span class='ident'>c_int</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOA</span>, <span class='ident'>g</span>: <span class='ident'>GROUP</span>,
-        <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>SOCKET</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSASocketW</span>(
-        <span class='ident'>af</span>: <span class='ident'>c_int</span>, <span class='ident'>_type</span>: <span class='ident'>c_int</span>, <span class='ident'>protocol</span>: <span class='ident'>c_int</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>g</span>: <span class='ident'>GROUP</span>,
-        <span class='ident'>dwFlags</span>: <span class='ident'>DWORD</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>SOCKET</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAStartup</span>(<span class='ident'>wVersionRequested</span>: <span class='ident'>WORD</span>, <span class='ident'>lpWSAData</span>: <span class='ident'>LPWSADATA</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAStringToAddressA</span>(
-        <span class='ident'>AddressString</span>: <span class='ident'>LPSTR</span>, <span class='ident'>AddressFamily</span>: <span class='ident'>INT</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOA</span>,
-        <span class='ident'>lpAddress</span>: <span class='ident'>LPSOCKADDR</span>, <span class='ident'>lpAddressLength</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAStringToAddressW</span>(
-        <span class='ident'>AddressString</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>AddressFamily</span>: <span class='ident'>INT</span>, <span class='ident'>lpProtocolInfo</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>,
-        <span class='ident'>lpAddress</span>: <span class='ident'>LPSOCKADDR</span>, <span class='ident'>lpAddressLength</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAUnadvertiseProvider</span>(<span class='ident'>puuidProviderId</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>GUID</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAUnhookBlockingHook</span>() <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSAWaitForMultipleEvents</span>(
-        <span class='ident'>cEvents</span>: <span class='ident'>DWORD</span>, <span class='ident'>lphEvents</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>WSAEVENT</span>, <span class='ident'>fWaitAll</span>: <span class='ident'>BOOL</span>, <span class='ident'>dwTimeout</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>fAlertable</span>: <span class='ident'>BOOL</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>DWORD</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCDeinstallProvider</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WSCDeinstallProviderEx();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCEnableNSProvider</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>fEnable</span>: <span class='ident'>BOOL</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCEnumProtocols</span>(
-        <span class='ident'>lpiProtocols</span>: <span class='ident'>LPINT</span>, <span class='ident'>lpProtocolBuffer</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WSCEnumProtocolsEx();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCGetApplicationCategory</span>(
-        <span class='ident'>Path</span>: <span class='ident'>LPCWSTR</span>, <span class='ident'>PathLength</span>: <span class='ident'>DWORD</span>, <span class='ident'>Extra</span>: <span class='ident'>LPCWSTR</span>, <span class='ident'>ExtraLength</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>pPermittedLspCategories</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WSCGetApplicationCategoryEx();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCGetProviderInfo</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>InfoType</span>: <span class='ident'>WSC_PROVIDER_INFO_TYPE</span>, <span class='ident'>Info</span>: <span class='ident'>PBYTE</span>, <span class='ident'>InfoSize</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>size_t</span>,
-        <span class='ident'>Flags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCGetProviderPath</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>WCHAR</span>, <span class='ident'>lpProviderDllPathLen</span>: <span class='ident'>LPINT</span>,
-        <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallNameSpace</span>(
-        <span class='ident'>lpszIdentifier</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpszPathName</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>dwVersion</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallNameSpaceEx</span>(
-        <span class='ident'>lpszIdentifier</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpszPathName</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>dwVersion</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpProviderSpecific</span>: <span class='ident'>LPBLOB</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='comment'>// pub fn WSCInstallNameSpaceEx2();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallProvider</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>WCHAR</span>,
-        <span class='ident'>lpProtocolInfoList</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WSCInstallProviderEx();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCSetApplicationCategory</span>(
-        <span class='ident'>Path</span>: <span class='ident'>LPCWSTR</span>, <span class='ident'>PathLength</span>: <span class='ident'>DWORD</span>, <span class='ident'>Extra</span>: <span class='ident'>LPCWSTR</span>, <span class='ident'>ExtraLength</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>PermittedLspCategories</span>: <span class='ident'>DWORD</span>, <span class='ident'>pPrevPermLspCat</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WSCSetApplicationCategoryEx();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCSetProviderInfo</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>InfoType</span>: <span class='ident'>WSC_PROVIDER_INFO_TYPE</span>, <span class='ident'>Info</span>: <span class='ident'>PBYTE</span>, <span class='ident'>InfoSize</span>: <span class='ident'>size_t</span>,
-        <span class='ident'>Flags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCUnInstallNameSpace</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='comment'>// pub fn WSCUnInstallNameSpaceEx2();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCUpdateProvider</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>WCHAR</span>,
-        <span class='ident'>lpProtocolInfoList</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WSCUpdateProviderEx();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCWriteNameSpaceOrder</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCWriteProviderOrder</span>(<span class='ident'>lpwdCatalogEntryId</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='comment'>// pub fn WSCWriteProviderOrderEx();</span>
-    <span class='comment'>// pub fn WahCloseApcHelper();</span>
-    <span class='comment'>// pub fn WahCloseHandleHelper();</span>
-    <span class='comment'>// pub fn WahCloseNotificationHandleHelper();</span>
-    <span class='comment'>// pub fn WahCloseSocketHandle();</span>
-    <span class='comment'>// pub fn WahCloseThread();</span>
-    <span class='comment'>// pub fn WahCompleteRequest();</span>
-    <span class='comment'>// pub fn WahCreateHandleContextTable();</span>
-    <span class='comment'>// pub fn WahCreateNotificationHandle();</span>
-    <span class='comment'>// pub fn WahCreateSocketHandle();</span>
-    <span class='comment'>// pub fn WahDestroyHandleContextTable();</span>
-    <span class='comment'>// pub fn WahDisableNonIFSHandleSupport();</span>
-    <span class='comment'>// pub fn WahEnableNonIFSHandleSupport();</span>
-    <span class='comment'>// pub fn WahEnumerateHandleContexts();</span>
-    <span class='comment'>// pub fn WahInsertHandleContext();</span>
-    <span class='comment'>// pub fn WahNotifyAllProcesses();</span>
-    <span class='comment'>// pub fn WahOpenApcHelper();</span>
-    <span class='comment'>// pub fn WahOpenCurrentThread();</span>
-    <span class='comment'>// pub fn WahOpenHandleHelper();</span>
-    <span class='comment'>// pub fn WahOpenNotificationHandleHelper();</span>
-    <span class='comment'>// pub fn WahQueueUserApc();</span>
-    <span class='comment'>// pub fn WahReferenceContextByHandle();</span>
-    <span class='comment'>// pub fn WahRemoveHandleContext();</span>
-    <span class='comment'>// pub fn WahWaitForNotification();</span>
-    <span class='comment'>// pub fn WahWriteLSPEvent();</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>__WSAFDIsSet</span>(<span class='ident'>fd</span>: <span class='ident'>SOCKET</span>, _: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>fd_set</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>accept</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>addrlen</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>SOCKET</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>bind</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>namelen</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>closesocket</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>namelen</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>freeaddrinfo</span>(<span class='ident'>pAddrInfo</span>: <span class='ident'>PADDRINFOA</span>);
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getaddrinfo</span>(
-        <span class='ident'>pNodeName</span>: <span class='ident'>PCSTR</span>, <span class='ident'>pServiceName</span>: <span class='ident'>PCSTR</span>, <span class='ident'>pHints</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ADDRINFOA</span>, <span class='ident'>ppResult</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>PADDRINFOA</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gethostbyaddr</span>(<span class='ident'>addr</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>c_int</span>, <span class='ident'>_type</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>hostent</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gethostbyname</span>(<span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>hostent</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gethostname</span>(<span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>namelen</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getnameinfo</span>(
-        <span class='ident'>pSockaddr</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>SockaddrLength</span>: <span class='ident'>socklen_t</span>, <span class='ident'>pNodeBuffer</span>: <span class='ident'>PCHAR</span>,
-        <span class='ident'>NodeBufferSize</span>: <span class='ident'>DWORD</span>, <span class='ident'>pServiceBuffer</span>: <span class='ident'>PCHAR</span>, <span class='ident'>ServiceBufferSize</span>: <span class='ident'>DWORD</span>, <span class='ident'>Flags</span>: <span class='ident'>INT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getpeername</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>namelen</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getprotobyname</span>(<span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>protoent</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getprotobynumber</span>(<span class='ident'>number</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>protoent</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getservbyname</span>(<span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>proto</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>servent</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getservbyport</span>(<span class='ident'>port</span>: <span class='ident'>c_int</span>, <span class='ident'>proto</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>servent</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getsockname</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>namelen</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>getsockopt</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>level</span>: <span class='ident'>c_int</span>, <span class='ident'>optname</span>: <span class='ident'>c_int</span>, <span class='ident'>optval</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>optlen</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>htonl</span>(<span class='ident'>hostlong</span>: <span class='ident'>u_long</span>) <span class='op'>-&gt;</span> <span class='ident'>u_long</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>htons</span>(<span class='ident'>hostshort</span>: <span class='ident'>u_short</span>) <span class='op'>-&gt;</span> <span class='ident'>u_short</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inet_addr</span>(<span class='ident'>cp</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>c_ulong</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inet_ntoa</span>(<span class='ident'>_in</span>: <span class='ident'>in_addr</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inet_ntop</span>(<span class='ident'>Family</span>: <span class='ident'>INT</span>, <span class='ident'>pAddr</span>: <span class='ident'>PVOID</span>, <span class='ident'>pStringBuf</span>: <span class='ident'>PSTR</span>, <span class='ident'>StringBufSize</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>PCSTR</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inet_pton</span>(<span class='ident'>Family</span>: <span class='ident'>INT</span>, <span class='ident'>pszAddrString</span>: <span class='ident'>PCSTR</span>, <span class='ident'>pAddrBuf</span>: <span class='ident'>PVOID</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ioctlsocket</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>cmd</span>: <span class='ident'>c_long</span>, <span class='ident'>argp</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u_long</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>listen</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>backlog</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ntohl</span>(<span class='ident'>netlong</span>: <span class='ident'>u_long</span>) <span class='op'>-&gt;</span> <span class='ident'>u_long</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ntohs</span>(<span class='ident'>netshort</span>: <span class='ident'>u_short</span>) <span class='op'>-&gt;</span> <span class='ident'>u_short</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>recv</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>c_int</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>recvfrom</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>c_int</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>, <span class='ident'>from</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>SOCKADDR</span>,
-        <span class='ident'>fromlen</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>select</span>(
-        <span class='ident'>nfds</span>: <span class='ident'>c_int</span>, <span class='ident'>readfds</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>fd_set</span>, <span class='ident'>writefds</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>fd_set</span>, <span class='ident'>exceptfds</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>fd_set</span>,
-        <span class='ident'>timeout</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>timeval</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>send</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>c_int</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sendto</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>len</span>: <span class='ident'>c_int</span>, <span class='ident'>flags</span>: <span class='ident'>c_int</span>, <span class='ident'>to</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>SOCKADDR</span>, <span class='ident'>tolen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>setsockopt</span>(
-        <span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>level</span>: <span class='ident'>c_int</span>, <span class='ident'>optname</span>: <span class='ident'>c_int</span>, <span class='ident'>optval</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>optlen</span>: <span class='ident'>c_int</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='ident'>s</span>: <span class='ident'>SOCKET</span>, <span class='ident'>how</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>socket</span>(<span class='ident'>af</span>: <span class='ident'>c_int</span>, <span class='ident'>_type</span>: <span class='ident'>c_int</span>, <span class='ident'>protocol</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>SOCKET</span>;
+</pre><pre class="rust ">
+<span class="comment">// Copyright © 2015, Peter Atashian</span>
+<span class="comment">// Licensed under the MIT License &lt;LICENSE.md&gt;</span>
+<span class="doccomment">//! FFI bindings to ws2_32.</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">winapi</span>;
+<span class="kw">use</span> <span class="ident">winapi</span>::<span class="kw-2">*</span>;
+<span class="kw">extern</span> <span class="string">&quot;system&quot;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">FreeAddrInfoEx</span>(<span class="ident">pAddrInfoEx</span>: <span class="ident">PADDRINFOEXA</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">FreeAddrInfoExW</span>(<span class="ident">pAddrInfoEx</span>: <span class="ident">PADDRINFOEXW</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">FreeAddrInfoW</span>(<span class="ident">pAddrInfo</span>: <span class="ident">PADDRINFOW</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">GetAddrInfoExA</span>(
+        <span class="ident">pName</span>: <span class="ident">PCSTR</span>, <span class="ident">pServiceName</span>: <span class="ident">PCSTR</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">lpNspId</span>: <span class="ident">LPGUID</span>,
+        <span class="ident">hints</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ADDRINFOEXA</span>, <span class="ident">ppResult</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PADDRINFOEXA</span>, <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">timeval</span>,
+        <span class="ident">lpOverlapped</span>: <span class="ident">LPOVERLAPPED</span>, <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
+        <span class="ident">lpNameHandle</span>: <span class="ident">LPHANDLE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">GetAddrInfoExCancel</span>(<span class="ident">lpHandle</span>: <span class="ident">LPHANDLE</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">GetAddrInfoExOverlappedResult</span>(<span class="ident">lpOverlapped</span>: <span class="ident">LPOVERLAPPED</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">GetAddrInfoExW</span>(
+        <span class="ident">pName</span>: <span class="ident">PCWSTR</span>, <span class="ident">pServiceName</span>: <span class="ident">PCWSTR</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">lpNspId</span>: <span class="ident">LPGUID</span>,
+        <span class="ident">hints</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ADDRINFOEXW</span>, <span class="ident">ppResult</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PADDRINFOEXW</span>, <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">timeval</span>,
+        <span class="ident">lpOverlapped</span>: <span class="ident">LPOVERLAPPED</span>, <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
+        <span class="ident">lpNameHandle</span>: <span class="ident">LPHANDLE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">GetAddrInfoW</span>(
+        <span class="ident">pNodeName</span>: <span class="ident">PCWSTR</span>, <span class="ident">pServiceName</span>: <span class="ident">PCWSTR</span>, <span class="ident">pHints</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ADDRINFOW</span>,
+        <span class="ident">ppResult</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PADDRINFOW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">GetHostNameW</span>(<span class="ident">name</span>: <span class="ident">PWSTR</span>, <span class="ident">namelen</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">GetNameInfoW</span>(
+        <span class="ident">pSockaddr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">SockaddrLength</span>: <span class="ident">socklen_t</span>, <span class="ident">pNodeBuffer</span>: <span class="ident">PWCHAR</span>,
+        <span class="ident">NodeBufferSize</span>: <span class="ident">DWORD</span>, <span class="ident">pServiceBuffer</span>: <span class="ident">PWCHAR</span>, <span class="ident">ServiceBufferSize</span>: <span class="ident">DWORD</span>, <span class="ident">Flags</span>: <span class="ident">INT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">InetNtopW</span>(<span class="ident">Family</span>: <span class="ident">INT</span>, <span class="ident">pAddr</span>: <span class="ident">PVOID</span>, <span class="ident">pStringBuf</span>: <span class="ident">PWSTR</span>, <span class="ident">StringBufSize</span>: <span class="ident">size_t</span>) <span class="op">-&gt;</span> <span class="ident">PCWSTR</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">InetPtonW</span>(<span class="ident">Family</span>: <span class="ident">INT</span>, <span class="ident">pszAddrString</span>: <span class="ident">PCWSTR</span>, <span class="ident">pAddrBuf</span>: <span class="ident">PVOID</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">SetAddrInfoExA</span>(
+        <span class="ident">pName</span>: <span class="ident">PCSTR</span>, <span class="ident">pServiceName</span>: <span class="ident">PCSTR</span>, <span class="ident">pAddresses</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKET_ADDRESS</span>, <span class="ident">dwAddressCount</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpBlob</span>: <span class="ident">LPBLOB</span>, <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">lpNspId</span>: <span class="ident">LPGUID</span>, <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">timeval</span>,
+        <span class="ident">lpOverlapped</span>: <span class="ident">LPOVERLAPPED</span>, <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
+        <span class="ident">lpNameHandle</span>: <span class="ident">LPHANDLE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">SetAddrInfoExW</span>(
+        <span class="ident">pName</span>: <span class="ident">PCWSTR</span>, <span class="ident">pServiceName</span>: <span class="ident">PCWSTR</span>, <span class="ident">pAddresses</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKET_ADDRESS</span>, <span class="ident">dwAddressCount</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpBlob</span>: <span class="ident">LPBLOB</span>, <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">lpNspId</span>: <span class="ident">LPGUID</span>, <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">timeval</span>,
+        <span class="ident">lpOverlapped</span>: <span class="ident">LPOVERLAPPED</span>, <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPLOOKUPSERVICE_COMPLETION_ROUTINE</span>,
+        <span class="ident">lpNameHandle</span>: <span class="ident">LPHANDLE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="comment">// pub fn WEP();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WPUCompleteOverlappedRequest</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>, <span class="ident">dwError</span>: <span class="ident">DWORD</span>, <span class="ident">cbTransferred</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WPUGetProviderPathEx();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAccept</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKADDR</span>, <span class="ident">addrlen</span>: <span class="ident">LPINT</span>, <span class="ident">lpfnCondition</span>: <span class="ident">LPCONDITIONPROC</span>,
+        <span class="ident">dwCallbackData</span>: <span class="ident">DWORD_PTR</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SOCKET</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAddressToStringA</span>(
+        <span class="ident">lpsaAddress</span>: <span class="ident">LPSOCKADDR</span>, <span class="ident">dwAddressLength</span>: <span class="ident">DWORD</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOA</span>,
+        <span class="ident">lpszAddressString</span>: <span class="ident">LPSTR</span>, <span class="ident">lpdwAddressStringLength</span>: <span class="ident">LPDWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAddressToStringW</span>(
+        <span class="ident">lpsaAddress</span>: <span class="ident">LPSOCKADDR</span>, <span class="ident">dwAddressLength</span>: <span class="ident">DWORD</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>,
+        <span class="ident">lpszAddressString</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpdwAddressStringLength</span>: <span class="ident">LPDWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAdvertiseProvider</span>(
+        <span class="ident">puuidProviderId</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">GUID</span>, <span class="ident">pNSPv2Routine</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">LPCNSPV2_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAsyncGetHostByAddr</span>(
+        <span class="ident">hWnd</span>: <span class="ident">HWND</span>, <span class="ident">wMsg</span>: <span class="ident">u_int</span>, <span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">len</span>: <span class="ident">c_int</span>, <span class="ident">_type</span>: <span class="ident">c_int</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
+        <span class="ident">buflen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">HANDLE</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAsyncGetHostByName</span>(
+        <span class="ident">hWnd</span>: <span class="ident">HWND</span>, <span class="ident">wMsg</span>: <span class="ident">u_int</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">HANDLE</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAsyncGetProtoByName</span>(
+        <span class="ident">hWnd</span>: <span class="ident">HWND</span>, <span class="ident">wMsg</span>: <span class="ident">u_int</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">HANDLE</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAsyncGetProtoByNumber</span>(
+        <span class="ident">hWnd</span>: <span class="ident">HWND</span>, <span class="ident">wMsg</span>: <span class="ident">u_int</span>, <span class="ident">number</span>: <span class="ident">c_int</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">HANDLE</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAsyncGetServByName</span>(
+        <span class="ident">hWnd</span>: <span class="ident">HWND</span>, <span class="ident">wMsg</span>: <span class="ident">u_int</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">proto</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>,
+        <span class="ident">buflen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">HANDLE</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAsyncGetServByPort</span>(
+        <span class="ident">hWnd</span>: <span class="ident">HWND</span>, <span class="ident">wMsg</span>: <span class="ident">u_int</span>, <span class="ident">port</span>: <span class="ident">c_int</span>, <span class="ident">proto</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">buflen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">HANDLE</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAAsyncSelect</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">hWnd</span>: <span class="ident">HWND</span>, <span class="ident">wMsg</span>: <span class="ident">u_int</span>, <span class="ident">lEvent</span>: <span class="ident">c_long</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSACancelAsyncRequest</span>(<span class="ident">hAsyncTaskHandle</span>: <span class="ident">HANDLE</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSACancelBlockingCall</span>() <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSACleanup</span>() <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSACloseEvent</span>(<span class="ident">hEvent</span>: <span class="ident">WSAEVENT</span>) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAConnect</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">namelen</span>: <span class="ident">c_int</span>, <span class="ident">lpCallerData</span>: <span class="ident">LPWSABUF</span>,
+        <span class="ident">lpCalleeData</span>: <span class="ident">LPWSABUF</span>, <span class="ident">lpSQOS</span>: <span class="ident">LPQOS</span>, <span class="ident">lpGQOS</span>: <span class="ident">LPQOS</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAConnectByList</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">SocketAddress</span>: <span class="ident">PSOCKET_ADDRESS_LIST</span>, <span class="ident">LocalAddressLength</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">LocalAddress</span>: <span class="ident">LPSOCKADDR</span>, <span class="ident">RemoteAddressLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">RemoteAddress</span>: <span class="ident">LPSOCKADDR</span>,
+        <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">timeval</span>, <span class="ident">Reserved</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAConnectByNameA</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">nodename</span>: <span class="ident">LPCSTR</span>, <span class="ident">servicename</span>: <span class="ident">LPCSTR</span>, <span class="ident">LocalAddressLength</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">LocalAddress</span>: <span class="ident">LPSOCKADDR</span>, <span class="ident">RemoteAddressLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">RemoteAddress</span>: <span class="ident">LPSOCKADDR</span>,
+        <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">timeval</span>, <span class="ident">Reserved</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAConnectByNameW</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">nodename</span>: <span class="ident">LPWSTR</span>, <span class="ident">servicename</span>: <span class="ident">LPWSTR</span>, <span class="ident">LocalAddressLength</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">LocalAddress</span>: <span class="ident">LPSOCKADDR</span>, <span class="ident">RemoteAddressLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">RemoteAddress</span>: <span class="ident">LPSOCKADDR</span>,
+        <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">timeval</span>, <span class="ident">Reserved</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSACreateEvent</span>() <span class="op">-&gt;</span> <span class="ident">WSAEVENT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSADuplicateSocketA</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">dwProcessId</span>: <span class="ident">DWORD</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOA</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSADuplicateSocketW</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">dwProcessId</span>: <span class="ident">DWORD</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEnumNameSpaceProvidersA</span>(
+        <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpnspBuffer</span>: <span class="ident">LPWSANAMESPACE_INFOA</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEnumNameSpaceProvidersExA</span>(
+        <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpnspBuffer</span>: <span class="ident">LPWSANAMESPACE_INFOEXA</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEnumNameSpaceProvidersExW</span>(
+        <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpnspBuffer</span>: <span class="ident">LPWSANAMESPACE_INFOEXW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEnumNameSpaceProvidersW</span>(
+        <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpnspBuffer</span>: <span class="ident">LPWSANAMESPACE_INFOW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEnumNetworkEvents</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">hEventObject</span>: <span class="ident">WSAEVENT</span>, <span class="ident">lpNetworkEvents</span>: <span class="ident">LPWSANETWORKEVENTS</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEnumProtocolsA</span>(
+        <span class="ident">lpiProtocols</span>: <span class="ident">LPINT</span>, <span class="ident">lpProtocolBuffer</span>: <span class="ident">LPWSAPROTOCOL_INFOA</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEnumProtocolsW</span>(
+        <span class="ident">lpiProtocols</span>: <span class="ident">LPINT</span>, <span class="ident">lpProtocolBuffer</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAEventSelect</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">hEventObject</span>: <span class="ident">WSAEVENT</span>, <span class="ident">lNetworkEvents</span>: <span class="ident">c_long</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAGetLastError</span>() <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAGetOverlappedResult</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>, <span class="ident">lpcbTransfer</span>: <span class="ident">LPDWORD</span>, <span class="ident">fWait</span>: <span class="ident">BOOL</span>,
+        <span class="ident">lpdwFlags</span>: <span class="ident">LPDWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAGetQOSByName</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpQOSName</span>: <span class="ident">LPWSABUF</span>, <span class="ident">lpQOS</span>: <span class="ident">LPQOS</span>) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAGetServiceClassInfoA</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpServiceClassId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpdwBufSize</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpServiceClassInfo</span>: <span class="ident">LPWSASERVICECLASSINFOA</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAGetServiceClassInfoW</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpServiceClassId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpdwBufSize</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpServiceClassInfo</span>: <span class="ident">LPWSASERVICECLASSINFOW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAGetServiceClassNameByClassIdA</span>(
+        <span class="ident">lpServiceClassId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszServiceClassName</span>: <span class="ident">LPSTR</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAGetServiceClassNameByClassIdW</span>(
+        <span class="ident">lpServiceClassId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszServiceClassName</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAHtonl</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">hostlong</span>: <span class="ident">u_long</span>, <span class="ident">lpnetlong</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u_long</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAHtons</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">hostshort</span>: <span class="ident">u_short</span>, <span class="ident">lpnetshort</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u_short</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAInstallServiceClassA</span>(<span class="ident">lpServiceClassInfo</span>: <span class="ident">LPWSASERVICECLASSINFOA</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAInstallServiceClassW</span>(<span class="ident">lpServiceClassInfo</span>: <span class="ident">LPWSASERVICECLASSINFOW</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAIoctl</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">dwIoControlCode</span>: <span class="ident">DWORD</span>, <span class="ident">lpvInBuffer</span>: <span class="ident">LPVOID</span>, <span class="ident">cbInBuffer</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpvOutBuffer</span>: <span class="ident">LPVOID</span>, <span class="ident">cbOutBuffer</span>: <span class="ident">DWORD</span>, <span class="ident">lpcbBytesReturned</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>, <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAIsBlocking</span>() <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAJoinLeaf</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">namelen</span>: <span class="ident">c_int</span>, <span class="ident">lpCallerData</span>: <span class="ident">LPWSABUF</span>,
+        <span class="ident">lpCalleeData</span>: <span class="ident">LPWSABUF</span>, <span class="ident">lpSQOS</span>: <span class="ident">LPQOS</span>, <span class="ident">lpGQOS</span>: <span class="ident">LPQOS</span>, <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SOCKET</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSALookupServiceBeginA</span>(
+        <span class="ident">lpqsRestrictions</span>: <span class="ident">LPWSAQUERYSETA</span>, <span class="ident">dwControlFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lphLookup</span>: <span class="ident">LPHANDLE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSALookupServiceBeginW</span>(
+        <span class="ident">lpqsRestrictions</span>: <span class="ident">LPWSAQUERYSETW</span>, <span class="ident">dwControlFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lphLookup</span>: <span class="ident">LPHANDLE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSALookupServiceEnd</span>(<span class="ident">hLookup</span>: <span class="ident">HANDLE</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSALookupServiceNextA</span>(
+        <span class="ident">hLookup</span>: <span class="ident">HANDLE</span>, <span class="ident">dwControlFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpqsResults</span>: <span class="ident">LPWSAQUERYSETA</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSALookupServiceNextW</span>(
+        <span class="ident">hLookup</span>: <span class="ident">HANDLE</span>, <span class="ident">dwControlFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpqsResults</span>: <span class="ident">LPWSAQUERYSETW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSANSPIoctl</span>(
+        <span class="ident">hLookup</span>: <span class="ident">HANDLE</span>, <span class="ident">dwControlFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpvInBuffer</span>: <span class="ident">LPVOID</span>, <span class="ident">cbInBuffer</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpvOutBuffer</span>: <span class="ident">LPVOID</span>, <span class="ident">cbOutBuffer</span>: <span class="ident">DWORD</span>, <span class="ident">lpcbBytesReturned</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpCompletion</span>: <span class="ident">LPWSACOMPLETION</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSANtohl</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">netlong</span>: <span class="ident">u_long</span>, <span class="ident">lphostlong</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_long</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSANtohs</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">netshort</span>: <span class="ident">u_short</span>, <span class="ident">lphostshort</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_short</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAPoll</span>(<span class="ident">fdArray</span>: <span class="ident">LPWSAPOLLFD</span>, <span class="ident">fds</span>: <span class="ident">ULONG</span>, <span class="ident">timeout</span>: <span class="ident">INT</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAProviderCompleteAsyncCall</span>(<span class="ident">hAsyncCall</span>: <span class="ident">HANDLE</span>, <span class="ident">iRetCode</span>: <span class="ident">INT</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAProviderConfigChange</span>(
+        <span class="ident">lpNotificationHandle</span>: <span class="ident">LPHANDLE</span>, <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+        <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSARecv</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpBuffers</span>: <span class="ident">LPWSABUF</span>, <span class="ident">dwBufferCount</span>: <span class="ident">DWORD</span>, <span class="ident">lpNumberOfBytesRecvd</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpFlags</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+        <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSARecvDisconnect</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpInboundDisconnectData</span>: <span class="ident">LPWSABUF</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSARecvFrom</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpBuffers</span>: <span class="ident">LPWSABUF</span>, <span class="ident">dwBufferCount</span>: <span class="ident">DWORD</span>, <span class="ident">lpNumberOfBytesRecvd</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpFlags</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpFrom</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKADDR</span>, <span class="ident">lpFromlen</span>: <span class="ident">LPINT</span>, <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+        <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSARemoveServiceClass</span>(<span class="ident">lpServiceClassId</span>: <span class="ident">LPGUID</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAResetEvent</span>(<span class="ident">hEvent</span>: <span class="ident">WSAEVENT</span>) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASend</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpBuffers</span>: <span class="ident">LPWSABUF</span>, <span class="ident">dwBufferCount</span>: <span class="ident">DWORD</span>, <span class="ident">lpNumberOfBytesSent</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+        <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASendDisconnect</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpOutboundDisconnectData</span>: <span class="ident">LPWSABUF</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASendMsg</span>(
+        <span class="ident">Handle</span>: <span class="ident">SOCKET</span>, <span class="ident">lpMsg</span>: <span class="ident">LPWSAMSG</span>, <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpNumberOfBytesSent</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>, <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASendTo</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">lpBuffers</span>: <span class="ident">LPWSABUF</span>, <span class="ident">dwBufferCount</span>: <span class="ident">DWORD</span>, <span class="ident">lpNumberOfBytesSent</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpTo</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">iToLen</span>: <span class="ident">c_int</span>, <span class="ident">lpOverlapped</span>: <span class="ident">LPWSAOVERLAPPED</span>,
+        <span class="ident">lpCompletionRoutine</span>: <span class="ident">LPWSAOVERLAPPED_COMPLETION_ROUTINE</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASetBlockingHook</span>(<span class="ident">lpBlockFunc</span>: <span class="ident">FARPROC</span>) <span class="op">-&gt;</span> <span class="ident">FARPROC</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASetEvent</span>(<span class="ident">hEvent</span>: <span class="ident">WSAEVENT</span>) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASetLastError</span>(<span class="ident">iError</span>: <span class="ident">c_int</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASetServiceA</span>(
+        <span class="ident">lpqsRegInfo</span>: <span class="ident">LPWSAQUERYSETA</span>, <span class="ident">essoperation</span>: <span class="ident">WSAESETSERVICEOP</span>, <span class="ident">dwControlFlags</span>: <span class="ident">DWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASetServiceW</span>(
+        <span class="ident">lpqsRegInfo</span>: <span class="ident">LPWSAQUERYSETW</span>, <span class="ident">essoperation</span>: <span class="ident">WSAESETSERVICEOP</span>, <span class="ident">dwControlFlags</span>: <span class="ident">DWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASocketA</span>(
+        <span class="ident">af</span>: <span class="ident">c_int</span>, <span class="ident">_type</span>: <span class="ident">c_int</span>, <span class="ident">protocol</span>: <span class="ident">c_int</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOA</span>, <span class="ident">g</span>: <span class="ident">GROUP</span>,
+        <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SOCKET</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSASocketW</span>(
+        <span class="ident">af</span>: <span class="ident">c_int</span>, <span class="ident">_type</span>: <span class="ident">c_int</span>, <span class="ident">protocol</span>: <span class="ident">c_int</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">g</span>: <span class="ident">GROUP</span>,
+        <span class="ident">dwFlags</span>: <span class="ident">DWORD</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">SOCKET</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAStartup</span>(<span class="ident">wVersionRequested</span>: <span class="ident">WORD</span>, <span class="ident">lpWSAData</span>: <span class="ident">LPWSADATA</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAStringToAddressA</span>(
+        <span class="ident">AddressString</span>: <span class="ident">LPSTR</span>, <span class="ident">AddressFamily</span>: <span class="ident">INT</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOA</span>,
+        <span class="ident">lpAddress</span>: <span class="ident">LPSOCKADDR</span>, <span class="ident">lpAddressLength</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAStringToAddressW</span>(
+        <span class="ident">AddressString</span>: <span class="ident">LPWSTR</span>, <span class="ident">AddressFamily</span>: <span class="ident">INT</span>, <span class="ident">lpProtocolInfo</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>,
+        <span class="ident">lpAddress</span>: <span class="ident">LPSOCKADDR</span>, <span class="ident">lpAddressLength</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAUnadvertiseProvider</span>(<span class="ident">puuidProviderId</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">GUID</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAUnhookBlockingHook</span>() <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSAWaitForMultipleEvents</span>(
+        <span class="ident">cEvents</span>: <span class="ident">DWORD</span>, <span class="ident">lphEvents</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">WSAEVENT</span>, <span class="ident">fWaitAll</span>: <span class="ident">BOOL</span>, <span class="ident">dwTimeout</span>: <span class="ident">DWORD</span>,
+        <span class="ident">fAlertable</span>: <span class="ident">BOOL</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">DWORD</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCDeinstallProvider</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WSCDeinstallProviderEx();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCEnableNSProvider</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">fEnable</span>: <span class="ident">BOOL</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCEnumProtocols</span>(
+        <span class="ident">lpiProtocols</span>: <span class="ident">LPINT</span>, <span class="ident">lpProtocolBuffer</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WSCEnumProtocolsEx();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCGetApplicationCategory</span>(
+        <span class="ident">Path</span>: <span class="ident">LPCWSTR</span>, <span class="ident">PathLength</span>: <span class="ident">DWORD</span>, <span class="ident">Extra</span>: <span class="ident">LPCWSTR</span>, <span class="ident">ExtraLength</span>: <span class="ident">DWORD</span>,
+        <span class="ident">pPermittedLspCategories</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WSCGetApplicationCategoryEx();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCGetProviderInfo</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">InfoType</span>: <span class="ident">WSC_PROVIDER_INFO_TYPE</span>, <span class="ident">Info</span>: <span class="ident">PBYTE</span>, <span class="ident">InfoSize</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">size_t</span>,
+        <span class="ident">Flags</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCGetProviderPath</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">WCHAR</span>, <span class="ident">lpProviderDllPathLen</span>: <span class="ident">LPINT</span>,
+        <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallNameSpace</span>(
+        <span class="ident">lpszIdentifier</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpszPathName</span>: <span class="ident">LPWSTR</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">dwVersion</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallNameSpaceEx</span>(
+        <span class="ident">lpszIdentifier</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpszPathName</span>: <span class="ident">LPWSTR</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">dwVersion</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpProviderSpecific</span>: <span class="ident">LPBLOB</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="comment">// pub fn WSCInstallNameSpaceEx2();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallProvider</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">WCHAR</span>,
+        <span class="ident">lpProtocolInfoList</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WSCInstallProviderEx();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCSetApplicationCategory</span>(
+        <span class="ident">Path</span>: <span class="ident">LPCWSTR</span>, <span class="ident">PathLength</span>: <span class="ident">DWORD</span>, <span class="ident">Extra</span>: <span class="ident">LPCWSTR</span>, <span class="ident">ExtraLength</span>: <span class="ident">DWORD</span>,
+        <span class="ident">PermittedLspCategories</span>: <span class="ident">DWORD</span>, <span class="ident">pPrevPermLspCat</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WSCSetApplicationCategoryEx();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCSetProviderInfo</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">InfoType</span>: <span class="ident">WSC_PROVIDER_INFO_TYPE</span>, <span class="ident">Info</span>: <span class="ident">PBYTE</span>, <span class="ident">InfoSize</span>: <span class="ident">size_t</span>,
+        <span class="ident">Flags</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCUnInstallNameSpace</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="comment">// pub fn WSCUnInstallNameSpaceEx2();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCUpdateProvider</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">WCHAR</span>,
+        <span class="ident">lpProtocolInfoList</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WSCUpdateProviderEx();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCWriteNameSpaceOrder</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCWriteProviderOrder</span>(<span class="ident">lpwdCatalogEntryId</span>: <span class="ident">LPDWORD</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="comment">// pub fn WSCWriteProviderOrderEx();</span>
+    <span class="comment">// pub fn WahCloseApcHelper();</span>
+    <span class="comment">// pub fn WahCloseHandleHelper();</span>
+    <span class="comment">// pub fn WahCloseNotificationHandleHelper();</span>
+    <span class="comment">// pub fn WahCloseSocketHandle();</span>
+    <span class="comment">// pub fn WahCloseThread();</span>
+    <span class="comment">// pub fn WahCompleteRequest();</span>
+    <span class="comment">// pub fn WahCreateHandleContextTable();</span>
+    <span class="comment">// pub fn WahCreateNotificationHandle();</span>
+    <span class="comment">// pub fn WahCreateSocketHandle();</span>
+    <span class="comment">// pub fn WahDestroyHandleContextTable();</span>
+    <span class="comment">// pub fn WahDisableNonIFSHandleSupport();</span>
+    <span class="comment">// pub fn WahEnableNonIFSHandleSupport();</span>
+    <span class="comment">// pub fn WahEnumerateHandleContexts();</span>
+    <span class="comment">// pub fn WahInsertHandleContext();</span>
+    <span class="comment">// pub fn WahNotifyAllProcesses();</span>
+    <span class="comment">// pub fn WahOpenApcHelper();</span>
+    <span class="comment">// pub fn WahOpenCurrentThread();</span>
+    <span class="comment">// pub fn WahOpenHandleHelper();</span>
+    <span class="comment">// pub fn WahOpenNotificationHandleHelper();</span>
+    <span class="comment">// pub fn WahQueueUserApc();</span>
+    <span class="comment">// pub fn WahReferenceContextByHandle();</span>
+    <span class="comment">// pub fn WahRemoveHandleContext();</span>
+    <span class="comment">// pub fn WahWaitForNotification();</span>
+    <span class="comment">// pub fn WahWriteLSPEvent();</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">__WSAFDIsSet</span>(<span class="ident">fd</span>: <span class="ident">SOCKET</span>, _: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">fd_set</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">accept</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKADDR</span>, <span class="ident">addrlen</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">SOCKET</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bind</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">namelen</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">closesocket</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">namelen</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">freeaddrinfo</span>(<span class="ident">pAddrInfo</span>: <span class="ident">PADDRINFOA</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getaddrinfo</span>(
+        <span class="ident">pNodeName</span>: <span class="ident">PCSTR</span>, <span class="ident">pServiceName</span>: <span class="ident">PCSTR</span>, <span class="ident">pHints</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">ADDRINFOA</span>, <span class="ident">ppResult</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PADDRINFOA</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gethostbyaddr</span>(<span class="ident">addr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">len</span>: <span class="ident">c_int</span>, <span class="ident">_type</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">hostent</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gethostbyname</span>(<span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">hostent</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gethostname</span>(<span class="ident">name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">namelen</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getnameinfo</span>(
+        <span class="ident">pSockaddr</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">SockaddrLength</span>: <span class="ident">socklen_t</span>, <span class="ident">pNodeBuffer</span>: <span class="ident">PCHAR</span>,
+        <span class="ident">NodeBufferSize</span>: <span class="ident">DWORD</span>, <span class="ident">pServiceBuffer</span>: <span class="ident">PCHAR</span>, <span class="ident">ServiceBufferSize</span>: <span class="ident">DWORD</span>, <span class="ident">Flags</span>: <span class="ident">INT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getpeername</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKADDR</span>, <span class="ident">namelen</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getprotobyname</span>(<span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">protoent</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getprotobynumber</span>(<span class="ident">number</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">protoent</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getservbyname</span>(<span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">proto</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">servent</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getservbyport</span>(<span class="ident">port</span>: <span class="ident">c_int</span>, <span class="ident">proto</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">servent</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getsockname</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKADDR</span>, <span class="ident">namelen</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">getsockopt</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">level</span>: <span class="ident">c_int</span>, <span class="ident">optname</span>: <span class="ident">c_int</span>, <span class="ident">optval</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">optlen</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">htonl</span>(<span class="ident">hostlong</span>: <span class="ident">u_long</span>) <span class="op">-&gt;</span> <span class="ident">u_long</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">htons</span>(<span class="ident">hostshort</span>: <span class="ident">u_short</span>) <span class="op">-&gt;</span> <span class="ident">u_short</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inet_addr</span>(<span class="ident">cp</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-&gt;</span> <span class="ident">c_ulong</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inet_ntoa</span>(<span class="ident">_in</span>: <span class="ident">in_addr</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inet_ntop</span>(<span class="ident">Family</span>: <span class="ident">INT</span>, <span class="ident">pAddr</span>: <span class="ident">PVOID</span>, <span class="ident">pStringBuf</span>: <span class="ident">PSTR</span>, <span class="ident">StringBufSize</span>: <span class="ident">size_t</span>) <span class="op">-&gt;</span> <span class="ident">PCSTR</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inet_pton</span>(<span class="ident">Family</span>: <span class="ident">INT</span>, <span class="ident">pszAddrString</span>: <span class="ident">PCSTR</span>, <span class="ident">pAddrBuf</span>: <span class="ident">PVOID</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ioctlsocket</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">cmd</span>: <span class="ident">c_long</span>, <span class="ident">argp</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u_long</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">listen</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">backlog</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ntohl</span>(<span class="ident">netlong</span>: <span class="ident">u_long</span>) <span class="op">-&gt;</span> <span class="ident">u_long</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ntohs</span>(<span class="ident">netshort</span>: <span class="ident">u_short</span>) <span class="op">-&gt;</span> <span class="ident">u_short</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recv</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">len</span>: <span class="ident">c_int</span>, <span class="ident">flags</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recvfrom</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">len</span>: <span class="ident">c_int</span>, <span class="ident">flags</span>: <span class="ident">c_int</span>, <span class="ident">from</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">SOCKADDR</span>,
+        <span class="ident">fromlen</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select</span>(
+        <span class="ident">nfds</span>: <span class="ident">c_int</span>, <span class="ident">readfds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">fd_set</span>, <span class="ident">writefds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">fd_set</span>, <span class="ident">exceptfds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">fd_set</span>,
+        <span class="ident">timeout</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">timeval</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">len</span>: <span class="ident">c_int</span>, <span class="ident">flags</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sendto</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">len</span>: <span class="ident">c_int</span>, <span class="ident">flags</span>: <span class="ident">c_int</span>, <span class="ident">to</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">SOCKADDR</span>, <span class="ident">tolen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setsockopt</span>(
+        <span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">level</span>: <span class="ident">c_int</span>, <span class="ident">optname</span>: <span class="ident">c_int</span>, <span class="ident">optval</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>, <span class="ident">optlen</span>: <span class="ident">c_int</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="ident">s</span>: <span class="ident">SOCKET</span>, <span class="ident">how</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">socket</span>(<span class="ident">af</span>: <span class="ident">c_int</span>, <span class="ident">_type</span>: <span class="ident">c_int</span>, <span class="ident">protocol</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">SOCKET</span>;
 }
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86&quot;</span>, <span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;arm&quot;</span>))]</span>
-<span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallProviderAndChains</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpszLspName</span>: <span class='ident'>LPWSTR</span>,
-        <span class='ident'>dwServiceFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpProtocolInfoList</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpdwCatalogEntryId</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;x86&quot;</span>, <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;arm&quot;</span>))]</span>
+<span class="kw">extern</span> <span class="string">&quot;system&quot;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallProviderAndChains</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpszLspName</span>: <span class="ident">LPWSTR</span>,
+        <span class="ident">dwServiceFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpProtocolInfoList</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpdwCatalogEntryId</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 }
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_arch</span> <span class='op'>=</span> <span class='string'>&quot;x86_64&quot;</span>)]</span>
-<span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCDeinstallProvider32</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCEnableNSProvider32</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>fEnable</span>: <span class='ident'>BOOL</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCEnumNameSpaceProviders32</span>(
-        <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpnspBuffer</span>: <span class='ident'>LPWSANAMESPACE_INFOW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCEnumNameSpaceProvidersEx32</span>(
-        <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpnspBuffer</span>: <span class='ident'>LPWSANAMESPACE_INFOEXW</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCEnumProtocols32</span>(
-        <span class='ident'>lpiProtocols</span>: <span class='ident'>LPINT</span>, <span class='ident'>lpProtocolBuffer</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>lpdwBufferLength</span>: <span class='ident'>LPDWORD</span>,
-        <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCGetProviderInfo32</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>InfoType</span>: <span class='ident'>WSC_PROVIDER_INFO_TYPE</span>, <span class='ident'>Info</span>: <span class='ident'>PBYTE</span>, <span class='ident'>InfoSize</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>size_t</span>,
-        <span class='ident'>Flags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCGetProviderPath32</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>WCHAR</span>, <span class='ident'>lpProviderDllPathLen</span>: <span class='ident'>LPINT</span>,
-        <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallNameSpace32</span>(
-        <span class='ident'>lpszIdentifier</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpszPathName</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>dwVersion</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallNameSpaceEx32</span>(
-        <span class='ident'>lpszIdentifier</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpszPathName</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>dwNameSpace</span>: <span class='ident'>DWORD</span>, <span class='ident'>dwVersion</span>: <span class='ident'>DWORD</span>,
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpProviderSpecific</span>: <span class='ident'>LPBLOB</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallProvider64_32</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>WCHAR</span>,
-        <span class='ident'>lpProtocolInfoList</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCInstallProviderAndChains64_32</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>lpszProviderDllPath32</span>: <span class='ident'>LPWSTR</span>,
-        <span class='ident'>lpszLspName</span>: <span class='ident'>LPWSTR</span>, <span class='ident'>dwServiceFlags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpProtocolInfoList</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>,
-        <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpdwCatalogEntryId</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCSetProviderInfo32</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>InfoType</span>: <span class='ident'>WSC_PROVIDER_INFO_TYPE</span>, <span class='ident'>Info</span>: <span class='ident'>PBYTE</span>, <span class='ident'>InfoSize</span>: <span class='ident'>size_t</span>,
-        <span class='ident'>Flags</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCUnInstallNameSpace32</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>) <span class='op'>-&gt;</span> <span class='ident'>INT</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCUpdateProvider32</span>(
-        <span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>lpszProviderDllPath</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>WCHAR</span>,
-        <span class='ident'>lpProtocolInfoList</span>: <span class='ident'>LPWSAPROTOCOL_INFOW</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>, <span class='ident'>lpErrno</span>: <span class='ident'>LPINT</span>,
-    ) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCWriteNameSpaceOrder32</span>(<span class='ident'>lpProviderId</span>: <span class='ident'>LPGUID</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>WSCWriteProviderOrder32</span>(<span class='ident'>lpwdCatalogEntryId</span>: <span class='ident'>LPDWORD</span>, <span class='ident'>dwNumberOfEntries</span>: <span class='ident'>DWORD</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;x86_64&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="string">&quot;system&quot;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCDeinstallProvider32</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCEnableNSProvider32</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">fEnable</span>: <span class="ident">BOOL</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCEnumNameSpaceProviders32</span>(
+        <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpnspBuffer</span>: <span class="ident">LPWSANAMESPACE_INFOW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCEnumNameSpaceProvidersEx32</span>(
+        <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpnspBuffer</span>: <span class="ident">LPWSANAMESPACE_INFOEXW</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCEnumProtocols32</span>(
+        <span class="ident">lpiProtocols</span>: <span class="ident">LPINT</span>, <span class="ident">lpProtocolBuffer</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">lpdwBufferLength</span>: <span class="ident">LPDWORD</span>,
+        <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCGetProviderInfo32</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">InfoType</span>: <span class="ident">WSC_PROVIDER_INFO_TYPE</span>, <span class="ident">Info</span>: <span class="ident">PBYTE</span>, <span class="ident">InfoSize</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">size_t</span>,
+        <span class="ident">Flags</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCGetProviderPath32</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">WCHAR</span>, <span class="ident">lpProviderDllPathLen</span>: <span class="ident">LPINT</span>,
+        <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallNameSpace32</span>(
+        <span class="ident">lpszIdentifier</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpszPathName</span>: <span class="ident">LPWSTR</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">dwVersion</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallNameSpaceEx32</span>(
+        <span class="ident">lpszIdentifier</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpszPathName</span>: <span class="ident">LPWSTR</span>, <span class="ident">dwNameSpace</span>: <span class="ident">DWORD</span>, <span class="ident">dwVersion</span>: <span class="ident">DWORD</span>,
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpProviderSpecific</span>: <span class="ident">LPBLOB</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallProvider64_32</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">WCHAR</span>,
+        <span class="ident">lpProtocolInfoList</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCInstallProviderAndChains64_32</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="ident">LPWSTR</span>, <span class="ident">lpszProviderDllPath32</span>: <span class="ident">LPWSTR</span>,
+        <span class="ident">lpszLspName</span>: <span class="ident">LPWSTR</span>, <span class="ident">dwServiceFlags</span>: <span class="ident">DWORD</span>, <span class="ident">lpProtocolInfoList</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>,
+        <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>, <span class="ident">lpdwCatalogEntryId</span>: <span class="ident">LPDWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCSetProviderInfo32</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">InfoType</span>: <span class="ident">WSC_PROVIDER_INFO_TYPE</span>, <span class="ident">Info</span>: <span class="ident">PBYTE</span>, <span class="ident">InfoSize</span>: <span class="ident">size_t</span>,
+        <span class="ident">Flags</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCUnInstallNameSpace32</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>) <span class="op">-&gt;</span> <span class="ident">INT</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCUpdateProvider32</span>(
+        <span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">lpszProviderDllPath</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">WCHAR</span>,
+        <span class="ident">lpProtocolInfoList</span>: <span class="ident">LPWSAPROTOCOL_INFOW</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>, <span class="ident">lpErrno</span>: <span class="ident">LPINT</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCWriteNameSpaceOrder32</span>(<span class="ident">lpProviderId</span>: <span class="ident">LPGUID</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">WSCWriteProviderOrder32</span>(<span class="ident">lpwdCatalogEntryId</span>: <span class="ident">LPDWORD</span>, <span class="ident">dwNumberOfEntries</span>: <span class="ident">DWORD</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 }
-<span class='kw'>extern</span> {
-    <span class='comment'>// pub static AddressFamilyInformation;</span>
-    <span class='comment'>// pub static eui48_broadcast;</span>
-    <span class='comment'>// pub static in4addr_alligmpv3routersonlink;</span>
-    <span class='comment'>// pub static in4addr_allnodesonlink;</span>
-    <span class='comment'>// pub static in4addr_allroutersonlink;</span>
-    <span class='comment'>// pub static in4addr_allteredohostsonlink;</span>
-    <span class='comment'>// pub static in4addr_any;</span>
-    <span class='comment'>// pub static in4addr_broadcast;</span>
-    <span class='comment'>// pub static in4addr_linklocalprefix;</span>
-    <span class='comment'>// pub static in4addr_loopback;</span>
-    <span class='comment'>// pub static in4addr_multicastprefix;</span>
-    <span class='comment'>// pub static in6addr_6to4prefix;</span>
-    <span class='comment'>// pub static in6addr_allmldv2routersonlink;</span>
-    <span class='comment'>// pub static in6addr_allnodesonlink;</span>
-    <span class='comment'>// pub static in6addr_allnodesonnode;</span>
-    <span class='comment'>// pub static in6addr_allroutersonlink;</span>
-    <span class='comment'>// pub static in6addr_any;</span>
-    <span class='comment'>// pub static in6addr_linklocalprefix;</span>
-    <span class='comment'>// pub static in6addr_loopback;</span>
-    <span class='comment'>// pub static in6addr_multicastprefix;</span>
-    <span class='comment'>// pub static in6addr_solicitednodemulticastprefix;</span>
-    <span class='comment'>// pub static in6addr_teredoinitiallinklocaladdress;</span>
-    <span class='comment'>// pub static in6addr_teredoprefix;</span>
-    <span class='comment'>// pub static in6addr_teredoprefix_old;</span>
-    <span class='comment'>// pub static in6addr_v4mappedprefix;</span>
-    <span class='comment'>// pub static scopeid_unspecified;</span>
-    <span class='comment'>// pub static sockaddr_size;</span>
+<span class="kw">extern</span> {
+    <span class="comment">// pub static AddressFamilyInformation;</span>
+    <span class="comment">// pub static eui48_broadcast;</span>
+    <span class="comment">// pub static in4addr_alligmpv3routersonlink;</span>
+    <span class="comment">// pub static in4addr_allnodesonlink;</span>
+    <span class="comment">// pub static in4addr_allroutersonlink;</span>
+    <span class="comment">// pub static in4addr_allteredohostsonlink;</span>
+    <span class="comment">// pub static in4addr_any;</span>
+    <span class="comment">// pub static in4addr_broadcast;</span>
+    <span class="comment">// pub static in4addr_linklocalprefix;</span>
+    <span class="comment">// pub static in4addr_loopback;</span>
+    <span class="comment">// pub static in4addr_multicastprefix;</span>
+    <span class="comment">// pub static in6addr_6to4prefix;</span>
+    <span class="comment">// pub static in6addr_allmldv2routersonlink;</span>
+    <span class="comment">// pub static in6addr_allnodesonlink;</span>
+    <span class="comment">// pub static in6addr_allnodesonnode;</span>
+    <span class="comment">// pub static in6addr_allroutersonlink;</span>
+    <span class="comment">// pub static in6addr_any;</span>
+    <span class="comment">// pub static in6addr_linklocalprefix;</span>
+    <span class="comment">// pub static in6addr_loopback;</span>
+    <span class="comment">// pub static in6addr_multicastprefix;</span>
+    <span class="comment">// pub static in6addr_solicitednodemulticastprefix;</span>
+    <span class="comment">// pub static in6addr_teredoinitiallinklocaladdress;</span>
+    <span class="comment">// pub static in6addr_teredoprefix;</span>
+    <span class="comment">// pub static in6addr_teredoprefix_old;</span>
+    <span class="comment">// pub static in6addr_v4mappedprefix;</span>
+    <span class="comment">// pub static scopeid_unspecified;</span>
+    <span class="comment">// pub static sockaddr_size;</span>
 }
 </pre>
 </section>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -120,82 +120,82 @@
 <span id="75">75</span>
 <span id="76">76</span>
 <span id="77">77</span>
-</pre><pre class='rust '>
-<span class='doccomment'>/// Some implementations for chains of tuples.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// FIXME(reem): Move generation of this to a build script.</span>
+</pre><pre class="rust ">
+<span class="doccomment">/// Some implementations for chains of tuples.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// FIXME(reem): Move generation of this to a build script.</span>
 
-<span class='kw'>use</span> <span class='ident'>Modifier</span>;
+<span class="kw">use</span> <span class="ident">Modifier</span>;
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>X</span>, <span class='ident'>M1</span><span class='op'>&gt;</span> <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> <span class='kw'>for</span> (<span class='ident'>M1</span>,)
-<span class='kw'>where</span> <span class='ident'>M1</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>modify</span>(<span class='self'>self</span>, <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>X</span>) {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">X</span>, <span class="ident">M1</span><span class="op">&gt;</span> <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">M1</span>,)
+<span class="kw">where</span> <span class="ident">M1</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">modify</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">X</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>X</span>, <span class='ident'>M1</span>, <span class='ident'>M2</span><span class='op'>&gt;</span> <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> <span class='kw'>for</span> (<span class='ident'>M1</span>, <span class='ident'>M2</span>)
-<span class='kw'>where</span> <span class='ident'>M1</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M2</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>modify</span>(<span class='self'>self</span>, <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>X</span>) {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">X</span>, <span class="ident">M1</span>, <span class="ident">M2</span><span class="op">&gt;</span> <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">M1</span>, <span class="ident">M2</span>)
+<span class="kw">where</span> <span class="ident">M1</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M2</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">modify</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">X</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">1</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>X</span>, <span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span><span class='op'>&gt;</span> <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> <span class='kw'>for</span> (<span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span>)
-<span class='kw'>where</span> <span class='ident'>M1</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M2</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M3</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>modify</span>(<span class='self'>self</span>, <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>X</span>) {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>2</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">X</span>, <span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span><span class="op">&gt;</span> <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span>)
+<span class="kw">where</span> <span class="ident">M1</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M2</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M3</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">modify</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">X</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">1</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">2</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>X</span>, <span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span>, <span class='ident'>M4</span><span class='op'>&gt;</span> <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> <span class='kw'>for</span> (<span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span>, <span class='ident'>M4</span>)
-<span class='kw'>where</span> <span class='ident'>M1</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M2</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M3</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M4</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>modify</span>(<span class='self'>self</span>, <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>X</span>) {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>2</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>3</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">X</span>, <span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span>, <span class="ident">M4</span><span class="op">&gt;</span> <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span>, <span class="ident">M4</span>)
+<span class="kw">where</span> <span class="ident">M1</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M2</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M3</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M4</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">modify</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">X</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">1</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">2</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">3</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>X</span>, <span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span>, <span class='ident'>M4</span>, <span class='ident'>M5</span><span class='op'>&gt;</span> <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> <span class='kw'>for</span> (<span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span>, <span class='ident'>M4</span>, <span class='ident'>M5</span>)
-<span class='kw'>where</span> <span class='ident'>M1</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M2</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M3</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M4</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M5</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>modify</span>(<span class='self'>self</span>, <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>X</span>) {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>2</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>3</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>4</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">X</span>, <span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span>, <span class="ident">M4</span>, <span class="ident">M5</span><span class="op">&gt;</span> <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span>, <span class="ident">M4</span>, <span class="ident">M5</span>)
+<span class="kw">where</span> <span class="ident">M1</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M2</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M3</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M4</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M5</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">modify</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">X</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">1</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">2</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">3</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">4</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>X</span>, <span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span>, <span class='ident'>M4</span>, <span class='ident'>M5</span>, <span class='ident'>M6</span><span class='op'>&gt;</span> <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> <span class='kw'>for</span> (<span class='ident'>M1</span>, <span class='ident'>M2</span>, <span class='ident'>M3</span>, <span class='ident'>M4</span>, <span class='ident'>M5</span>, <span class='ident'>M6</span>)
-<span class='kw'>where</span> <span class='ident'>M1</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M2</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M3</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M4</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M5</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span>,
-      <span class='ident'>M6</span>: <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>X</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>modify</span>(<span class='self'>self</span>, <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>X</span>) {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>2</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>3</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>4</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
-        <span class='self'>self</span>.<span class='number'>5</span>.<span class='ident'>modify</span>(<span class='ident'>x</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">X</span>, <span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span>, <span class="ident">M4</span>, <span class="ident">M5</span>, <span class="ident">M6</span><span class="op">&gt;</span> <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">M1</span>, <span class="ident">M2</span>, <span class="ident">M3</span>, <span class="ident">M4</span>, <span class="ident">M5</span>, <span class="ident">M6</span>)
+<span class="kw">where</span> <span class="ident">M1</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M2</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M3</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M4</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M5</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span>,
+      <span class="ident">M6</span>: <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">X</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">modify</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">X</span>) {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">1</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">2</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">3</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">4</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
+        <span class="self">self</span>.<span class="number">5</span>.<span class="ident">modify</span>(<span class="ident">x</span>);
     }
 }
 </pre>

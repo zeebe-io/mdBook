@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -136,98 +136,98 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
-</pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>test</span>, <span class='ident'>feature</span>(<span class='ident'>test</span>))]</span>
+</pre><pre class="rust ">
+<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">feature</span>(<span class="ident">test</span>))]</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rustc_serialize</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>Decodable</span>, <span class='ident'>json</span>};
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>::<span class='ident'>Json</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
+<span class="kw">use</span> <span class="ident">rustc_serialize</span>::{<span class="ident">Decodable</span>, <span class="ident">json</span>};
+<span class="kw">use</span> <span class="ident">rustc_serialize</span>::<span class="ident">json</span>::<span class="ident">Json</span>;
 
-<span class='kw'>static</span> <span class='ident'>JSON</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='macro'>include_str</span><span class='macro'>!</span>(<span class='string'>&quot;../data/mime.json&quot;</span>);
+<span class="kw">static</span> <span class="ident">JSON</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../data/mime.json&quot;</span>);
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Types</span> {
-    <span class='ident'>ext_by_type</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
-    <span class='ident'>type_by_ext</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>String</span><span class='op'>&gt;</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Types</span> {
+    <span class="ident">ext_by_type</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">type_by_ext</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>Types</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Types</span>, ()<span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>parsed</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='ident'>JSON</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> ()));
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>parsed</span>);
-        <span class='kw'>let</span> <span class='ident'>decoded</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span>
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Decodable</span>::<span class='ident'>decode</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>decoder</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> ()));
+<span class="kw">impl</span> <span class="ident">Types</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Types</span>, ()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">parsed</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Json</span>::<span class="ident">from_str</span>(<span class="ident">JSON</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> ()));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">json</span>::<span class="ident">Decoder</span>::<span class="ident">new</span>(<span class="ident">parsed</span>);
+        <span class="kw">let</span> <span class="ident">decoded</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Decodable</span>::<span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">decoder</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> ()));
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>by_ext</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">by_ext</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
 
-        <span class='kw'>for</span> (<span class='ident'>mime_type</span>, <span class='ident'>exts</span>) <span class='kw'>in</span> <span class='ident'>decoded</span>.<span class='ident'>iter</span>() {
-            <span class='kw'>for</span> <span class='ident'>ext</span> <span class='kw'>in</span> <span class='ident'>exts</span>.<span class='ident'>iter</span>() {
-                <span class='ident'>by_ext</span>.<span class='ident'>insert</span>(<span class='ident'>ext</span>.<span class='ident'>clone</span>(), <span class='ident'>mime_type</span>.<span class='ident'>clone</span>());
+        <span class="kw">for</span> (<span class="ident">mime_type</span>, <span class="ident">exts</span>) <span class="kw">in</span> <span class="ident">decoded</span>.<span class="ident">iter</span>() {
+            <span class="kw">for</span> <span class="ident">ext</span> <span class="kw">in</span> <span class="ident">exts</span>.<span class="ident">iter</span>() {
+                <span class="ident">by_ext</span>.<span class="ident">insert</span>(<span class="ident">ext</span>.<span class="ident">clone</span>(), <span class="ident">mime_type</span>.<span class="ident">clone</span>());
             }
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>Types</span> { <span class='ident'>ext_by_type</span>: <span class='ident'>decoded</span>, <span class='ident'>type_by_ext</span>: <span class='ident'>by_ext</span> })
+        <span class="prelude-val">Ok</span>(<span class="ident">Types</span> { <span class="ident">ext_by_type</span>: <span class="ident">decoded</span>, <span class="ident">type_by_ext</span>: <span class="ident">by_ext</span> })
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_extension</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>String</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>ext_by_type</span>.<span class='ident'>get</span>(<span class='ident'>name</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>v</span>[..])
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_extension</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">String</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">ext_by_type</span>.<span class="ident">get</span>(<span class="ident">name</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">v</span>[..])
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mime_type</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>ext</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>type_by_ext</span>.<span class='ident'>get</span>(<span class='ident'>ext</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>v</span>[..])
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mime_type</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">ext</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">type_by_ext</span>.<span class="ident">get</span>(<span class="ident">ext</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">v</span>[..])
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mime_for_path</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='kw-2'>&amp;</span><span class='ident'>Path</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span> {
-        <span class='ident'>path</span>.<span class='ident'>extension</span>()
-            .<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='ident'>to_str</span>())
-            .<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>ext</span><span class='op'>|</span> <span class='self'>self</span>.<span class='ident'>get_mime_type</span>(<span class='ident'>ext</span>))
-            .<span class='ident'>unwrap_or_else</span>(<span class='op'>||</span> <span class='string'>&quot;text/plain&quot;</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mime_for_path</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
+        <span class="ident">path</span>.<span class="ident">extension</span>()
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_str</span>())
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">get_mime_type</span>(<span class="ident">ext</span>))
+            .<span class="ident">unwrap_or_else</span>(<span class="op">||</span> <span class="string">&quot;text/plain&quot;</span>)
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>test</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
-    <span class='kw'>use</span> <span class='ident'>Types</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span> {
+    <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">test</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
+    <span class="kw">use</span> <span class="ident">Types</span>;
 
-    <span class='attribute'>#[<span class='ident'>bench</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>bench_load_types</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>test</span>::<span class='ident'>Bencher</span>) {
-        <span class='ident'>b</span>.<span class='ident'>iter</span>(<span class='op'>||</span> {
-            <span class='ident'>Types</span>::<span class='ident'>new</span>()
+    <span class="attribute">#[<span class="ident">bench</span>]</span>
+    <span class="kw">fn</span> <span class="ident">bench_load_types</span>(<span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">test</span>::<span class="ident">Bencher</span>) {
+        <span class="ident">b</span>.<span class="ident">iter</span>(<span class="op">||</span> {
+            <span class="ident">Types</span>::<span class="ident">new</span>()
         });
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_by_ext</span>() {
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>Types</span>::<span class='ident'>new</span>().<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Types didn&#39;t load&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>get_extension</span>(<span class='string'>&quot;text/css&quot;</span>).<span class='ident'>unwrap</span>(), [<span class='string'>&quot;css&quot;</span>.<span class='ident'>to_string</span>()]);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_by_ext</span>() {
+        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Types</span>::<span class="ident">new</span>().<span class="ident">ok</span>().<span class="ident">expect</span>(<span class="string">&quot;Types didn&#39;t load&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">get_extension</span>(<span class="string">&quot;text/css&quot;</span>).<span class="ident">unwrap</span>(), [<span class="string">&quot;css&quot;</span>.<span class="ident">to_string</span>()]);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_by_type</span>() {
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>Types</span>::<span class='ident'>new</span>().<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Types didn&#39;t load&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>get_mime_type</span>(<span class='string'>&quot;css&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;text/css&quot;</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_by_type</span>() {
+        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Types</span>::<span class="ident">new</span>().<span class="ident">ok</span>().<span class="ident">expect</span>(<span class="string">&quot;Types didn&#39;t load&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">get_mime_type</span>(<span class="string">&quot;css&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;text/css&quot;</span>));
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_by_path</span>() {
-        <span class='kw'>let</span> <span class='ident'>t</span> <span class='op'>=</span> <span class='ident'>Types</span>::<span class='ident'>new</span>().<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Types didn&#39;t load&quot;</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_by_path</span>() {
+        <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">Types</span>::<span class="ident">new</span>().<span class="ident">ok</span>().<span class="ident">expect</span>(<span class="string">&quot;Types didn&#39;t load&quot;</span>);
 
-        <span class='ident'>test_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>, <span class='string'>&quot;foo&quot;</span>, <span class='string'>&quot;text/plain&quot;</span>);
-        <span class='ident'>test_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>, <span class='string'>&quot;/path/to/foo&quot;</span>, <span class='string'>&quot;text/plain&quot;</span>);
-        <span class='ident'>test_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>, <span class='string'>&quot;foo.css&quot;</span>, <span class='string'>&quot;text/css&quot;</span>);
-        <span class='ident'>test_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>, <span class='string'>&quot;/path/to/foo.css&quot;</span>, <span class='string'>&quot;text/css&quot;</span>);
-        <span class='ident'>test_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>, <span class='string'>&quot;foo.html.css&quot;</span>, <span class='string'>&quot;text/css&quot;</span>);
-        <span class='ident'>test_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>, <span class='string'>&quot;/path/to/foo.html.css&quot;</span>, <span class='string'>&quot;text/css&quot;</span>);
-        <span class='ident'>test_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>t</span>, <span class='string'>&quot;/path/to.html/foo.css&quot;</span>, <span class='string'>&quot;text/css&quot;</span>);
+        <span class="ident">test_path</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;text/plain&quot;</span>);
+        <span class="ident">test_path</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="string">&quot;/path/to/foo&quot;</span>, <span class="string">&quot;text/plain&quot;</span>);
+        <span class="ident">test_path</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="string">&quot;foo.css&quot;</span>, <span class="string">&quot;text/css&quot;</span>);
+        <span class="ident">test_path</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="string">&quot;/path/to/foo.css&quot;</span>, <span class="string">&quot;text/css&quot;</span>);
+        <span class="ident">test_path</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="string">&quot;foo.html.css&quot;</span>, <span class="string">&quot;text/css&quot;</span>);
+        <span class="ident">test_path</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="string">&quot;/path/to/foo.html.css&quot;</span>, <span class="string">&quot;text/css&quot;</span>);
+        <span class="ident">test_path</span>(<span class="kw-2">&amp;</span><span class="ident">t</span>, <span class="string">&quot;/path/to.html/foo.css&quot;</span>, <span class="string">&quot;text/css&quot;</span>);
     }
 
-    <span class='kw'>fn</span> <span class='ident'>test_path</span>(<span class='ident'>types</span>: <span class='kw-2'>&amp;</span><span class='ident'>Types</span>, <span class='ident'>path</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>expected</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>types</span>.<span class='ident'>mime_for_path</span>(<span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='ident'>path</span>)), <span class='ident'>expected</span>);
+    <span class="kw">fn</span> <span class="ident">test_path</span>(<span class="ident">types</span>: <span class="kw-2">&amp;</span><span class="ident">Types</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">types</span>.<span class="ident">mime_for_path</span>(<span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">path</span>)), <span class="ident">expected</span>);
     }
 }
 </pre>

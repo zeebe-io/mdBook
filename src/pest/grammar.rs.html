@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -680,642 +680,642 @@
 <span id="635">635</span>
 <span id="636">636</span>
 <span id="637">637</span>
-</pre><pre class='rust '>
-<span class='comment'>// pest. Elegant, efficient grammars</span>
-<span class='comment'>// Copyright (C) 2016  Dragoș Tiselice</span>
-<span class='comment'>//</span>
-<span class='comment'>// This Source Code Form is subject to the terms of the Mozilla Public</span>
-<span class='comment'>// License, v. 2.0. If a copy of the MPL was not distributed with this</span>
-<span class='comment'>// file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
+</pre><pre class="rust ">
+<span class="comment">// pest. Elegant, efficient grammars</span>
+<span class="comment">// Copyright (C) 2016  Dragoș Tiselice</span>
+<span class="comment">//</span>
+<span class="comment">// This Source Code Form is subject to the terms of the Mozilla Public</span>
+<span class="comment">// License, v. 2.0. If a copy of the MPL was not distributed with this</span>
+<span class="comment">// file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
 
-<span class='doccomment'>/// A `macro` that defines each rule as a method on a `Parser` which parses from the current</span>
-<span class='doccomment'>/// position. Rules are always defined between braces, with an optional symbol marking the type of</span>
-<span class='doccomment'>/// rule defined.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// *Note:* `grammar!` may require you to increase the recursion limit of your create with</span>
-<span class='doccomment'>/// `#![recursion_limit = &quot;*&quot;]` where * is the new limit.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// pest has four special rules:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// * `whitespace` - gets run between rules and sub-rules</span>
-<span class='doccomment'>/// * `comment` - gets run only between rules</span>
-<span class='doccomment'>/// * `any` - matches exactly one `char`</span>
-<span class='doccomment'>/// * `eoi` - (end-of-input) matches only when a `Parser` has reached its</span>
-<span class='doccomment'>///   [end](trait.Parser#tymethod.end)</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// `whitespace` and `comment` should be overridden and are void otherwise, while `any` and `eoi`</span>
-<span class='doccomment'>/// are predefined rules.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Normal rules</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A normal rule will always create a [`Token`](struct.Token) and add it to the</span>
-<span class='doccomment'>/// [`Parser::queue`](trait.Parser#tymethod.queue), along with any subsequent rules that its</span>
-<span class='doccomment'>/// subrules may create.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```ignore</span>
-<span class='doccomment'>/// one = { two }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// If the above rule matches and `two` is a normal rule as well, the queue of `Token`s will</span>
-<span class='doccomment'>/// contain `Token { rule: Rule::one, ... }, Token { rule: Rule::two, ... }`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Normal rules are also tracked for error reporting. Once a normal rule fails, its failure is</span>
-<span class='doccomment'>/// automatically recorded and available in [`Parser::expected`](trait.Parser#tymethod.expected).</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Atomic rules `@`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Atomic rules work as normal rules apart from the fact that they don&#39;t accept any `whitespace`</span>
-<span class='doccomment'>/// or `comment` between rules and sub-rules, and any sub-rules of an atomic rule will not appear</span>
-<span class='doccomment'>/// in [`Parser::expected`](trait.Parser#tymethod.expected).</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```ignore</span>
-<span class='doccomment'>/// ab = @{ a ~ b }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// In the rule above, there cannot be anything between `a` and `b` for `ab` to match. This rule</span>
-<span class='doccomment'>/// has a *cascading* effect, so any rules called from an atomic rule will also be atomic while</span>
-<span class='doccomment'>/// being matched in an atomic context. In other words, `a` and `b` will also be atomic when being</span>
-<span class='doccomment'>/// matched inside of `ab`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Silent rules `_`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Silent rules work like normal rules without appearing in</span>
-<span class='doccomment'>/// [`Parser::queue`](trait.Parser#tymethod.queue) or</span>
-<span class='doccomment'>/// [`Parser::expected`](trait.Parser#tymethod.expected).</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```ignore</span>
-<span class='doccomment'>/// whitespace = _{ [&quot; &quot;] }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Unlike atomic rules, silent rules are *not cascading*. A rule inside a silent rule will not be</span>
-<span class='doccomment'>/// silent unless it&#39;s explicitly stated.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Syntax</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// | Rule         | What it does                                         |</span>
-<span class='doccomment'>/// |--------------|------------------------------------------------------|</span>
-<span class='doccomment'>/// | `[&quot;a&quot;]`      | matches the exact string `&quot;a&quot;`                       |</span>
-<span class='doccomment'>/// | `[&#39;a&#39;..&#39;z&#39;]` | matches one character between `&#39;a&#39;` and `&#39;z&#39;`        |</span>
-<span class='doccomment'>/// | `a`          | matches rule `a`                                     |</span>
-<span class='doccomment'>/// | `a ~ b`      | matches the sequence `a` `b`                         |</span>
-<span class='doccomment'>/// | `a | b`      | matches either `a` or `b`                            |</span>
-<span class='doccomment'>/// | `a*`         | matches `a` zero or more times                       |</span>
-<span class='doccomment'>/// | `a+`         | matches `a` one or more times                        |</span>
-<span class='doccomment'>/// | `a?`         | optionally matches `a`                               |</span>
-<span class='doccomment'>/// | `&amp;a`         | matches `a` without making progress                  |</span>
-<span class='doccomment'>/// | `!a`         | matches if `a` doesn&#39;t match without making progress |</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ## Precedence climbing</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// pest supports a special type of rule that implements precedence climbing in the background.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```ignore</span>
-<span class='doccomment'>/// expression = _{</span>
-<span class='doccomment'>///     { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
-<span class='doccomment'>///     addition       = {  plus  | minus }</span>
-<span class='doccomment'>///     multiplication = {  times | slash }</span>
-<span class='doccomment'>///     power          = {&lt; pow } // &lt; for right-associativity</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The first part of the precedence climbing rule is the primary expression that comes between</span>
-<span class='doccomment'>/// braces. It&#39;s followed by any number of rules, each rule having a precedence higher than the</span>
-<span class='doccomment'>/// previous one. The `&lt;` denote right-associativity, the default being left-associativity.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>/// # use pest::prelude::*;</span>
-<span class='doccomment'>/// # fn main() {</span>
-<span class='doccomment'>/// impl_rdp! {</span>
-<span class='doccomment'>///     grammar! {</span>
-<span class='doccomment'>///         expression = _{ paren ~ expression? }</span>
-<span class='doccomment'>///         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let mut parser = Rdp::new(StringInput::new(&quot;(())((())())()&quot;));</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert!(parser.expression());</span>
-<span class='doccomment'>/// assert!(parser.end());</span>
-<span class='doccomment'>/// # }</span>
-<span class='doccomment'>/// ```</span>
-<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>grammar</span> {
-    <span class='comment'>// handle associativity</span>
-    ( @<span class='ident'>assoc</span> <span class='op'>&lt;</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> (<span class='bool-val'>true</span>);
-    ( @<span class='ident'>assoc</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> )   <span class='op'>=&gt;</span> (<span class='bool-val'>false</span>);
+<span class="doccomment">/// A `macro` that defines each rule as a method on a `Parser` which parses from the current</span>
+<span class="doccomment">/// position. Rules are always defined between braces, with an optional symbol marking the type of</span>
+<span class="doccomment">/// rule defined.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// *Note:* `grammar!` may require you to increase the recursion limit of your create with</span>
+<span class="doccomment">/// `#![recursion_limit = &quot;*&quot;]` where * is the new limit.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// pest has four special rules:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * `whitespace` - gets run between rules and sub-rules</span>
+<span class="doccomment">/// * `comment` - gets run only between rules</span>
+<span class="doccomment">/// * `any` - matches exactly one `char`</span>
+<span class="doccomment">/// * `eoi` - (end-of-input) matches only when a `Parser` has reached its</span>
+<span class="doccomment">///   [end](trait.Parser#tymethod.end)</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `whitespace` and `comment` should be overridden and are void otherwise, while `any` and `eoi`</span>
+<span class="doccomment">/// are predefined rules.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Normal rules</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A normal rule will always create a [`Token`](struct.Token) and add it to the</span>
+<span class="doccomment">/// [`Parser::queue`](trait.Parser#tymethod.queue), along with any subsequent rules that its</span>
+<span class="doccomment">/// subrules may create.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// one = { two }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If the above rule matches and `two` is a normal rule as well, the queue of `Token`s will</span>
+<span class="doccomment">/// contain `Token { rule: Rule::one, ... }, Token { rule: Rule::two, ... }`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Normal rules are also tracked for error reporting. Once a normal rule fails, its failure is</span>
+<span class="doccomment">/// automatically recorded and available in [`Parser::expected`](trait.Parser#tymethod.expected).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Atomic rules `@`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Atomic rules work as normal rules apart from the fact that they don&#39;t accept any `whitespace`</span>
+<span class="doccomment">/// or `comment` between rules and sub-rules, and any sub-rules of an atomic rule will not appear</span>
+<span class="doccomment">/// in [`Parser::expected`](trait.Parser#tymethod.expected).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// ab = @{ a ~ b }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// In the rule above, there cannot be anything between `a` and `b` for `ab` to match. This rule</span>
+<span class="doccomment">/// has a *cascading* effect, so any rules called from an atomic rule will also be atomic while</span>
+<span class="doccomment">/// being matched in an atomic context. In other words, `a` and `b` will also be atomic when being</span>
+<span class="doccomment">/// matched inside of `ab`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Silent rules `_`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Silent rules work like normal rules without appearing in</span>
+<span class="doccomment">/// [`Parser::queue`](trait.Parser#tymethod.queue) or</span>
+<span class="doccomment">/// [`Parser::expected`](trait.Parser#tymethod.expected).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// whitespace = _{ [&quot; &quot;] }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Unlike atomic rules, silent rules are *not cascading*. A rule inside a silent rule will not be</span>
+<span class="doccomment">/// silent unless it&#39;s explicitly stated.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Syntax</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// | Rule         | What it does                                         |</span>
+<span class="doccomment">/// |--------------|------------------------------------------------------|</span>
+<span class="doccomment">/// | `[&quot;a&quot;]`      | matches the exact string `&quot;a&quot;`                       |</span>
+<span class="doccomment">/// | `[&#39;a&#39;..&#39;z&#39;]` | matches one character between `&#39;a&#39;` and `&#39;z&#39;`        |</span>
+<span class="doccomment">/// | `a`          | matches rule `a`                                     |</span>
+<span class="doccomment">/// | `a ~ b`      | matches the sequence `a` `b`                         |</span>
+<span class="doccomment">/// | `a | b`      | matches either `a` or `b`                            |</span>
+<span class="doccomment">/// | `a*`         | matches `a` zero or more times                       |</span>
+<span class="doccomment">/// | `a+`         | matches `a` one or more times                        |</span>
+<span class="doccomment">/// | `a?`         | optionally matches `a`                               |</span>
+<span class="doccomment">/// | `&amp;a`         | matches `a` without making progress                  |</span>
+<span class="doccomment">/// | `!a`         | matches if `a` doesn&#39;t match without making progress |</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Precedence climbing</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// pest supports a special type of rule that implements precedence climbing in the background.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// expression = _{</span>
+<span class="doccomment">///     { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
+<span class="doccomment">///     addition       = {  plus  | minus }</span>
+<span class="doccomment">///     multiplication = {  times | slash }</span>
+<span class="doccomment">///     power          = {&lt; pow } // &lt; for right-associativity</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The first part of the precedence climbing rule is the primary expression that comes between</span>
+<span class="doccomment">/// braces. It&#39;s followed by any number of rules, each rule having a precedence higher than the</span>
+<span class="doccomment">/// previous one. The `&lt;` denote right-associativity, the default being left-associativity.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # #[macro_use] extern crate pest;</span>
+<span class="doccomment">/// # use pest::prelude::*;</span>
+<span class="doccomment">/// # fn main() {</span>
+<span class="doccomment">/// impl_rdp! {</span>
+<span class="doccomment">///     grammar! {</span>
+<span class="doccomment">///         expression = _{ paren ~ expression? }</span>
+<span class="doccomment">///         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut parser = Rdp::new(StringInput::new(&quot;(())((())())()&quot;));</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert!(parser.expression());</span>
+<span class="doccomment">/// assert!(parser.end());</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">grammar</span> {
+    <span class="comment">// handle associativity</span>
+    ( @<span class="ident">assoc</span> <span class="op">&lt;</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> (<span class="bool-val">true</span>);
+    ( @<span class="ident">assoc</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> )   <span class="op">=&gt;</span> (<span class="bool-val">false</span>);
 
-    <span class='comment'>// handle right associativity rule</span>
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='op'>&lt;</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [] [] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ] [] [])
+    <span class="comment">// handle right associativity rule</span>
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="op">&lt;</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [] [] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ] [] [])
     };
 
-    <span class='comment'>// handle precedence climbing</span>
-    ( @<span class='ident'>conv_prec</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span>:<span class='ident'>ident</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_prec</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [] [] [] ) <span class='op'>=&gt;</span> {
+    <span class="comment">// handle precedence climbing</span>
+    ( @<span class="ident">conv_prec</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span>:<span class="ident">ident</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">_prec</span>:<span class="ident">expr</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [] [] [] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input_mut</span>().<span class='ident'>set_pos</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span>);
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input_mut</span>().<span class="ident">set_pos</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span>);
 
-            <span class='prelude-val'>None</span>
+            <span class="prelude-val">None</span>
         }
     };
-    <span class='comment'>// normal</span>
-    ( @<span class='ident'>conv_prec</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span>:<span class='ident'>ident</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span>
-      [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [] [] ) <span class='op'>=&gt;</span> {
+    <span class="comment">// normal</span>
+    ( @<span class="ident">conv_prec</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span>:<span class="ident">ident</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span>:<span class="ident">expr</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>
+      [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [] [] ) <span class="op">=&gt;</span> {
         {
-            <span class='kw'>if</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> )<span class='op'>*</span> ] [] []) {
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>((<span class='prelude-val'>Some</span>(<span class='ident'>Rule</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span>, <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>assoc</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> )<span class='kw-2'>*</span>)))
-            } <span class='kw'>else</span> {
-                <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv_prec</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [] [])
+            <span class="kw">if</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> )<span class="op">*</span> ] [] []) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="prelude-val">Some</span>(<span class="ident">Rule</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span>, <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">assoc</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> )<span class="kw-2">*</span>)))
+            } <span class="kw">else</span> {
+                <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv_prec</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span> <span class="op">+</span> <span class="number">1</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [] [])
             }
         }
     };
-    <span class='comment'>// atomic</span>
-    ( @<span class='ident'>conv_prec</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span>:<span class='ident'>ident</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span>
-      [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [] [] ) <span class='op'>=&gt;</span> {
+    <span class="comment">// atomic</span>
+    ( @<span class="ident">conv_prec</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span>:<span class="ident">ident</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span>:<span class="ident">expr</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>
+      [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> @{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [] [] ) <span class="op">=&gt;</span> {
         {
-            <span class='kw'>if</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> )<span class='op'>*</span> ] [] []) {
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>((<span class='prelude-val'>Some</span>(<span class='ident'>Rule</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span>, <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>assoc</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> )<span class='kw-2'>*</span>)))
-            } <span class='kw'>else</span> {
-                <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv_prec</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [] [])
+            <span class="kw">if</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> )<span class="op">*</span> ] [] []) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="prelude-val">Some</span>(<span class="ident">Rule</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span>, <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">assoc</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> )<span class="kw-2">*</span>)))
+            } <span class="kw">else</span> {
+                <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv_prec</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span> <span class="op">+</span> <span class="number">1</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [] [])
             }
         }
     };
-    <span class='comment'>// silent</span>
-    ( @<span class='ident'>conv_prec</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span>:<span class='ident'>ident</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span>:<span class='ident'>expr</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span>
-      [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [] [] ) <span class='op'>=&gt;</span> {
+    <span class="comment">// silent</span>
+    ( @<span class="ident">conv_prec</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span>:<span class="ident">ident</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span>:<span class="ident">expr</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>
+      [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> _{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [] [] ) <span class="op">=&gt;</span> {
         {
-            <span class='kw'>if</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> )<span class='op'>*</span> ] [] []) {
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>((<span class='prelude-val'>None</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span>, <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>assoc</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> )<span class='kw-2'>*</span>)))
-            } <span class='kw'>else</span> {
-                <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv_prec</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>pos</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>prec</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [] [])
+            <span class="kw">if</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> )<span class="op">*</span> ] [] []) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="prelude-val">None</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span>, <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">assoc</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> )<span class="kw-2">*</span>)))
+            } <span class="kw">else</span> {
+                <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv_prec</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pos</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">prec</span> <span class="op">+</span> <span class="number">1</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [] [])
             }
         }
     };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>primary</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [] [] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">primary</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [] [] ) <span class="op">=&gt;</span> {
 
           {
-              <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>primary</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>slf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span><span class='op'>|</span> {
-                  <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
+              <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">primary</span> <span class="op">=</span> <span class="op">|</span><span class="ident">slf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="op">|</span> {
+                  <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
 
-                  <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>skip</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='ident'>slf</span>);
+                  <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">skip</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="ident">slf</span>);
 
-                  <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='ident'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>primary</span> )<span class='op'>*</span> ] [] []);
+                  <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="ident">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">primary</span> )<span class="op">*</span> ] [] []);
 
-                  <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>result</span> {
-                      <span class='ident'>slf</span>.<span class='ident'>input_mut</span>().<span class='ident'>set_pos</span>(<span class='ident'>pos</span>);
+                  <span class="kw">if</span> <span class="op">!</span><span class="ident">result</span> {
+                      <span class="ident">slf</span>.<span class="ident">input_mut</span>().<span class="ident">set_pos</span>(<span class="ident">pos</span>);
                   }
 
-                  <span class='ident'>result</span>
+                  <span class="ident">result</span>
               };
-              <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>climb</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>slf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span><span class='op'>|</span> {
-                  <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
+              <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">climb</span> <span class="op">=</span> <span class="op">|</span><span class="ident">slf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="op">|</span> {
+                  <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
 
-                  <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>skip</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='ident'>slf</span>);
+                  <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">skip</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="ident">slf</span>);
 
-                  <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv_prec</span> <span class='ident'>pos</span> (<span class='number'>0u8</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='ident'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ] [] [])
+                  <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv_prec</span> <span class="ident">pos</span> (<span class="number">0u8</span>) <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="ident">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ] [] [])
               };
 
-              <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-              <span class='kw'>let</span> <span class='ident'>queue_pos</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>queue</span>().<span class='ident'>len</span>();
+              <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pos</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+              <span class="kw">let</span> <span class="ident">queue_pos</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">queue</span>().<span class="ident">len</span>();
 
-              <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>primary</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>);
+              <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">primary</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>);
 
-              <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>token</span>) <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>queue</span>().<span class='ident'>get</span>(<span class='ident'>queue_pos</span>) {
-                  <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>token</span>.<span class='ident'>start</span>;
+              <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">queue</span>().<span class="ident">get</span>(<span class="ident">queue_pos</span>) {
+                  <span class="ident">pos</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">start</span>;
               }
 
-              <span class='kw'>if</span> <span class='ident'>result</span> {
-                  <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>prec_climb</span>(<span class='ident'>queue_pos</span>, <span class='ident'>pos</span>, <span class='number'>0</span>, <span class='prelude-val'>None</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>primary</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>climb</span>);
+              <span class="kw">if</span> <span class="ident">result</span> {
+                  <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">prec_climb</span>(<span class="ident">queue_pos</span>, <span class="ident">pos</span>, <span class="number">0</span>, <span class="prelude-val">None</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">primary</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">climb</span>);
               }
 
-              <span class='ident'>result</span>
+              <span class="ident">result</span>
           }
     };
 
-    <span class='comment'>// handle parens</span>
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ ( $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> )<span class='op'>*</span> <span class='ident'>_rp</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ <span class='ident'>_lp</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ]
-                 [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> ])
+    <span class="comment">// handle parens</span>
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ ( $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> )<span class="op">*</span> ) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> )<span class="op">*</span> <span class="ident">_rp</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ <span class="ident">_lp</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ]
+                 [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> ])
     };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='ident'>_rp</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='ident'>_lp</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> ])
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="ident">_rp</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="ident">_lp</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> ])
     };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='ident'>_rp</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>op</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ <span class='ident'>_rp</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>op</span> ])
-    };
-
-    <span class='comment'>// handle prefix operands</span>
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='op'>&amp;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> <span class='ident'>_pres</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>)
-    };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='op'>!</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> <span class='ident'>_abs</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>)
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="ident">_rp</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">op</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ <span class="ident">_rp</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">op</span> ])
     };
 
-    <span class='comment'>// handle infix operands</span>
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> ~ ])
+    <span class="comment">// handle prefix operands</span>
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="op">&amp;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> <span class="ident">_pres</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>)
     };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>)
-    };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> ~ ])
-    };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> <span class='op'>|</span> ])
-    };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>)
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="op">!</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> <span class="ident">_abs</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>)
     };
 
-    <span class='comment'>// handle everything else</span>
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ops</span>:<span class='ident'>tt</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ops</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> ])
+    <span class="comment">// handle infix operands</span>
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> ~ ])
+    };
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span>) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>)
+    };
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> ~ ])
+    };
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> <span class="op">|</span> ])
+    };
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span>) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>)
     };
 
-    <span class='comment'>// output remaining operators</span>
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [] [] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> ])
-    };
-    ( @<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>op</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>output</span> )<span class='op'>*</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>op</span> ])
+    <span class="comment">// handle everything else</span>
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ops</span>:<span class="ident">tt</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ops</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> ])
     };
 
-    <span class='comment'>// match</span>
-    ( @<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> (( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>exp</span>:<span class='ident'>expr</span> )) ) <span class='op'>=&gt;</span> ((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>exp</span>));
-    ( @<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>left</span>:<span class='ident'>tt</span> .. <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>right</span>:<span class='ident'>tt</span> ]) <span class='op'>=&gt;</span> (<span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>left</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>right</span>]));
-    ( @<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>left</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>right</span>:<span class='ident'>expr</span> ]) <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_range</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>left</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>right</span>)
+    <span class="comment">// output remaining operators</span>
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [] [] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> ])
     };
-    ( @<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>str</span>:<span class='ident'>expr</span> ]) <span class='op'>=&gt;</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>str</span>));
-    ( @<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rule</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rule</span>());
+    ( @<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">op</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">output</span> )<span class="op">*</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">op</span> ])
+    };
 
-    <span class='comment'>// process postfix</span>
-    ( @<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_slf</span>:<span class='ident'>ident</span> [( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>:<span class='ident'>expr</span> )] [] ) <span class='op'>=&gt;</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>);
-    ( @<span class='ident'>process</span> <span class='bool-val'>false</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    <span class="comment">// match</span>
+    ( @<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> (( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exp</span>:<span class="ident">expr</span> )) ) <span class="op">=&gt;</span> ((<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exp</span>));
+    ( @<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">left</span>:<span class="ident">tt</span> .. <span class="macro-nonterminal">$</span><span class="macro-nonterminal">right</span>:<span class="ident">tt</span> ]) <span class="op">=&gt;</span> (<span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [<span class="macro-nonterminal">$</span><span class="macro-nonterminal">left</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">right</span>]));
+    ( @<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">left</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">right</span>:<span class="ident">expr</span> ]) <span class="op">=&gt;</span> {
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input_mut</span>().<span class="ident">match_range</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">left</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">right</span>)
+    };
+    ( @<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">str</span>:<span class="ident">expr</span> ]) <span class="op">=&gt;</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">str</span>));
+    ( @<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rule</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">rule</span>());
+
+    <span class="comment">// process postfix</span>
+    ( @<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_slf</span>:<span class="ident">ident</span> [( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">result</span>:<span class="ident">expr</span> )] [] ) <span class="op">=&gt;</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">result</span>);
+    ( @<span class="ident">process</span> <span class="bool-val">false</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='bool-val'>false</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>try</span>(<span class='bool-val'>false</span>, <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span><span class='op'>|</span> {
-                <span class='kw'>if</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) {
-                    <span class='kw'>let</span> <span class='ident'>original</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="bool-val">false</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">try</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span><span class="op">|</span> {
+                <span class="kw">if</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) {
+                    <span class="kw">let</span> <span class="ident">original</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
 
-                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_ws</span>();
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_ws</span>();
 
-                    <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-                    <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>queue</span>().<span class='ident'>len</span>();
+                    <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+                    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">queue</span>().<span class="ident">len</span>();
 
-                    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>);
+                    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>);
 
-                    <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>() <span class='op'>==</span> <span class='ident'>pos</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>eoi_matched</span>() {
-                        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input_mut</span>().<span class='ident'>set_pos</span>(<span class='ident'>original</span>);
+                    <span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>() <span class="op">==</span> <span class="ident">pos</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">eoi_matched</span>() {
+                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input_mut</span>().<span class="ident">set_pos</span>(<span class="ident">original</span>);
                     }
 
-                    <span class='ident'>result</span>
-                } <span class='kw'>else</span> {
-                    <span class='bool-val'>false</span>
+                    <span class="ident">result</span>
+                } <span class="kw">else</span> {
+                    <span class="bool-val">false</span>
                 }
-            }) )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+            }) )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ ~ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ ~ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>try</span>(<span class='bool-val'>false</span>, <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span><span class='op'>|</span> {
-                <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) <span class='op'>&amp;&amp;</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>)
-            }) )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">try</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span><span class="op">|</span> {
+                <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) <span class="op">&amp;&amp;</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>)
+            }) )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='op'>|</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="op">|</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [((
-                <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) <span class='op'>||</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>)
-            )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [((
+                <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) <span class="op">||</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>)
+            )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='bool-val'>false</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='op'>*</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="bool-val">false</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="op">*</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='bool-val'>false</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="bool-val">false</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pos</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
 
-                <span class='kw'>loop</span> {
-                    <span class='kw'>if</span> <span class='op'>!</span><span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) {
-                        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input_mut</span>().<span class='ident'>set_pos</span>(<span class='ident'>pos</span>);
+                <span class="kw">loop</span> {
+                    <span class="kw">if</span> <span class="op">!</span><span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) {
+                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input_mut</span>().<span class="ident">set_pos</span>(<span class="ident">pos</span>);
 
-                        <span class='kw'>break</span>
+                        <span class="kw">break</span>
                     }
 
-                    <span class='ident'>pos</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
+                    <span class="ident">pos</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
 
-                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_ws</span>();
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_ws</span>();
                 }
 
-                <span class='bool-val'>true</span>
-            } )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+                <span class="bool-val">true</span>
+            } )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='op'>*</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="op">*</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( {
-                <span class='kw'>loop</span> {
-                    <span class='kw'>if</span> <span class='op'>!</span><span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) {
-                        <span class='kw'>break</span>
-                    }
-                }
-
-                <span class='bool-val'>true</span>
-            } )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
-        }
-    };
-    ( @<span class='ident'>process</span> <span class='bool-val'>false</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='op'>+</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='bool-val'>false</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( <span class='kw'>if</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) {
-                <span class='kw'>loop</span> {
-                    <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-
-                    <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_ws</span>();
-
-                    <span class='kw'>if</span> <span class='op'>!</span><span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) {
-                        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>input_mut</span>().<span class='ident'>set_pos</span>(<span class='ident'>pos</span>);
-
-                        <span class='kw'>break</span>
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( {
+                <span class="kw">loop</span> {
+                    <span class="kw">if</span> <span class="op">!</span><span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) {
+                        <span class="kw">break</span>
                     }
                 }
 
-                <span class='bool-val'>true</span>
-            } <span class='kw'>else</span> {
-                <span class='bool-val'>false</span>
-            } )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+                <span class="bool-val">true</span>
+            } )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='op'>+</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="bool-val">false</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="op">+</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( <span class='kw'>if</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) {
-                <span class='kw'>loop</span> {
-                    <span class='kw'>if</span> <span class='op'>!</span><span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>) {
-                        <span class='kw'>break</span>
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="bool-val">false</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( <span class="kw">if</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) {
+                <span class="kw">loop</span> {
+                    <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_ws</span>();
+
+                    <span class="kw">if</span> <span class="op">!</span><span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) {
+                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">input_mut</span>().<span class="ident">set_pos</span>(<span class="ident">pos</span>);
+
+                        <span class="kw">break</span>
                     }
                 }
 
-                <span class='bool-val'>true</span>
-            } <span class='kw'>else</span> {
-                <span class='bool-val'>false</span>
-            } )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+                <span class="bool-val">true</span>
+            } <span class="kw">else</span> {
+                <span class="bool-val">false</span>
+            } )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='question-mark'>?</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="op">+</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( {
-                <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>);
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( <span class="kw">if</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) {
+                <span class="kw">loop</span> {
+                    <span class="kw">if</span> <span class="op">!</span><span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>) {
+                        <span class="kw">break</span>
+                    }
+                }
 
-                <span class='bool-val'>true</span>
-            } )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+                <span class="bool-val">true</span>
+            } <span class="kw">else</span> {
+                <span class="bool-val">false</span>
+            } )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='ident'>_pres</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="question-mark">?</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>try</span>(<span class='bool-val'>true</span>, <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span><span class='op'>|</span> {
-                <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)
-            }) )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( {
+                <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>);
+
+                <span class="bool-val">true</span>
+            } )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='ident'>_abs</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="ident">_pres</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [(( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>try</span>(<span class='bool-val'>true</span>, <span class='op'>|</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span><span class='op'>|</span> {
-                <span class='op'>!</span><span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>)
-            }) )) $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ])
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">try</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span><span class="op">|</span> {
+                <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>)
+            }) )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    ( @<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>single</span>:<span class='ident'>tt</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>mtc</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>single</span>)
-    };
-    ( @<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span>:<span class='ident'>tt</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>process</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>head</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>optail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ])
-    };
-
-    <span class='comment'>// skip only if not whitespace</span>
-    ( @<span class='ident'>skip</span> <span class='ident'>whitespace</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_slf</span>:<span class='ident'>ident</span> )  <span class='op'>=&gt;</span> ();
-    ( @<span class='ident'>skip</span> <span class='ident'>comment</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> )      <span class='op'>=&gt;</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_ws</span>());
-    ( @<span class='ident'>skip</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="ident">_abs</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
         {
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_com</span>();
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_ws</span>();
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [(( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">try</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span><span class="op">|</span> {
+                <span class="op">!</span><span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>)
+            }) )) $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ])
         }
     };
-    <span class='comment'>// skip if not atomic</span>
-    ( @<span class='ident'>skip</span> <span class='bool-val'>false</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> ) <span class='op'>=&gt;</span> ();
-    ( @<span class='ident'>skip</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> ) <span class='op'>=&gt;</span> {
+    ( @<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">single</span>:<span class="ident">tt</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">mtc</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">single</span>)
+    };
+    ( @<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">tt</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">process</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">optail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ])
+    };
+
+    <span class="comment">// skip only if not whitespace</span>
+    ( @<span class="ident">skip</span> <span class="ident">whitespace</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_slf</span>:<span class="ident">ident</span> )  <span class="op">=&gt;</span> ();
+    ( @<span class="ident">skip</span> <span class="ident">comment</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> )      <span class="op">=&gt;</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_ws</span>());
+    ( @<span class="ident">skip</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> ) <span class="op">=&gt;</span> {
         {
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_com</span>();
-            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>.<span class='ident'>skip_ws</span>();
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_com</span>();
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_ws</span>();
+        }
+    };
+    <span class="comment">// skip if not atomic</span>
+    ( @<span class="ident">skip</span> <span class="bool-val">false</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> ) <span class="op">=&gt;</span> ();
+    ( @<span class="ident">skip</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> ) <span class="op">=&gt;</span> {
+        {
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_com</span>();
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>.<span class="ident">skip_ws</span>();
         }
     };
 
-    <span class='comment'>// whitespace and comment are always atomic</span>
-    ( @<span class='ident'>atomic</span> <span class='ident'>whitespace</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> [] [])
+    <span class="comment">// whitespace and comment are always atomic</span>
+    ( @<span class="ident">atomic</span> <span class="ident">whitespace</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> [] [])
     };
-    ( @<span class='ident'>atomic</span> <span class='ident'>comment</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='bool-val'>true</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> [] [])
+    ( @<span class="ident">atomic</span> <span class="ident">comment</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="bool-val">true</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> [] [])
     };
-    ( @<span class='ident'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span>:<span class='ident'>tt</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span>:<span class='ident'>ident</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>slf</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> [] [])
+    ( @<span class="ident">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> [] [])
     };
 
-    () <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>revert</span>: <span class='ident'>bool</span>, <span class='ident'>rule</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    () <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">revert</span>: <span class="ident">bool</span>, <span class="ident">rule</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
 
-            <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>queue</span>().<span class='ident'>len</span>();
+            <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">queue</span>().<span class="ident">len</span>();
 
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>rule</span>(<span class='self'>self</span>);
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">rule</span>(<span class="self">self</span>);
 
-            <span class='kw'>if</span> <span class='ident'>revert</span> <span class='op'>||</span> <span class='op'>!</span><span class='ident'>result</span> {
-                <span class='self'>self</span>.<span class='ident'>input_mut</span>().<span class='ident'>set_pos</span>(<span class='ident'>pos</span>);
+            <span class="kw">if</span> <span class="ident">revert</span> <span class="op">||</span> <span class="op">!</span><span class="ident">result</span> {
+                <span class="self">self</span>.<span class="ident">input_mut</span>().<span class="ident">set_pos</span>(<span class="ident">pos</span>);
             }
 
-            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>result</span> {
-                <span class='self'>self</span>.<span class='ident'>queue_mut</span>().<span class='ident'>truncate</span>(<span class='ident'>len</span>);
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">result</span> {
+                <span class="self">self</span>.<span class="ident">queue_mut</span>().<span class="ident">truncate</span>(<span class="ident">len</span>);
             }
 
-            <span class='ident'>result</span>
+            <span class="ident">result</span>
         }
 
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>prec_climb</span><span class='op'>&lt;</span><span class='ident'>F</span>, <span class='ident'>G</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>pos</span>: <span class='ident'>usize</span>, <span class='ident'>left</span>: <span class='ident'>usize</span>, <span class='ident'>min_prec</span>: <span class='ident'>u8</span>,
-                            <span class='ident'>last_op</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;</span>, <span class='ident'>u8</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span>, <span class='ident'>primary</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>F</span>,
-                            <span class='ident'>climb</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>G</span>) <span class='op'>-&gt;</span> (<span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;</span>, <span class='ident'>u8</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>)
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>,
-                  <span class='ident'>G</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;</span>, <span class='ident'>u8</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prec_climb</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">G</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">usize</span>, <span class="ident">left</span>: <span class="ident">usize</span>, <span class="ident">min_prec</span>: <span class="ident">u8</span>,
+                            <span class="ident">last_op</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">u8</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>, <span class="ident">primary</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">F</span>,
+                            <span class="ident">climb</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">G</span>) <span class="op">-&gt;</span> (<span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">u8</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>)
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>,
+                  <span class="ident">G</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">u8</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>op</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>last_op</span>.<span class='ident'>is_some</span>() {
-                <span class='ident'>last_op</span>
-            } <span class='kw'>else</span> {
-                <span class='ident'>climb</span>(<span class='self'>self</span>)
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">op</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">last_op</span>.<span class="ident">is_some</span>() {
+                <span class="ident">last_op</span>
+            } <span class="kw">else</span> {
+                <span class="ident">climb</span>(<span class="self">self</span>)
             };
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>last_right</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_right</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
-            <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>((<span class='ident'>rule</span>, <span class='ident'>prec</span>, _)) <span class='op'>=</span> <span class='ident'>op</span> {
-                <span class='kw'>if</span> <span class='ident'>prec</span> <span class='op'>&gt;=</span> <span class='ident'>min_prec</span> {
-                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>right</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-                    <span class='kw'>let</span> <span class='ident'>queue_pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>queue</span>().<span class='ident'>len</span>();
+            <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">rule</span>, <span class="ident">prec</span>, _)) <span class="op">=</span> <span class="ident">op</span> {
+                <span class="kw">if</span> <span class="ident">prec</span> <span class="op">&gt;=</span> <span class="ident">min_prec</span> {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">right</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+                    <span class="kw">let</span> <span class="ident">queue_pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">queue</span>().<span class="ident">len</span>();
 
-                    <span class='ident'>primary</span>(<span class='self'>self</span>);
+                    <span class="ident">primary</span>(<span class="self">self</span>);
 
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>token</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>queue</span>().<span class='ident'>get</span>(<span class='ident'>queue_pos</span>) {
-                        <span class='ident'>new_pos</span> <span class='op'>=</span> <span class='ident'>token</span>.<span class='ident'>start</span>;
-                        <span class='ident'>right</span>   <span class='op'>=</span> <span class='ident'>token</span>.<span class='ident'>end</span>;
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">queue</span>().<span class="ident">get</span>(<span class="ident">queue_pos</span>) {
+                        <span class="ident">new_pos</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">start</span>;
+                        <span class="ident">right</span>   <span class="op">=</span> <span class="ident">token</span>.<span class="ident">end</span>;
                     }
 
-                    <span class='ident'>op</span> <span class='op'>=</span> <span class='ident'>climb</span>(<span class='self'>self</span>);
+                    <span class="ident">op</span> <span class="op">=</span> <span class="ident">climb</span>(<span class="self">self</span>);
 
-                    <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>((_, <span class='ident'>new_prec</span>, <span class='ident'>right_assoc</span>)) <span class='op'>=</span> <span class='ident'>op</span> {
-                        <span class='kw'>if</span> <span class='ident'>new_prec</span> <span class='op'>&gt;</span> <span class='ident'>prec</span> <span class='op'>||</span> <span class='ident'>right_assoc</span> <span class='op'>&amp;&amp;</span> <span class='ident'>new_prec</span> <span class='op'>==</span> <span class='ident'>prec</span> {
-                            <span class='kw'>let</span> (<span class='ident'>new_op</span>, <span class='ident'>new_lr</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>prec_climb</span>(<span class='ident'>queue_pos</span>, <span class='ident'>new_pos</span>,
-                                                                   <span class='ident'>new_prec</span>, <span class='ident'>op</span>, <span class='ident'>primary</span>,
-                                                                   <span class='ident'>climb</span>);
+                    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((_, <span class="ident">new_prec</span>, <span class="ident">right_assoc</span>)) <span class="op">=</span> <span class="ident">op</span> {
+                        <span class="kw">if</span> <span class="ident">new_prec</span> <span class="op">&gt;</span> <span class="ident">prec</span> <span class="op">||</span> <span class="ident">right_assoc</span> <span class="op">&amp;&amp;</span> <span class="ident">new_prec</span> <span class="op">==</span> <span class="ident">prec</span> {
+                            <span class="kw">let</span> (<span class="ident">new_op</span>, <span class="ident">new_lr</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">prec_climb</span>(<span class="ident">queue_pos</span>, <span class="ident">new_pos</span>,
+                                                                   <span class="ident">new_prec</span>, <span class="ident">op</span>, <span class="ident">primary</span>,
+                                                                   <span class="ident">climb</span>);
 
-                            <span class='ident'>op</span> <span class='op'>=</span> <span class='ident'>new_op</span>;
-                            <span class='ident'>last_right</span> <span class='op'>=</span> <span class='ident'>new_lr</span>;
-                        } <span class='kw'>else</span> {
-                            <span class='kw'>break</span>
+                            <span class="ident">op</span> <span class="op">=</span> <span class="ident">new_op</span>;
+                            <span class="ident">last_right</span> <span class="op">=</span> <span class="ident">new_lr</span>;
+                        } <span class="kw">else</span> {
+                            <span class="kw">break</span>
                         }
                     }
 
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>pos</span>) <span class='op'>=</span> <span class='ident'>last_right</span> {
-                        <span class='ident'>right</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>max</span>(<span class='ident'>pos</span>, <span class='ident'>right</span>);
-                    } <span class='kw'>else</span> {
-                        <span class='ident'>last_right</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>right</span>);
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pos</span>) <span class="op">=</span> <span class="ident">last_right</span> {
+                        <span class="ident">right</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">max</span>(<span class="ident">pos</span>, <span class="ident">right</span>);
+                    } <span class="kw">else</span> {
+                        <span class="ident">last_right</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">right</span>);
                     }
 
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>rule</span>) <span class='op'>=</span> <span class='ident'>rule</span> {
-                        <span class='kw'>let</span> <span class='ident'>token</span> <span class='op'>=</span> <span class='ident'>Token</span> {
-                            <span class='ident'>rule</span>:  <span class='ident'>rule</span>,
-                            <span class='ident'>start</span>: <span class='ident'>left</span>,
-                            <span class='ident'>end</span>:   <span class='ident'>right</span>
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rule</span>) <span class="op">=</span> <span class="ident">rule</span> {
+                        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">Token</span> {
+                            <span class="ident">rule</span>:  <span class="ident">rule</span>,
+                            <span class="ident">start</span>: <span class="ident">left</span>,
+                            <span class="ident">end</span>:   <span class="ident">right</span>
                         };
 
-                        <span class='self'>self</span>.<span class='ident'>queue_mut</span>().<span class='ident'>insert</span>(<span class='ident'>pos</span>, <span class='ident'>token</span>);
+                        <span class="self">self</span>.<span class="ident">queue_mut</span>().<span class="ident">insert</span>(<span class="ident">pos</span>, <span class="ident">token</span>);
                     }
-                } <span class='kw'>else</span> {
-                    <span class='kw'>return</span> (<span class='ident'>op</span>, <span class='ident'>last_right</span>)
+                } <span class="kw">else</span> {
+                    <span class="kw">return</span> (<span class="ident">op</span>, <span class="ident">last_right</span>)
                 }
             }
 
-            (<span class='ident'>op</span>, <span class='ident'>last_right</span>)
+            (<span class="ident">op</span>, <span class="ident">last_right</span>)
         }
     };
 
-    <span class='comment'>// normal rule</span>
-    ( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_parens</span>, <span class='ident'>unused_variables</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-            <span class='kw'>let</span> <span class='ident'>slf</span> <span class='op'>=</span> <span class='self'>self</span>;
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>skip</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='ident'>slf</span>);
+    <span class="comment">// normal rule</span>
+    ( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_parens</span>, <span class="ident">unused_variables</span>)]</span>
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="self">self</span>;
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">skip</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="ident">slf</span>);
 
-            <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>queue</span>().<span class='ident'>len</span>();
-            <span class='kw'>let</span> <span class='ident'>tracked_len</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>tracked_len</span>();
+            <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">queue</span>().<span class="ident">len</span>();
+            <span class="kw">let</span> <span class="ident">tracked_len</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">tracked_len</span>();
 
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='bool-val'>false</span> <span class='ident'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ]);
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="bool-val">false</span> <span class="ident">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ]);
 
-            <span class='kw'>if</span> <span class='ident'>result</span> {
-                <span class='kw'>let</span> <span class='ident'>new_pos</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
+            <span class="kw">if</span> <span class="ident">result</span> {
+                <span class="kw">let</span> <span class="ident">new_pos</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
 
-                <span class='kw'>let</span> <span class='ident'>token</span> <span class='op'>=</span> <span class='ident'>Token</span> {
-                    <span class='ident'>rule</span>:  <span class='ident'>Rule</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>,
-                    <span class='ident'>start</span>: <span class='ident'>pos</span>,
-                    <span class='ident'>end</span>:   <span class='ident'>new_pos</span>
+                <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">Token</span> {
+                    <span class="ident">rule</span>:  <span class="ident">Rule</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>,
+                    <span class="ident">start</span>: <span class="ident">pos</span>,
+                    <span class="ident">end</span>:   <span class="ident">new_pos</span>
                 };
 
-                <span class='ident'>slf</span>.<span class='ident'>queue_mut</span>().<span class='ident'>insert</span>(<span class='ident'>len</span>, <span class='ident'>token</span>);
-            } <span class='kw'>else</span> {
-                <span class='ident'>slf</span>.<span class='ident'>queue_mut</span>().<span class='ident'>truncate</span>(<span class='ident'>len</span>);
+                <span class="ident">slf</span>.<span class="ident">queue_mut</span>().<span class="ident">insert</span>(<span class="ident">len</span>, <span class="ident">token</span>);
+            } <span class="kw">else</span> {
+                <span class="ident">slf</span>.<span class="ident">queue_mut</span>().<span class="ident">truncate</span>(<span class="ident">len</span>);
 
-                <span class='kw'>if</span> <span class='ident'>slf</span>.<span class='ident'>tracked_len</span>() <span class='op'>==</span> <span class='ident'>tracked_len</span> {
-                    <span class='ident'>slf</span>.<span class='ident'>track</span>(<span class='ident'>Rule</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, <span class='ident'>pos</span>);
+                <span class="kw">if</span> <span class="ident">slf</span>.<span class="ident">tracked_len</span>() <span class="op">==</span> <span class="ident">tracked_len</span> {
+                    <span class="ident">slf</span>.<span class="ident">track</span>(<span class="ident">Rule</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="ident">pos</span>);
                 }
             }
 
-            <span class='ident'>result</span>
+            <span class="ident">result</span>
         }
 
-        <span class='macro'>grammar</span><span class='macro'>!</span>($( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+        <span class="macro">grammar</span><span class="macro">!</span>($( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
 
-    <span class='comment'>// atomic rule</span>
-    ( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_parens</span>, <span class='ident'>unused_variables</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-            <span class='kw'>let</span> <span class='ident'>slf</span> <span class='op'>=</span> <span class='self'>self</span>;
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>skip</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='ident'>slf</span>);
+    <span class="comment">// atomic rule</span>
+    ( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> @{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_parens</span>, <span class="ident">unused_variables</span>)]</span>
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="self">self</span>;
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">skip</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="ident">slf</span>);
 
-            <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>queue</span>().<span class='ident'>len</span>();
+            <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
+            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">queue</span>().<span class="ident">len</span>();
 
-            <span class='kw'>let</span> <span class='ident'>toggled</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>is_atomic</span>();
+            <span class="kw">let</span> <span class="ident">toggled</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">is_atomic</span>();
 
-            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>toggled</span> {
-                <span class='ident'>slf</span>.<span class='ident'>set_atomic</span>(<span class='bool-val'>true</span>);
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">toggled</span> {
+                <span class="ident">slf</span>.<span class="ident">set_atomic</span>(<span class="bool-val">true</span>);
             }
 
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>conv</span> <span class='bool-val'>true</span> <span class='ident'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ] [] []);
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">conv</span> <span class="bool-val">true</span> <span class="ident">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ] [] []);
 
-            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>toggled</span> {
-                <span class='ident'>slf</span>.<span class='ident'>set_atomic</span>(<span class='bool-val'>false</span>);
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">toggled</span> {
+                <span class="ident">slf</span>.<span class="ident">set_atomic</span>(<span class="bool-val">false</span>);
             }
 
-            <span class='kw'>if</span> <span class='ident'>result</span> {
-                <span class='kw'>let</span> <span class='ident'>new_pos</span> <span class='op'>=</span> <span class='ident'>slf</span>.<span class='ident'>input</span>().<span class='ident'>pos</span>();
+            <span class="kw">if</span> <span class="ident">result</span> {
+                <span class="kw">let</span> <span class="ident">new_pos</span> <span class="op">=</span> <span class="ident">slf</span>.<span class="ident">input</span>().<span class="ident">pos</span>();
 
-                <span class='kw'>let</span> <span class='ident'>token</span> <span class='op'>=</span> <span class='ident'>Token</span> {
-                    <span class='ident'>rule</span>:  <span class='ident'>Rule</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>,
-                    <span class='ident'>start</span>: <span class='ident'>pos</span>,
-                    <span class='ident'>end</span>:   <span class='ident'>new_pos</span>
+                <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">Token</span> {
+                    <span class="ident">rule</span>:  <span class="ident">Rule</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>,
+                    <span class="ident">start</span>: <span class="ident">pos</span>,
+                    <span class="ident">end</span>:   <span class="ident">new_pos</span>
                 };
 
-                <span class='ident'>slf</span>.<span class='ident'>queue_mut</span>().<span class='ident'>insert</span>(<span class='ident'>len</span>, <span class='ident'>token</span>);
-            } <span class='kw'>else</span> {
-                <span class='ident'>slf</span>.<span class='ident'>queue_mut</span>().<span class='ident'>truncate</span>(<span class='ident'>len</span>);
+                <span class="ident">slf</span>.<span class="ident">queue_mut</span>().<span class="ident">insert</span>(<span class="ident">len</span>, <span class="ident">token</span>);
+            } <span class="kw">else</span> {
+                <span class="ident">slf</span>.<span class="ident">queue_mut</span>().<span class="ident">truncate</span>(<span class="ident">len</span>);
 
-                <span class='ident'>slf</span>.<span class='ident'>track</span>(<span class='ident'>Rule</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>, <span class='ident'>pos</span>);
+                <span class="ident">slf</span>.<span class="ident">track</span>(<span class="ident">Rule</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="ident">pos</span>);
             }
 
-            <span class='ident'>result</span>
+            <span class="ident">result</span>
         }
 
-        <span class='macro'>grammar</span><span class='macro'>!</span>($( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+        <span class="macro">grammar</span><span class="macro">!</span>($( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
 
-    <span class='comment'>// silent rule</span>
-    ( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_parens</span>, <span class='ident'>unused_variables</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-            <span class='kw'>let</span> <span class='ident'>slf</span> <span class='op'>=</span> <span class='self'>self</span>;
-            <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>skip</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='ident'>slf</span>);
+    <span class="comment">// silent rule</span>
+    ( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> _{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_parens</span>, <span class="ident">unused_variables</span>)]</span>
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="self">self</span>;
+            <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">skip</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="ident">slf</span>);
 
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>grammar</span><span class='macro'>!</span>(@<span class='ident'>atomic</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> <span class='bool-val'>false</span> <span class='ident'>slf</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ]);
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro">grammar</span><span class="macro">!</span>(@<span class="ident">atomic</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> <span class="bool-val">false</span> <span class="ident">slf</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ]);
 
-            <span class='ident'>result</span>
+            <span class="ident">result</span>
         }
 
-        <span class='macro'>grammar</span><span class='macro'>!</span>($( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+        <span class="macro">grammar</span><span class="macro">!</span>($( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
 }
 </pre>

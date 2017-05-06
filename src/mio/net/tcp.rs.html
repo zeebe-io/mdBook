@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -328,290 +328,290 @@
 <span id="283">283</span>
 <span id="284">284</span>
 <span id="285">285</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>Read</span>, <span class='ident'>Write</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='self'>self</span>, <span class='ident'>SocketAddr</span>, <span class='ident'>SocketAddrV4</span>, <span class='ident'>SocketAddrV6</span>, <span class='ident'>Ipv4Addr</span>, <span class='ident'>Ipv6Addr</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">Read</span>, <span class="ident">Write</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::{<span class="self">self</span>, <span class="ident">SocketAddr</span>, <span class="ident">SocketAddrV4</span>, <span class="ident">SocketAddrV6</span>, <span class="ident">Ipv4Addr</span>, <span class="ident">Ipv6Addr</span>};
 
-<span class='kw'>use</span> <span class='ident'>net2</span>::<span class='ident'>TcpBuilder</span>;
+<span class="kw">use</span> <span class="ident">net2</span>::<span class="ident">TcpBuilder</span>;
 
-<span class='kw'>use</span> {<span class='ident'>io</span>, <span class='ident'>sys</span>, <span class='ident'>Evented</span>, <span class='ident'>EventSet</span>, <span class='ident'>PollOpt</span>, <span class='ident'>Selector</span>, <span class='ident'>Token</span>, <span class='ident'>TryAccept</span>};
+<span class="kw">use</span> {<span class="ident">io</span>, <span class="ident">sys</span>, <span class="ident">Evented</span>, <span class="ident">EventSet</span>, <span class="ident">PollOpt</span>, <span class="ident">Selector</span>, <span class="ident">Token</span>, <span class="ident">TryAccept</span>};
 
-<span class='comment'>/*
+<span class="comment">/*
  *
  * ===== TcpStream =====
  *
  */</span>
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TcpStream</span> {
-    <span class='ident'>sys</span>: <span class='ident'>sys</span>::<span class='ident'>TcpStream</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TcpStream</span> {
+    <span class="ident">sys</span>: <span class="ident">sys</span>::<span class="ident">TcpStream</span>,
 }
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Shutdown</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">Shutdown</span>;
 
-<span class='kw'>impl</span> <span class='ident'>TcpStream</span> {
-    <span class='doccomment'>/// Create a new TCP stream an issue a non-blocking connect to the specified</span>
-    <span class='doccomment'>/// address.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This convenience method is available and uses the system&#39;s default</span>
-    <span class='doccomment'>/// options when creating a socket which is then conntected. If fine-grained</span>
-    <span class='doccomment'>/// control over the creation of the socket is desired, you can use</span>
-    <span class='doccomment'>/// `net2::TcpBuilder` to configure a socket and then pass its socket to</span>
-    <span class='doccomment'>/// `TcpStream::connect_stream` to transfer ownership into mio and schedule</span>
-    <span class='doccomment'>/// the connect operation.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect</span>(<span class='ident'>addr</span>: <span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpStream</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>sock</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>addr</span> {
-            <span class='ident'>SocketAddr</span>::<span class='ident'>V4</span>(..) <span class='op'>=&gt;</span> <span class='ident'>TcpBuilder</span>::<span class='ident'>new_v4</span>(),
-            <span class='ident'>SocketAddr</span>::<span class='ident'>V6</span>(..) <span class='op'>=&gt;</span> <span class='ident'>TcpBuilder</span>::<span class='ident'>new_v6</span>(),
+<span class="kw">impl</span> <span class="ident">TcpStream</span> {
+    <span class="doccomment">/// Create a new TCP stream an issue a non-blocking connect to the specified</span>
+    <span class="doccomment">/// address.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This convenience method is available and uses the system&#39;s default</span>
+    <span class="doccomment">/// options when creating a socket which is then conntected. If fine-grained</span>
+    <span class="doccomment">/// control over the creation of the socket is desired, you can use</span>
+    <span class="doccomment">/// `net2::TcpBuilder` to configure a socket and then pass its socket to</span>
+    <span class="doccomment">/// `TcpStream::connect_stream` to transfer ownership into mio and schedule</span>
+    <span class="doccomment">/// the connect operation.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect</span>(<span class="ident">addr</span>: <span class="kw-2">&amp;</span><span class="ident">SocketAddr</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">sock</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="kw">match</span> <span class="kw-2">*</span><span class="ident">addr</span> {
+            <span class="ident">SocketAddr</span>::<span class="ident">V4</span>(..) <span class="op">=&gt;</span> <span class="ident">TcpBuilder</span>::<span class="ident">new_v4</span>(),
+            <span class="ident">SocketAddr</span>::<span class="ident">V6</span>(..) <span class="op">=&gt;</span> <span class="ident">TcpBuilder</span>::<span class="ident">new_v6</span>(),
         });
-        <span class='comment'>// Required on Windows for a future `connect_overlapped` operation to be</span>
-        <span class='comment'>// executed successfully.</span>
-        <span class='kw'>if</span> <span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>windows</span>) {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sock</span>.<span class='ident'>bind</span>(<span class='kw-2'>&amp;</span><span class='ident'>inaddr_any</span>(<span class='ident'>addr</span>)));
+        <span class="comment">// Required on Windows for a future `connect_overlapped` operation to be</span>
+        <span class="comment">// executed successfully.</span>
+        <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">windows</span>) {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">sock</span>.<span class="ident">bind</span>(<span class="kw-2">&amp;</span><span class="ident">inaddr_any</span>(<span class="ident">addr</span>)));
         }
-        <span class='ident'>TcpStream</span>::<span class='ident'>connect_stream</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sock</span>.<span class='ident'>to_tcp_stream</span>()), <span class='ident'>addr</span>)
+        <span class="ident">TcpStream</span>::<span class="ident">connect_stream</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">sock</span>.<span class="ident">to_tcp_stream</span>()), <span class="ident">addr</span>)
     }
 
-    <span class='doccomment'>/// Creates a new `TcpStream` from the pending socket inside the given</span>
-    <span class='doccomment'>/// `std::net::TcpBuilder`, connecting it to the address specified.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This constructor allows configuring the socket before it&#39;s actually</span>
-    <span class='doccomment'>/// connected, and this function will transfer ownership to the returned</span>
-    <span class='doccomment'>/// `TcpStream` if successful. An unconnected `TcpStream` can be created</span>
-    <span class='doccomment'>/// with the `net2::TcpBuilder` type (and also configured via that route).</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The platform specific behavior of this function looks like:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * On Unix, the socket is placed into nonblocking mode and then a</span>
-    <span class='doccomment'>///   `connect` call is issued.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// * On Windows, the address is stored internally and the connect operation</span>
-    <span class='doccomment'>///   is issued when the returned `TcpStream` is registered with an event</span>
-    <span class='doccomment'>///   loop. Note that on Windows you must `bind` a socket before it can be</span>
-    <span class='doccomment'>///   connected, so if a custom `TcpBuilder` is used it should be bound</span>
-    <span class='doccomment'>///   (perhaps to `INADDR_ANY`) before this method is called.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect_stream</span>(<span class='ident'>stream</span>: <span class='ident'>net</span>::<span class='ident'>TcpStream</span>,
-                          <span class='ident'>addr</span>: <span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpStream</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>TcpStream</span> {
-            <span class='ident'>sys</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sys</span>::<span class='ident'>TcpStream</span>::<span class='ident'>connect</span>(<span class='ident'>stream</span>, <span class='ident'>addr</span>)),
+    <span class="doccomment">/// Creates a new `TcpStream` from the pending socket inside the given</span>
+    <span class="doccomment">/// `std::net::TcpBuilder`, connecting it to the address specified.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This constructor allows configuring the socket before it&#39;s actually</span>
+    <span class="doccomment">/// connected, and this function will transfer ownership to the returned</span>
+    <span class="doccomment">/// `TcpStream` if successful. An unconnected `TcpStream` can be created</span>
+    <span class="doccomment">/// with the `net2::TcpBuilder` type (and also configured via that route).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The platform specific behavior of this function looks like:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * On Unix, the socket is placed into nonblocking mode and then a</span>
+    <span class="doccomment">///   `connect` call is issued.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * On Windows, the address is stored internally and the connect operation</span>
+    <span class="doccomment">///   is issued when the returned `TcpStream` is registered with an event</span>
+    <span class="doccomment">///   loop. Note that on Windows you must `bind` a socket before it can be</span>
+    <span class="doccomment">///   connected, so if a custom `TcpBuilder` is used it should be bound</span>
+    <span class="doccomment">///   (perhaps to `INADDR_ANY`) before this method is called.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_stream</span>(<span class="ident">stream</span>: <span class="ident">net</span>::<span class="ident">TcpStream</span>,
+                          <span class="ident">addr</span>: <span class="kw-2">&amp;</span><span class="ident">SocketAddr</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">TcpStream</span> {
+            <span class="ident">sys</span>: <span class="macro">try</span><span class="macro">!</span>(<span class="ident">sys</span>::<span class="ident">TcpStream</span>::<span class="ident">connect</span>(<span class="ident">stream</span>, <span class="ident">addr</span>)),
         })
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>peer_addr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>peer_addr</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">peer_addr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">peer_addr</span>()
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>local_addr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>local_addr</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">local_addr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">local_addr</span>()
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try_clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpStream</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>try_clone</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>TcpStream</span> { <span class='ident'>sys</span>: <span class='ident'>s</span> })
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">try_clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">TcpStream</span> { <span class="ident">sys</span>: <span class="ident">s</span> })
     }
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>how</span>: <span class='ident'>Shutdown</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>shutdown</span>(<span class='ident'>how</span>)
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_nodelay</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nodelay</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>set_nodelay</span>(<span class='ident'>nodelay</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">how</span>: <span class="ident">Shutdown</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">shutdown</span>(<span class="ident">how</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_keepalive</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>seconds</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>set_keepalive</span>(<span class='ident'>seconds</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_nodelay</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">nodelay</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">set_nodelay</span>(<span class="ident">nodelay</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>take_socket_error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>take_socket_error</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_keepalive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">seconds</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">set_keepalive</span>(<span class="ident">seconds</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take_socket_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">take_socket_error</span>()
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>inaddr_any</span>(<span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span>) <span class='op'>-&gt;</span> <span class='ident'>SocketAddr</span> {
-    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>other</span> {
-        <span class='ident'>SocketAddr</span>::<span class='ident'>V4</span>(..) <span class='op'>=&gt;</span> {
-            <span class='kw'>let</span> <span class='ident'>any</span> <span class='op'>=</span> <span class='ident'>Ipv4Addr</span>::<span class='ident'>new</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>);
-            <span class='kw'>let</span> <span class='ident'>addr</span> <span class='op'>=</span> <span class='ident'>SocketAddrV4</span>::<span class='ident'>new</span>(<span class='ident'>any</span>, <span class='number'>0</span>);
-            <span class='ident'>SocketAddr</span>::<span class='ident'>V4</span>(<span class='ident'>addr</span>)
+<span class="kw">fn</span> <span class="ident">inaddr_any</span>(<span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">SocketAddr</span>) <span class="op">-&gt;</span> <span class="ident">SocketAddr</span> {
+    <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">other</span> {
+        <span class="ident">SocketAddr</span>::<span class="ident">V4</span>(..) <span class="op">=&gt;</span> {
+            <span class="kw">let</span> <span class="ident">any</span> <span class="op">=</span> <span class="ident">Ipv4Addr</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);
+            <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="ident">SocketAddrV4</span>::<span class="ident">new</span>(<span class="ident">any</span>, <span class="number">0</span>);
+            <span class="ident">SocketAddr</span>::<span class="ident">V4</span>(<span class="ident">addr</span>)
         }
-        <span class='ident'>SocketAddr</span>::<span class='ident'>V6</span>(..) <span class='op'>=&gt;</span> {
-            <span class='kw'>let</span> <span class='ident'>any</span> <span class='op'>=</span> <span class='ident'>Ipv6Addr</span>::<span class='ident'>new</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>);
-            <span class='kw'>let</span> <span class='ident'>addr</span> <span class='op'>=</span> <span class='ident'>SocketAddrV6</span>::<span class='ident'>new</span>(<span class='ident'>any</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>);
-            <span class='ident'>SocketAddr</span>::<span class='ident'>V6</span>(<span class='ident'>addr</span>)
+        <span class="ident">SocketAddr</span>::<span class="ident">V6</span>(..) <span class="op">=&gt;</span> {
+            <span class="kw">let</span> <span class="ident">any</span> <span class="op">=</span> <span class="ident">Ipv6Addr</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);
+            <span class="kw">let</span> <span class="ident">addr</span> <span class="op">=</span> <span class="ident">SocketAddrV6</span>::<span class="ident">new</span>(<span class="ident">any</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);
+            <span class="ident">SocketAddr</span>::<span class="ident">V6</span>(<span class="ident">addr</span>)
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>TcpStream</span> {
-    <span class='kw'>fn</span> <span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>read</span>(<span class='ident'>buf</span>)
+<span class="kw">impl</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">TcpStream</span> {
+    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">read</span>(<span class="ident">buf</span>)
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>TcpStream</span> {
-    <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>write</span>(<span class='ident'>buf</span>)
+<span class="kw">impl</span> <span class="ident">Write</span> <span class="kw">for</span> <span class="ident">TcpStream</span> {
+    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">write</span>(<span class="ident">buf</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>flush</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>flush</span>()
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Evented</span> <span class='kw'>for</span> <span class='ident'>TcpStream</span> {
-    <span class='kw'>fn</span> <span class='ident'>register</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>,
-                <span class='ident'>interest</span>: <span class='ident'>EventSet</span>, <span class='ident'>opts</span>: <span class='ident'>PollOpt</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>register</span>(<span class='ident'>selector</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>reregister</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>,
-                  <span class='ident'>interest</span>: <span class='ident'>EventSet</span>, <span class='ident'>opts</span>: <span class='ident'>PollOpt</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>reregister</span>(<span class='ident'>selector</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>deregister</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>deregister</span>(<span class='ident'>selector</span>)
+    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">flush</span>()
     }
 }
 
-<span class='comment'>/*
+<span class="kw">impl</span> <span class="ident">Evented</span> <span class="kw">for</span> <span class="ident">TcpStream</span> {
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Selector</span>, <span class="ident">token</span>: <span class="ident">Token</span>,
+                <span class="ident">interest</span>: <span class="ident">EventSet</span>, <span class="ident">opts</span>: <span class="ident">PollOpt</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">register</span>(<span class="ident">selector</span>, <span class="ident">token</span>, <span class="ident">interest</span>, <span class="ident">opts</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Selector</span>, <span class="ident">token</span>: <span class="ident">Token</span>,
+                  <span class="ident">interest</span>: <span class="ident">EventSet</span>, <span class="ident">opts</span>: <span class="ident">PollOpt</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">reregister</span>(<span class="ident">selector</span>, <span class="ident">token</span>, <span class="ident">interest</span>, <span class="ident">opts</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">deregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Selector</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">deregister</span>(<span class="ident">selector</span>)
+    }
+}
+
+<span class="comment">/*
  *
  * ===== TcpListener =====
  *
  */</span>
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TcpListener</span> {
-    <span class='ident'>sys</span>: <span class='ident'>sys</span>::<span class='ident'>TcpListener</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TcpListener</span> {
+    <span class="ident">sys</span>: <span class="ident">sys</span>::<span class="ident">TcpListener</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>TcpListener</span> {
-    <span class='doccomment'>/// Convenience method to bind a new TCP listener to the specified address</span>
-    <span class='doccomment'>/// to receive new connections.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This function will take the following steps:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// 1. Create a new TCP socket.</span>
-    <span class='doccomment'>/// 2. Set the `SO_REUSEADDR` option on the socket.</span>
-    <span class='doccomment'>/// 3. Bind the socket to the specified address.</span>
-    <span class='doccomment'>/// 4. Call `listen` on the socket to prepare it to receive new connections.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If fine-grained control over the binding and listening process for a</span>
-    <span class='doccomment'>/// socket is desired then the `net2::TcpBuilder` methods can be used in</span>
-    <span class='doccomment'>/// combination with the `TcpListener::from_listener` method to transfer</span>
-    <span class='doccomment'>/// ownership into mio.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>bind</span>(<span class='ident'>addr</span>: <span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpListener</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Create the socket</span>
-        <span class='kw'>let</span> <span class='ident'>sock</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>addr</span> {
-            <span class='ident'>SocketAddr</span>::<span class='ident'>V4</span>(..) <span class='op'>=&gt;</span> <span class='ident'>TcpBuilder</span>::<span class='ident'>new_v4</span>(),
-            <span class='ident'>SocketAddr</span>::<span class='ident'>V6</span>(..) <span class='op'>=&gt;</span> <span class='ident'>TcpBuilder</span>::<span class='ident'>new_v6</span>(),
+<span class="kw">impl</span> <span class="ident">TcpListener</span> {
+    <span class="doccomment">/// Convenience method to bind a new TCP listener to the specified address</span>
+    <span class="doccomment">/// to receive new connections.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function will take the following steps:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// 1. Create a new TCP socket.</span>
+    <span class="doccomment">/// 2. Set the `SO_REUSEADDR` option on the socket.</span>
+    <span class="doccomment">/// 3. Bind the socket to the specified address.</span>
+    <span class="doccomment">/// 4. Call `listen` on the socket to prepare it to receive new connections.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If fine-grained control over the binding and listening process for a</span>
+    <span class="doccomment">/// socket is desired then the `net2::TcpBuilder` methods can be used in</span>
+    <span class="doccomment">/// combination with the `TcpListener::from_listener` method to transfer</span>
+    <span class="doccomment">/// ownership into mio.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bind</span>(<span class="ident">addr</span>: <span class="kw-2">&amp;</span><span class="ident">SocketAddr</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpListener</span><span class="op">&gt;</span> {
+        <span class="comment">// Create the socket</span>
+        <span class="kw">let</span> <span class="ident">sock</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="kw">match</span> <span class="kw-2">*</span><span class="ident">addr</span> {
+            <span class="ident">SocketAddr</span>::<span class="ident">V4</span>(..) <span class="op">=&gt;</span> <span class="ident">TcpBuilder</span>::<span class="ident">new_v4</span>(),
+            <span class="ident">SocketAddr</span>::<span class="ident">V6</span>(..) <span class="op">=&gt;</span> <span class="ident">TcpBuilder</span>::<span class="ident">new_v6</span>(),
         });
 
-        <span class='comment'>// Set SO_REUSEADDR</span>
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sock</span>.<span class='ident'>reuse_address</span>(<span class='bool-val'>true</span>));
+        <span class="comment">// Set SO_REUSEADDR</span>
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">sock</span>.<span class="ident">reuse_address</span>(<span class="bool-val">true</span>));
 
-        <span class='comment'>// Bind the socket</span>
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sock</span>.<span class='ident'>bind</span>(<span class='ident'>addr</span>));
+        <span class="comment">// Bind the socket</span>
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">sock</span>.<span class="ident">bind</span>(<span class="ident">addr</span>));
 
-        <span class='comment'>// listen</span>
-        <span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sock</span>.<span class='ident'>listen</span>(<span class='number'>1024</span>));
-        <span class='prelude-val'>Ok</span>(<span class='ident'>TcpListener</span> {
-            <span class='ident'>sys</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sys</span>::<span class='ident'>TcpListener</span>::<span class='ident'>new</span>(<span class='ident'>listener</span>, <span class='ident'>addr</span>)),
+        <span class="comment">// listen</span>
+        <span class="kw">let</span> <span class="ident">listener</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">sock</span>.<span class="ident">listen</span>(<span class="number">1024</span>));
+        <span class="prelude-val">Ok</span>(<span class="ident">TcpListener</span> {
+            <span class="ident">sys</span>: <span class="macro">try</span><span class="macro">!</span>(<span class="ident">sys</span>::<span class="ident">TcpListener</span>::<span class="ident">new</span>(<span class="ident">listener</span>, <span class="ident">addr</span>)),
         })
     }
 
-    <span class='doccomment'>/// Creates a new `TcpListener` from an instance of a</span>
-    <span class='doccomment'>/// `std::net::TcpListener` type.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This function will set the `listener` provided into nonblocking mode on</span>
-    <span class='doccomment'>/// Unix, and otherwise the stream will just be wrapped up in an mio stream</span>
-    <span class='doccomment'>/// ready to accept new connections and become associated with an event</span>
-    <span class='doccomment'>/// loop.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The address provided must be the address that the listener is bound to.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_listener</span>(<span class='ident'>listener</span>: <span class='ident'>net</span>::<span class='ident'>TcpListener</span>, <span class='ident'>addr</span>: <span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span>)
-                         <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpListener</span><span class='op'>&gt;</span> {
-        <span class='ident'>sys</span>::<span class='ident'>TcpListener</span>::<span class='ident'>new</span>(<span class='ident'>listener</span>, <span class='ident'>addr</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>TcpListener</span> { <span class='ident'>sys</span>: <span class='ident'>s</span> })
+    <span class="doccomment">/// Creates a new `TcpListener` from an instance of a</span>
+    <span class="doccomment">/// `std::net::TcpListener` type.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function will set the `listener` provided into nonblocking mode on</span>
+    <span class="doccomment">/// Unix, and otherwise the stream will just be wrapped up in an mio stream</span>
+    <span class="doccomment">/// ready to accept new connections and become associated with an event</span>
+    <span class="doccomment">/// loop.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The address provided must be the address that the listener is bound to.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_listener</span>(<span class="ident">listener</span>: <span class="ident">net</span>::<span class="ident">TcpListener</span>, <span class="ident">addr</span>: <span class="kw-2">&amp;</span><span class="ident">SocketAddr</span>)
+                         <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpListener</span><span class="op">&gt;</span> {
+        <span class="ident">sys</span>::<span class="ident">TcpListener</span>::<span class="ident">new</span>(<span class="ident">listener</span>, <span class="ident">addr</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">TcpListener</span> { <span class="ident">sys</span>: <span class="ident">s</span> })
     }
 
-    <span class='doccomment'>/// Accepts a new `TcpStream`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns a `Ok(None)` when the socket `WOULDBLOCK`, this means the stream</span>
-    <span class='doccomment'>/// will be ready at a later point. If an accepted stream is returned, the</span>
-    <span class='doccomment'>/// address of the peer is returned along with it</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>accept</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>TcpStream</span>, <span class='ident'>SocketAddr</span>)<span class='op'>&gt;&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>accept</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>.<span class='ident'>map</span>(<span class='op'>|</span>(<span class='ident'>s</span>, <span class='ident'>a</span>)<span class='op'>|</span> (<span class='ident'>TcpStream</span> { <span class='ident'>sys</span>: <span class='ident'>s</span> }, <span class='ident'>a</span>)))
+    <span class="doccomment">/// Accepts a new `TcpStream`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a `Ok(None)` when the socket `WOULDBLOCK`, this means the stream</span>
+    <span class="doccomment">/// will be ready at a later point. If an accepted stream is returned, the</span>
+    <span class="doccomment">/// address of the peer is returned along with it</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">TcpStream</span>, <span class="ident">SocketAddr</span>)<span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">accept</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">s</span>, <span class="ident">a</span>)<span class="op">|</span> (<span class="ident">TcpStream</span> { <span class="ident">sys</span>: <span class="ident">s</span> }, <span class="ident">a</span>)))
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>local_addr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>local_addr</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">local_addr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">local_addr</span>()
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try_clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TcpListener</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>try_clone</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>TcpListener</span> { <span class='ident'>sys</span>: <span class='ident'>s</span> })
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TcpListener</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">try_clone</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">TcpListener</span> { <span class="ident">sys</span>: <span class="ident">s</span> })
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>take_socket_error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>take_socket_error</span>()
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Evented</span> <span class='kw'>for</span> <span class='ident'>TcpListener</span> {
-    <span class='kw'>fn</span> <span class='ident'>register</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>,
-                <span class='ident'>interest</span>: <span class='ident'>EventSet</span>, <span class='ident'>opts</span>: <span class='ident'>PollOpt</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>register</span>(<span class='ident'>selector</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>reregister</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>, <span class='ident'>token</span>: <span class='ident'>Token</span>,
-                  <span class='ident'>interest</span>: <span class='ident'>EventSet</span>, <span class='ident'>opts</span>: <span class='ident'>PollOpt</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>reregister</span>(<span class='ident'>selector</span>, <span class='ident'>token</span>, <span class='ident'>interest</span>, <span class='ident'>opts</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>deregister</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Selector</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>deregister</span>(<span class='ident'>selector</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take_socket_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">take_socket_error</span>()
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>TryAccept</span> <span class='kw'>for</span> <span class='ident'>TcpListener</span> {
-    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='ident'>TcpStream</span>;
+<span class="kw">impl</span> <span class="ident">Evented</span> <span class="kw">for</span> <span class="ident">TcpListener</span> {
+    <span class="kw">fn</span> <span class="ident">register</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Selector</span>, <span class="ident">token</span>: <span class="ident">Token</span>,
+                <span class="ident">interest</span>: <span class="ident">EventSet</span>, <span class="ident">opts</span>: <span class="ident">PollOpt</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">register</span>(<span class="ident">selector</span>, <span class="ident">token</span>, <span class="ident">interest</span>, <span class="ident">opts</span>)
+    }
 
-    <span class='kw'>fn</span> <span class='ident'>accept</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>TcpStream</span><span class='op'>&gt;&gt;</span> {
-        <span class='ident'>TcpListener</span>::<span class='ident'>accept</span>(<span class='self'>self</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>a</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>map</span>(<span class='op'>|</span>(<span class='ident'>s</span>, _)<span class='op'>|</span> <span class='ident'>s</span>))
+    <span class="kw">fn</span> <span class="ident">reregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Selector</span>, <span class="ident">token</span>: <span class="ident">Token</span>,
+                  <span class="ident">interest</span>: <span class="ident">EventSet</span>, <span class="ident">opts</span>: <span class="ident">PollOpt</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">reregister</span>(<span class="ident">selector</span>, <span class="ident">token</span>, <span class="ident">interest</span>, <span class="ident">opts</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">deregister</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Selector</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">deregister</span>(<span class="ident">selector</span>)
     }
 }
 
-<span class='comment'>/*
+<span class="kw">impl</span> <span class="ident">TryAccept</span> <span class="kw">for</span> <span class="ident">TcpListener</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">TcpStream</span>;
+
+    <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;&gt;</span> {
+        <span class="ident">TcpListener</span>::<span class="ident">accept</span>(<span class="self">self</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">s</span>, _)<span class="op">|</span> <span class="ident">s</span>))
+    }
+}
+
+<span class="comment">/*
  *
  * ===== UNIX ext =====
  *
  */</span>
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::{<span class='ident'>AsRawFd</span>, <span class='ident'>FromRawFd</span>, <span class='ident'>RawFd</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::{<span class="ident">AsRawFd</span>, <span class="ident">FromRawFd</span>, <span class="ident">RawFd</span>};
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>AsRawFd</span> <span class='kw'>for</span> <span class='ident'>TcpStream</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_raw_fd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>RawFd</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>as_raw_fd</span>()
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">impl</span> <span class="ident">AsRawFd</span> <span class="kw">for</span> <span class="ident">TcpStream</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">RawFd</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">as_raw_fd</span>()
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>TcpStream</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_raw_fd</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='ident'>TcpStream</span> {
-        <span class='ident'>TcpStream</span> { <span class='ident'>sys</span>: <span class='ident'>FromRawFd</span>::<span class='ident'>from_raw_fd</span>(<span class='ident'>fd</span>) }
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">impl</span> <span class="ident">FromRawFd</span> <span class="kw">for</span> <span class="ident">TcpStream</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw_fd</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-&gt;</span> <span class="ident">TcpStream</span> {
+        <span class="ident">TcpStream</span> { <span class="ident">sys</span>: <span class="ident">FromRawFd</span>::<span class="ident">from_raw_fd</span>(<span class="ident">fd</span>) }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>AsRawFd</span> <span class='kw'>for</span> <span class='ident'>TcpListener</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_raw_fd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>RawFd</span> {
-        <span class='self'>self</span>.<span class='ident'>sys</span>.<span class='ident'>as_raw_fd</span>()
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">impl</span> <span class="ident">AsRawFd</span> <span class="kw">for</span> <span class="ident">TcpListener</span> {
+    <span class="kw">fn</span> <span class="ident">as_raw_fd</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">RawFd</span> {
+        <span class="self">self</span>.<span class="ident">sys</span>.<span class="ident">as_raw_fd</span>()
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>TcpListener</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_raw_fd</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='ident'>TcpListener</span> {
-        <span class='ident'>TcpListener</span> { <span class='ident'>sys</span>: <span class='ident'>FromRawFd</span>::<span class='ident'>from_raw_fd</span>(<span class='ident'>fd</span>) }
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">impl</span> <span class="ident">FromRawFd</span> <span class="kw">for</span> <span class="ident">TcpListener</span> {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_raw_fd</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>) <span class="op">-&gt;</span> <span class="ident">TcpListener</span> {
+        <span class="ident">TcpListener</span> { <span class="ident">sys</span>: <span class="ident">FromRawFd</span>::<span class="ident">from_raw_fd</span>(<span class="ident">fd</span>) }
     }
 }
 </pre>

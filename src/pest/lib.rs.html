@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -623,587 +623,587 @@
 <span id="578">578</span>
 <span id="579">579</span>
 <span id="580">580</span>
-</pre><pre class='rust '>
-<span class='comment'>// pest. Elegant, efficient grammars</span>
-<span class='comment'>// Copyright (C) 2016  Dragoș Tiselice</span>
-<span class='comment'>//</span>
-<span class='comment'>// This Source Code Form is subject to the terms of the Mozilla Public</span>
-<span class='comment'>// License, v. 2.0. If a copy of the MPL was not distributed with this</span>
-<span class='comment'>// file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
+</pre><pre class="rust ">
+<span class="comment">// pest. Elegant, efficient grammars</span>
+<span class="comment">// Copyright (C) 2016  Dragoș Tiselice</span>
+<span class="comment">//</span>
+<span class="comment">// This Source Code Form is subject to the terms of the Mozilla Public</span>
+<span class="comment">// License, v. 2.0. If a copy of the MPL was not distributed with this</span>
+<span class="comment">// file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
 
-<span class='doccomment'>//! # pest. Elegant, efficient grammars</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! pest is a [PEG](https://en.wikipedia.org/wiki/Parsing_expression_grammar) parser generator with</span>
-<span class='doccomment'>//! *simplicity* and *speed* in mind.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Input &amp; Parser</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! pest works mainly through two `trait`s: `Input` &amp; `Parser`. `Input` is used to remember the</span>
-<span class='doccomment'>//! current position or index of the to-be-parsed input. It also knows how to match a `&amp;str` or</span>
-<span class='doccomment'>//! `char` range against the current position. If it did in fact match, it advances the input by</span>
-<span class='doccomment'>//! incrementing the position.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! let mut input = StringInput::new(&quot;asdasdf&quot;); // Input mutates its position</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(input.pos(), 0);                  // matching starts from 0, before &#39;a&#39;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(input.match_string(&quot;asd&quot;));          // Input::match_string matches &quot;asd&quot;; returns true</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(input.pos(), 3);                  // last match advances the parser by &quot;asd&quot;.len()</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(input.match_range(&#39;a&#39;, &#39;z&#39;));        // Input::match_range matches &#39;a&#39;; returns true</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(input.pos(), 4);                  // last match advances the parser by 1</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `Input` is also supposed to return a `&amp;str` `slice` of its input by calling</span>
-<span class='doccomment'>//! [`Input::slice`](trait.Input#tymethod.slice).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `Parser` gets constructed on top of an `Input` and delegates position access to</span>
-<span class='doccomment'>//! [`Parser::pos`](trait.Parser#tymethod.pos) and</span>
-<span class='doccomment'>//! [`Parser::set_pos`](trait.Parser#tymethod.set_pos). Apart from this, `Parser` also gives access</span>
-<span class='doccomment'>//! to its `Token` queue and expected rules to match when it fails.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## grammar!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The [`grammar!`](macro.grammar!) `macro` processes every rule and generates a method on a</span>
-<span class='doccomment'>//! `Parser` that returns whether the rule has matched its `Input`. `grammar!` can only be used</span>
-<span class='doccomment'>//! inside of [`impl_rdp!`](macro.impl_rdp!) right now until other parser algorithms are</span>
-<span class='doccomment'>//! implemented.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! *Note:* `grammar!` may require you to increase the recursion limit of your create with</span>
-<span class='doccomment'>//! `#![recursion_limit = &quot;*&quot;]` where * is the new limit.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! When `impl_rdp!` is run, it implements an `enum` called `Rule` that has a value for all</span>
-<span class='doccomment'>//! [non-silent](macro.grammar!#silent-rules-_) rules, but also for</span>
-<span class='doccomment'>//! [`any` and `eoi`](macro.grammar!). These `Rule`s are used within `Token`s to specify the type</span>
-<span class='doccomment'>//! of rule that matched. These `Tokens` are accesible from</span>
-<span class='doccomment'>//! [`Parser::queue`](trait.Parser#tymethod.queue) after parsing. Instead of having the shape of</span>
-<span class='doccomment'>//! an AST, the `Token`s come in a `Vec` in a predefined order that makes them easy to process.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = _{ paren ~ expression? } // expression is silent so we&#39;ll only have parens</span>
-<span class='doccomment'>//!         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;(())()&quot;));</span>
-<span class='doccomment'>//!                                         //  ^--^   - Token { paren, 0, 4 }; queue[0]</span>
-<span class='doccomment'>//!                                         //   ^^    - Token { paren, 1, 3 }; queue[1]</span>
-<span class='doccomment'>//!                                         //      ^^ - Token { paren, 4, 6 }; queue[2]</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let queue = vec![</span>
-<span class='doccomment'>//!     Token::new(Rule::paren, 0, 4),</span>
-<span class='doccomment'>//!     Token::new(Rule::paren, 1, 3),</span>
-<span class='doccomment'>//!     Token::new(Rule::paren, 4, 6)</span>
-<span class='doccomment'>//! ];</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(parser.queue(), &amp;queue);</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `Rule`s are also used for error reporting through</span>
-<span class='doccomment'>//! [`Parser::queue`](trait.Parser#tymethod.queue) which is used when a `Parser` failed to parse</span>
-<span class='doccomment'>//! and you want to see what `Rule`s it expected at the last possible position.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = _{ paren ~ expression? } // expression is silent so we&#39;ll only have parens</span>
-<span class='doccomment'>//!         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;(())()foo&quot;));</span>
-<span class='doccomment'>//!                                         //        ^   - Parser should expect a paren at pos 6</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression()); // the parser goes as deep as it can</span>
-<span class='doccomment'>//! assert!(!parser.end());       // end is not reached, so the whole Input was not matched</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(parser.expected(), (vec![Rule::paren], 6));</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! *Note:* You can use the `eoi` rule instead of calling</span>
-<span class='doccomment'>//! [`Parser::end`](trait.Parser#tymethod.end) manually.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Calculator example</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This example will concentrate on parsing and solving simple airthmetic with parens, additions,</span>
-<span class='doccomment'>//! subtractions, multiplications, and divisions.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Let&#39;s start with defining a rule that matches integers. We first need to match an optional</span>
-<span class='doccomment'>//! `&quot;-&quot;`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         number = { [&quot;-&quot;]? }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;-&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.number());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! In order to match a number, we should deal with two cases:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * number is `0`</span>
-<span class='doccomment'>//! * number is any other number *not* starting with `0`</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!                //  |    | |  |     | |          | |         ^ zero or more</span>
-<span class='doccomment'>//!                //  |    | |  |     | |          | ^ digit</span>
-<span class='doccomment'>//!                //  |    | |  |     | |          ^ followed by</span>
-<span class='doccomment'>//!                //  |    | |  |     | ^ non-zero digit</span>
-<span class='doccomment'>//!                //  |    | |  |     ^ or</span>
-<span class='doccomment'>//!                //  |    | |  ^ zero</span>
-<span class='doccomment'>//!                //  |    | ^ followed by</span>
-<span class='doccomment'>//!                //  |    ^ optional</span>
-<span class='doccomment'>//!                //  ^ minus</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.number());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Now let&#39;s add operator rules.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!         plus   = { [&quot;+&quot;] }</span>
-<span class='doccomment'>//!         minus  = { [&quot;-&quot;] }</span>
-<span class='doccomment'>//!         times  = { [&quot;*&quot;] }</span>
-<span class='doccomment'>//!         slash  = { [&quot;/&quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! # let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! # assert!(parser.number());</span>
-<span class='doccomment'>//! # assert!(parser.end());</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Because infix precedence is hard to implement in PEG and quite inefficient, pest comes with a</span>
-<span class='doccomment'>//! [rule](macro.grammar!#precedence-climbing) that implements [precedence climbing]</span>
-<span class='doccomment'>//! (https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = {</span>
-<span class='doccomment'>//!             { number }                         // primary rule is a number</span>
-<span class='doccomment'>//!             addition       = { plus  | minus } // precedence 0 is addition</span>
-<span class='doccomment'>//!             multiplication = { times | slash } // precedence 1 is multiplication</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!         plus   = { [&quot;+&quot;] }</span>
-<span class='doccomment'>//!         minus  = { [&quot;-&quot;] }</span>
-<span class='doccomment'>//!         times  = { [&quot;*&quot;] }</span>
-<span class='doccomment'>//!         slash  = { [&quot;/&quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! # let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! # assert!(parser.number());</span>
-<span class='doccomment'>//! # assert!(parser.end());</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Before we go any further, let&#39;s see what parsing a `number` from an `expression` places on to</span>
-<span class='doccomment'>//! the queue.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! # impl_rdp! {</span>
-<span class='doccomment'>//! #     grammar! {</span>
-<span class='doccomment'>//! #         expression = {</span>
-<span class='doccomment'>//! #             { number }                         // primary rule is a number</span>
-<span class='doccomment'>//! #             addition       = { plus  | minus } // precedence 0 is addition</span>
-<span class='doccomment'>//! #             multiplication = { times | slash } // precedence 1 is multiplication</span>
-<span class='doccomment'>//! #         }</span>
-<span class='doccomment'>//! #         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//! #         plus   = { [&quot;+&quot;] }</span>
-<span class='doccomment'>//! #         minus  = { [&quot;-&quot;] }</span>
-<span class='doccomment'>//! #         times  = { [&quot;*&quot;] }</span>
-<span class='doccomment'>//! #         slash  = { [&quot;/&quot;] }</span>
-<span class='doccomment'>//! #     }</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! println!(&quot;{:?}&quot;, parser.queue()); // [Token { rule: expression, start: 0, end: 3 },</span>
-<span class='doccomment'>//!                                   //  Token { rule: number, start: 0, end: 3 }]</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Since we&#39;re already parsing an `expression` and don&#39;t care about its length, we can make it</span>
-<span class='doccomment'>//! [silent](macro.grammar!#silent-rules-_).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = _{ // the underscore tells pest that this rule is silent</span>
-<span class='doccomment'>//!             { number }</span>
-<span class='doccomment'>//!             addition       = { plus  | minus }</span>
-<span class='doccomment'>//!             multiplication = { times | slash }</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!         plus   = { [&quot;+&quot;] }</span>
-<span class='doccomment'>//!         minus  = { [&quot;-&quot;] }</span>
-<span class='doccomment'>//!         times  = { [&quot;*&quot;] }</span>
-<span class='doccomment'>//!         slash  = { [&quot;/&quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let queue = vec![</span>
-<span class='doccomment'>//!     Token::new(Rule::number, 0, 3)</span>
-<span class='doccomment'>//! ];</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(parser.queue(), &amp;queue);</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Adding parens to the whole business is as easy as adding a paren rule to the primary rule of</span>
-<span class='doccomment'>//! the precedence climber.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = _{</span>
-<span class='doccomment'>//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
-<span class='doccomment'>//!             addition       = { plus  | minus }</span>
-<span class='doccomment'>//!             multiplication = { times | slash }</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!         plus   = { [&quot;+&quot;] }</span>
-<span class='doccomment'>//!         minus  = { [&quot;-&quot;] }</span>
-<span class='doccomment'>//!         times  = { [&quot;*&quot;] }</span>
-<span class='doccomment'>//!         slash  = { [&quot;/&quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;((-90))&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let queue = vec![</span>
-<span class='doccomment'>//!     Token::new(Rule::number, 2, 5)</span>
-<span class='doccomment'>//! ];</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(parser.queue(), &amp;queue);</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Before we get to the processing of the `Token`s, let&#39;s also add white-space to the grammar.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = _{</span>
-<span class='doccomment'>//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
-<span class='doccomment'>//!             addition       = { plus  | minus }</span>
-<span class='doccomment'>//!             multiplication = { times | slash }</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!         plus   = { [&quot;+&quot;] }</span>
-<span class='doccomment'>//!         minus  = { [&quot;-&quot;] }</span>
-<span class='doccomment'>//!         times  = { [&quot;*&quot;] }</span>
-<span class='doccomment'>//!         slash  = { [&quot;/&quot;] }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!         whitespace = _{ [&quot; &quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;2 + 2&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! But now trying to parse `&quot;9 9&quot;` will work and recognize it as a `number`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! # impl_rdp! {</span>
-<span class='doccomment'>//! #     grammar! {</span>
-<span class='doccomment'>//! #         expression = _{</span>
-<span class='doccomment'>//! #             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
-<span class='doccomment'>//! #             addition       = { plus  | minus }</span>
-<span class='doccomment'>//! #             multiplication = { times | slash }</span>
-<span class='doccomment'>//! #         }</span>
-<span class='doccomment'>//! #         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//! #         plus   = { [&quot;+&quot;] }</span>
-<span class='doccomment'>//! #         minus  = { [&quot;-&quot;] }</span>
-<span class='doccomment'>//! #         times  = { [&quot;*&quot;] }</span>
-<span class='doccomment'>//! #         slash  = { [&quot;/&quot;] }</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! #         whitespace = _{ [&quot; &quot;] }</span>
-<span class='doccomment'>//! #     }</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;9 9&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert!(parser.end());</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let queue = vec![</span>
-<span class='doccomment'>//!     Token::new(Rule::number, 0, 3)</span>
-<span class='doccomment'>//! ];</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert_eq!(parser.queue(), &amp;queue);</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! To solve this issue, we make `number` [atomic](macro.grammar!#atomic-rules-), stopping any</span>
-<span class='doccomment'>//! white-space matching inside of the rule.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = _{</span>
-<span class='doccomment'>//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
-<span class='doccomment'>//!             addition       = { plus  | minus }</span>
-<span class='doccomment'>//!             multiplication = { times | slash }</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!         number = @{ [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!         plus   =  { [&quot;+&quot;] }</span>
-<span class='doccomment'>//!         minus  =  { [&quot;-&quot;] }</span>
-<span class='doccomment'>//!         times  =  { [&quot;*&quot;] }</span>
-<span class='doccomment'>//!         slash  =  { [&quot;/&quot;] }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!         whitespace = _{ [&quot; &quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;9 9&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert!(!parser.end());</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! To process all these `Token`s we&#39;ll use the [`process!`](macro.process!) `macro`. This `macro`</span>
-<span class='doccomment'>//! defines matcher methods on the `Parser` that pattern match against a set of `Token`s from the</span>
-<span class='doccomment'>//! front of the queue, calling themselves recursively until everything matched and returned its</span>
-<span class='doccomment'>//! result.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Let&#39;s start by defining the signature of the `compute` matcher that will do the computation. We</span>
-<span class='doccomment'>//! need it to return an `i32` in the end.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! compute(&amp;self) -&gt; i32</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Now all we need to do is to write the three cases of interest, namely `number`, `addition`, and</span>
-<span class='doccomment'>//! `multiplication`. `number` is captured (its `&amp;str` is being sliced from the `Input`) with the</span>
-<span class='doccomment'>//! `&amp;` pattern and then parsed to an `i32`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! (&amp;number: number) =&gt; number.parse::&lt;i32&gt;().unwrap()</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `addition` and `multiplication` are virtually identical:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * match the `addition`/`multiplication` `Token` without using it</span>
-<span class='doccomment'>//! * recursively process the left-hand-side by calling `compute`</span>
-<span class='doccomment'>//! * use the `sign` `Token` without capturing its `&amp;str` value</span>
-<span class='doccomment'>//! * recursively process the right-hand-side by calling `compute`</span>
-<span class='doccomment'>//! * match `sign` inside the block and return the appropriate result</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```ignore</span>
-<span class='doccomment'>//! (_: addition, left: compute(), sign, right: compute()) =&gt; {</span>
-<span class='doccomment'>//!     match sign.rule {</span>
-<span class='doccomment'>//!         Rule::plus  =&gt; left + right,</span>
-<span class='doccomment'>//!         Rule::minus =&gt; left - right,</span>
-<span class='doccomment'>//!         _ =&gt; unreachable!()</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! },</span>
-<span class='doccomment'>//! (_: multiplication, left: compute(), sign, right: compute()) =&gt; {</span>
-<span class='doccomment'>//!     match sign.rule {</span>
-<span class='doccomment'>//!         Rule::times =&gt; left * right,</span>
-<span class='doccomment'>//!         Rule::slash =&gt; left / right,</span>
-<span class='doccomment'>//!         _ =&gt; unreachable!()</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The reason we&#39;re matching `sign` manually inside of the block is because using `_: plus` and</span>
-<span class='doccomment'>//! `_: minus` will cause `left: main()` to be run twice in case the first rule fails. Caching the</span>
-<span class='doccomment'>//! result in this case is non-trivial apart from the fact that duplicate complex patterns are not</span>
-<span class='doccomment'>//! necessarily easier to read.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Now for the whole example:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>//! # use pest::Parser;</span>
-<span class='doccomment'>//! # use pest::Token;</span>
-<span class='doccomment'>//! # use pest::Input;</span>
-<span class='doccomment'>//! # use pest::StringInput;</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! impl_rdp! {</span>
-<span class='doccomment'>//!     grammar! {</span>
-<span class='doccomment'>//!         expression = _{</span>
-<span class='doccomment'>//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
-<span class='doccomment'>//!             addition       = { plus  | minus }</span>
-<span class='doccomment'>//!             multiplication = { times | slash }</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!         number = @{ [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
-<span class='doccomment'>//!         plus   =  { [&quot;+&quot;] }</span>
-<span class='doccomment'>//!         minus  =  { [&quot;-&quot;] }</span>
-<span class='doccomment'>//!         times  =  { [&quot;*&quot;] }</span>
-<span class='doccomment'>//!         slash  =  { [&quot;/&quot;] }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!         whitespace = _{ [&quot; &quot;] }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     process! {</span>
-<span class='doccomment'>//!         compute(&amp;self) -&gt; i32 {</span>
-<span class='doccomment'>//!             (&amp;number: number) =&gt; number.parse::&lt;i32&gt;().unwrap(),</span>
-<span class='doccomment'>//!             (_: addition, left: compute(), sign, right: compute()) =&gt; {</span>
-<span class='doccomment'>//!                 match sign.rule {</span>
-<span class='doccomment'>//!                     Rule::plus  =&gt; left + right,</span>
-<span class='doccomment'>//!                     Rule::minus =&gt; left - right,</span>
-<span class='doccomment'>//!                     _ =&gt; unreachable!()</span>
-<span class='doccomment'>//!                 }</span>
-<span class='doccomment'>//!             },</span>
-<span class='doccomment'>//!             (_: multiplication, left: compute(), sign, right: compute()) =&gt; {</span>
-<span class='doccomment'>//!                 match sign.rule {</span>
-<span class='doccomment'>//!                     Rule::times =&gt; left * right,</span>
-<span class='doccomment'>//!                     Rule::slash =&gt; left / right,</span>
-<span class='doccomment'>//!                     _ =&gt; unreachable!()</span>
-<span class='doccomment'>//!                 }</span>
-<span class='doccomment'>//!             }</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let mut parser = Rdp::new(StringInput::new(&quot;(3 + (9 + 3 * 4 + (3 + 1) / 2 - 4)) * 2&quot;));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! assert!(parser.expression());</span>
-<span class='doccomment'>//! assert_eq!(parser.compute(), 44);</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
+<span class="doccomment">//! # pest. Elegant, efficient grammars</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! pest is a [PEG](https://en.wikipedia.org/wiki/Parsing_expression_grammar) parser generator with</span>
+<span class="doccomment">//! *simplicity* and *speed* in mind.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Input &amp; Parser</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! pest works mainly through two `trait`s: `Input` &amp; `Parser`. `Input` is used to remember the</span>
+<span class="doccomment">//! current position or index of the to-be-parsed input. It also knows how to match a `&amp;str` or</span>
+<span class="doccomment">//! `char` range against the current position. If it did in fact match, it advances the input by</span>
+<span class="doccomment">//! incrementing the position.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! let mut input = StringInput::new(&quot;asdasdf&quot;); // Input mutates its position</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(input.pos(), 0);                  // matching starts from 0, before &#39;a&#39;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(input.match_string(&quot;asd&quot;));          // Input::match_string matches &quot;asd&quot;; returns true</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(input.pos(), 3);                  // last match advances the parser by &quot;asd&quot;.len()</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(input.match_range(&#39;a&#39;, &#39;z&#39;));        // Input::match_range matches &#39;a&#39;; returns true</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(input.pos(), 4);                  // last match advances the parser by 1</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `Input` is also supposed to return a `&amp;str` `slice` of its input by calling</span>
+<span class="doccomment">//! [`Input::slice`](trait.Input#tymethod.slice).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `Parser` gets constructed on top of an `Input` and delegates position access to</span>
+<span class="doccomment">//! [`Parser::pos`](trait.Parser#tymethod.pos) and</span>
+<span class="doccomment">//! [`Parser::set_pos`](trait.Parser#tymethod.set_pos). Apart from this, `Parser` also gives access</span>
+<span class="doccomment">//! to its `Token` queue and expected rules to match when it fails.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## grammar!</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The [`grammar!`](macro.grammar!) `macro` processes every rule and generates a method on a</span>
+<span class="doccomment">//! `Parser` that returns whether the rule has matched its `Input`. `grammar!` can only be used</span>
+<span class="doccomment">//! inside of [`impl_rdp!`](macro.impl_rdp!) right now until other parser algorithms are</span>
+<span class="doccomment">//! implemented.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! *Note:* `grammar!` may require you to increase the recursion limit of your create with</span>
+<span class="doccomment">//! `#![recursion_limit = &quot;*&quot;]` where * is the new limit.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! When `impl_rdp!` is run, it implements an `enum` called `Rule` that has a value for all</span>
+<span class="doccomment">//! [non-silent](macro.grammar!#silent-rules-_) rules, but also for</span>
+<span class="doccomment">//! [`any` and `eoi`](macro.grammar!). These `Rule`s are used within `Token`s to specify the type</span>
+<span class="doccomment">//! of rule that matched. These `Tokens` are accesible from</span>
+<span class="doccomment">//! [`Parser::queue`](trait.Parser#tymethod.queue) after parsing. Instead of having the shape of</span>
+<span class="doccomment">//! an AST, the `Token`s come in a `Vec` in a predefined order that makes them easy to process.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = _{ paren ~ expression? } // expression is silent so we&#39;ll only have parens</span>
+<span class="doccomment">//!         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;(())()&quot;));</span>
+<span class="doccomment">//!                                         //  ^--^   - Token { paren, 0, 4 }; queue[0]</span>
+<span class="doccomment">//!                                         //   ^^    - Token { paren, 1, 3 }; queue[1]</span>
+<span class="doccomment">//!                                         //      ^^ - Token { paren, 4, 6 }; queue[2]</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let queue = vec![</span>
+<span class="doccomment">//!     Token::new(Rule::paren, 0, 4),</span>
+<span class="doccomment">//!     Token::new(Rule::paren, 1, 3),</span>
+<span class="doccomment">//!     Token::new(Rule::paren, 4, 6)</span>
+<span class="doccomment">//! ];</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(parser.queue(), &amp;queue);</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `Rule`s are also used for error reporting through</span>
+<span class="doccomment">//! [`Parser::queue`](trait.Parser#tymethod.queue) which is used when a `Parser` failed to parse</span>
+<span class="doccomment">//! and you want to see what `Rule`s it expected at the last possible position.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = _{ paren ~ expression? } // expression is silent so we&#39;ll only have parens</span>
+<span class="doccomment">//!         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;(())()foo&quot;));</span>
+<span class="doccomment">//!                                         //        ^   - Parser should expect a paren at pos 6</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression()); // the parser goes as deep as it can</span>
+<span class="doccomment">//! assert!(!parser.end());       // end is not reached, so the whole Input was not matched</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(parser.expected(), (vec![Rule::paren], 6));</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! *Note:* You can use the `eoi` rule instead of calling</span>
+<span class="doccomment">//! [`Parser::end`](trait.Parser#tymethod.end) manually.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Calculator example</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This example will concentrate on parsing and solving simple airthmetic with parens, additions,</span>
+<span class="doccomment">//! subtractions, multiplications, and divisions.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Let&#39;s start with defining a rule that matches integers. We first need to match an optional</span>
+<span class="doccomment">//! `&quot;-&quot;`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         number = { [&quot;-&quot;]? }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;-&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.number());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! In order to match a number, we should deal with two cases:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! * number is `0`</span>
+<span class="doccomment">//! * number is any other number *not* starting with `0`</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!                //  |    | |  |     | |          | |         ^ zero or more</span>
+<span class="doccomment">//!                //  |    | |  |     | |          | ^ digit</span>
+<span class="doccomment">//!                //  |    | |  |     | |          ^ followed by</span>
+<span class="doccomment">//!                //  |    | |  |     | ^ non-zero digit</span>
+<span class="doccomment">//!                //  |    | |  |     ^ or</span>
+<span class="doccomment">//!                //  |    | |  ^ zero</span>
+<span class="doccomment">//!                //  |    | ^ followed by</span>
+<span class="doccomment">//!                //  |    ^ optional</span>
+<span class="doccomment">//!                //  ^ minus</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.number());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Now let&#39;s add operator rules.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!         plus   = { [&quot;+&quot;] }</span>
+<span class="doccomment">//!         minus  = { [&quot;-&quot;] }</span>
+<span class="doccomment">//!         times  = { [&quot;*&quot;] }</span>
+<span class="doccomment">//!         slash  = { [&quot;/&quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! # let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! # assert!(parser.number());</span>
+<span class="doccomment">//! # assert!(parser.end());</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Because infix precedence is hard to implement in PEG and quite inefficient, pest comes with a</span>
+<span class="doccomment">//! [rule](macro.grammar!#precedence-climbing) that implements [precedence climbing]</span>
+<span class="doccomment">//! (https://en.wikipedia.org/wiki/Operator-precedence_parser#Precedence_climbing_method).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = {</span>
+<span class="doccomment">//!             { number }                         // primary rule is a number</span>
+<span class="doccomment">//!             addition       = { plus  | minus } // precedence 0 is addition</span>
+<span class="doccomment">//!             multiplication = { times | slash } // precedence 1 is multiplication</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!         plus   = { [&quot;+&quot;] }</span>
+<span class="doccomment">//!         minus  = { [&quot;-&quot;] }</span>
+<span class="doccomment">//!         times  = { [&quot;*&quot;] }</span>
+<span class="doccomment">//!         slash  = { [&quot;/&quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! # let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! # assert!(parser.number());</span>
+<span class="doccomment">//! # assert!(parser.end());</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Before we go any further, let&#39;s see what parsing a `number` from an `expression` places on to</span>
+<span class="doccomment">//! the queue.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! # impl_rdp! {</span>
+<span class="doccomment">//! #     grammar! {</span>
+<span class="doccomment">//! #         expression = {</span>
+<span class="doccomment">//! #             { number }                         // primary rule is a number</span>
+<span class="doccomment">//! #             addition       = { plus  | minus } // precedence 0 is addition</span>
+<span class="doccomment">//! #             multiplication = { times | slash } // precedence 1 is multiplication</span>
+<span class="doccomment">//! #         }</span>
+<span class="doccomment">//! #         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//! #         plus   = { [&quot;+&quot;] }</span>
+<span class="doccomment">//! #         minus  = { [&quot;-&quot;] }</span>
+<span class="doccomment">//! #         times  = { [&quot;*&quot;] }</span>
+<span class="doccomment">//! #         slash  = { [&quot;/&quot;] }</span>
+<span class="doccomment">//! #     }</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! println!(&quot;{:?}&quot;, parser.queue()); // [Token { rule: expression, start: 0, end: 3 },</span>
+<span class="doccomment">//!                                   //  Token { rule: number, start: 0, end: 3 }]</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Since we&#39;re already parsing an `expression` and don&#39;t care about its length, we can make it</span>
+<span class="doccomment">//! [silent](macro.grammar!#silent-rules-_).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = _{ // the underscore tells pest that this rule is silent</span>
+<span class="doccomment">//!             { number }</span>
+<span class="doccomment">//!             addition       = { plus  | minus }</span>
+<span class="doccomment">//!             multiplication = { times | slash }</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!         plus   = { [&quot;+&quot;] }</span>
+<span class="doccomment">//!         minus  = { [&quot;-&quot;] }</span>
+<span class="doccomment">//!         times  = { [&quot;*&quot;] }</span>
+<span class="doccomment">//!         slash  = { [&quot;/&quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;-90&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let queue = vec![</span>
+<span class="doccomment">//!     Token::new(Rule::number, 0, 3)</span>
+<span class="doccomment">//! ];</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(parser.queue(), &amp;queue);</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Adding parens to the whole business is as easy as adding a paren rule to the primary rule of</span>
+<span class="doccomment">//! the precedence climber.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = _{</span>
+<span class="doccomment">//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
+<span class="doccomment">//!             addition       = { plus  | minus }</span>
+<span class="doccomment">//!             multiplication = { times | slash }</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!         plus   = { [&quot;+&quot;] }</span>
+<span class="doccomment">//!         minus  = { [&quot;-&quot;] }</span>
+<span class="doccomment">//!         times  = { [&quot;*&quot;] }</span>
+<span class="doccomment">//!         slash  = { [&quot;/&quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;((-90))&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let queue = vec![</span>
+<span class="doccomment">//!     Token::new(Rule::number, 2, 5)</span>
+<span class="doccomment">//! ];</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(parser.queue(), &amp;queue);</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Before we get to the processing of the `Token`s, let&#39;s also add white-space to the grammar.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = _{</span>
+<span class="doccomment">//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
+<span class="doccomment">//!             addition       = { plus  | minus }</span>
+<span class="doccomment">//!             multiplication = { times | slash }</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!         plus   = { [&quot;+&quot;] }</span>
+<span class="doccomment">//!         minus  = { [&quot;-&quot;] }</span>
+<span class="doccomment">//!         times  = { [&quot;*&quot;] }</span>
+<span class="doccomment">//!         slash  = { [&quot;/&quot;] }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         whitespace = _{ [&quot; &quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;2 + 2&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! But now trying to parse `&quot;9 9&quot;` will work and recognize it as a `number`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! # impl_rdp! {</span>
+<span class="doccomment">//! #     grammar! {</span>
+<span class="doccomment">//! #         expression = _{</span>
+<span class="doccomment">//! #             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
+<span class="doccomment">//! #             addition       = { plus  | minus }</span>
+<span class="doccomment">//! #             multiplication = { times | slash }</span>
+<span class="doccomment">//! #         }</span>
+<span class="doccomment">//! #         number = { [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//! #         plus   = { [&quot;+&quot;] }</span>
+<span class="doccomment">//! #         minus  = { [&quot;-&quot;] }</span>
+<span class="doccomment">//! #         times  = { [&quot;*&quot;] }</span>
+<span class="doccomment">//! #         slash  = { [&quot;/&quot;] }</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! #         whitespace = _{ [&quot; &quot;] }</span>
+<span class="doccomment">//! #     }</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;9 9&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert!(parser.end());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let queue = vec![</span>
+<span class="doccomment">//!     Token::new(Rule::number, 0, 3)</span>
+<span class="doccomment">//! ];</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert_eq!(parser.queue(), &amp;queue);</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To solve this issue, we make `number` [atomic](macro.grammar!#atomic-rules-), stopping any</span>
+<span class="doccomment">//! white-space matching inside of the rule.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = _{</span>
+<span class="doccomment">//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
+<span class="doccomment">//!             addition       = { plus  | minus }</span>
+<span class="doccomment">//!             multiplication = { times | slash }</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!         number = @{ [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!         plus   =  { [&quot;+&quot;] }</span>
+<span class="doccomment">//!         minus  =  { [&quot;-&quot;] }</span>
+<span class="doccomment">//!         times  =  { [&quot;*&quot;] }</span>
+<span class="doccomment">//!         slash  =  { [&quot;/&quot;] }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         whitespace = _{ [&quot; &quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;9 9&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert!(!parser.end());</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To process all these `Token`s we&#39;ll use the [`process!`](macro.process!) `macro`. This `macro`</span>
+<span class="doccomment">//! defines matcher methods on the `Parser` that pattern match against a set of `Token`s from the</span>
+<span class="doccomment">//! front of the queue, calling themselves recursively until everything matched and returned its</span>
+<span class="doccomment">//! result.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Let&#39;s start by defining the signature of the `compute` matcher that will do the computation. We</span>
+<span class="doccomment">//! need it to return an `i32` in the end.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```ignore</span>
+<span class="doccomment">//! compute(&amp;self) -&gt; i32</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Now all we need to do is to write the three cases of interest, namely `number`, `addition`, and</span>
+<span class="doccomment">//! `multiplication`. `number` is captured (its `&amp;str` is being sliced from the `Input`) with the</span>
+<span class="doccomment">//! `&amp;` pattern and then parsed to an `i32`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```ignore</span>
+<span class="doccomment">//! (&amp;number: number) =&gt; number.parse::&lt;i32&gt;().unwrap()</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `addition` and `multiplication` are virtually identical:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! * match the `addition`/`multiplication` `Token` without using it</span>
+<span class="doccomment">//! * recursively process the left-hand-side by calling `compute`</span>
+<span class="doccomment">//! * use the `sign` `Token` without capturing its `&amp;str` value</span>
+<span class="doccomment">//! * recursively process the right-hand-side by calling `compute`</span>
+<span class="doccomment">//! * match `sign` inside the block and return the appropriate result</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```ignore</span>
+<span class="doccomment">//! (_: addition, left: compute(), sign, right: compute()) =&gt; {</span>
+<span class="doccomment">//!     match sign.rule {</span>
+<span class="doccomment">//!         Rule::plus  =&gt; left + right,</span>
+<span class="doccomment">//!         Rule::minus =&gt; left - right,</span>
+<span class="doccomment">//!         _ =&gt; unreachable!()</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! },</span>
+<span class="doccomment">//! (_: multiplication, left: compute(), sign, right: compute()) =&gt; {</span>
+<span class="doccomment">//!     match sign.rule {</span>
+<span class="doccomment">//!         Rule::times =&gt; left * right,</span>
+<span class="doccomment">//!         Rule::slash =&gt; left / right,</span>
+<span class="doccomment">//!         _ =&gt; unreachable!()</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The reason we&#39;re matching `sign` manually inside of the block is because using `_: plus` and</span>
+<span class="doccomment">//! `_: minus` will cause `left: main()` to be run twice in case the first rule fails. Caching the</span>
+<span class="doccomment">//! result in this case is non-trivial apart from the fact that duplicate complex patterns are not</span>
+<span class="doccomment">//! necessarily easier to read.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Now for the whole example:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # #[macro_use] extern crate pest;</span>
+<span class="doccomment">//! # use pest::Parser;</span>
+<span class="doccomment">//! # use pest::Token;</span>
+<span class="doccomment">//! # use pest::Input;</span>
+<span class="doccomment">//! # use pest::StringInput;</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! impl_rdp! {</span>
+<span class="doccomment">//!     grammar! {</span>
+<span class="doccomment">//!         expression = _{</span>
+<span class="doccomment">//!             { [&quot;(&quot;] ~ expression ~ [&quot;)&quot;] | number }</span>
+<span class="doccomment">//!             addition       = { plus  | minus }</span>
+<span class="doccomment">//!             multiplication = { times | slash }</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!         number = @{ [&quot;-&quot;]? ~ ([&quot;0&quot;] | [&#39;1&#39;..&#39;9&#39;] ~ [&#39;0&#39;..&#39;9&#39;]*) }</span>
+<span class="doccomment">//!         plus   =  { [&quot;+&quot;] }</span>
+<span class="doccomment">//!         minus  =  { [&quot;-&quot;] }</span>
+<span class="doccomment">//!         times  =  { [&quot;*&quot;] }</span>
+<span class="doccomment">//!         slash  =  { [&quot;/&quot;] }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         whitespace = _{ [&quot; &quot;] }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     process! {</span>
+<span class="doccomment">//!         compute(&amp;self) -&gt; i32 {</span>
+<span class="doccomment">//!             (&amp;number: number) =&gt; number.parse::&lt;i32&gt;().unwrap(),</span>
+<span class="doccomment">//!             (_: addition, left: compute(), sign, right: compute()) =&gt; {</span>
+<span class="doccomment">//!                 match sign.rule {</span>
+<span class="doccomment">//!                     Rule::plus  =&gt; left + right,</span>
+<span class="doccomment">//!                     Rule::minus =&gt; left - right,</span>
+<span class="doccomment">//!                     _ =&gt; unreachable!()</span>
+<span class="doccomment">//!                 }</span>
+<span class="doccomment">//!             },</span>
+<span class="doccomment">//!             (_: multiplication, left: compute(), sign, right: compute()) =&gt; {</span>
+<span class="doccomment">//!                 match sign.rule {</span>
+<span class="doccomment">//!                     Rule::times =&gt; left * right,</span>
+<span class="doccomment">//!                     Rule::slash =&gt; left / right,</span>
+<span class="doccomment">//!                     _ =&gt; unreachable!()</span>
+<span class="doccomment">//!                 }</span>
+<span class="doccomment">//!             }</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut parser = Rdp::new(StringInput::new(&quot;(3 + (9 + 3 * 4 + (3 + 1) / 2 - 4)) * 2&quot;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! assert!(parser.expression());</span>
+<span class="doccomment">//! assert_eq!(parser.compute(), 44);</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>grammar</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>process</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>parsers</span>;
-<span class='kw'>mod</span> <span class='ident'>input</span>;
-<span class='kw'>mod</span> <span class='ident'>inputs</span>;
-<span class='kw'>mod</span> <span class='ident'>parser</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">grammar</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">process</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">parsers</span>;
+<span class="kw">mod</span> <span class="ident">input</span>;
+<span class="kw">mod</span> <span class="ident">inputs</span>;
+<span class="kw">mod</span> <span class="ident">parser</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>prelude</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">prelude</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>input</span>::<span class='ident'>Input</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>inputs</span>::<span class='ident'>StringInput</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>parser</span>::<span class='ident'>Parser</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>parsers</span>::<span class='ident'>Token</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">input</span>::<span class="ident">Input</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">inputs</span>::<span class="ident">StringInput</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">parser</span>::<span class="ident">Parser</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">parsers</span>::<span class="ident">Token</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

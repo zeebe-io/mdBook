@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.2/src/buf/take.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/bytes-0.4.3/src/buf/take.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>take.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -197,159 +197,159 @@
 <span id="152">152</span>
 <span id="153">153</span>
 <span id="154">154</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> {<span class='ident'>Buf</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> {<span class="ident">Buf</span>};
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
 
-<span class='doccomment'>/// A `Buf` adapter which limits the bytes read from an underlying buffer.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This struct is generally created by calling `take()` on `Buf`. See</span>
-<span class='doccomment'>/// documentation of [`take()`](trait.Buf.html#method.take) for more details.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Take</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>inner</span>: <span class='ident'>T</span>,
-    <span class='ident'>limit</span>: <span class='ident'>usize</span>,
+<span class="doccomment">/// A `Buf` adapter which limits the bytes read from an underlying buffer.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This struct is generally created by calling `take()` on `Buf`. See</span>
+<span class="doccomment">/// documentation of [`take()`](trait.Buf.html#method.take) for more details.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Take</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">inner</span>: <span class="ident">T</span>,
+    <span class="ident">limit</span>: <span class="ident">usize</span>,
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>inner</span>: <span class='ident'>T</span>, <span class='ident'>limit</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Take</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>Take</span> {
-        <span class='ident'>inner</span>: <span class='ident'>inner</span>,
-        <span class='ident'>limit</span>: <span class='ident'>limit</span>,
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Take</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Consumes this `Take`, returning the underlying value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::{Buf, BufMut};</span>
-    <span class='doccomment'>/// use std::io::Cursor;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
-    <span class='doccomment'>/// let mut dst = vec![];</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// dst.put(&amp;mut buf);</span>
-    <span class='doccomment'>/// assert_eq!(*dst, b&quot;he&quot;[..]);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = buf.into_inner();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// dst.clear();</span>
-    <span class='doccomment'>/// dst.put(&amp;mut buf);</span>
-    <span class='doccomment'>/// assert_eq!(*dst, b&quot;llo world&quot;[..]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_inner</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span> {
-        <span class='self'>self</span>.<span class='ident'>inner</span>
-    }
-
-    <span class='doccomment'>/// Gets a reference to the underlying `Buf`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// It is inadvisable to directly read from the underlying `Buf`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::{Buf, BufMut};</span>
-    <span class='doccomment'>/// use std::io::Cursor;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(0, buf.get_ref().position());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>T</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>
-    }
-
-    <span class='doccomment'>/// Gets a mutable reference to the underlying `Buf`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// It is inadvisable to directly read from the underlying `Buf`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::{Buf, BufMut};</span>
-    <span class='doccomment'>/// use std::io::Cursor;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
-    <span class='doccomment'>/// let mut dst = vec![];</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// buf.get_mut().set_position(2);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// dst.put(&amp;mut buf);</span>
-    <span class='doccomment'>/// assert_eq!(*dst, b&quot;ll&quot;[..]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>inner</span>
-    }
-
-    <span class='doccomment'>/// Returns the maximum number of bytes that can be read.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Note</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the inner `Buf` has fewer bytes than indicated by this method then</span>
-    <span class='doccomment'>/// that is the actual number of available bytes.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::Buf;</span>
-    <span class='doccomment'>/// use std::io::Cursor;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(2, buf.limit());</span>
-    <span class='doccomment'>/// assert_eq!(b&#39;h&#39;, buf.get_u8());</span>
-    <span class='doccomment'>/// assert_eq!(1, buf.limit());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>limit</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>limit</span>
-    }
-
-    <span class='doccomment'>/// Sets the maximum number of bytes that can be read.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Note</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the inner `Buf` has fewer bytes than `lim` then that is the actual</span>
-    <span class='doccomment'>/// number of available bytes.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// use bytes::{Buf, BufMut};</span>
-    <span class='doccomment'>/// use std::io::Cursor;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
-    <span class='doccomment'>/// let mut dst = vec![];</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// dst.put(&amp;mut buf);</span>
-    <span class='doccomment'>/// assert_eq!(*dst, b&quot;he&quot;[..]);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// dst.clear();</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// buf.set_limit(3);</span>
-    <span class='doccomment'>/// dst.put(&amp;mut buf);</span>
-    <span class='doccomment'>/// assert_eq!(*dst, b&quot;llo&quot;[..]);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_limit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>lim</span>: <span class='ident'>usize</span>) {
-        <span class='self'>self</span>.<span class='ident'>limit</span> <span class='op'>=</span> <span class='ident'>lim</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">inner</span>: <span class="ident">T</span>, <span class="ident">limit</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Take</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">Take</span> {
+        <span class="ident">inner</span>: <span class="ident">inner</span>,
+        <span class="ident">limit</span>: <span class="ident">limit</span>,
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Buf</span><span class='op'>&gt;</span> <span class='ident'>Buf</span> <span class='kw'>for</span> <span class='ident'>Take</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>remaining</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>remaining</span>(), <span class='self'>self</span>.<span class='ident'>limit</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Take</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Consumes this `Take`, returning the underlying value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::{Buf, BufMut};</span>
+    <span class="doccomment">/// use std::io::Cursor;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
+    <span class="doccomment">/// let mut dst = vec![];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// dst.put(&amp;mut buf);</span>
+    <span class="doccomment">/// assert_eq!(*dst, b&quot;he&quot;[..]);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = buf.into_inner();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// dst.clear();</span>
+    <span class="doccomment">/// dst.put(&amp;mut buf);</span>
+    <span class="doccomment">/// assert_eq!(*dst, b&quot;llo world&quot;[..]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">T</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>bytes</span>()[..<span class='self'>self</span>.<span class='ident'>limit</span>]
+    <span class="doccomment">/// Gets a reference to the underlying `Buf`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is inadvisable to directly read from the underlying `Buf`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::{Buf, BufMut};</span>
+    <span class="doccomment">/// use std::io::Cursor;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(0, buf.get_ref().position());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">T</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>
     }
 
-    <span class='kw'>fn</span> <span class='ident'>advance</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cnt</span>: <span class='ident'>usize</span>) {
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cnt</span> <span class='op'>&lt;=</span> <span class='self'>self</span>.<span class='ident'>limit</span>);
-        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>advance</span>(<span class='ident'>cnt</span>);
-        <span class='self'>self</span>.<span class='ident'>limit</span> <span class='op'>-=</span> <span class='ident'>cnt</span>;
+    <span class="doccomment">/// Gets a mutable reference to the underlying `Buf`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is inadvisable to directly read from the underlying `Buf`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::{Buf, BufMut};</span>
+    <span class="doccomment">/// use std::io::Cursor;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
+    <span class="doccomment">/// let mut dst = vec![];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// buf.get_mut().set_position(2);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// dst.put(&amp;mut buf);</span>
+    <span class="doccomment">/// assert_eq!(*dst, b&quot;ll&quot;[..]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">inner</span>
+    }
+
+    <span class="doccomment">/// Returns the maximum number of bytes that can be read.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Note</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the inner `Buf` has fewer bytes than indicated by this method then</span>
+    <span class="doccomment">/// that is the actual number of available bytes.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::Buf;</span>
+    <span class="doccomment">/// use std::io::Cursor;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(2, buf.limit());</span>
+    <span class="doccomment">/// assert_eq!(b&#39;h&#39;, buf.get_u8());</span>
+    <span class="doccomment">/// assert_eq!(1, buf.limit());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">limit</span>
+    }
+
+    <span class="doccomment">/// Sets the maximum number of bytes that can be read.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Note</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the inner `Buf` has fewer bytes than `lim` then that is the actual</span>
+    <span class="doccomment">/// number of available bytes.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use bytes::{Buf, BufMut};</span>
+    <span class="doccomment">/// use std::io::Cursor;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut buf = Cursor::new(b&quot;hello world&quot;).take(2);</span>
+    <span class="doccomment">/// let mut dst = vec![];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// dst.put(&amp;mut buf);</span>
+    <span class="doccomment">/// assert_eq!(*dst, b&quot;he&quot;[..]);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// dst.clear();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// buf.set_limit(3);</span>
+    <span class="doccomment">/// dst.put(&amp;mut buf);</span>
+    <span class="doccomment">/// assert_eq!(*dst, b&quot;llo&quot;[..]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_limit</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">lim</span>: <span class="ident">usize</span>) {
+        <span class="self">self</span>.<span class="ident">limit</span> <span class="op">=</span> <span class="ident">lim</span>
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Buf</span><span class="op">&gt;</span> <span class="ident">Buf</span> <span class="kw">for</span> <span class="ident">Take</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="ident">cmp</span>::<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">remaining</span>(), <span class="self">self</span>.<span class="ident">limit</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">bytes</span>()[..<span class="self">self</span>.<span class="ident">limit</span>]
+    }
+
+    <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cnt</span>: <span class="ident">usize</span>) {
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">cnt</span> <span class="op">&lt;=</span> <span class="self">self</span>.<span class="ident">limit</span>);
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">advance</span>(<span class="ident">cnt</span>);
+        <span class="self">self</span>.<span class="ident">limit</span> <span class="op">-=</span> <span class="ident">cnt</span>;
     }
 }
 </pre>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,27 +43,27 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>ws</a>::<wbr><a class='fn' href=''>listen</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>ws</a>::<wbr><a class="fn" href=''>listen</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../src/ws/lib.rs.html#73-82' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn listen&lt;A, F, H&gt;(addr: A, factory: F) -&gt; <a class='type' href='../ws/type.Result.html' title='ws::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where fmt-newline'>where A: <a class='trait' href='https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html' title='std::net::addr::ToSocketAddrs'>ToSocketAddrs</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>, F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(<a class='struct' href='../ws/struct.Sender.html' title='ws::Sender'>Sender</a>) -&gt; H, H: <a class='trait' href='../ws/trait.Handler.html' title='ws::Handler'>Handler</a></span></pre><div class='docblock'><p>A utility function for setting up a WebSocket server.</p>
+<pre class='rust fn'>pub fn listen&lt;A, F, H&gt;(addr: A, factory: F) -&gt; <a class="type" href="../ws/type.Result.html" title="type ws::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt; <span class="where fmt-newline">where A: <a class="trait" href="https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html" title="trait std::net::addr::ToSocketAddrs">ToSocketAddrs</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>, F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html" title="trait core::ops::FnMut">FnMut</a>(<a class="struct" href="../ws/struct.Sender.html" title="struct ws::Sender">Sender</a>) -&gt; H, H: <a class="trait" href="../ws/trait.Handler.html" title="trait ws::Handler">Handler</a></span></pre><div class='docblock'><p>A utility function for setting up a WebSocket server.</p>
 
 <h1 id='safety' class='section-header'><a href='#safety'>Safety</a></h1>
 <p>This function blocks until the event loop finishes running. Avoid calling this method within
 another WebSocket handler.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
-<pre class='rust rust-example-rendered'>
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>listen</span>;
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">listen</span>;
 
-<span class='ident'>listen</span>(<span class='string'>&quot;127.0.0.1:3012&quot;</span>, <span class='op'>|</span><span class='ident'>out</span><span class='op'>|</span> {
-    <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>msg</span><span class='op'>|</span> {
-       <span class='ident'>out</span>.<span class='ident'>send</span>(<span class='ident'>msg</span>)
+<span class="ident">listen</span>(<span class="string">&quot;127.0.0.1:3012&quot;</span>, <span class="op">|</span><span class="ident">out</span><span class="op">|</span> {
+    <span class="kw">move</span> <span class="op">|</span><span class="ident">msg</span><span class="op">|</span> {
+       <span class="ident">out</span>.<span class="ident">send</span>(<span class="ident">msg</span>)
    }
-}).<span class='ident'>unwrap</span>()</pre>
+}).<span class="ident">unwrap</span>()</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 

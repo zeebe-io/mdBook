@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -476,438 +476,438 @@
 <span id="431">431</span>
 <span id="432">432</span>
 <span id="433">433</span>
-</pre><pre class='rust '>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>os</span>::<span class='kw-2'>*</span>;
+</pre><pre class="rust ">
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">os</span>::<span class="kw-2">*</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>os</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='self'>self</span>, <span class='ident'>c_int</span>, <span class='ident'>uint8_t</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">os</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="self">self</span>, <span class="ident">c_int</span>, <span class="ident">uint8_t</span>};
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_UNIX</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_LOCAL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>AF_UNIX</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>10</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_NETLINK</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>16</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_PACKET</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>17</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_UNIX</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_LOCAL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">AF_UNIX</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">10</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_NETLINK</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">16</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_PACKET</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">17</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_STREAM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_DGRAM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_SEQPACKET</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>5</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_RAW</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_RDM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_STREAM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_DGRAM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_SEQPACKET</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">5</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_RAW</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_RDM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_IP</span>: <span class='ident'>c_int</span>     <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_SOCKET</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_TCP</span>: <span class='ident'>c_int</span>    <span class='op'>=</span> <span class='number'>6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_UDP</span>: <span class='ident'>c_int</span>    <span class='op'>=</span> <span class='number'>17</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_IPV6</span>: <span class='ident'>c_int</span>   <span class='op'>=</span> <span class='number'>41</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_NETLINK</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>270</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_IP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>SOL_IP</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_IPV6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>SOL_IPV6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_TCP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>SOL_TCP</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_UDP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>SOL_UDP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_IP</span>: <span class="ident">c_int</span>     <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_SOCKET</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_TCP</span>: <span class="ident">c_int</span>    <span class="op">=</span> <span class="number">6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_UDP</span>: <span class="ident">c_int</span>    <span class="op">=</span> <span class="number">17</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_IPV6</span>: <span class="ident">c_int</span>   <span class="op">=</span> <span class="number">41</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_NETLINK</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">270</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_IP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">SOL_IP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_IPV6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">SOL_IPV6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_TCP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">SOL_TCP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_UDP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">SOL_UDP</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_ACCEPTCONN</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>30</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_BINDTODEVICE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>25</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_BROADCAST</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_BSDCOMPAT</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>14</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DEBUG</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DOMAIN</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>39</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_ERROR</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DONTROUTE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>5</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_KEEPALIVE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>9</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_LINGER</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>13</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_MARK</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>36</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_OOBINLINE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>10</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_PASSCRED</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>16</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_PEEK_OFF</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>42</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_PEERCRED</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>17</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_PRIORITY</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>12</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_PROTOCOL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>38</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVBUF</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>8</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVBUFFORCE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>33</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVLOWAT</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>18</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDLOWAT</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>19</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVTIMEO</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>20</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDTIMEO</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>21</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_REUSEADDR</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_REUSEPORT</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>15</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RXQ_OVFL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>40</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDBUF</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>7</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDBUFFORCE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>32</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TIMESTAMP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>29</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TYPE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_BUSY_POLL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>46</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_ACCEPTCONN</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">30</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_BINDTODEVICE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">25</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_BROADCAST</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_BSDCOMPAT</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">14</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DEBUG</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DOMAIN</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">39</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_ERROR</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DONTROUTE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">5</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_KEEPALIVE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">9</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_LINGER</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">13</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_MARK</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">36</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_OOBINLINE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">10</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_PASSCRED</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">16</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_PEEK_OFF</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">42</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_PEERCRED</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">17</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_PRIORITY</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">12</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_PROTOCOL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">38</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVBUF</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">8</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVBUFFORCE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">33</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVLOWAT</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">18</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDLOWAT</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">19</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVTIMEO</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">20</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDTIMEO</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">21</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_REUSEADDR</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_REUSEPORT</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">15</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RXQ_OVFL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">40</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDBUF</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">7</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDBUFFORCE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">32</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TIMESTAMP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">29</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TYPE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_BUSY_POLL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">46</span>;
 
-    <span class='comment'>// Socket options for TCP sockets</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_NODELAY</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_MAXSEG</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_CORK</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_KEEPIDLE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>TCP_KEEPIDLE</span>;
+    <span class="comment">// Socket options for TCP sockets</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_NODELAY</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_MAXSEG</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_CORK</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_KEEPIDLE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">TCP_KEEPIDLE</span>;
 
-    <span class='comment'>// Socket options for the IP layer of the socket</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_IF</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>32</span>;
+    <span class="comment">// Socket options for the IP layer of the socket</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_IF</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">32</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>IpMulticastTtl</span> <span class='op'>=</span> <span class='ident'>uint8_t</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">IpMulticastTtl</span> <span class="op">=</span> <span class="ident">uint8_t</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_TTL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>33</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_LOOP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>34</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_ADD_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>35</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_DROP_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>36</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_TTL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">33</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_LOOP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">34</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_ADD_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">35</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_DROP_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">36</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPV6_ADD_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>IPV6_ADD_MEMBERSHIP</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPV6_DROP_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>IPV6_DROP_MEMBERSHIP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPV6_ADD_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">IPV6_ADD_MEMBERSHIP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPV6_DROP_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">IPV6_DROP_MEMBERSHIP</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='ident'>u32</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">InAddrT</span> <span class="op">=</span> <span class="ident">u32</span>;
 
-    <span class='comment'>// Declarations of special addresses</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_ANY</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_NONE</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0xffffffff</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_BROADCAST</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0xffffffff</span>;
+    <span class="comment">// Declarations of special addresses</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_ANY</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_NONE</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0xffffffff</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_BROADCAST</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0xffffffff</span>;
 
-    <span class='comment'>// Flags for send/recv and their relatives</span>
-    <span class='macro'>bitflags</span><span class='macro'>!</span>{
-        <span class='ident'>flags</span> <span class='ident'>MsgFlags</span> : <span class='ident'>libc</span>::<span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>MSG_OOB</span>      <span class='op'>=</span> <span class='number'>0x0001</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_PEEK</span>     <span class='op'>=</span> <span class='number'>0x0002</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_CTRUNC</span>   <span class='op'>=</span> <span class='number'>0x0008</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_TRUNC</span>    <span class='op'>=</span> <span class='number'>0x0020</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_DONTWAIT</span> <span class='op'>=</span> <span class='number'>0x0040</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_EOR</span>      <span class='op'>=</span> <span class='number'>0x0080</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_ERRQUEUE</span> <span class='op'>=</span> <span class='number'>0x2000</span>,
+    <span class="comment">// Flags for send/recv and their relatives</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>{
+        <span class="ident">flags</span> <span class="ident">MsgFlags</span> : <span class="ident">libc</span>::<span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">MSG_OOB</span>      <span class="op">=</span> <span class="number">0x0001</span>,
+            <span class="kw">const</span> <span class="ident">MSG_PEEK</span>     <span class="op">=</span> <span class="number">0x0002</span>,
+            <span class="kw">const</span> <span class="ident">MSG_CTRUNC</span>   <span class="op">=</span> <span class="number">0x0008</span>,
+            <span class="kw">const</span> <span class="ident">MSG_TRUNC</span>    <span class="op">=</span> <span class="number">0x0020</span>,
+            <span class="kw">const</span> <span class="ident">MSG_DONTWAIT</span> <span class="op">=</span> <span class="number">0x0040</span>,
+            <span class="kw">const</span> <span class="ident">MSG_EOR</span>      <span class="op">=</span> <span class="number">0x0080</span>,
+            <span class="kw">const</span> <span class="ident">MSG_ERRQUEUE</span> <span class="op">=</span> <span class="number">0x2000</span>,
         }
     }
 
-    <span class='comment'>// shutdown flags</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_RD</span>: <span class='ident'>c_int</span>   <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_WR</span>: <span class='ident'>c_int</span>   <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_RDWR</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
+    <span class="comment">// shutdown flags</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_RD</span>: <span class="ident">c_int</span>   <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_WR</span>: <span class="ident">c_int</span>   <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_RDWR</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
 
-    <span class='comment'>// Ancillary message types</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SCM_RIGHTS</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
+    <span class="comment">// Ancillary message types</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SCM_RIGHTS</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
 }
 
-<span class='comment'>// Not all of these constants exist on freebsd</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>os</span> {
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>,
-              <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>,
-              <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>))]</span>
-    <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='self'>self</span>, <span class='ident'>c_int</span>, <span class='ident'>uint8_t</span>};
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-    <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='self'>self</span>, <span class='ident'>c_int</span>, <span class='ident'>uint8_t</span>};
+<span class="comment">// Not all of these constants exist on freebsd</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">os</span> {
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>,
+              <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>,
+              <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>))]</span>
+    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="self">self</span>, <span class="ident">c_int</span>, <span class="ident">uint8_t</span>};
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="self">self</span>, <span class="ident">c_int</span>, <span class="ident">uint8_t</span>};
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_UNIX</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_LOCAL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>AF_UNIX</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>24</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>26</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>28</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>30</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_UNIX</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_LOCAL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">AF_UNIX</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">2</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">24</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">26</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">28</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">30</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_STREAM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_DGRAM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_SEQPACKET</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>5</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_RAW</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_RDM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_STREAM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_DGRAM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_SEQPACKET</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">5</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_RAW</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_RDM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_SOCKET</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0xffff</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_IP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_IPV6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>41</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_TCP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_UDP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>17</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_SOCKET</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0xffff</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_IP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_IPV6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">41</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_TCP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_UDP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">17</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_ACCEPTCONN</span>: <span class='ident'>c_int</span>          <span class='op'>=</span> <span class='number'>0x0002</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_BROADCAST</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0020</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DEBUG</span>: <span class='ident'>c_int</span>               <span class='op'>=</span> <span class='number'>0x0001</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DONTTRUNC</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x2000</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_USELOOPBACK</span>: <span class='ident'>c_int</span>         <span class='op'>=</span> <span class='number'>0x0040</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_ERROR</span>: <span class='ident'>c_int</span>               <span class='op'>=</span> <span class='number'>0x1007</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DONTROUTE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0010</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_KEEPALIVE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0008</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_LABEL</span>: <span class='ident'>c_int</span>               <span class='op'>=</span> <span class='number'>0x1010</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_LINGER</span>: <span class='ident'>c_int</span>              <span class='op'>=</span> <span class='number'>0x0080</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NREAD</span>: <span class='ident'>c_int</span>               <span class='op'>=</span> <span class='number'>0x1020</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NKE</span>: <span class='ident'>c_int</span>                 <span class='op'>=</span> <span class='number'>0x1021</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NOSIGPIPE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x1022</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NOADDRERR</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x1023</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NOTIFYCONFLICT</span>: <span class='ident'>c_int</span>      <span class='op'>=</span> <span class='number'>0x1026</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NP_EXTENSIONS</span>: <span class='ident'>c_int</span>       <span class='op'>=</span> <span class='number'>0x1083</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NWRITE</span>: <span class='ident'>c_int</span>              <span class='op'>=</span> <span class='number'>0x1024</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_OOBINLINE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0100</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_PEERLABEL</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x1011</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVBUF</span>: <span class='ident'>c_int</span>              <span class='op'>=</span> <span class='number'>0x1002</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVLOWAT</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1004</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDLOWAT</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1003</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVTIMEO</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1006</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDTIMEO</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1005</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RANDOMPORT</span>: <span class='ident'>c_int</span>          <span class='op'>=</span> <span class='number'>0x1082</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RESTRICTIONS</span>: <span class='ident'>c_int</span>        <span class='op'>=</span> <span class='number'>0x1081</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RESTRICT_DENYIN</span>: <span class='ident'>c_int</span>     <span class='op'>=</span> <span class='number'>0x00000001</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RESTRICT_DENYOUT</span>: <span class='ident'>c_int</span>    <span class='op'>=</span> <span class='number'>0x00000002</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_REUSEADDR</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0004</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_REUSEPORT</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0200</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_REUSESHAREUID</span>: <span class='ident'>c_int</span>       <span class='op'>=</span> <span class='number'>0x1025</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDBUF</span>: <span class='ident'>c_int</span>              <span class='op'>=</span> <span class='number'>0x1001</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TIMESTAMP</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0400</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TIMESTAMP_MONOTONIC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x0800</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TIMESTAMP</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x2000</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TYPE</span>: <span class='ident'>c_int</span>                <span class='op'>=</span> <span class='number'>0x1008</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_WANTMORE</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x4000</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_WANTOOBFLAG</span>: <span class='ident'>c_int</span>         <span class='op'>=</span> <span class='number'>0x8000</span>;
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>overflowing_literals</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RESTRICT_DENYSET</span>: <span class='ident'>c_int</span>    <span class='op'>=</span> <span class='number'>0x80000000</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_ACCEPTCONN</span>: <span class="ident">c_int</span>          <span class="op">=</span> <span class="number">0x0002</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_BROADCAST</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0020</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DEBUG</span>: <span class="ident">c_int</span>               <span class="op">=</span> <span class="number">0x0001</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DONTTRUNC</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x2000</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_USELOOPBACK</span>: <span class="ident">c_int</span>         <span class="op">=</span> <span class="number">0x0040</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_ERROR</span>: <span class="ident">c_int</span>               <span class="op">=</span> <span class="number">0x1007</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DONTROUTE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0010</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_KEEPALIVE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0008</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_LABEL</span>: <span class="ident">c_int</span>               <span class="op">=</span> <span class="number">0x1010</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_LINGER</span>: <span class="ident">c_int</span>              <span class="op">=</span> <span class="number">0x0080</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NREAD</span>: <span class="ident">c_int</span>               <span class="op">=</span> <span class="number">0x1020</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NKE</span>: <span class="ident">c_int</span>                 <span class="op">=</span> <span class="number">0x1021</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NOSIGPIPE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x1022</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NOADDRERR</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x1023</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NOTIFYCONFLICT</span>: <span class="ident">c_int</span>      <span class="op">=</span> <span class="number">0x1026</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NP_EXTENSIONS</span>: <span class="ident">c_int</span>       <span class="op">=</span> <span class="number">0x1083</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NWRITE</span>: <span class="ident">c_int</span>              <span class="op">=</span> <span class="number">0x1024</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_OOBINLINE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0100</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_PEERLABEL</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x1011</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVBUF</span>: <span class="ident">c_int</span>              <span class="op">=</span> <span class="number">0x1002</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVLOWAT</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1004</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDLOWAT</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1003</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVTIMEO</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1006</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDTIMEO</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1005</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RANDOMPORT</span>: <span class="ident">c_int</span>          <span class="op">=</span> <span class="number">0x1082</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RESTRICTIONS</span>: <span class="ident">c_int</span>        <span class="op">=</span> <span class="number">0x1081</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RESTRICT_DENYIN</span>: <span class="ident">c_int</span>     <span class="op">=</span> <span class="number">0x00000001</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RESTRICT_DENYOUT</span>: <span class="ident">c_int</span>    <span class="op">=</span> <span class="number">0x00000002</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_REUSEADDR</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0004</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_REUSEPORT</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0200</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_REUSESHAREUID</span>: <span class="ident">c_int</span>       <span class="op">=</span> <span class="number">0x1025</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDBUF</span>: <span class="ident">c_int</span>              <span class="op">=</span> <span class="number">0x1001</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TIMESTAMP</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0400</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TIMESTAMP_MONOTONIC</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x0800</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TIMESTAMP</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x2000</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TYPE</span>: <span class="ident">c_int</span>                <span class="op">=</span> <span class="number">0x1008</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_WANTMORE</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x4000</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_WANTOOBFLAG</span>: <span class="ident">c_int</span>         <span class="op">=</span> <span class="number">0x8000</span>;
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">overflowing_literals</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RESTRICT_DENYSET</span>: <span class="ident">c_int</span>    <span class="op">=</span> <span class="number">0x80000000</span>;
 
-    <span class='comment'>// Socket options for TCP sockets</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_NODELAY</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_MAXSEG</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>,
-              <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_KEEPALIVE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>TCP_KEEPALIVE</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_KEEPIDLE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>TCP_KEEPIDLE</span>;
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_KEEPIDLE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
+    <span class="comment">// Socket options for TCP sockets</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_NODELAY</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_MAXSEG</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>,
+              <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_KEEPALIVE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">TCP_KEEPALIVE</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_KEEPIDLE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">TCP_KEEPIDLE</span>;
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_KEEPIDLE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
 
-    <span class='comment'>// Socket options for the IP layer of the socket</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_IF</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>9</span>;
+    <span class="comment">// Socket options for the IP layer of the socket</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_IF</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">9</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>IpMulticastTtl</span> <span class='op'>=</span> <span class='ident'>uint8_t</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">IpMulticastTtl</span> <span class="op">=</span> <span class="ident">uint8_t</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_TTL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>10</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_LOOP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>11</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_ADD_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>12</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_DROP_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>13</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_TTL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">10</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_LOOP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">11</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_ADD_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">12</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_DROP_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">13</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPV6_JOIN_GROUP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>IPV6_JOIN_GROUP</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPV6_LEAVE_GROUP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>IPV6_LEAVE_GROUP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPV6_JOIN_GROUP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">IPV6_JOIN_GROUP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPV6_LEAVE_GROUP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">IPV6_LEAVE_GROUP</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='ident'>u32</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">InAddrT</span> <span class="op">=</span> <span class="ident">u32</span>;
 
-    <span class='comment'>// Declarations of special addresses</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_ANY</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_NONE</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0xffffffff</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_BROADCAST</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0xffffffff</span>;
+    <span class="comment">// Declarations of special addresses</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_ANY</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_NONE</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0xffffffff</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_BROADCAST</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0xffffffff</span>;
 
-    <span class='comment'>// Flags for send/recv and their relatives</span>
-    <span class='macro'>bitflags</span><span class='macro'>!</span>{
-        <span class='ident'>flags</span> <span class='ident'>MsgFlags</span> : <span class='ident'>libc</span>::<span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>MSG_OOB</span>      <span class='op'>=</span> <span class='number'>0x01</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_PEEK</span>     <span class='op'>=</span> <span class='number'>0x02</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_EOR</span>      <span class='op'>=</span> <span class='number'>0x08</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_TRUNC</span>    <span class='op'>=</span> <span class='number'>0x10</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_CTRUNC</span>   <span class='op'>=</span> <span class='number'>0x20</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_DONTWAIT</span> <span class='op'>=</span> <span class='number'>0x80</span>,
+    <span class="comment">// Flags for send/recv and their relatives</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>{
+        <span class="ident">flags</span> <span class="ident">MsgFlags</span> : <span class="ident">libc</span>::<span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">MSG_OOB</span>      <span class="op">=</span> <span class="number">0x01</span>,
+            <span class="kw">const</span> <span class="ident">MSG_PEEK</span>     <span class="op">=</span> <span class="number">0x02</span>,
+            <span class="kw">const</span> <span class="ident">MSG_EOR</span>      <span class="op">=</span> <span class="number">0x08</span>,
+            <span class="kw">const</span> <span class="ident">MSG_TRUNC</span>    <span class="op">=</span> <span class="number">0x10</span>,
+            <span class="kw">const</span> <span class="ident">MSG_CTRUNC</span>   <span class="op">=</span> <span class="number">0x20</span>,
+            <span class="kw">const</span> <span class="ident">MSG_DONTWAIT</span> <span class="op">=</span> <span class="number">0x80</span>,
         }
     }
 
-    <span class='comment'>// shutdown flags</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_RD</span>: <span class='ident'>c_int</span>   <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_WR</span>: <span class='ident'>c_int</span>   <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_RDWR</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
+    <span class="comment">// shutdown flags</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_RD</span>: <span class="ident">c_int</span>   <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_WR</span>: <span class="ident">c_int</span>   <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_RDWR</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
 
-    <span class='comment'>// Ancillary message types</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SCM_RIGHTS</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
+    <span class="comment">// Ancillary message types</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SCM_RIGHTS</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>os</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>uint8_t</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>)]</span>
+<span class="kw">mod</span> <span class="ident">os</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">uint8_t</span>};
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_UNIX</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_LOCAL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>AF_UNIX</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET</span>: <span class='ident'>c_int</span>  <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AF_INET6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>28</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_UNIX</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_LOCAL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">AF_UNIX</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET</span>: <span class="ident">c_int</span>  <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AF_INET6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">28</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_STREAM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_DGRAM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_SEQPACKET</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>5</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_RAW</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOCK_RDM</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_STREAM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_DGRAM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_SEQPACKET</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">5</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_RAW</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOCK_RDM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SOL_SOCKET</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0xffff</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_IP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_IPV6</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>41</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_TCP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>6</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPPROTO_UDP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>17</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SOL_SOCKET</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0xffff</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_IP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_IPV6</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">41</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_TCP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">6</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPPROTO_UDP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">17</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_ACCEPTCONN</span>: <span class='ident'>c_int</span>          <span class='op'>=</span> <span class='number'>0x0002</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_BROADCAST</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0020</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DEBUG</span>: <span class='ident'>c_int</span>               <span class='op'>=</span> <span class='number'>0x0001</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_ERROR</span>: <span class='ident'>c_int</span>               <span class='op'>=</span> <span class='number'>0x1007</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_DONTROUTE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0010</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_KEEPALIVE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0008</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_LINGER</span>: <span class='ident'>c_int</span>              <span class='op'>=</span> <span class='number'>0x0080</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_NOSIGPIPE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0800</span>; <span class='comment'>// different value!</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_OOBINLINE</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0100</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVBUF</span>: <span class='ident'>c_int</span>              <span class='op'>=</span> <span class='number'>0x1002</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVLOWAT</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1004</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDLOWAT</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1003</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_RCVTIMEO</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1006</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDTIMEO</span>: <span class='ident'>c_int</span>            <span class='op'>=</span> <span class='number'>0x1005</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_REUSEADDR</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0004</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_REUSEPORT</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0200</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_SNDBUF</span>: <span class='ident'>c_int</span>              <span class='op'>=</span> <span class='number'>0x1001</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TIMESTAMP</span>: <span class='ident'>c_int</span>           <span class='op'>=</span> <span class='number'>0x0400</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SO_TYPE</span>: <span class='ident'>c_int</span>                <span class='op'>=</span> <span class='number'>0x1008</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_ACCEPTCONN</span>: <span class="ident">c_int</span>          <span class="op">=</span> <span class="number">0x0002</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_BROADCAST</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0020</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DEBUG</span>: <span class="ident">c_int</span>               <span class="op">=</span> <span class="number">0x0001</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_ERROR</span>: <span class="ident">c_int</span>               <span class="op">=</span> <span class="number">0x1007</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_DONTROUTE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0010</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_KEEPALIVE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0008</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_LINGER</span>: <span class="ident">c_int</span>              <span class="op">=</span> <span class="number">0x0080</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_NOSIGPIPE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0800</span>; <span class="comment">// different value!</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_OOBINLINE</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0100</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVBUF</span>: <span class="ident">c_int</span>              <span class="op">=</span> <span class="number">0x1002</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVLOWAT</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1004</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDLOWAT</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1003</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_RCVTIMEO</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1006</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDTIMEO</span>: <span class="ident">c_int</span>            <span class="op">=</span> <span class="number">0x1005</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_REUSEADDR</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0004</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_REUSEPORT</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0200</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_SNDBUF</span>: <span class="ident">c_int</span>              <span class="op">=</span> <span class="number">0x1001</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TIMESTAMP</span>: <span class="ident">c_int</span>           <span class="op">=</span> <span class="number">0x0400</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SO_TYPE</span>: <span class="ident">c_int</span>                <span class="op">=</span> <span class="number">0x1008</span>;
 
-    <span class='comment'>// Socket options for TCP sockets</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_NODELAY</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_MAXSEG</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>TCP_KEEPIDLE</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x100</span>;
+    <span class="comment">// Socket options for TCP sockets</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_NODELAY</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_MAXSEG</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TCP_KEEPIDLE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x100</span>;
 
-    <span class='comment'>// Socket options for the IP layer of the socket</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_IF</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>9</span>;
+    <span class="comment">// Socket options for the IP layer of the socket</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_IF</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">9</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>IpMulticastTtl</span> <span class='op'>=</span> <span class='ident'>uint8_t</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">IpMulticastTtl</span> <span class="op">=</span> <span class="ident">uint8_t</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_TTL</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>10</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_MULTICAST_LOOP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>11</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_ADD_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>12</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IP_DROP_MEMBERSHIP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>13</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPV6_JOIN_GROUP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>IPV6_JOIN_GROUP</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>IPV6_LEAVE_GROUP</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>IPV6_LEAVE_GROUP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_TTL</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">10</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_MULTICAST_LOOP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">11</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_ADD_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">12</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IP_DROP_MEMBERSHIP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">13</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPV6_JOIN_GROUP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">IPV6_JOIN_GROUP</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IPV6_LEAVE_GROUP</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">IPV6_LEAVE_GROUP</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='ident'>u32</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">InAddrT</span> <span class="op">=</span> <span class="ident">u32</span>;
 
-    <span class='comment'>// Declarations of special addresses</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_ANY</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_NONE</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0xffffffff</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>INADDR_BROADCAST</span>: <span class='ident'>InAddrT</span> <span class='op'>=</span> <span class='number'>0xffffffff</span>;
+    <span class="comment">// Declarations of special addresses</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_ANY</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_NONE</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0xffffffff</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INADDR_BROADCAST</span>: <span class="ident">InAddrT</span> <span class="op">=</span> <span class="number">0xffffffff</span>;
 
-    <span class='comment'>// Flags for send/recv and their relatives</span>
-    <span class='macro'>bitflags</span><span class='macro'>!</span>{
-        <span class='ident'>flags</span> <span class='ident'>MsgFlags</span> : <span class='ident'>libc</span>::<span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>MSG_OOB</span>      <span class='op'>=</span> <span class='number'>0x01</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_PEEK</span>     <span class='op'>=</span> <span class='number'>0x02</span>,
-            <span class='kw'>const</span> <span class='ident'>MSG_DONTWAIT</span> <span class='op'>=</span> <span class='number'>0x80</span>,
+    <span class="comment">// Flags for send/recv and their relatives</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>{
+        <span class="ident">flags</span> <span class="ident">MsgFlags</span> : <span class="ident">libc</span>::<span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">MSG_OOB</span>      <span class="op">=</span> <span class="number">0x01</span>,
+            <span class="kw">const</span> <span class="ident">MSG_PEEK</span>     <span class="op">=</span> <span class="number">0x02</span>,
+            <span class="kw">const</span> <span class="ident">MSG_DONTWAIT</span> <span class="op">=</span> <span class="number">0x80</span>,
         }
     }
 
-    <span class='comment'>// shutdown flags</span>
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_RD</span>: <span class='ident'>c_int</span>   <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_WR</span>: <span class='ident'>c_int</span>   <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SHUT_RDWR</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
+    <span class="comment">// shutdown flags</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_RD</span>: <span class="ident">c_int</span>   <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_WR</span>: <span class="ident">c_int</span>   <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SHUT_RDWR</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>nixtest</span>::{<span class='ident'>assert_const_eq</span>,<span class='ident'>get_int_const</span>,<span class='ident'>GetConst</span>};
-    <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">nixtest</span>::{<span class="ident">assert_const_eq</span>,<span class="ident">get_int_const</span>,<span class="ident">GetConst</span>};
+    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_char</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
-    <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>MsgFlags</span> {
-        <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-            <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>bits</span>())
+    <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MsgFlags</span> {
+        <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">bits</span>())
         }
     }
 
-    <span class='kw'>impl</span> <span class='ident'>GetConst</span> <span class='kw'>for</span> <span class='ident'>MsgFlags</span> {
-        <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>get_const</span>(<span class='ident'>name</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>) <span class='op'>-&gt;</span> <span class='ident'>MsgFlags</span> {
-            <span class='ident'>MsgFlags</span>::<span class='ident'>from_bits_truncate</span>(<span class='ident'>get_int_const</span>(<span class='ident'>name</span>))
+    <span class="kw">impl</span> <span class="ident">GetConst</span> <span class="kw">for</span> <span class="ident">MsgFlags</span> {
+        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">get_const</span>(<span class="ident">name</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) <span class="op">-&gt;</span> <span class="ident">MsgFlags</span> {
+            <span class="ident">MsgFlags</span>::<span class="ident">from_bits_truncate</span>(<span class="ident">get_int_const</span>(<span class="ident">name</span>))
         }
     }
 
-    <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>check_const</span> {
-        ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>konst</span>:<span class='ident'>ident</span>),<span class='op'>+</span>) <span class='op'>=&gt;</span> {{
-            $(<span class='ident'>assert_const_eq</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>konst</span>), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>konst</span>);)<span class='op'>+</span>
+    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">check_const</span> {
+        ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">konst</span>:<span class="ident">ident</span>),<span class="op">+</span>) <span class="op">=&gt;</span> {{
+            $(<span class="ident">assert_const_eq</span>(<span class="macro">stringify</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">konst</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">konst</span>);)<span class="op">+</span>
         }};
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_const_values</span>() {
-        <span class='macro'>check_const</span><span class='macro'>!</span>(
-            <span class='ident'>AF_UNIX</span>,
-            <span class='ident'>AF_LOCAL</span>,
-            <span class='ident'>AF_INET</span>,
-            <span class='ident'>AF_INET6</span>,
-            <span class='ident'>SOCK_STREAM</span>,
-            <span class='ident'>SOCK_DGRAM</span>,
-            <span class='ident'>SOCK_SEQPACKET</span>,
-            <span class='ident'>SOCK_RAW</span>,
-            <span class='ident'>SOCK_RDM</span>,
-            <span class='ident'>SOL_SOCKET</span>,
-            <span class='ident'>IPPROTO_IP</span>,
-            <span class='ident'>IPPROTO_IPV6</span>,
-            <span class='ident'>IPPROTO_TCP</span>,
-            <span class='ident'>IPPROTO_UDP</span>,
-            <span class='ident'>SO_ACCEPTCONN</span>,
-            <span class='ident'>SO_BROADCAST</span>,
-            <span class='ident'>SO_DEBUG</span>,
-            <span class='ident'>SO_ERROR</span>,
-            <span class='ident'>SO_DONTROUTE</span>,
-            <span class='ident'>SO_KEEPALIVE</span>,
-            <span class='ident'>SO_LINGER</span>,
-            <span class='ident'>SO_OOBINLINE</span>,
-            <span class='ident'>SO_RCVBUF</span>,
-            <span class='ident'>SO_RCVLOWAT</span>,
-            <span class='ident'>SO_SNDLOWAT</span>,
-            <span class='ident'>SO_RCVTIMEO</span>,
-            <span class='ident'>SO_SNDTIMEO</span>,
-            <span class='ident'>SO_REUSEADDR</span>,
-            <span class='comment'>// SO_REUSEPORT,</span>
-            <span class='ident'>SO_SNDBUF</span>,
-            <span class='ident'>SO_TIMESTAMP</span>,
-            <span class='ident'>SO_TYPE</span>,
-            <span class='ident'>TCP_NODELAY</span>,
-            <span class='ident'>TCP_MAXSEG</span>,
-            <span class='ident'>IP_MULTICAST_IF</span>,
-            <span class='ident'>IP_MULTICAST_TTL</span>,
-            <span class='ident'>IP_MULTICAST_LOOP</span>,
-            <span class='ident'>IP_ADD_MEMBERSHIP</span>,
-            <span class='ident'>IP_DROP_MEMBERSHIP</span>,
-            <span class='ident'>INADDR_ANY</span>,
-            <span class='ident'>INADDR_NONE</span>,
-            <span class='ident'>INADDR_BROADCAST</span>,
-            <span class='ident'>MSG_OOB</span>,
-            <span class='ident'>MSG_PEEK</span>,
-            <span class='ident'>MSG_DONTWAIT</span>,
-            <span class='ident'>MSG_EOR</span>,
-            <span class='ident'>MSG_TRUNC</span>,
-            <span class='ident'>MSG_CTRUNC</span>,
-            <span class='ident'>SHUT_RD</span>,
-            <span class='ident'>SHUT_WR</span>,
-            <span class='ident'>SHUT_RDWR</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_const_values</span>() {
+        <span class="macro">check_const</span><span class="macro">!</span>(
+            <span class="ident">AF_UNIX</span>,
+            <span class="ident">AF_LOCAL</span>,
+            <span class="ident">AF_INET</span>,
+            <span class="ident">AF_INET6</span>,
+            <span class="ident">SOCK_STREAM</span>,
+            <span class="ident">SOCK_DGRAM</span>,
+            <span class="ident">SOCK_SEQPACKET</span>,
+            <span class="ident">SOCK_RAW</span>,
+            <span class="ident">SOCK_RDM</span>,
+            <span class="ident">SOL_SOCKET</span>,
+            <span class="ident">IPPROTO_IP</span>,
+            <span class="ident">IPPROTO_IPV6</span>,
+            <span class="ident">IPPROTO_TCP</span>,
+            <span class="ident">IPPROTO_UDP</span>,
+            <span class="ident">SO_ACCEPTCONN</span>,
+            <span class="ident">SO_BROADCAST</span>,
+            <span class="ident">SO_DEBUG</span>,
+            <span class="ident">SO_ERROR</span>,
+            <span class="ident">SO_DONTROUTE</span>,
+            <span class="ident">SO_KEEPALIVE</span>,
+            <span class="ident">SO_LINGER</span>,
+            <span class="ident">SO_OOBINLINE</span>,
+            <span class="ident">SO_RCVBUF</span>,
+            <span class="ident">SO_RCVLOWAT</span>,
+            <span class="ident">SO_SNDLOWAT</span>,
+            <span class="ident">SO_RCVTIMEO</span>,
+            <span class="ident">SO_SNDTIMEO</span>,
+            <span class="ident">SO_REUSEADDR</span>,
+            <span class="comment">// SO_REUSEPORT,</span>
+            <span class="ident">SO_SNDBUF</span>,
+            <span class="ident">SO_TIMESTAMP</span>,
+            <span class="ident">SO_TYPE</span>,
+            <span class="ident">TCP_NODELAY</span>,
+            <span class="ident">TCP_MAXSEG</span>,
+            <span class="ident">IP_MULTICAST_IF</span>,
+            <span class="ident">IP_MULTICAST_TTL</span>,
+            <span class="ident">IP_MULTICAST_LOOP</span>,
+            <span class="ident">IP_ADD_MEMBERSHIP</span>,
+            <span class="ident">IP_DROP_MEMBERSHIP</span>,
+            <span class="ident">INADDR_ANY</span>,
+            <span class="ident">INADDR_NONE</span>,
+            <span class="ident">INADDR_BROADCAST</span>,
+            <span class="ident">MSG_OOB</span>,
+            <span class="ident">MSG_PEEK</span>,
+            <span class="ident">MSG_DONTWAIT</span>,
+            <span class="ident">MSG_EOR</span>,
+            <span class="ident">MSG_TRUNC</span>,
+            <span class="ident">MSG_CTRUNC</span>,
+            <span class="ident">SHUT_RD</span>,
+            <span class="ident">SHUT_WR</span>,
+            <span class="ident">SHUT_RDWR</span>
             );
 
 
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_linux_consts</span>() {
-        <span class='comment'>// TODO Figure out how to test new constants</span>
-        <span class='macro'>check_const</span><span class='macro'>!</span>(
-            <span class='ident'>SOL_IP</span>,
-            <span class='ident'>SOL_TCP</span>,
-            <span class='ident'>SOL_UDP</span>,
-            <span class='ident'>SOL_IPV6</span>,
-            <span class='ident'>SO_BINDTODEVICE</span>,
-            <span class='ident'>SO_BSDCOMPAT</span>,
-            <span class='comment'>// SO_DOMAIN,</span>
-            <span class='comment'>// SO_MARK,</span>
-            <span class='ident'>TCP_CORK</span>,
-            <span class='comment'>// SO_BUSY_POLL,</span>
-            <span class='comment'>// SO_RXQ_OVFL,</span>
-            <span class='ident'>SO_PASSCRED</span>,
-            <span class='ident'>SO_PRIORITY</span>,
-            <span class='comment'>// SO_PROTOCOL,</span>
-            <span class='ident'>SO_RCVBUFFORCE</span>,
-            <span class='comment'>// SO_PEEK_OFF,</span>
-            <span class='ident'>SO_PEERCRED</span>,
-            <span class='ident'>SO_SNDBUFFORCE</span>,
-            <span class='ident'>MSG_ERRQUEUE</span>);
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_linux_consts</span>() {
+        <span class="comment">// TODO Figure out how to test new constants</span>
+        <span class="macro">check_const</span><span class="macro">!</span>(
+            <span class="ident">SOL_IP</span>,
+            <span class="ident">SOL_TCP</span>,
+            <span class="ident">SOL_UDP</span>,
+            <span class="ident">SOL_IPV6</span>,
+            <span class="ident">SO_BINDTODEVICE</span>,
+            <span class="ident">SO_BSDCOMPAT</span>,
+            <span class="comment">// SO_DOMAIN,</span>
+            <span class="comment">// SO_MARK,</span>
+            <span class="ident">TCP_CORK</span>,
+            <span class="comment">// SO_BUSY_POLL,</span>
+            <span class="comment">// SO_RXQ_OVFL,</span>
+            <span class="ident">SO_PASSCRED</span>,
+            <span class="ident">SO_PRIORITY</span>,
+            <span class="comment">// SO_PROTOCOL,</span>
+            <span class="ident">SO_RCVBUFFORCE</span>,
+            <span class="comment">// SO_PEEK_OFF,</span>
+            <span class="ident">SO_PEERCRED</span>,
+            <span class="ident">SO_SNDBUFFORCE</span>,
+            <span class="ident">MSG_ERRQUEUE</span>);
     }
 }
 </pre>

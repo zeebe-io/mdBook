@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -182,143 +182,143 @@
 <span id="137">137</span>
 <span id="138">138</span>
 <span id="139">139</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>Component</span>};
-<span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
-<span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>middleware</span>::<span class='ident'>Handler</span>;
-<span class='kw'>use</span> <span class='ident'>iron</span>::{<span class='ident'>status</span>, <span class='ident'>Url</span>};
-<span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>typemap</span>;
-<span class='kw'>use</span> <span class='ident'>sequence_trie</span>::<span class='ident'>SequenceTrie</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">Component</span>};
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">middleware</span>::<span class="ident">Handler</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::{<span class="ident">status</span>, <span class="ident">Url</span>};
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">typemap</span>;
+<span class="kw">use</span> <span class="ident">sequence_trie</span>::<span class="ident">SequenceTrie</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
-<span class='doccomment'>/// Exposes the original, unmodified path to be stored in `Request::extensions`.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>OriginalUrl</span>;
-<span class='kw'>impl</span> <span class='ident'>typemap</span>::<span class='ident'>Key</span> <span class='kw'>for</span> <span class='ident'>OriginalUrl</span> { <span class='kw'>type</span> <span class='ident'>Value</span> <span class='op'>=</span> <span class='ident'>Url</span>; }
+<span class="doccomment">/// Exposes the original, unmodified path to be stored in `Request::extensions`.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OriginalUrl</span>;
+<span class="kw">impl</span> <span class="ident">typemap</span>::<span class="ident">Key</span> <span class="kw">for</span> <span class="ident">OriginalUrl</span> { <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Url</span>; }
 
-<span class='doccomment'>/// `Mount` is a simple mounting middleware.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Mounting allows you to install a handler on a route and have it receive requests as if they</span>
-<span class='doccomment'>/// are relative to that route. For example, a handler mounted on `/foo/` will receive</span>
-<span class='doccomment'>/// requests like `/foo/bar` as if they are just `/bar`. Iron&#39;s mounting middleware allows</span>
-<span class='doccomment'>/// you to specify multiple mountings using one middleware instance. Requests that pass through</span>
-<span class='doccomment'>/// the mounting middleware are passed along to the mounted handler that best matches the request&#39;s</span>
-<span class='doccomment'>/// path. `Request::url` is modified so that requests appear to be relative to the mounted handler&#39;s route.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Mounted handlers may also access the *original* URL by requesting the `OriginalUrl` key</span>
-<span class='doccomment'>/// from `Request::extensions`.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Mount</span> {
-    <span class='ident'>inner</span>: <span class='ident'>SequenceTrie</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Match</span><span class='op'>&gt;</span>
+<span class="doccomment">/// `Mount` is a simple mounting middleware.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Mounting allows you to install a handler on a route and have it receive requests as if they</span>
+<span class="doccomment">/// are relative to that route. For example, a handler mounted on `/foo/` will receive</span>
+<span class="doccomment">/// requests like `/foo/bar` as if they are just `/bar`. Iron&#39;s mounting middleware allows</span>
+<span class="doccomment">/// you to specify multiple mountings using one middleware instance. Requests that pass through</span>
+<span class="doccomment">/// the mounting middleware are passed along to the mounted handler that best matches the request&#39;s</span>
+<span class="doccomment">/// path. `Request::url` is modified so that requests appear to be relative to the mounted handler&#39;s route.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Mounted handlers may also access the *original* URL by requesting the `OriginalUrl` key</span>
+<span class="doccomment">/// from `Request::extensions`.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Mount</span> {
+    <span class="ident">inner</span>: <span class="ident">SequenceTrie</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Match</span><span class="op">&gt;</span>
 }
 
-<span class='kw'>struct</span> <span class='ident'>Match</span> {
-    <span class='ident'>handler</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span>,
-    <span class='ident'>length</span>: <span class='ident'>usize</span>
+<span class="kw">struct</span> <span class="ident">Match</span> {
+    <span class="ident">handler</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span>,
+    <span class="ident">length</span>: <span class="ident">usize</span>
 }
 
-<span class='doccomment'>/// The error returned by `Mount` when a request doesn&#39;t match any mounted handlers.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>NoMatch</span>;
+<span class="doccomment">/// The error returned by `Mount` when a request doesn&#39;t match any mounted handlers.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NoMatch</span>;
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>NoMatch</span> {
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> { <span class='string'>&quot;No Match&quot;</span> }
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">NoMatch</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> { <span class="string">&quot;No Match&quot;</span> }
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>NoMatch</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='ident'>f</span>.<span class='ident'>write_str</span>(<span class='self'>self</span>.<span class='ident'>description</span>())
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">NoMatch</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="self">self</span>.<span class="ident">description</span>())
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Mount</span> {
-    <span class='doccomment'>/// Creates a new instance of `Mount`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Mount</span> {
-        <span class='ident'>Mount</span> {
-            <span class='ident'>inner</span>: <span class='ident'>SequenceTrie</span>::<span class='ident'>new</span>()
+<span class="kw">impl</span> <span class="ident">Mount</span> {
+    <span class="doccomment">/// Creates a new instance of `Mount`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Mount</span> {
+        <span class="ident">Mount</span> {
+            <span class="ident">inner</span>: <span class="ident">SequenceTrie</span>::<span class="ident">new</span>()
         }
     }
 
-    <span class='doccomment'>/// Mounts a given `Handler` onto a route.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This method may be called multiple times with different routes.</span>
-    <span class='doccomment'>/// For a given request, the *most specific* handler will be selected.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Existing handlers on the same route will be overwritten.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mount</span><span class='op'>&lt;</span><span class='ident'>H</span>: <span class='ident'>Handler</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>route</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>handler</span>: <span class='ident'>H</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Mount</span> {
-        <span class='comment'>// Parse the route into a list of strings. The unwrap is safe because strs are UTF-8.</span>
-        <span class='kw'>let</span> <span class='ident'>key</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='ident'>route</span>).<span class='ident'>components</span>().<span class='ident'>flat_map</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span>
-            <span class='kw'>match</span> <span class='ident'>c</span> {
-                <span class='ident'>Component</span>::<span class='ident'>RootDir</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
-                <span class='ident'>c</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>c</span>.<span class='ident'>as_os_str</span>().<span class='ident'>to_str</span>().<span class='ident'>unwrap</span>())
+    <span class="doccomment">/// Mounts a given `Handler` onto a route.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method may be called multiple times with different routes.</span>
+    <span class="doccomment">/// For a given request, the *most specific* handler will be selected.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Existing handlers on the same route will be overwritten.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mount</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Handler</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">route</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">handler</span>: <span class="ident">H</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Mount</span> {
+        <span class="comment">// Parse the route into a list of strings. The unwrap is safe because strs are UTF-8.</span>
+        <span class="kw">let</span> <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">route</span>).<span class="ident">components</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span>
+            <span class="kw">match</span> <span class="ident">c</span> {
+                <span class="ident">Component</span>::<span class="ident">RootDir</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+                <span class="ident">c</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>.<span class="ident">as_os_str</span>().<span class="ident">to_str</span>().<span class="ident">unwrap</span>())
             }
-        ).<span class='ident'>collect</span>();
+        ).<span class="ident">collect</span>();
 
-        <span class='comment'>// Insert a match struct into the trie.</span>
-        <span class='kw'>let</span> <span class='ident'>match_length</span> <span class='op'>=</span> <span class='ident'>key</span>.<span class='ident'>len</span>();
-        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>insert</span>(<span class='ident'>key</span>, <span class='ident'>Match</span> {
-            <span class='ident'>handler</span>: <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>handler</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Handler</span><span class='op'>&gt;</span>,
-            <span class='ident'>length</span>: <span class='ident'>match_length</span>,
+        <span class="comment">// Insert a match struct into the trie.</span>
+        <span class="kw">let</span> <span class="ident">match_length</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">len</span>();
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">Match</span> {
+            <span class="ident">handler</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">handler</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Handler</span><span class="op">&gt;</span>,
+            <span class="ident">length</span>: <span class="ident">match_length</span>,
         });
-        <span class='self'>self</span>
+        <span class="self">self</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>Mount</span> {
-    <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Find the matching handler.</span>
-        <span class='kw'>let</span> <span class='ident'>matched</span> <span class='op'>=</span> {
-            <span class='comment'>// Extract the request path.</span>
-            <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>req</span>.<span class='ident'>url</span>.<span class='ident'>path</span>();
+<span class="kw">impl</span> <span class="ident">Handler</span> <span class="kw">for</span> <span class="ident">Mount</span> {
+    <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="comment">// Find the matching handler.</span>
+        <span class="kw">let</span> <span class="ident">matched</span> <span class="op">=</span> {
+            <span class="comment">// Extract the request path.</span>
+            <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">url</span>.<span class="ident">path</span>();
 
-            <span class='comment'>// If present, remove the trailing empty string (which represents a trailing slash).</span>
-            <span class='comment'>// If it isn&#39;t removed the path will never match anything, because</span>
-            <span class='comment'>// Path::str_components ignores trailing slashes and will never create routes</span>
-            <span class='comment'>// ending in &quot;&quot;.</span>
-            <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>path</span>.<span class='ident'>last</span>() {
-                <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='kw'>if</span> <span class='ident'>s</span>.<span class='ident'>is_empty</span>() <span class='op'>=&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>path</span>[..<span class='ident'>path</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>],
-                _ <span class='op'>=&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>path</span>
+            <span class="comment">// If present, remove the trailing empty string (which represents a trailing slash).</span>
+            <span class="comment">// If it isn&#39;t removed the path will never match anything, because</span>
+            <span class="comment">// Path::str_components ignores trailing slashes and will never create routes</span>
+            <span class="comment">// ending in &quot;&quot;.</span>
+            <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">path</span>.<span class="ident">last</span>() {
+                <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">is_empty</span>() <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">path</span>[..<span class="ident">path</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>],
+                _ <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">path</span>
             };
 
-            <span class='kw'>let</span> <span class='ident'>key</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>key</span>.<span class='ident'>into_iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='kw-2'>*</span><span class='ident'>s</span>)).<span class='ident'>collect</span>();
+            <span class="kw">let</span> <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">String</span>::<span class="ident">from</span>(<span class="kw-2">*</span><span class="ident">s</span>)).<span class="ident">collect</span>();
 
-            <span class='comment'>// Search the Trie for the nearest most specific match.</span>
-            <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>get_ancestor</span>(<span class='kw-2'>&amp;</span><span class='ident'>key</span>) {
-                <span class='prelude-val'>Some</span>(<span class='ident'>matched</span>) <span class='op'>=&gt;</span> <span class='ident'>matched</span>,
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>IronError</span>::<span class='ident'>new</span>(<span class='ident'>NoMatch</span>, <span class='ident'>status</span>::<span class='ident'>NotFound</span>))
+            <span class="comment">// Search the Trie for the nearest most specific match.</span>
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">get_ancestor</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>) {
+                <span class="prelude-val">Some</span>(<span class="ident">matched</span>) <span class="op">=&gt;</span> <span class="ident">matched</span>,
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">IronError</span>::<span class="ident">new</span>(<span class="ident">NoMatch</span>, <span class="ident">status</span>::<span class="ident">NotFound</span>))
             }
         };
 
-        <span class='comment'>// We have a match, so fire off the child.</span>
-        <span class='comment'>// If another mount middleware hasn&#39;t already, insert the unmodified url</span>
-        <span class='comment'>// into the extensions as the &quot;original url&quot;.</span>
-        <span class='kw'>let</span> <span class='ident'>is_outer_mount</span> <span class='op'>=</span> <span class='op'>!</span><span class='ident'>req</span>.<span class='ident'>extensions</span>.<span class='ident'>contains</span>::<span class='op'>&lt;</span><span class='ident'>OriginalUrl</span><span class='op'>&gt;</span>();
-        <span class='kw'>if</span> <span class='ident'>is_outer_mount</span> {
-            <span class='ident'>req</span>.<span class='ident'>extensions</span>.<span class='ident'>insert</span>::<span class='op'>&lt;</span><span class='ident'>OriginalUrl</span><span class='op'>&gt;</span>(<span class='ident'>req</span>.<span class='ident'>url</span>.<span class='ident'>clone</span>());
+        <span class="comment">// We have a match, so fire off the child.</span>
+        <span class="comment">// If another mount middleware hasn&#39;t already, insert the unmodified url</span>
+        <span class="comment">// into the extensions as the &quot;original url&quot;.</span>
+        <span class="kw">let</span> <span class="ident">is_outer_mount</span> <span class="op">=</span> <span class="op">!</span><span class="ident">req</span>.<span class="ident">extensions</span>.<span class="ident">contains</span>::<span class="op">&lt;</span><span class="ident">OriginalUrl</span><span class="op">&gt;</span>();
+        <span class="kw">if</span> <span class="ident">is_outer_mount</span> {
+            <span class="ident">req</span>.<span class="ident">extensions</span>.<span class="ident">insert</span>::<span class="op">&lt;</span><span class="ident">OriginalUrl</span><span class="op">&gt;</span>(<span class="ident">req</span>.<span class="ident">url</span>.<span class="ident">clone</span>());
         }
 
-        <span class='comment'>// Remove the prefix from the request&#39;s path before passing it to the mounted handler.</span>
-        <span class='comment'>// If the prefix is entirely removed and no trailing slash was present, the new path</span>
-        <span class='comment'>// will be the empty list. For the purposes of redirection, conveying that the path</span>
-        <span class='comment'>// did not include a trailing slash is more important than providing a non-empty list.</span>
-        <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>req</span>.<span class='ident'>url</span>.<span class='ident'>path</span>()[<span class='ident'>matched</span>.<span class='ident'>length</span>..].<span class='ident'>join</span>(<span class='string'>&quot;/&quot;</span>);
-        <span class='ident'>req</span>.<span class='ident'>url</span>.<span class='ident'>as_mut</span>().<span class='ident'>set_path</span>(<span class='kw-2'>&amp;</span><span class='ident'>path</span>);
+        <span class="comment">// Remove the prefix from the request&#39;s path before passing it to the mounted handler.</span>
+        <span class="comment">// If the prefix is entirely removed and no trailing slash was present, the new path</span>
+        <span class="comment">// will be the empty list. For the purposes of redirection, conveying that the path</span>
+        <span class="comment">// did not include a trailing slash is more important than providing a non-empty list.</span>
+        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">url</span>.<span class="ident">path</span>()[<span class="ident">matched</span>.<span class="ident">length</span>..].<span class="ident">join</span>(<span class="string">&quot;/&quot;</span>);
+        <span class="ident">req</span>.<span class="ident">url</span>.<span class="ident">as_mut</span>().<span class="ident">set_path</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>);
 
-        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>matched</span>.<span class='ident'>handler</span>.<span class='ident'>handle</span>(<span class='ident'>req</span>);
+        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">matched</span>.<span class="ident">handler</span>.<span class="ident">handle</span>(<span class="ident">req</span>);
 
-        <span class='comment'>// Reverse the URL munging, for future middleware.</span>
-        <span class='ident'>req</span>.<span class='ident'>url</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>req</span>.<span class='ident'>extensions</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>OriginalUrl</span><span class='op'>&gt;</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>original</span>) <span class='op'>=&gt;</span> <span class='ident'>original</span>.<span class='ident'>clone</span>(),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;OriginalUrl unexpectedly removed from req.extensions.&quot;</span>)
+        <span class="comment">// Reverse the URL munging, for future middleware.</span>
+        <span class="ident">req</span>.<span class="ident">url</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">req</span>.<span class="ident">extensions</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">OriginalUrl</span><span class="op">&gt;</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">original</span>) <span class="op">=&gt;</span> <span class="ident">original</span>.<span class="ident">clone</span>(),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;OriginalUrl unexpectedly removed from req.extensions.&quot;</span>)
         };
 
-        <span class='comment'>// If this mount middleware is the outermost mount middleware,</span>
-        <span class='comment'>// remove the original url from the extensions map to prevent leakage.</span>
-        <span class='kw'>if</span> <span class='ident'>is_outer_mount</span> {
-            <span class='ident'>req</span>.<span class='ident'>extensions</span>.<span class='ident'>remove</span>::<span class='op'>&lt;</span><span class='ident'>OriginalUrl</span><span class='op'>&gt;</span>();
+        <span class="comment">// If this mount middleware is the outermost mount middleware,</span>
+        <span class="comment">// remove the original url from the extensions map to prevent leakage.</span>
+        <span class="kw">if</span> <span class="ident">is_outer_mount</span> {
+            <span class="ident">req</span>.<span class="ident">extensions</span>.<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">OriginalUrl</span><span class="op">&gt;</span>();
         }
 
-        <span class='ident'>res</span>
+        <span class="ident">res</span>
     }
 }
 

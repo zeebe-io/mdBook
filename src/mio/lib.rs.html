@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -225,187 +225,187 @@
 <span id="180">180</span>
 <span id="181">181</span>
 <span id="182">182</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! A fast, low-level IO library for Rust focusing on non-blocking APIs, event</span>
-<span class='doccomment'>//! notification, and other useful utilities for building high performance IO</span>
-<span class='doccomment'>//! apps.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Goals</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Fast - minimal overhead over the equivalent OS facilities (epoll, kqueue, etc...)</span>
-<span class='doccomment'>//! * Zero allocations</span>
-<span class='doccomment'>//! * A scalable readiness-based API, similar to epoll on Linux</span>
-<span class='doccomment'>//! * Design to allow for stack allocated buffers when possible (avoid double buffering).</span>
-<span class='doccomment'>//! * Provide utilities such as a timers, a notification channel, buffer abstractions, and a slab.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Usage</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Using mio starts by creating an [EventLoop](struct.EventLoop.html), which</span>
-<span class='doccomment'>//! handles receiving events from the OS and dispatching them to a supplied</span>
-<span class='doccomment'>//! [Handler](handler/trait.Handler.html).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Example</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use mio::*;</span>
-<span class='doccomment'>//! use mio::tcp::{TcpListener, TcpStream};</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Setup some tokens to allow us to identify which event is</span>
-<span class='doccomment'>//! // for which socket.</span>
-<span class='doccomment'>//! const SERVER: Token = Token(0);</span>
-<span class='doccomment'>//! const CLIENT: Token = Token(1);</span>
-<span class='doccomment'>//! #</span>
-<span class='doccomment'>//! # // level() isn&#39;t implemented on windows yet</span>
-<span class='doccomment'>//! # if cfg!(windows) { return }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let addr = &quot;127.0.0.1:13265&quot;.parse().unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Setup the server socket</span>
-<span class='doccomment'>//! let server = TcpListener::bind(&amp;addr).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Create an event loop</span>
-<span class='doccomment'>//! let mut event_loop = EventLoop::new().unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Start listening for incoming connections</span>
-<span class='doccomment'>//! event_loop.register(&amp;server, SERVER, EventSet::readable(),</span>
-<span class='doccomment'>//!                     PollOpt::edge()).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Setup the client socket</span>
-<span class='doccomment'>//! let sock = TcpStream::connect(&amp;addr).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Register the socket</span>
-<span class='doccomment'>//! event_loop.register(&amp;sock, CLIENT, EventSet::readable(),</span>
-<span class='doccomment'>//!                     PollOpt::edge()).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Define a handler to process the events</span>
-<span class='doccomment'>//! struct MyHandler(TcpListener);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl Handler for MyHandler {</span>
-<span class='doccomment'>//!     type Timeout = ();</span>
-<span class='doccomment'>//!     type Message = ();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     fn ready(&amp;mut self, event_loop: &amp;mut EventLoop&lt;MyHandler&gt;, token: Token, _: EventSet) {</span>
-<span class='doccomment'>//!         match token {</span>
-<span class='doccomment'>//!             SERVER =&gt; {</span>
-<span class='doccomment'>//!                 let MyHandler(ref mut server) = *self;</span>
-<span class='doccomment'>//!                 // Accept and drop the socket immediately, this will close</span>
-<span class='doccomment'>//!                 // the socket and notify the client of the EOF.</span>
-<span class='doccomment'>//!                 let _ = server.accept();</span>
-<span class='doccomment'>//!             }</span>
-<span class='doccomment'>//!             CLIENT =&gt; {</span>
-<span class='doccomment'>//!                 // The server just shuts down the socket, let&#39;s just</span>
-<span class='doccomment'>//!                 // shutdown the event loop</span>
-<span class='doccomment'>//!                 event_loop.shutdown();</span>
-<span class='doccomment'>//!             }</span>
-<span class='doccomment'>//!             _ =&gt; panic!(&quot;unexpected token&quot;),</span>
-<span class='doccomment'>//!         }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // Start handling events</span>
-<span class='doccomment'>//! event_loop.run(&amp;mut MyHandler(server)).unwrap();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! A fast, low-level IO library for Rust focusing on non-blocking APIs, event</span>
+<span class="doccomment">//! notification, and other useful utilities for building high performance IO</span>
+<span class="doccomment">//! apps.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Goals</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! * Fast - minimal overhead over the equivalent OS facilities (epoll, kqueue, etc...)</span>
+<span class="doccomment">//! * Zero allocations</span>
+<span class="doccomment">//! * A scalable readiness-based API, similar to epoll on Linux</span>
+<span class="doccomment">//! * Design to allow for stack allocated buffers when possible (avoid double buffering).</span>
+<span class="doccomment">//! * Provide utilities such as a timers, a notification channel, buffer abstractions, and a slab.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Usage</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Using mio starts by creating an [EventLoop](struct.EventLoop.html), which</span>
+<span class="doccomment">//! handles receiving events from the OS and dispatching them to a supplied</span>
+<span class="doccomment">//! [Handler](handler/trait.Handler.html).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Example</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use mio::*;</span>
+<span class="doccomment">//! use mio::tcp::{TcpListener, TcpStream};</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Setup some tokens to allow us to identify which event is</span>
+<span class="doccomment">//! // for which socket.</span>
+<span class="doccomment">//! const SERVER: Token = Token(0);</span>
+<span class="doccomment">//! const CLIENT: Token = Token(1);</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! # // level() isn&#39;t implemented on windows yet</span>
+<span class="doccomment">//! # if cfg!(windows) { return }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let addr = &quot;127.0.0.1:13265&quot;.parse().unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Setup the server socket</span>
+<span class="doccomment">//! let server = TcpListener::bind(&amp;addr).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Create an event loop</span>
+<span class="doccomment">//! let mut event_loop = EventLoop::new().unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Start listening for incoming connections</span>
+<span class="doccomment">//! event_loop.register(&amp;server, SERVER, EventSet::readable(),</span>
+<span class="doccomment">//!                     PollOpt::edge()).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Setup the client socket</span>
+<span class="doccomment">//! let sock = TcpStream::connect(&amp;addr).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Register the socket</span>
+<span class="doccomment">//! event_loop.register(&amp;sock, CLIENT, EventSet::readable(),</span>
+<span class="doccomment">//!                     PollOpt::edge()).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Define a handler to process the events</span>
+<span class="doccomment">//! struct MyHandler(TcpListener);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl Handler for MyHandler {</span>
+<span class="doccomment">//!     type Timeout = ();</span>
+<span class="doccomment">//!     type Message = ();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     fn ready(&amp;mut self, event_loop: &amp;mut EventLoop&lt;MyHandler&gt;, token: Token, _: EventSet) {</span>
+<span class="doccomment">//!         match token {</span>
+<span class="doccomment">//!             SERVER =&gt; {</span>
+<span class="doccomment">//!                 let MyHandler(ref mut server) = *self;</span>
+<span class="doccomment">//!                 // Accept and drop the socket immediately, this will close</span>
+<span class="doccomment">//!                 // the socket and notify the client of the EOF.</span>
+<span class="doccomment">//!                 let _ = server.accept();</span>
+<span class="doccomment">//!             }</span>
+<span class="doccomment">//!             CLIENT =&gt; {</span>
+<span class="doccomment">//!                 // The server just shuts down the socket, let&#39;s just</span>
+<span class="doccomment">//!                 // shutdown the event loop</span>
+<span class="doccomment">//!                 event_loop.shutdown();</span>
+<span class="doccomment">//!             }</span>
+<span class="doccomment">//!             _ =&gt; panic!(&quot;unexpected token&quot;),</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Start handling events</span>
+<span class="doccomment">//! event_loop.run(&amp;mut MyHandler(server)).unwrap();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;mio&quot;</span>]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>unix</span>, <span class='ident'>deny</span>(<span class='ident'>warnings</span>))]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">crate_name</span> <span class="op">=</span> <span class="string">&quot;mio&quot;</span>]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg_attr</span>(<span class="ident">unix</span>, <span class="ident">deny</span>(<span class="ident">warnings</span>))]</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>bytes</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slab</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bytes</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">slab</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>nix</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">nix</span>;
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>winapi</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>miow</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>net2</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">winapi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">miow</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">net2</span>;
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>env_logger</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">env_logger</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>util</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">util</span>;
 
-<span class='kw'>mod</span> <span class='ident'>event</span>;
-<span class='kw'>mod</span> <span class='ident'>event_loop</span>;
-<span class='kw'>mod</span> <span class='ident'>handler</span>;
-<span class='kw'>mod</span> <span class='ident'>io</span>;
-<span class='kw'>mod</span> <span class='ident'>net</span>;
-<span class='kw'>mod</span> <span class='ident'>notify</span>;
-<span class='kw'>mod</span> <span class='ident'>poll</span>;
-<span class='kw'>mod</span> <span class='ident'>sys</span>;
-<span class='kw'>mod</span> <span class='ident'>timer</span>;
-<span class='kw'>mod</span> <span class='ident'>token</span>;
+<span class="kw">mod</span> <span class="ident">event</span>;
+<span class="kw">mod</span> <span class="ident">event_loop</span>;
+<span class="kw">mod</span> <span class="ident">handler</span>;
+<span class="kw">mod</span> <span class="ident">io</span>;
+<span class="kw">mod</span> <span class="ident">net</span>;
+<span class="kw">mod</span> <span class="ident">notify</span>;
+<span class="kw">mod</span> <span class="ident">poll</span>;
+<span class="kw">mod</span> <span class="ident">sys</span>;
+<span class="kw">mod</span> <span class="ident">timer</span>;
+<span class="kw">mod</span> <span class="ident">token</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event</span>::{
-    <span class='ident'>PollOpt</span>,
-    <span class='ident'>EventSet</span>,
-    <span class='ident'>IoEvent</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event</span>::{
+    <span class="ident">PollOpt</span>,
+    <span class="ident">EventSet</span>,
+    <span class="ident">IoEvent</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>event_loop</span>::{
-    <span class='ident'>EventLoop</span>,
-    <span class='ident'>EventLoopConfig</span>,
-    <span class='ident'>Sender</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">event_loop</span>::{
+    <span class="ident">EventLoop</span>,
+    <span class="ident">EventLoopConfig</span>,
+    <span class="ident">Sender</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>handler</span>::{
-    <span class='ident'>Handler</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">handler</span>::{
+    <span class="ident">Handler</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>io</span>::{
-    <span class='ident'>TryRead</span>,
-    <span class='ident'>TryWrite</span>,
-    <span class='ident'>Evented</span>,
-    <span class='ident'>TryAccept</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">io</span>::{
+    <span class="ident">TryRead</span>,
+    <span class="ident">TryWrite</span>,
+    <span class="ident">Evented</span>,
+    <span class="ident">TryAccept</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>net</span>::{
-    <span class='ident'>tcp</span>,
-    <span class='ident'>udp</span>,
-    <span class='ident'>IpAddr</span>,
-    <span class='ident'>Ipv4Addr</span>,
-    <span class='ident'>Ipv6Addr</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">net</span>::{
+    <span class="ident">tcp</span>,
+    <span class="ident">udp</span>,
+    <span class="ident">IpAddr</span>,
+    <span class="ident">Ipv4Addr</span>,
+    <span class="ident">Ipv6Addr</span>,
 };
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>unix</span> {
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>net</span>::<span class='ident'>unix</span>::{
-        <span class='ident'>pipe</span>,
-        <span class='ident'>PipeReader</span>,
-        <span class='ident'>PipeWriter</span>,
-        <span class='ident'>UnixListener</span>,
-        <span class='ident'>UnixSocket</span>,
-        <span class='ident'>UnixStream</span>,
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">unix</span> {
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">net</span>::<span class="ident">unix</span>::{
+        <span class="ident">pipe</span>,
+        <span class="ident">PipeReader</span>,
+        <span class="ident">PipeWriter</span>,
+        <span class="ident">UnixListener</span>,
+        <span class="ident">UnixSocket</span>,
+        <span class="ident">UnixStream</span>,
     };
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>sys</span>::{
-        <span class='ident'>EventedFd</span>,
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sys</span>::{
+        <span class="ident">EventedFd</span>,
     };
 }
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>notify</span>::{
-    <span class='ident'>NotifyError</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">notify</span>::{
+    <span class="ident">NotifyError</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>poll</span>::{
-    <span class='ident'>Poll</span>,
-    <span class='ident'>Events</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">poll</span>::{
+    <span class="ident">Poll</span>,
+    <span class="ident">Events</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>timer</span>::{
-    <span class='ident'>Timeout</span>,
-    <span class='ident'>TimerError</span>,
-    <span class='ident'>TimerResult</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">timer</span>::{
+    <span class="ident">Timeout</span>,
+    <span class="ident">TimerError</span>,
+    <span class="ident">TimerResult</span>
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>token</span>::{
-    <span class='ident'>Token</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">token</span>::{
+    <span class="ident">Token</span>,
 };
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>Io</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>Selector</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sys</span>::<span class="ident">Io</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sys</span>::<span class="ident">Selector</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>prelude</span> {
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='kw'>super</span>::{
-        <span class='ident'>EventLoop</span>,
-        <span class='ident'>TryRead</span>,
-        <span class='ident'>TryWrite</span>,
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">prelude</span> {
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">super</span>::{
+        <span class="ident">EventLoop</span>,
+        <span class="ident">TryRead</span>,
+        <span class="ident">TryWrite</span>,
     };
 }
 </pre>

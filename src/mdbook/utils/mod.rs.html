@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -63,26 +63,26 @@
 <span id="18">18</span>
 <span id="19">19</span>
 <span id="20">20</span>
-</pre><pre class='rust '>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>fs</span>;
+</pre><pre class="rust ">
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">fs</span>;
 
-<span class='kw'>use</span> <span class='ident'>pulldown_cmark</span>::{<span class='ident'>Parser</span>, <span class='ident'>html</span>, <span class='ident'>Options</span>, <span class='ident'>OPTION_ENABLE_TABLES</span>, <span class='ident'>OPTION_ENABLE_FOOTNOTES</span>};
+<span class="kw">use</span> <span class="ident">pulldown_cmark</span>::{<span class="ident">Parser</span>, <span class="ident">html</span>, <span class="ident">Options</span>, <span class="ident">OPTION_ENABLE_TABLES</span>, <span class="ident">OPTION_ENABLE_FOOTNOTES</span>};
 
 
-<span class='doccomment'>///</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Wrapper around the pulldown-cmark parser and renderer to render markdown</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Wrapper around the pulldown-cmark parser and renderer to render markdown</span>
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>render_markdown</span>(<span class='ident'>text</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>with_capacity</span>(<span class='ident'>text</span>.<span class='ident'>len</span>() <span class='op'>*</span> <span class='number'>3</span> <span class='op'>/</span> <span class='number'>2</span>);
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render_markdown</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">with_capacity</span>(<span class="ident">text</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">3</span> <span class="op">/</span> <span class="number">2</span>);
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>opts</span> <span class='op'>=</span> <span class='ident'>Options</span>::<span class='ident'>empty</span>();
-    <span class='ident'>opts</span>.<span class='ident'>insert</span>(<span class='ident'>OPTION_ENABLE_TABLES</span>);
-    <span class='ident'>opts</span>.<span class='ident'>insert</span>(<span class='ident'>OPTION_ENABLE_FOOTNOTES</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">opts</span> <span class="op">=</span> <span class="ident">Options</span>::<span class="ident">empty</span>();
+    <span class="ident">opts</span>.<span class="ident">insert</span>(<span class="ident">OPTION_ENABLE_TABLES</span>);
+    <span class="ident">opts</span>.<span class="ident">insert</span>(<span class="ident">OPTION_ENABLE_FOOTNOTES</span>);
 
-    <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Parser</span>::<span class='ident'>new_ext</span>(<span class='ident'>text</span>, <span class='ident'>opts</span>);
-    <span class='ident'>html</span>::<span class='ident'>push_html</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>s</span>, <span class='ident'>p</span>);
-    <span class='ident'>s</span>
+    <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new_ext</span>(<span class="ident">text</span>, <span class="ident">opts</span>);
+    <span class="ident">html</span>::<span class="ident">push_html</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">s</span>, <span class="ident">p</span>);
+    <span class="ident">s</span>
 }
 </pre>
 </section>

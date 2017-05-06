@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -458,419 +458,419 @@
 <span id="413">413</span>
 <span id="414">414</span>
 <span id="415">415</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> {<span class='ident'>Errno</span>, <span class='prelude-ty'>Result</span>, <span class='ident'>NixPath</span>};
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_uint</span>};
-<span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>stat</span>::<span class='ident'>Mode</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::<span class='ident'>RawFd</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> {<span class="ident">Errno</span>, <span class="prelude-ty">Result</span>, <span class="ident">NixPath</span>};
+<span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_uint</span>};
+<span class="kw">use</span> <span class="ident">sys</span>::<span class="ident">stat</span>::<span class="ident">Mode</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">io</span>::<span class="ident">RawFd</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>use</span> <span class='ident'>sys</span>::<span class='ident'>uio</span>::<span class='ident'>IoVec</span>;  <span class='comment'>// For vmsplice</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>use</span> <span class='ident'>libc</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="kw">use</span> <span class="ident">sys</span>::<span class="ident">uio</span>::<span class="ident">IoVec</span>;  <span class="comment">// For vmsplice</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="kw">use</span> <span class="ident">libc</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ffi</span>::<span class='ident'>flock</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">consts</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ffi</span>::<span class="ident">flock</span>;
 
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>ffi</span> {
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>open</span>, <span class='ident'>fcntl</span>};
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>os</span>::<span class='kw-2'>*</span>;
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>flock</span> <span class='kw'>as</span> <span class='ident'>libc_flock</span>;
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>LOCK_SH</span>, <span class='ident'>LOCK_EX</span>, <span class='ident'>LOCK_NB</span>, <span class='ident'>LOCK_UN</span>};
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="kw">mod</span> <span class="ident">ffi</span> {
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">open</span>, <span class="ident">fcntl</span>};
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">os</span>::<span class="kw-2">*</span>;
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">flock</span> <span class="kw">as</span> <span class="ident">libc_flock</span>;
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">LOCK_SH</span>, <span class="ident">LOCK_EX</span>, <span class="ident">LOCK_NB</span>, <span class="ident">LOCK_UN</span>};
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-    <span class='kw'>mod</span> <span class='ident'>os</span> {
-        <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_short</span>, <span class='ident'>off_t</span>, <span class='ident'>pid_t</span>};
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+    <span class="kw">mod</span> <span class="ident">os</span> {
+        <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_short</span>, <span class="ident">off_t</span>, <span class="ident">pid_t</span>};
 
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>Debug</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>flock</span> {
-            <span class='kw'>pub</span> <span class='ident'>l_type</span>: <span class='ident'>c_short</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_whence</span>: <span class='ident'>c_short</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_start</span>: <span class='ident'>off_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_len</span>: <span class='ident'>off_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_pid</span>: <span class='ident'>pid_t</span>,
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">flock</span> {
+            <span class="kw">pub</span> <span class="ident">l_type</span>: <span class="ident">c_short</span>,
+            <span class="kw">pub</span> <span class="ident">l_whence</span>: <span class="ident">c_short</span>,
+            <span class="kw">pub</span> <span class="ident">l_start</span>: <span class="ident">off_t</span>,
+            <span class="kw">pub</span> <span class="ident">l_len</span>: <span class="ident">off_t</span>,
+            <span class="kw">pub</span> <span class="ident">l_pid</span>: <span class="ident">pid_t</span>,
 
-            <span class='comment'>// not actually here, but brings in line with freebsd</span>
-            <span class='kw'>pub</span> <span class='ident'>l_sysid</span>: <span class='ident'>c_int</span>,
+            <span class="comment">// not actually here, but brings in line with freebsd</span>
+            <span class="kw">pub</span> <span class="ident">l_sysid</span>: <span class="ident">c_int</span>,
         }
 
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_DUPFD</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_DUPFD_CLOEXEC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1030</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETFD</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETFD</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETFL</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETFL</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETLK</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>6</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETLKW</span>:        <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>7</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETLK</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>5</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_DUPFD</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_DUPFD_CLOEXEC</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1030</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETFD</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETFD</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETFL</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETFL</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETLK</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">6</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETLKW</span>:        <span class="ident">c_int</span> <span class="op">=</span> <span class="number">7</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETLK</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">5</span>;
 
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_ADD_SEALS</span>:     <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1033</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GET_SEALS</span>:     <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1034</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_ADD_SEALS</span>:     <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1033</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GET_SEALS</span>:     <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1034</span>;
 
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SEAL_SEAL</span>:     <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SEAL_SHRINK</span>:   <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SEAL_GROW</span>:     <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SEAL_WRITE</span>:    <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>8</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SEAL_SEAL</span>:     <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SEAL_SHRINK</span>:   <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SEAL_GROW</span>:     <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SEAL_WRITE</span>:    <span class="ident">c_int</span> <span class="op">=</span> <span class="number">8</span>;
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>))]</span>
-    <span class='kw'>mod</span> <span class='ident'>os</span> {
-        <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_short</span>, <span class='ident'>off_t</span>, <span class='ident'>pid_t</span>};
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>))]</span>
+    <span class="kw">mod</span> <span class="ident">os</span> {
+        <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_int</span>, <span class="ident">c_short</span>, <span class="ident">off_t</span>, <span class="ident">pid_t</span>};
 
-        <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Default</span>, <span class='ident'>Debug</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>flock</span> {
-            <span class='kw'>pub</span> <span class='ident'>l_start</span>: <span class='ident'>off_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_len</span>: <span class='ident'>off_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_pid</span>: <span class='ident'>pid_t</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_type</span>: <span class='ident'>c_short</span>,
-            <span class='kw'>pub</span> <span class='ident'>l_whence</span>: <span class='ident'>c_short</span>,
+        <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">flock</span> {
+            <span class="kw">pub</span> <span class="ident">l_start</span>: <span class="ident">off_t</span>,
+            <span class="kw">pub</span> <span class="ident">l_len</span>: <span class="ident">off_t</span>,
+            <span class="kw">pub</span> <span class="ident">l_pid</span>: <span class="ident">pid_t</span>,
+            <span class="kw">pub</span> <span class="ident">l_type</span>: <span class="ident">c_short</span>,
+            <span class="kw">pub</span> <span class="ident">l_whence</span>: <span class="ident">c_short</span>,
 
-            <span class='comment'>// not actually here, but brings in line with freebsd</span>
-            <span class='kw'>pub</span> <span class='ident'>l_sysid</span>: <span class='ident'>c_int</span>,
+            <span class="comment">// not actually here, but brings in line with freebsd</span>
+            <span class="kw">pub</span> <span class="ident">l_sysid</span>: <span class="ident">c_int</span>,
         }
 
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_DUPFD</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)))]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_DUPFD_CLOEXEC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>67</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_DUPFD_CLOEXEC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>17</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_DUPFD_CLOEXEC</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>12</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETFD</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETFD</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETFL</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETFL</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETOWN</span>:        <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>5</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETOWN</span>:        <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>6</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETLK</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>7</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETLK</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>8</span>;
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETLKW</span>:        <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>9</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_DUPFD</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)))]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_DUPFD_CLOEXEC</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">67</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_DUPFD_CLOEXEC</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">17</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_DUPFD_CLOEXEC</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">12</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETFD</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETFD</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETFL</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETFL</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETOWN</span>:        <span class="ident">c_int</span> <span class="op">=</span> <span class="number">5</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETOWN</span>:        <span class="ident">c_int</span> <span class="op">=</span> <span class="number">6</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETLK</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">7</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETLK</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">8</span>;
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETLKW</span>:        <span class="ident">c_int</span> <span class="op">=</span> <span class="number">9</span>;
 
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_CLOSEM</span>:        <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>10</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_MAXFD</span>:         <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>11</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_GETNOSIGPIPE</span>:  <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>13</span>;
-        <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETNOSIGPIPE</span>:  <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>14</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_CLOSEM</span>:        <span class="ident">c_int</span> <span class="op">=</span> <span class="number">10</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_MAXFD</span>:         <span class="ident">c_int</span> <span class="op">=</span> <span class="number">11</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_GETNOSIGPIPE</span>:  <span class="ident">c_int</span> <span class="op">=</span> <span class="number">13</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">F_SETNOSIGPIPE</span>:  <span class="ident">c_int</span> <span class="op">=</span> <span class="number">14</span>;
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>open</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>NixPath</span><span class='op'>&gt;</span>(<span class='ident'>path</span>: <span class='kw-2'>&amp;</span><span class='ident'>P</span>, <span class='ident'>oflag</span>: <span class='ident'>OFlag</span>, <span class='ident'>mode</span>: <span class='ident'>Mode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>RawFd</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>fd</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>path</span>.<span class='ident'>with_nix_path</span>(<span class='op'>|</span><span class='ident'>cstr</span><span class='op'>|</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>open</span>(<span class='ident'>cstr</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>oflag</span>.<span class='ident'>bits</span>(), <span class='ident'>mode</span>.<span class='ident'>bits</span>() <span class='kw'>as</span> <span class='ident'>c_uint</span>) }
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">NixPath</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>, <span class="ident">oflag</span>: <span class="ident">OFlag</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RawFd</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">fd</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">path</span>.<span class="ident">with_nix_path</span>(<span class="op">|</span><span class="ident">cstr</span><span class="op">|</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">open</span>(<span class="ident">cstr</span>.<span class="ident">as_ptr</span>(), <span class="ident">oflag</span>.<span class="ident">bits</span>(), <span class="ident">mode</span>.<span class="ident">bits</span>() <span class="kw">as</span> <span class="ident">c_uint</span>) }
     }));
 
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>fd</span>)
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">fd</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FcntlArg</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>F_DUPFD</span>(<span class='ident'>RawFd</span>),
-    <span class='ident'>F_DUPFD_CLOEXEC</span>(<span class='ident'>RawFd</span>),
-    <span class='ident'>F_GETFD</span>,
-    <span class='ident'>F_SETFD</span>(<span class='ident'>FdFlag</span>), <span class='comment'>// FD_FLAGS</span>
-    <span class='ident'>F_GETFL</span>,
-    <span class='ident'>F_SETFL</span>(<span class='ident'>OFlag</span>), <span class='comment'>// O_NONBLOCK</span>
-    <span class='ident'>F_SETLK</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>flock</span>),
-    <span class='ident'>F_SETLKW</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>flock</span>),
-    <span class='ident'>F_GETLK</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>flock</span>),
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-    <span class='ident'>F_OFD_SETLK</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>flock</span>),
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-    <span class='ident'>F_OFD_SETLKW</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>flock</span>),
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-    <span class='ident'>F_OFD_GETLK</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>flock</span>),
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
-    <span class='ident'>F_ADD_SEALS</span>(<span class='ident'>SealFlag</span>),
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
-    <span class='ident'>F_GET_SEALS</span>,
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FcntlArg</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">F_DUPFD</span>(<span class="ident">RawFd</span>),
+    <span class="ident">F_DUPFD_CLOEXEC</span>(<span class="ident">RawFd</span>),
+    <span class="ident">F_GETFD</span>,
+    <span class="ident">F_SETFD</span>(<span class="ident">FdFlag</span>), <span class="comment">// FD_FLAGS</span>
+    <span class="ident">F_GETFL</span>,
+    <span class="ident">F_SETFL</span>(<span class="ident">OFlag</span>), <span class="comment">// O_NONBLOCK</span>
+    <span class="ident">F_SETLK</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">flock</span>),
+    <span class="ident">F_SETLKW</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">flock</span>),
+    <span class="ident">F_GETLK</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">flock</span>),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+    <span class="ident">F_OFD_SETLK</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">flock</span>),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+    <span class="ident">F_OFD_SETLKW</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">flock</span>),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+    <span class="ident">F_OFD_GETLK</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">flock</span>),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
+    <span class="ident">F_ADD_SEALS</span>(<span class="ident">SealFlag</span>),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
+    <span class="ident">F_GET_SEALS</span>,
 
-    <span class='comment'>// TODO: Rest of flags</span>
+    <span class="comment">// TODO: Rest of flags</span>
 }
 
-<span class='comment'>// TODO: Figure out how to handle value fcntl returns</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fcntl</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>arg</span>: <span class='ident'>FcntlArg</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_int</span><span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>FcntlArg</span>::<span class='kw-2'>*</span>;
+<span class="comment">// TODO: Figure out how to handle value fcntl returns</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fcntl</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">arg</span>: <span class="ident">FcntlArg</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">c_int</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="self">self</span>::<span class="ident">FcntlArg</span>::<span class="kw-2">*</span>;
 
-    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='kw'>match</span> <span class='ident'>arg</span> {
-            <span class='ident'>F_DUPFD</span>(<span class='ident'>rawfd</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_DUPFD</span>, <span class='ident'>rawfd</span>),
-            <span class='ident'>F_DUPFD_CLOEXEC</span>(<span class='ident'>rawfd</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_DUPFD_CLOEXEC</span>, <span class='ident'>rawfd</span>),
-            <span class='ident'>F_GETFD</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_GETFD</span>),
-            <span class='ident'>F_SETFD</span>(<span class='ident'>flag</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_SETFD</span>, <span class='ident'>flag</span>.<span class='ident'>bits</span>()),
-            <span class='ident'>F_GETFL</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_GETFL</span>),
-            <span class='ident'>F_SETFL</span>(<span class='ident'>flag</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_SETFL</span>, <span class='ident'>flag</span>.<span class='ident'>bits</span>()),
-            <span class='ident'>F_SETLK</span>(<span class='ident'>flock</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_SETLK</span>, <span class='ident'>flock</span>),
-            <span class='ident'>F_SETLKW</span>(<span class='ident'>flock</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_SETLKW</span>, <span class='ident'>flock</span>),
-            <span class='ident'>F_GETLK</span>(<span class='ident'>flock</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_GETLK</span>, <span class='ident'>flock</span>),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
-            <span class='ident'>F_ADD_SEALS</span>(<span class='ident'>flag</span>) <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_ADD_SEALS</span>, <span class='ident'>flag</span>.<span class='ident'>bits</span>()),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
-            <span class='ident'>F_GET_SEALS</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>fcntl</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>F_GET_SEALS</span>),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-            _ <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>()
+    <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+        <span class="kw">match</span> <span class="ident">arg</span> {
+            <span class="ident">F_DUPFD</span>(<span class="ident">rawfd</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_DUPFD</span>, <span class="ident">rawfd</span>),
+            <span class="ident">F_DUPFD_CLOEXEC</span>(<span class="ident">rawfd</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_DUPFD_CLOEXEC</span>, <span class="ident">rawfd</span>),
+            <span class="ident">F_GETFD</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_GETFD</span>),
+            <span class="ident">F_SETFD</span>(<span class="ident">flag</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_SETFD</span>, <span class="ident">flag</span>.<span class="ident">bits</span>()),
+            <span class="ident">F_GETFL</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_GETFL</span>),
+            <span class="ident">F_SETFL</span>(<span class="ident">flag</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_SETFL</span>, <span class="ident">flag</span>.<span class="ident">bits</span>()),
+            <span class="ident">F_SETLK</span>(<span class="ident">flock</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_SETLK</span>, <span class="ident">flock</span>),
+            <span class="ident">F_SETLKW</span>(<span class="ident">flock</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_SETLKW</span>, <span class="ident">flock</span>),
+            <span class="ident">F_GETLK</span>(<span class="ident">flock</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_GETLK</span>, <span class="ident">flock</span>),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
+            <span class="ident">F_ADD_SEALS</span>(<span class="ident">flag</span>) <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_ADD_SEALS</span>, <span class="ident">flag</span>.<span class="ident">bits</span>()),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
+            <span class="ident">F_GET_SEALS</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">fcntl</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">F_GET_SEALS</span>),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+            _ <span class="op">=&gt;</span> <span class="macro">unimplemented</span><span class="macro">!</span>()
         }
     };
 
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>)
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">res</span>)
 }
 
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FlockArg</span> {
-    <span class='ident'>LockShared</span>,
-    <span class='ident'>LockExclusive</span>,
-    <span class='ident'>Unlock</span>,
-    <span class='ident'>LockSharedNonblock</span>,
-    <span class='ident'>LockExclusiveNonblock</span>,
-    <span class='ident'>UnlockNonblock</span>,
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FlockArg</span> {
+    <span class="ident">LockShared</span>,
+    <span class="ident">LockExclusive</span>,
+    <span class="ident">Unlock</span>,
+    <span class="ident">LockSharedNonblock</span>,
+    <span class="ident">LockExclusiveNonblock</span>,
+    <span class="ident">UnlockNonblock</span>,
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>flock</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>arg</span>: <span class='ident'>FlockArg</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>FlockArg</span>::<span class='kw-2'>*</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flock</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">arg</span>: <span class="ident">FlockArg</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="self">self</span>::<span class="ident">FlockArg</span>::<span class="kw-2">*</span>;
 
-    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='kw'>match</span> <span class='ident'>arg</span> {
-            <span class='ident'>LockShared</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>libc_flock</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>LOCK_SH</span>),
-            <span class='ident'>LockExclusive</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>libc_flock</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>LOCK_EX</span>),
-            <span class='ident'>Unlock</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>libc_flock</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>LOCK_UN</span>),
-            <span class='ident'>LockSharedNonblock</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>libc_flock</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>LOCK_SH</span> <span class='op'>|</span> <span class='ident'>ffi</span>::<span class='ident'>LOCK_NB</span>),
-            <span class='ident'>LockExclusiveNonblock</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>libc_flock</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>LOCK_EX</span> <span class='op'>|</span> <span class='ident'>ffi</span>::<span class='ident'>LOCK_NB</span>),
-            <span class='ident'>UnlockNonblock</span> <span class='op'>=&gt;</span> <span class='ident'>ffi</span>::<span class='ident'>libc_flock</span>(<span class='ident'>fd</span>, <span class='ident'>ffi</span>::<span class='ident'>LOCK_UN</span> <span class='op'>|</span> <span class='ident'>ffi</span>::<span class='ident'>LOCK_NB</span>),
+    <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+        <span class="kw">match</span> <span class="ident">arg</span> {
+            <span class="ident">LockShared</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">libc_flock</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">LOCK_SH</span>),
+            <span class="ident">LockExclusive</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">libc_flock</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">LOCK_EX</span>),
+            <span class="ident">Unlock</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">libc_flock</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">LOCK_UN</span>),
+            <span class="ident">LockSharedNonblock</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">libc_flock</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">LOCK_SH</span> <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">LOCK_NB</span>),
+            <span class="ident">LockExclusiveNonblock</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">libc_flock</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">LOCK_EX</span> <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">LOCK_NB</span>),
+            <span class="ident">UnlockNonblock</span> <span class="op">=&gt;</span> <span class="ident">ffi</span>::<span class="ident">libc_flock</span>(<span class="ident">fd</span>, <span class="ident">ffi</span>::<span class="ident">LOCK_UN</span> <span class="op">|</span> <span class="ident">ffi</span>::<span class="ident">LOCK_NB</span>),
         }
     };
 
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>).<span class='ident'>map</span>(<span class='ident'>drop</span>)
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">res</span>).<span class="ident">map</span>(<span class="ident">drop</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>splice</span>(<span class='ident'>fd_in</span>: <span class='ident'>RawFd</span>, <span class='ident'>off_in</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>loff_t</span><span class='op'>&gt;</span>,
-          <span class='ident'>fd_out</span>: <span class='ident'>RawFd</span>, <span class='ident'>off_out</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>loff_t</span><span class='op'>&gt;</span>,
-          <span class='ident'>len</span>: <span class='ident'>usize</span>, <span class='ident'>flags</span>: <span class='ident'>SpliceFFlags</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-    <span class='kw'>let</span> <span class='ident'>off_in</span> <span class='op'>=</span> <span class='ident'>off_in</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>offset</span><span class='op'>|</span> <span class='ident'>offset</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _).<span class='ident'>unwrap_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
-    <span class='kw'>let</span> <span class='ident'>off_out</span> <span class='op'>=</span> <span class='ident'>off_out</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>offset</span><span class='op'>|</span> <span class='ident'>offset</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _).<span class='ident'>unwrap_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>());
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">splice</span>(<span class="ident">fd_in</span>: <span class="ident">RawFd</span>, <span class="ident">off_in</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">libc</span>::<span class="ident">loff_t</span><span class="op">&gt;</span>,
+          <span class="ident">fd_out</span>: <span class="ident">RawFd</span>, <span class="ident">off_out</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">libc</span>::<span class="ident">loff_t</span><span class="op">&gt;</span>,
+          <span class="ident">len</span>: <span class="ident">usize</span>, <span class="ident">flags</span>: <span class="ident">SpliceFFlags</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+    <span class="kw">let</span> <span class="ident">off_in</span> <span class="op">=</span> <span class="ident">off_in</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">offset</span><span class="op">|</span> <span class="ident">offset</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _).<span class="ident">unwrap_or</span>(<span class="ident">ptr</span>::<span class="ident">null_mut</span>());
+    <span class="kw">let</span> <span class="ident">off_out</span> <span class="op">=</span> <span class="ident">off_out</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">offset</span><span class="op">|</span> <span class="ident">offset</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _).<span class="ident">unwrap_or</span>(<span class="ident">ptr</span>::<span class="ident">null_mut</span>());
 
-    <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>libc</span>::<span class='ident'>splice</span>(<span class='ident'>fd_in</span>, <span class='ident'>off_in</span>, <span class='ident'>fd_out</span>, <span class='ident'>off_out</span>, <span class='ident'>len</span>, <span class='ident'>flags</span>.<span class='ident'>bits</span>()) };
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>ret</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
+    <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">libc</span>::<span class="ident">splice</span>(<span class="ident">fd_in</span>, <span class="ident">off_in</span>, <span class="ident">fd_out</span>, <span class="ident">off_out</span>, <span class="ident">len</span>, <span class="ident">flags</span>.<span class="ident">bits</span>()) };
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">ret</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">usize</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tee</span>(<span class='ident'>fd_in</span>: <span class='ident'>RawFd</span>, <span class='ident'>fd_out</span>: <span class='ident'>RawFd</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>, <span class='ident'>flags</span>: <span class='ident'>SpliceFFlags</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>libc</span>::<span class='ident'>tee</span>(<span class='ident'>fd_in</span>, <span class='ident'>fd_out</span>, <span class='ident'>len</span>, <span class='ident'>flags</span>.<span class='ident'>bits</span>()) };
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>ret</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tee</span>(<span class="ident">fd_in</span>: <span class="ident">RawFd</span>, <span class="ident">fd_out</span>: <span class="ident">RawFd</span>, <span class="ident">len</span>: <span class="ident">usize</span>, <span class="ident">flags</span>: <span class="ident">SpliceFFlags</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">libc</span>::<span class="ident">tee</span>(<span class="ident">fd_in</span>, <span class="ident">fd_out</span>, <span class="ident">len</span>, <span class="ident">flags</span>.<span class="ident">bits</span>()) };
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">ret</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">usize</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>vmsplice</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>, <span class='ident'>iov</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>IoVec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;</span>], <span class='ident'>flags</span>: <span class='ident'>SpliceFFlags</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>libc</span>::<span class='ident'>vmsplice</span>(<span class='ident'>fd</span>, <span class='ident'>iov</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>libc</span>::<span class='ident'>iovec</span>, <span class='ident'>iov</span>.<span class='ident'>len</span>(), <span class='ident'>flags</span>.<span class='ident'>bits</span>())
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vmsplice</span>(<span class="ident">fd</span>: <span class="ident">RawFd</span>, <span class="ident">iov</span>: <span class="kw-2">&amp;</span>[<span class="ident">IoVec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>], <span class="ident">flags</span>: <span class="ident">SpliceFFlags</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+        <span class="ident">libc</span>::<span class="ident">vmsplice</span>(<span class="ident">fd</span>, <span class="ident">iov</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">libc</span>::<span class="ident">iovec</span>, <span class="ident">iov</span>.<span class="ident">len</span>(), <span class="ident">flags</span>.<span class="ident">bits</span>())
     };
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>ret</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">ret</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">usize</span>)
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;android&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>consts</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='self'>self</span>, <span class='ident'>c_int</span>, <span class='ident'>c_uint</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;android&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">consts</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="self">self</span>, <span class="ident">c_int</span>, <span class="ident">c_uint</span>};
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span> {
-        <span class='ident'>flags</span> <span class='ident'>SpliceFFlags</span>: <span class='ident'>c_uint</span> {
-            <span class='kw'>const</span> <span class='ident'>SPLICE_F_MOVE</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>SPLICE_F_MOVE</span>,
-            <span class='kw'>const</span> <span class='ident'>SPLICE_F_NONBLOCK</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>SPLICE_F_NONBLOCK</span>,
-            <span class='kw'>const</span> <span class='ident'>SPLICE_F_MORE</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>SPLICE_F_MORE</span>,
-            <span class='kw'>const</span> <span class='ident'>SPLICE_F_GIFT</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>SPLICE_F_GIFT</span>,
+    <span class="macro">bitflags</span><span class="macro">!</span> {
+        <span class="ident">flags</span> <span class="ident">SpliceFFlags</span>: <span class="ident">c_uint</span> {
+            <span class="kw">const</span> <span class="ident">SPLICE_F_MOVE</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">SPLICE_F_MOVE</span>,
+            <span class="kw">const</span> <span class="ident">SPLICE_F_NONBLOCK</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">SPLICE_F_NONBLOCK</span>,
+            <span class="kw">const</span> <span class="ident">SPLICE_F_MORE</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">SPLICE_F_MORE</span>,
+            <span class="kw">const</span> <span class="ident">SPLICE_F_GIFT</span> <span class="op">=</span> <span class="ident">libc</span>::<span class="ident">SPLICE_F_GIFT</span>,
         }
     }
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>OFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>O_ACCMODE</span>   <span class='op'>=</span> <span class='number'>0o00000003</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDONLY</span>    <span class='op'>=</span> <span class='number'>0o00000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_WRONLY</span>    <span class='op'>=</span> <span class='number'>0o00000001</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDWR</span>      <span class='op'>=</span> <span class='number'>0o00000002</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CREAT</span>     <span class='op'>=</span> <span class='number'>0o00000100</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXCL</span>      <span class='op'>=</span> <span class='number'>0o00000200</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOCTTY</span>    <span class='op'>=</span> <span class='number'>0o00000400</span>,
-            <span class='kw'>const</span> <span class='ident'>O_TRUNC</span>     <span class='op'>=</span> <span class='number'>0o00001000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_APPEND</span>    <span class='op'>=</span> <span class='number'>0o00002000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NONBLOCK</span>  <span class='op'>=</span> <span class='number'>0o00004000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DSYNC</span>     <span class='op'>=</span> <span class='number'>0o00010000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECT</span>    <span class='op'>=</span> <span class='number'>0o00040000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_LARGEFILE</span> <span class='op'>=</span> <span class='number'>0o00100000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECTORY</span> <span class='op'>=</span> <span class='number'>0o00200000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOFOLLOW</span>  <span class='op'>=</span> <span class='number'>0o00400000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOATIME</span>   <span class='op'>=</span> <span class='number'>0o01000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CLOEXEC</span>   <span class='op'>=</span> <span class='number'>0o02000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SYNC</span>      <span class='op'>=</span> <span class='number'>0o04000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_PATH</span>      <span class='op'>=</span> <span class='number'>0o10000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_TMPFILE</span>   <span class='op'>=</span> <span class='number'>0o20000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NDELAY</span>    <span class='op'>=</span> <span class='ident'>O_NONBLOCK</span>.<span class='ident'>bits</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">OFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">O_ACCMODE</span>   <span class="op">=</span> <span class="number">0o00000003</span>,
+            <span class="kw">const</span> <span class="ident">O_RDONLY</span>    <span class="op">=</span> <span class="number">0o00000000</span>,
+            <span class="kw">const</span> <span class="ident">O_WRONLY</span>    <span class="op">=</span> <span class="number">0o00000001</span>,
+            <span class="kw">const</span> <span class="ident">O_RDWR</span>      <span class="op">=</span> <span class="number">0o00000002</span>,
+            <span class="kw">const</span> <span class="ident">O_CREAT</span>     <span class="op">=</span> <span class="number">0o00000100</span>,
+            <span class="kw">const</span> <span class="ident">O_EXCL</span>      <span class="op">=</span> <span class="number">0o00000200</span>,
+            <span class="kw">const</span> <span class="ident">O_NOCTTY</span>    <span class="op">=</span> <span class="number">0o00000400</span>,
+            <span class="kw">const</span> <span class="ident">O_TRUNC</span>     <span class="op">=</span> <span class="number">0o00001000</span>,
+            <span class="kw">const</span> <span class="ident">O_APPEND</span>    <span class="op">=</span> <span class="number">0o00002000</span>,
+            <span class="kw">const</span> <span class="ident">O_NONBLOCK</span>  <span class="op">=</span> <span class="number">0o00004000</span>,
+            <span class="kw">const</span> <span class="ident">O_DSYNC</span>     <span class="op">=</span> <span class="number">0o00010000</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECT</span>    <span class="op">=</span> <span class="number">0o00040000</span>,
+            <span class="kw">const</span> <span class="ident">O_LARGEFILE</span> <span class="op">=</span> <span class="number">0o00100000</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECTORY</span> <span class="op">=</span> <span class="number">0o00200000</span>,
+            <span class="kw">const</span> <span class="ident">O_NOFOLLOW</span>  <span class="op">=</span> <span class="number">0o00400000</span>,
+            <span class="kw">const</span> <span class="ident">O_NOATIME</span>   <span class="op">=</span> <span class="number">0o01000000</span>,
+            <span class="kw">const</span> <span class="ident">O_CLOEXEC</span>   <span class="op">=</span> <span class="number">0o02000000</span>,
+            <span class="kw">const</span> <span class="ident">O_SYNC</span>      <span class="op">=</span> <span class="number">0o04000000</span>,
+            <span class="kw">const</span> <span class="ident">O_PATH</span>      <span class="op">=</span> <span class="number">0o10000000</span>,
+            <span class="kw">const</span> <span class="ident">O_TMPFILE</span>   <span class="op">=</span> <span class="number">0o20000000</span>,
+            <span class="kw">const</span> <span class="ident">O_NDELAY</span>    <span class="op">=</span> <span class="ident">O_NONBLOCK</span>.<span class="ident">bits</span>
         }
     );
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>FdFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>FD_CLOEXEC</span> <span class='op'>=</span> <span class='number'>1</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">FdFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">FD_CLOEXEC</span> <span class="op">=</span> <span class="number">1</span>
         }
     );
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>SealFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>F_SEAL_SEAL</span> <span class='op'>=</span> <span class='number'>1</span>,
-            <span class='kw'>const</span> <span class='ident'>F_SEAL_SHRINK</span> <span class='op'>=</span> <span class='number'>2</span>,
-            <span class='kw'>const</span> <span class='ident'>F_SEAL_GROW</span> <span class='op'>=</span> <span class='number'>4</span>,
-            <span class='kw'>const</span> <span class='ident'>F_SEAL_WRITE</span> <span class='op'>=</span> <span class='number'>8</span>,
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">SealFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">F_SEAL_SEAL</span> <span class="op">=</span> <span class="number">1</span>,
+            <span class="kw">const</span> <span class="ident">F_SEAL_SHRINK</span> <span class="op">=</span> <span class="number">2</span>,
+            <span class="kw">const</span> <span class="ident">F_SEAL_GROW</span> <span class="op">=</span> <span class="number">4</span>,
+            <span class="kw">const</span> <span class="ident">F_SEAL_WRITE</span> <span class="op">=</span> <span class="number">8</span>,
         }
     );
 
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;ios&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>consts</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;ios&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">consts</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>OFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>O_ACCMODE</span>   <span class='op'>=</span> <span class='number'>0x0000003</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDONLY</span>    <span class='op'>=</span> <span class='number'>0x0000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_WRONLY</span>    <span class='op'>=</span> <span class='number'>0x0000001</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDWR</span>      <span class='op'>=</span> <span class='number'>0x0000002</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CREAT</span>     <span class='op'>=</span> <span class='number'>0x0000200</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXCL</span>      <span class='op'>=</span> <span class='number'>0x0000800</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOCTTY</span>    <span class='op'>=</span> <span class='number'>0x0020000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_TRUNC</span>     <span class='op'>=</span> <span class='number'>0x0000400</span>,
-            <span class='kw'>const</span> <span class='ident'>O_APPEND</span>    <span class='op'>=</span> <span class='number'>0x0000008</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NONBLOCK</span>  <span class='op'>=</span> <span class='number'>0x0000004</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DSYNC</span>     <span class='op'>=</span> <span class='number'>0x0400000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECTORY</span> <span class='op'>=</span> <span class='number'>0x0100000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOFOLLOW</span>  <span class='op'>=</span> <span class='number'>0x0000100</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CLOEXEC</span>   <span class='op'>=</span> <span class='number'>0x1000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SYNC</span>      <span class='op'>=</span> <span class='number'>0x0000080</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NDELAY</span>    <span class='op'>=</span> <span class='ident'>O_NONBLOCK</span>.<span class='ident'>bits</span>,
-            <span class='kw'>const</span> <span class='ident'>O_FSYNC</span>     <span class='op'>=</span> <span class='ident'>O_SYNC</span>.<span class='ident'>bits</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">OFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">O_ACCMODE</span>   <span class="op">=</span> <span class="number">0x0000003</span>,
+            <span class="kw">const</span> <span class="ident">O_RDONLY</span>    <span class="op">=</span> <span class="number">0x0000000</span>,
+            <span class="kw">const</span> <span class="ident">O_WRONLY</span>    <span class="op">=</span> <span class="number">0x0000001</span>,
+            <span class="kw">const</span> <span class="ident">O_RDWR</span>      <span class="op">=</span> <span class="number">0x0000002</span>,
+            <span class="kw">const</span> <span class="ident">O_CREAT</span>     <span class="op">=</span> <span class="number">0x0000200</span>,
+            <span class="kw">const</span> <span class="ident">O_EXCL</span>      <span class="op">=</span> <span class="number">0x0000800</span>,
+            <span class="kw">const</span> <span class="ident">O_NOCTTY</span>    <span class="op">=</span> <span class="number">0x0020000</span>,
+            <span class="kw">const</span> <span class="ident">O_TRUNC</span>     <span class="op">=</span> <span class="number">0x0000400</span>,
+            <span class="kw">const</span> <span class="ident">O_APPEND</span>    <span class="op">=</span> <span class="number">0x0000008</span>,
+            <span class="kw">const</span> <span class="ident">O_NONBLOCK</span>  <span class="op">=</span> <span class="number">0x0000004</span>,
+            <span class="kw">const</span> <span class="ident">O_DSYNC</span>     <span class="op">=</span> <span class="number">0x0400000</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECTORY</span> <span class="op">=</span> <span class="number">0x0100000</span>,
+            <span class="kw">const</span> <span class="ident">O_NOFOLLOW</span>  <span class="op">=</span> <span class="number">0x0000100</span>,
+            <span class="kw">const</span> <span class="ident">O_CLOEXEC</span>   <span class="op">=</span> <span class="number">0x1000000</span>,
+            <span class="kw">const</span> <span class="ident">O_SYNC</span>      <span class="op">=</span> <span class="number">0x0000080</span>,
+            <span class="kw">const</span> <span class="ident">O_NDELAY</span>    <span class="op">=</span> <span class="ident">O_NONBLOCK</span>.<span class="ident">bits</span>,
+            <span class="kw">const</span> <span class="ident">O_FSYNC</span>     <span class="op">=</span> <span class="ident">O_SYNC</span>.<span class="ident">bits</span>
         }
     );
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>FdFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>FD_CLOEXEC</span> <span class='op'>=</span> <span class='number'>1</span>
-        }
-    );
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;freebsd&quot;</span>, <span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;openbsd&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>consts</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
-
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>OFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>O_ACCMODE</span>   <span class='op'>=</span> <span class='number'>0x0000003</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDONLY</span>    <span class='op'>=</span> <span class='number'>0x0000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_WRONLY</span>    <span class='op'>=</span> <span class='number'>0x0000001</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDWR</span>      <span class='op'>=</span> <span class='number'>0x0000002</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CREAT</span>     <span class='op'>=</span> <span class='number'>0x0000200</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXCL</span>      <span class='op'>=</span> <span class='number'>0x0000800</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOCTTY</span>    <span class='op'>=</span> <span class='number'>0x0008000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_TRUNC</span>     <span class='op'>=</span> <span class='number'>0x0000400</span>,
-            <span class='kw'>const</span> <span class='ident'>O_APPEND</span>    <span class='op'>=</span> <span class='number'>0x0000008</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NONBLOCK</span>  <span class='op'>=</span> <span class='number'>0x0000004</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECTORY</span> <span class='op'>=</span> <span class='number'>0x0020000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOFOLLOW</span>  <span class='op'>=</span> <span class='number'>0x0000100</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CLOEXEC</span>   <span class='op'>=</span> <span class='number'>0x0100000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SYNC</span>      <span class='op'>=</span> <span class='number'>0x0000080</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NDELAY</span>    <span class='op'>=</span> <span class='ident'>O_NONBLOCK</span>.<span class='ident'>bits</span>,
-            <span class='kw'>const</span> <span class='ident'>O_FSYNC</span>     <span class='op'>=</span> <span class='ident'>O_SYNC</span>.<span class='ident'>bits</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SHLOCK</span>    <span class='op'>=</span> <span class='number'>0x0000080</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXLOCK</span>    <span class='op'>=</span> <span class='number'>0x0000020</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECT</span>    <span class='op'>=</span> <span class='number'>0x0010000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXEC</span>      <span class='op'>=</span> <span class='number'>0x0040000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_TTY_INIT</span>  <span class='op'>=</span> <span class='number'>0x0080000</span>
-        }
-    );
-
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>FdFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>FD_CLOEXEC</span> <span class='op'>=</span> <span class='number'>1</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">FdFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">FD_CLOEXEC</span> <span class="op">=</span> <span class="number">1</span>
         }
     );
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;netbsd&quot;</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>consts</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;openbsd&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">consts</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>OFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>O_ACCMODE</span>   <span class='op'>=</span> <span class='number'>0x0000003</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDONLY</span>    <span class='op'>=</span> <span class='number'>0x0000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_WRONLY</span>    <span class='op'>=</span> <span class='number'>0x0000001</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDWR</span>      <span class='op'>=</span> <span class='number'>0x0000002</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NONBLOCK</span>  <span class='op'>=</span> <span class='number'>0x0000004</span>,
-            <span class='kw'>const</span> <span class='ident'>O_APPEND</span>    <span class='op'>=</span> <span class='number'>0x0000008</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SHLOCK</span>    <span class='op'>=</span> <span class='number'>0x0000010</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXLOCK</span>    <span class='op'>=</span> <span class='number'>0x0000020</span>,
-            <span class='kw'>const</span> <span class='ident'>O_ASYNC</span>     <span class='op'>=</span> <span class='number'>0x0000040</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SYNC</span>      <span class='op'>=</span> <span class='number'>0x0000080</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOFOLLOW</span>  <span class='op'>=</span> <span class='number'>0x0000100</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CREAT</span>     <span class='op'>=</span> <span class='number'>0x0000200</span>,
-            <span class='kw'>const</span> <span class='ident'>O_TRUNC</span>     <span class='op'>=</span> <span class='number'>0x0000400</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXCL</span>      <span class='op'>=</span> <span class='number'>0x0000800</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOCTTY</span>    <span class='op'>=</span> <span class='number'>0x0008000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DSYNC</span>     <span class='op'>=</span> <span class='number'>0x0010000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RSYNC</span>     <span class='op'>=</span> <span class='number'>0x0020000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_ALT_IO</span>    <span class='op'>=</span> <span class='number'>0x0040000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECT</span>    <span class='op'>=</span> <span class='number'>0x0080000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOSIGPIPE</span> <span class='op'>=</span> <span class='number'>0x0100000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECTORY</span> <span class='op'>=</span> <span class='number'>0x0200000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CLOEXEC</span>   <span class='op'>=</span> <span class='number'>0x0400000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SEARCH</span>    <span class='op'>=</span> <span class='number'>0x0800000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_FSYNC</span>     <span class='op'>=</span> <span class='ident'>O_SYNC</span>.<span class='ident'>bits</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NDELAY</span>    <span class='op'>=</span> <span class='ident'>O_NONBLOCK</span>.<span class='ident'>bits</span>,
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">OFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">O_ACCMODE</span>   <span class="op">=</span> <span class="number">0x0000003</span>,
+            <span class="kw">const</span> <span class="ident">O_RDONLY</span>    <span class="op">=</span> <span class="number">0x0000000</span>,
+            <span class="kw">const</span> <span class="ident">O_WRONLY</span>    <span class="op">=</span> <span class="number">0x0000001</span>,
+            <span class="kw">const</span> <span class="ident">O_RDWR</span>      <span class="op">=</span> <span class="number">0x0000002</span>,
+            <span class="kw">const</span> <span class="ident">O_CREAT</span>     <span class="op">=</span> <span class="number">0x0000200</span>,
+            <span class="kw">const</span> <span class="ident">O_EXCL</span>      <span class="op">=</span> <span class="number">0x0000800</span>,
+            <span class="kw">const</span> <span class="ident">O_NOCTTY</span>    <span class="op">=</span> <span class="number">0x0008000</span>,
+            <span class="kw">const</span> <span class="ident">O_TRUNC</span>     <span class="op">=</span> <span class="number">0x0000400</span>,
+            <span class="kw">const</span> <span class="ident">O_APPEND</span>    <span class="op">=</span> <span class="number">0x0000008</span>,
+            <span class="kw">const</span> <span class="ident">O_NONBLOCK</span>  <span class="op">=</span> <span class="number">0x0000004</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECTORY</span> <span class="op">=</span> <span class="number">0x0020000</span>,
+            <span class="kw">const</span> <span class="ident">O_NOFOLLOW</span>  <span class="op">=</span> <span class="number">0x0000100</span>,
+            <span class="kw">const</span> <span class="ident">O_CLOEXEC</span>   <span class="op">=</span> <span class="number">0x0100000</span>,
+            <span class="kw">const</span> <span class="ident">O_SYNC</span>      <span class="op">=</span> <span class="number">0x0000080</span>,
+            <span class="kw">const</span> <span class="ident">O_NDELAY</span>    <span class="op">=</span> <span class="ident">O_NONBLOCK</span>.<span class="ident">bits</span>,
+            <span class="kw">const</span> <span class="ident">O_FSYNC</span>     <span class="op">=</span> <span class="ident">O_SYNC</span>.<span class="ident">bits</span>,
+            <span class="kw">const</span> <span class="ident">O_SHLOCK</span>    <span class="op">=</span> <span class="number">0x0000080</span>,
+            <span class="kw">const</span> <span class="ident">O_EXLOCK</span>    <span class="op">=</span> <span class="number">0x0000020</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECT</span>    <span class="op">=</span> <span class="number">0x0010000</span>,
+            <span class="kw">const</span> <span class="ident">O_EXEC</span>      <span class="op">=</span> <span class="number">0x0040000</span>,
+            <span class="kw">const</span> <span class="ident">O_TTY_INIT</span>  <span class="op">=</span> <span class="number">0x0080000</span>
         }
     );
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>FdFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>FD_CLOEXEC</span> <span class='op'>=</span> <span class='number'>1</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">FdFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">FD_CLOEXEC</span> <span class="op">=</span> <span class="number">1</span>
         }
     );
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;dragonfly&quot;</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>consts</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;netbsd&quot;</span>)]</span>
+<span class="kw">mod</span> <span class="ident">consts</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>OFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>O_ACCMODE</span>   <span class='op'>=</span> <span class='number'>0x0000003</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDONLY</span>    <span class='op'>=</span> <span class='number'>0x0000000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_WRONLY</span>    <span class='op'>=</span> <span class='number'>0x0000001</span>,
-            <span class='kw'>const</span> <span class='ident'>O_RDWR</span>      <span class='op'>=</span> <span class='number'>0x0000002</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CREAT</span>     <span class='op'>=</span> <span class='number'>0x0000200</span>,
-            <span class='kw'>const</span> <span class='ident'>O_EXCL</span>      <span class='op'>=</span> <span class='number'>0x0000800</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NOCTTY</span>    <span class='op'>=</span> <span class='number'>0x0008000</span>,
-            <span class='kw'>const</span> <span class='ident'>O_TRUNC</span>     <span class='op'>=</span> <span class='number'>0x0000400</span>,
-            <span class='kw'>const</span> <span class='ident'>O_APPEND</span>    <span class='op'>=</span> <span class='number'>0x0000008</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NONBLOCK</span>  <span class='op'>=</span> <span class='number'>0x0000004</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECTORY</span> <span class='op'>=</span> <span class='number'>0x8000000</span>, <span class='comment'>// different from FreeBSD!</span>
-            <span class='kw'>const</span> <span class='ident'>O_NOFOLLOW</span>  <span class='op'>=</span> <span class='number'>0x0000100</span>,
-            <span class='kw'>const</span> <span class='ident'>O_CLOEXEC</span>   <span class='op'>=</span> <span class='number'>0x0020000</span>, <span class='comment'>// different from FreeBSD!</span>
-            <span class='kw'>const</span> <span class='ident'>O_SYNC</span>      <span class='op'>=</span> <span class='number'>0x0000080</span>,
-            <span class='kw'>const</span> <span class='ident'>O_NDELAY</span>    <span class='op'>=</span> <span class='ident'>O_NONBLOCK</span>.<span class='ident'>bits</span>,
-            <span class='kw'>const</span> <span class='ident'>O_FSYNC</span>     <span class='op'>=</span> <span class='ident'>O_SYNC</span>.<span class='ident'>bits</span>,
-            <span class='kw'>const</span> <span class='ident'>O_SHLOCK</span>    <span class='op'>=</span> <span class='number'>0x0000010</span>, <span class='comment'>// different from FreeBSD!</span>
-            <span class='kw'>const</span> <span class='ident'>O_EXLOCK</span>    <span class='op'>=</span> <span class='number'>0x0000020</span>,
-            <span class='kw'>const</span> <span class='ident'>O_DIRECT</span>    <span class='op'>=</span> <span class='number'>0x0010000</span>,
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">OFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">O_ACCMODE</span>   <span class="op">=</span> <span class="number">0x0000003</span>,
+            <span class="kw">const</span> <span class="ident">O_RDONLY</span>    <span class="op">=</span> <span class="number">0x0000000</span>,
+            <span class="kw">const</span> <span class="ident">O_WRONLY</span>    <span class="op">=</span> <span class="number">0x0000001</span>,
+            <span class="kw">const</span> <span class="ident">O_RDWR</span>      <span class="op">=</span> <span class="number">0x0000002</span>,
+            <span class="kw">const</span> <span class="ident">O_NONBLOCK</span>  <span class="op">=</span> <span class="number">0x0000004</span>,
+            <span class="kw">const</span> <span class="ident">O_APPEND</span>    <span class="op">=</span> <span class="number">0x0000008</span>,
+            <span class="kw">const</span> <span class="ident">O_SHLOCK</span>    <span class="op">=</span> <span class="number">0x0000010</span>,
+            <span class="kw">const</span> <span class="ident">O_EXLOCK</span>    <span class="op">=</span> <span class="number">0x0000020</span>,
+            <span class="kw">const</span> <span class="ident">O_ASYNC</span>     <span class="op">=</span> <span class="number">0x0000040</span>,
+            <span class="kw">const</span> <span class="ident">O_SYNC</span>      <span class="op">=</span> <span class="number">0x0000080</span>,
+            <span class="kw">const</span> <span class="ident">O_NOFOLLOW</span>  <span class="op">=</span> <span class="number">0x0000100</span>,
+            <span class="kw">const</span> <span class="ident">O_CREAT</span>     <span class="op">=</span> <span class="number">0x0000200</span>,
+            <span class="kw">const</span> <span class="ident">O_TRUNC</span>     <span class="op">=</span> <span class="number">0x0000400</span>,
+            <span class="kw">const</span> <span class="ident">O_EXCL</span>      <span class="op">=</span> <span class="number">0x0000800</span>,
+            <span class="kw">const</span> <span class="ident">O_NOCTTY</span>    <span class="op">=</span> <span class="number">0x0008000</span>,
+            <span class="kw">const</span> <span class="ident">O_DSYNC</span>     <span class="op">=</span> <span class="number">0x0010000</span>,
+            <span class="kw">const</span> <span class="ident">O_RSYNC</span>     <span class="op">=</span> <span class="number">0x0020000</span>,
+            <span class="kw">const</span> <span class="ident">O_ALT_IO</span>    <span class="op">=</span> <span class="number">0x0040000</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECT</span>    <span class="op">=</span> <span class="number">0x0080000</span>,
+            <span class="kw">const</span> <span class="ident">O_NOSIGPIPE</span> <span class="op">=</span> <span class="number">0x0100000</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECTORY</span> <span class="op">=</span> <span class="number">0x0200000</span>,
+            <span class="kw">const</span> <span class="ident">O_CLOEXEC</span>   <span class="op">=</span> <span class="number">0x0400000</span>,
+            <span class="kw">const</span> <span class="ident">O_SEARCH</span>    <span class="op">=</span> <span class="number">0x0800000</span>,
+            <span class="kw">const</span> <span class="ident">O_FSYNC</span>     <span class="op">=</span> <span class="ident">O_SYNC</span>.<span class="ident">bits</span>,
+            <span class="kw">const</span> <span class="ident">O_NDELAY</span>    <span class="op">=</span> <span class="ident">O_NONBLOCK</span>.<span class="ident">bits</span>,
         }
     );
 
-    <span class='macro'>bitflags</span><span class='macro'>!</span>(
-        <span class='ident'>flags</span> <span class='ident'>FdFlag</span>: <span class='ident'>c_int</span> {
-            <span class='kw'>const</span> <span class='ident'>FD_CLOEXEC</span> <span class='op'>=</span> <span class='number'>1</span>
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">FdFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">FD_CLOEXEC</span> <span class="op">=</span> <span class="number">1</span>
+        }
+    );
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;dragonfly&quot;</span>)]</span>
+<span class="kw">mod</span> <span class="ident">consts</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
+
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">OFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">O_ACCMODE</span>   <span class="op">=</span> <span class="number">0x0000003</span>,
+            <span class="kw">const</span> <span class="ident">O_RDONLY</span>    <span class="op">=</span> <span class="number">0x0000000</span>,
+            <span class="kw">const</span> <span class="ident">O_WRONLY</span>    <span class="op">=</span> <span class="number">0x0000001</span>,
+            <span class="kw">const</span> <span class="ident">O_RDWR</span>      <span class="op">=</span> <span class="number">0x0000002</span>,
+            <span class="kw">const</span> <span class="ident">O_CREAT</span>     <span class="op">=</span> <span class="number">0x0000200</span>,
+            <span class="kw">const</span> <span class="ident">O_EXCL</span>      <span class="op">=</span> <span class="number">0x0000800</span>,
+            <span class="kw">const</span> <span class="ident">O_NOCTTY</span>    <span class="op">=</span> <span class="number">0x0008000</span>,
+            <span class="kw">const</span> <span class="ident">O_TRUNC</span>     <span class="op">=</span> <span class="number">0x0000400</span>,
+            <span class="kw">const</span> <span class="ident">O_APPEND</span>    <span class="op">=</span> <span class="number">0x0000008</span>,
+            <span class="kw">const</span> <span class="ident">O_NONBLOCK</span>  <span class="op">=</span> <span class="number">0x0000004</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECTORY</span> <span class="op">=</span> <span class="number">0x8000000</span>, <span class="comment">// different from FreeBSD!</span>
+            <span class="kw">const</span> <span class="ident">O_NOFOLLOW</span>  <span class="op">=</span> <span class="number">0x0000100</span>,
+            <span class="kw">const</span> <span class="ident">O_CLOEXEC</span>   <span class="op">=</span> <span class="number">0x0020000</span>, <span class="comment">// different from FreeBSD!</span>
+            <span class="kw">const</span> <span class="ident">O_SYNC</span>      <span class="op">=</span> <span class="number">0x0000080</span>,
+            <span class="kw">const</span> <span class="ident">O_NDELAY</span>    <span class="op">=</span> <span class="ident">O_NONBLOCK</span>.<span class="ident">bits</span>,
+            <span class="kw">const</span> <span class="ident">O_FSYNC</span>     <span class="op">=</span> <span class="ident">O_SYNC</span>.<span class="ident">bits</span>,
+            <span class="kw">const</span> <span class="ident">O_SHLOCK</span>    <span class="op">=</span> <span class="number">0x0000010</span>, <span class="comment">// different from FreeBSD!</span>
+            <span class="kw">const</span> <span class="ident">O_EXLOCK</span>    <span class="op">=</span> <span class="number">0x0000020</span>,
+            <span class="kw">const</span> <span class="ident">O_DIRECT</span>    <span class="op">=</span> <span class="number">0x0010000</span>,
+        }
+    );
+
+    <span class="macro">bitflags</span><span class="macro">!</span>(
+        <span class="ident">flags</span> <span class="ident">FdFlag</span>: <span class="ident">c_int</span> {
+            <span class="kw">const</span> <span class="ident">FD_CLOEXEC</span> <span class="op">=</span> <span class="number">1</span>
         }
     );
 }

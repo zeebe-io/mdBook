@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -502,464 +502,464 @@
 <span id="457">457</span>
 <span id="458">458</span>
 <span id="459">459</span>
-</pre><pre class='rust '>
-<span class='comment'>// pest. Elegant, efficient grammars</span>
-<span class='comment'>// Copyright (C) 2016  Dragoș Tiselice</span>
-<span class='comment'>//</span>
-<span class='comment'>// This Source Code Form is subject to the terms of the Mozilla Public</span>
-<span class='comment'>// License, v. 2.0. If a copy of the MPL was not distributed with this</span>
-<span class='comment'>// file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
+</pre><pre class="rust ">
+<span class="comment">// pest. Elegant, efficient grammars</span>
+<span class="comment">// Copyright (C) 2016  Dragoș Tiselice</span>
+<span class="comment">//</span>
+<span class="comment">// This Source Code Form is subject to the terms of the Mozilla Public</span>
+<span class="comment">// License, v. 2.0. If a copy of the MPL was not distributed with this</span>
+<span class="comment">// file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
 
-<span class='doccomment'>/// A `macro` useful for implementing the `Parser` `trait` as a recursive descent parser. It only</span>
-<span class='doccomment'>/// accepts `grammar!` and `process!` calls that get implemented on `self`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Rule</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// It also implements an `enum` called `Rule` that has a value for all</span>
-<span class='doccomment'>/// [non-silent](macro.grammar!#silent-rules-_) rules, but also for</span>
-<span class='doccomment'>/// [`any` and `eoi`](macro.grammar!). These `Rule`s are used within `Token`s to specify the type</span>
-<span class='doccomment'>/// of rule that matched.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # #[macro_use] extern crate pest;</span>
-<span class='doccomment'>/// # use pest::prelude::*;</span>
-<span class='doccomment'>/// # fn main() {</span>
-<span class='doccomment'>/// impl_rdp! {</span>
-<span class='doccomment'>///     grammar! {</span>
-<span class='doccomment'>///         expression = _{ paren ~ expression? }</span>
-<span class='doccomment'>///         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// let mut parser = Rdp::new(StringInput::new(&quot;(())((())())()&quot;));</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// assert!(parser.expression());</span>
-<span class='doccomment'>/// assert!(parser.end());</span>
-<span class='doccomment'>/// # }</span>
-<span class='doccomment'>/// ```</span>
-<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>impl_rdp</span> {
-    <span class='comment'>// implement rules</span>
-    ( @<span class='ident'>rules</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>, <span class='ident'>non_camel_case_types</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>, <span class='ident'>Ord</span>, <span class='ident'>PartialEq</span>, <span class='ident'>PartialOrd</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Rule</span> {
-            <span class='ident'>any</span>,
-            <span class='ident'>eoi</span>,
-            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> ),<span class='op'>*</span>
+<span class="doccomment">/// A `macro` useful for implementing the `Parser` `trait` as a recursive descent parser. It only</span>
+<span class="doccomment">/// accepts `grammar!` and `process!` calls that get implemented on `self`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Rule</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// It also implements an `enum` called `Rule` that has a value for all</span>
+<span class="doccomment">/// [non-silent](macro.grammar!#silent-rules-_) rules, but also for</span>
+<span class="doccomment">/// [`any` and `eoi`](macro.grammar!). These `Rule`s are used within `Token`s to specify the type</span>
+<span class="doccomment">/// of rule that matched.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # #[macro_use] extern crate pest;</span>
+<span class="doccomment">/// # use pest::prelude::*;</span>
+<span class="doccomment">/// # fn main() {</span>
+<span class="doccomment">/// impl_rdp! {</span>
+<span class="doccomment">///     grammar! {</span>
+<span class="doccomment">///         expression = _{ paren ~ expression? }</span>
+<span class="doccomment">///         paren      =  { [&quot;(&quot;] ~ expression? ~ [&quot;)&quot;] }</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut parser = Rdp::new(StringInput::new(&quot;(())((())())()&quot;));</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert!(parser.expression());</span>
+<span class="doccomment">/// assert!(parser.end());</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">impl_rdp</span> {
+    <span class="comment">// implement rules</span>
+    ( @<span class="ident">rules</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>, <span class="ident">non_camel_case_types</span>)]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">Ord</span>, <span class="ident">PartialEq</span>, <span class="ident">PartialOrd</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Rule</span> {
+            <span class="ident">any</span>,
+            <span class="ident">eoi</span>,
+            $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> ),<span class="op">*</span>
         }
     };
 
-    <span class='comment'>// filter out silent rules</span>
-    ( @<span class='ident'>filter</span> [  ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>rules</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='kw-2'>*</span>);
+    <span class="comment">// filter out silent rules</span>
+    ( @<span class="ident">filter</span> [  ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">rules</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> )<span class="kw-2">*</span>);
     };
-    ( @<span class='ident'>filter</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_primary</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>filter</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='op'>*</span> ]);
+    ( @<span class="ident">filter</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> { { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_primary</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">filter</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> )<span class="op">*</span> ]);
     };
-    ( @<span class='ident'>filter</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_primary</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>filter</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='op'>*</span> ]);
+    ( @<span class="ident">filter</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> @{ { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_primary</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">filter</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> )<span class="op">*</span> ]);
     };
-    ( @<span class='ident'>filter</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_primary</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ]
-      [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>filter</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='op'>*</span> ]);
+    ( @<span class="ident">filter</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> _{ { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_primary</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ]
+      [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">filter</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> )<span class="op">*</span> ]);
     };
-    ( @<span class='ident'>filter</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>filter</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='op'>*</span> ]);
+    ( @<span class="ident">filter</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">filter</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> )<span class="op">*</span> ]);
     };
-    ( @<span class='ident'>filter</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>filter</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='op'>*</span> ]);
+    ( @<span class="ident">filter</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> <span class="op">=</span> @{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">filter</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> )<span class="op">*</span> ]);
     };
-    ( @<span class='ident'>filter</span> [ <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ] ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>filter</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='op'>*</span> ] [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rules</span> )<span class='op'>*</span> ]);
+    ( @<span class="ident">filter</span> [ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> _{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span>:<span class="ident">tt</span> )<span class="op">*</span> ] ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">filter</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="op">*</span> ] [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rules</span> )<span class="op">*</span> ]);
     };
 
-    <span class='comment'>// implement empty whitespace rule</span>
-    ( @<span class='ident'>ws</span> ) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>whitespace</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-            <span class='bool-val'>false</span>
+    <span class="comment">// implement empty whitespace rule</span>
+    ( @<span class="ident">ws</span> ) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="bool-val">false</span>
         }
     };
-    ( @<span class='ident'>ws</span> <span class='ident'>whitespace</span> <span class='op'>=</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> ();
-    ( @<span class='ident'>ws</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+    ( @<span class="ident">ws</span> <span class="ident">whitespace</span> <span class="op">=</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> ();
+    ( @<span class="ident">ws</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">ws</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
-    ( @<span class='ident'>ws</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+    ( @<span class="ident">ws</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> @{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">ws</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
-    ( @<span class='ident'>ws</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+    ( @<span class="ident">ws</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> _{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">ws</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
 
-    <span class='comment'>// implement empty comment rule</span>
-    ( @<span class='ident'>com</span> ) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>comment</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-            <span class='bool-val'>false</span>
+    <span class="comment">// implement empty comment rule</span>
+    ( @<span class="ident">com</span> ) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">comment</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="bool-val">false</span>
         }
     };
-    ( @<span class='ident'>com</span> <span class='ident'>comment</span> <span class='op'>=</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> ();
-    ( @<span class='ident'>com</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+    ( @<span class="ident">com</span> <span class="ident">comment</span> <span class="op">=</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> ();
+    ( @<span class="ident">com</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">com</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
-    ( @<span class='ident'>com</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> @{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+    ( @<span class="ident">com</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> @{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">com</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
-    ( @<span class='ident'>com</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_name</span>:<span class='ident'>ident</span> <span class='op'>=</span> _{ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>_ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span>:<span class='ident'>tt</span> )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tail</span> )<span class='kw-2'>*</span>);
+    ( @<span class="ident">com</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_name</span>:<span class="ident">ident</span> <span class="op">=</span> _{ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">_ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">tt</span> )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">com</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span> )<span class="kw-2">*</span>);
     };
 
-    ( <span class='macro'>grammar</span><span class='macro'>!</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mac</span>:<span class='macro'>ident</span><span class='macro'>!</span> { $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rest</span>:<span class='ident'>tt</span> )<span class='op'>*</span> } )<span class='op'>*</span> ) <span class='op'>=&gt;</span> {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>Cell</span>;
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>;
+    ( <span class="macro">grammar</span><span class="macro">!</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span>:<span class="ident">tt</span> )<span class="op">*</span> } $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">mac</span>:<span class="macro">ident</span><span class="macro">!</span> { $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rest</span>:<span class="ident">tt</span> )<span class="op">*</span> } )<span class="op">*</span> ) <span class="op">=&gt;</span> {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">Cell</span>;
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
 
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Rdp</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-            <span class='ident'>input</span>:       <span class='ident'>T</span>,
-            <span class='ident'>queue</span>:       <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Token</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;&gt;</span>,
-            <span class='ident'>queue_index</span>: <span class='ident'>Cell</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>,
-            <span class='ident'>failures</span>:    <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;</span>,
-            <span class='ident'>fail_pos</span>:    <span class='ident'>usize</span>,
-            <span class='ident'>atomic</span>:      <span class='ident'>bool</span>,
-            <span class='ident'>comment</span>:     <span class='ident'>bool</span>,
-            <span class='ident'>eoi_matched</span>: <span class='ident'>bool</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Rdp</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+            <span class="ident">input</span>:       <span class="ident">T</span>,
+            <span class="ident">queue</span>:       <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;&gt;</span>,
+            <span class="ident">queue_index</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+            <span class="ident">failures</span>:    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>,
+            <span class="ident">fail_pos</span>:    <span class="ident">usize</span>,
+            <span class="ident">atomic</span>:      <span class="ident">bool</span>,
+            <span class="ident">comment</span>:     <span class="ident">bool</span>,
+            <span class="ident">eoi_matched</span>: <span class="ident">bool</span>
         }
 
-        <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>filter</span> [ $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span> ] []);
+        <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">filter</span> [ $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span> ] []);
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;input</span>, <span class='ident'>T</span>: <span class='ident'>Input</span><span class='op'>&lt;</span><span class='lifetime'>&#39;input</span><span class='op'>&gt;&gt;</span> <span class='ident'>Rdp</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>input</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Rdp</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-                <span class='ident'>Rdp</span> {
-                    <span class='ident'>input</span>:       <span class='ident'>input</span>,
-                    <span class='ident'>queue</span>:       <span class='macro'>vec</span><span class='macro'>!</span>[],
-                    <span class='ident'>queue_index</span>: <span class='ident'>Cell</span>::<span class='ident'>new</span>(<span class='number'>0</span>),
-                    <span class='ident'>failures</span>:    <span class='macro'>vec</span><span class='macro'>!</span>[],
-                    <span class='ident'>fail_pos</span>:    <span class='number'>0</span>,
-                    <span class='ident'>atomic</span>:      <span class='bool-val'>false</span>,
-                    <span class='ident'>comment</span>:     <span class='bool-val'>false</span>,
-                    <span class='ident'>eoi_matched</span>: <span class='bool-val'>false</span>
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;input</span>, <span class="ident">T</span>: <span class="ident">Input</span><span class="op">&lt;</span><span class="lifetime">&#39;input</span><span class="op">&gt;&gt;</span> <span class="ident">Rdp</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">input</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Rdp</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+                <span class="ident">Rdp</span> {
+                    <span class="ident">input</span>:       <span class="ident">input</span>,
+                    <span class="ident">queue</span>:       <span class="macro">vec</span><span class="macro">!</span>[],
+                    <span class="ident">queue_index</span>: <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="number">0</span>),
+                    <span class="ident">failures</span>:    <span class="macro">vec</span><span class="macro">!</span>[],
+                    <span class="ident">fail_pos</span>:    <span class="number">0</span>,
+                    <span class="ident">atomic</span>:      <span class="bool-val">false</span>,
+                    <span class="ident">comment</span>:     <span class="bool-val">false</span>,
+                    <span class="ident">eoi_matched</span>: <span class="bool-val">false</span>
                 }
             }
 
-            <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>ws</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='kw-2'>*</span>);
-            <span class='macro'>impl_rdp</span><span class='macro'>!</span>(@<span class='ident'>com</span> $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='kw-2'>*</span>);
+            <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">ws</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="kw-2">*</span>);
+            <span class="macro">impl_rdp</span><span class="macro">!</span>(@<span class="ident">com</span> $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="kw-2">*</span>);
 
-            <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>any</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-                <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>end</span>() {
-                    <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>pos</span>();
+            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">any</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">end</span>() {
+                    <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">pos</span>();
 
-                    <span class='self'>self</span>.<span class='ident'>track</span>(<span class='ident'>Rule</span>::<span class='ident'>any</span>, <span class='ident'>pos</span>);
+                    <span class="self">self</span>.<span class="ident">track</span>(<span class="ident">Rule</span>::<span class="ident">any</span>, <span class="ident">pos</span>);
 
-                    <span class='bool-val'>false</span>
-                } <span class='kw'>else</span> {
-                    <span class='kw'>let</span> <span class='ident'>next</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>pos</span>() <span class='op'>+</span> <span class='number'>1</span>;
-                    <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>set_pos</span>(<span class='ident'>next</span>);
+                    <span class="bool-val">false</span>
+                } <span class="kw">else</span> {
+                    <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">pos</span>() <span class="op">+</span> <span class="number">1</span>;
+                    <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">set_pos</span>(<span class="ident">next</span>);
 
-                    <span class='bool-val'>true</span>
+                    <span class="bool-val">true</span>
                 }
             }
 
-            <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>eoi</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-                <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>end</span>();
+            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">eoi</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">end</span>();
 
-                <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>result</span> {
-                    <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>pos</span>();
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">result</span> {
+                    <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">pos</span>();
 
-                    <span class='self'>self</span>.<span class='ident'>track</span>(<span class='ident'>Rule</span>::<span class='ident'>eoi</span>, <span class='ident'>pos</span>);
-                } <span class='kw'>else</span> {
-                    <span class='self'>self</span>.<span class='ident'>eoi_matched</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+                    <span class="self">self</span>.<span class="ident">track</span>(<span class="ident">Rule</span>::<span class="ident">eoi</span>, <span class="ident">pos</span>);
+                } <span class="kw">else</span> {
+                    <span class="self">self</span>.<span class="ident">eoi_matched</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 }
 
-                <span class='ident'>result</span>
+                <span class="ident">result</span>
             }
 
-            <span class='macro'>grammar</span><span class='macro'>!</span> {
-                $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ts</span> )<span class='op'>*</span>
+            <span class="macro">grammar</span><span class="macro">!</span> {
+                $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ts</span> )<span class="op">*</span>
             }
 
             $(
-                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>mac</span><span class='op'>!</span> {
-                    $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rest</span> )<span class='op'>*</span>
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">mac</span><span class="op">!</span> {
+                    $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rest</span> )<span class="op">*</span>
                 }
-            )<span class='op'>*</span>
+            )<span class="op">*</span>
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;input</span>, <span class='ident'>T</span>: <span class='ident'>Input</span><span class='op'>&lt;</span><span class='lifetime'>&#39;input</span><span class='op'>&gt;&gt;</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;input</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Rdp</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-            <span class='kw'>type</span> <span class='ident'>Rule</span> <span class='op'>=</span> <span class='ident'>Rule</span>;
-            <span class='kw'>type</span> <span class='ident'>Token</span> <span class='op'>=</span> <span class='ident'>Token</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;</span>;
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;input</span>, <span class="ident">T</span>: <span class="ident">Input</span><span class="op">&lt;</span><span class="lifetime">&#39;input</span><span class="op">&gt;&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;input</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Rdp</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+            <span class="kw">type</span> <span class="ident">Rule</span> <span class="op">=</span> <span class="ident">Rule</span>;
+            <span class="kw">type</span> <span class="ident">Token</span> <span class="op">=</span> <span class="ident">Token</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>;
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>input</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>T</span> {
-                <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>input</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">input</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">T</span> {
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">input</span>
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>input_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>T</span> {
-                <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>input</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">input_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span> {
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">input</span>
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-                <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>pos</span>()
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+                <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">pos</span>()
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>eoi_matched</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-                <span class='self'>self</span>.<span class='ident'>eoi_matched</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">eoi_matched</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+                <span class="self">self</span>.<span class="ident">eoi_matched</span>
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>reset</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-                <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>set_pos</span>(<span class='number'>0</span>);
-                <span class='self'>self</span>.<span class='ident'>queue</span>.<span class='ident'>clear</span>();
-                <span class='self'>self</span>.<span class='ident'>queue_index</span>.<span class='ident'>set</span>(<span class='number'>0</span>);
-                <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>clear</span>();
-                <span class='self'>self</span>.<span class='ident'>fail_pos</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+                <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">set_pos</span>(<span class="number">0</span>);
+                <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">clear</span>();
+                <span class="self">self</span>.<span class="ident">queue_index</span>.<span class="ident">set</span>(<span class="number">0</span>);
+                <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">clear</span>();
+                <span class="self">self</span>.<span class="ident">fail_pos</span> <span class="op">=</span> <span class="number">0</span>;
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>queue</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Token</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;&gt;</span>{
-                <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>queue</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;&gt;</span>{
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">queue</span>
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>queue_index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-                <span class='self'>self</span>.<span class='ident'>queue_index</span>.<span class='ident'>get</span>()
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">queue_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+                <span class="self">self</span>.<span class="ident">queue_index</span>.<span class="ident">get</span>()
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>inc_queue_index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
-                <span class='self'>self</span>.<span class='ident'>queue_index</span>.<span class='ident'>set</span>(<span class='self'>self</span>.<span class='ident'>queue_index</span>.<span class='ident'>get</span>() <span class='op'>+</span> <span class='number'>1</span>);
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">inc_queue_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+                <span class="self">self</span>.<span class="ident">queue_index</span>.<span class="ident">set</span>(<span class="self">self</span>.<span class="ident">queue_index</span>.<span class="ident">get</span>() <span class="op">+</span> <span class="number">1</span>);
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>set_queue_index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) {
-                <span class='self'>self</span>.<span class='ident'>queue_index</span>.<span class='ident'>set</span>(<span class='ident'>index</span>);
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">set_queue_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) {
+                <span class="self">self</span>.<span class="ident">queue_index</span>.<span class="ident">set</span>(<span class="ident">index</span>);
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>queue_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Token</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;&gt;</span>{
-                <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>queue</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">queue_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;&gt;</span>{
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">queue</span>
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>skip_ws</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-                <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>atomic</span> {
-                    <span class='kw'>return</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">skip_ws</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">atomic</span> {
+                    <span class="kw">return</span>
                 }
 
-                <span class='kw'>loop</span> {
-                    <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>whitespace</span>() {
-                        <span class='kw'>break</span>
+                <span class="kw">loop</span> {
+                    <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">whitespace</span>() {
+                        <span class="kw">break</span>
                     }
                 }
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>skip_com</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-                <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>atomic</span> {
-                    <span class='kw'>return</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">skip_com</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">atomic</span> {
+                    <span class="kw">return</span>
                 }
 
-                <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>comment</span> {
-                    <span class='self'>self</span>.<span class='ident'>comment</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+                <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">comment</span> {
+                    <span class="self">self</span>.<span class="ident">comment</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
-                    <span class='kw'>loop</span> {
-                        <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>comment</span>() {
-                            <span class='kw'>break</span>
+                    <span class="kw">loop</span> {
+                        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">comment</span>() {
+                            <span class="kw">break</span>
                         }
                     }
 
-                    <span class='self'>self</span>.<span class='ident'>comment</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+                    <span class="self">self</span>.<span class="ident">comment</span> <span class="op">=</span> <span class="bool-val">false</span>;
                 }
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>is_atomic</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-                <span class='self'>self</span>.<span class='ident'>atomic</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">is_atomic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+                <span class="self">self</span>.<span class="ident">atomic</span>
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>set_atomic</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>bool</span>) {
-                <span class='self'>self</span>.<span class='ident'>atomic</span> <span class='op'>=</span> <span class='ident'>value</span>;
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">set_atomic</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">bool</span>) {
+                <span class="self">self</span>.<span class="ident">atomic</span> <span class="op">=</span> <span class="ident">value</span>;
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>track</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>failed</span>: <span class='ident'>Rule</span>, <span class='ident'>pos</span>: <span class='ident'>usize</span>) {
-                <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>atomic</span> {
-                    <span class='kw'>return</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">track</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">failed</span>: <span class="ident">Rule</span>, <span class="ident">pos</span>: <span class="ident">usize</span>) {
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">atomic</span> {
+                    <span class="kw">return</span>
                 }
 
-                <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>is_empty</span>() {
-                    <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>push</span>(<span class='ident'>failed</span>);
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">is_empty</span>() {
+                    <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">push</span>(<span class="ident">failed</span>);
 
-                    <span class='self'>self</span>.<span class='ident'>fail_pos</span> <span class='op'>=</span> <span class='ident'>pos</span>;
-                } <span class='kw'>else</span> {
-                    <span class='kw'>if</span> <span class='ident'>pos</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>fail_pos</span> {
-                        <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>push</span>(<span class='ident'>failed</span>);
-                    } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>pos</span> <span class='op'>&gt;</span> <span class='self'>self</span>.<span class='ident'>fail_pos</span> {
-                        <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>clear</span>();
-                        <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>push</span>(<span class='ident'>failed</span>);
+                    <span class="self">self</span>.<span class="ident">fail_pos</span> <span class="op">=</span> <span class="ident">pos</span>;
+                } <span class="kw">else</span> {
+                    <span class="kw">if</span> <span class="ident">pos</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">fail_pos</span> {
+                        <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">push</span>(<span class="ident">failed</span>);
+                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">pos</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">fail_pos</span> {
+                        <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">clear</span>();
+                        <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">push</span>(<span class="ident">failed</span>);
 
-                        <span class='self'>self</span>.<span class='ident'>fail_pos</span> <span class='op'>=</span> <span class='ident'>pos</span>;
+                        <span class="self">self</span>.<span class="ident">fail_pos</span> <span class="op">=</span> <span class="ident">pos</span>;
                     }
                 }
             }
 
-            <span class='kw'>fn</span> <span class='ident'>tracked_len</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-                <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>len</span>()
+            <span class="kw">fn</span> <span class="ident">tracked_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+                <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">len</span>()
             }
 
-            <span class='kw'>fn</span> <span class='ident'>expected</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&gt;</span>, <span class='ident'>usize</span>) {
-                <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>sort</span>();
-                <span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>dedup</span>();
+            <span class="kw">fn</span> <span class="ident">expected</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Rule</span><span class="op">&gt;</span>, <span class="ident">usize</span>) {
+                <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">sort</span>();
+                <span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">dedup</span>();
 
-                (<span class='self'>self</span>.<span class='ident'>failures</span>.<span class='ident'>iter</span>().<span class='ident'>cloned</span>().<span class='ident'>collect</span>(), <span class='self'>self</span>.<span class='ident'>fail_pos</span>)
+                (<span class="self">self</span>.<span class="ident">failures</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>(), <span class="self">self</span>.<span class="ident">fail_pos</span>)
             }
         }
     };
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw'>super</span>::<span class='kw'>super</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 
-    <span class='macro'>impl_rdp</span><span class='macro'>!</span> {
-        <span class='macro'>grammar</span><span class='macro'>!</span> {
-            <span class='ident'>expression</span> <span class='op'>=</span> _{ <span class='ident'>paren</span> ~ <span class='ident'>expression</span><span class='question-mark'>?</span> }
-            <span class='ident'>paren</span> <span class='op'>=</span> { [<span class='string'>&quot;(&quot;</span>] ~ <span class='ident'>expression</span><span class='question-mark'>?</span> ~ [<span class='string'>&quot;)&quot;</span>] }
-            <span class='ident'>zero</span> <span class='op'>=</span> { [<span class='string'>&quot;a&quot;</span>]<span class='op'>*</span> }
-            <span class='ident'>one</span> <span class='op'>=</span> { [<span class='string'>&quot;a&quot;</span>]<span class='op'>+</span> }
-            <span class='ident'>comment</span> <span class='op'>=</span> _{ [<span class='string'>&quot;//&quot;</span>] ~ (<span class='op'>!</span>[<span class='string'>&quot;\n&quot;</span>] ~ <span class='ident'>any</span>)<span class='op'>*</span> ~ [<span class='string'>&quot;\n&quot;</span>] }
-            <span class='ident'>whitespace</span> <span class='op'>=</span> _{ [<span class='string'>&quot; &quot;</span>] }
+    <span class="macro">impl_rdp</span><span class="macro">!</span> {
+        <span class="macro">grammar</span><span class="macro">!</span> {
+            <span class="ident">expression</span> <span class="op">=</span> _{ <span class="ident">paren</span> ~ <span class="ident">expression</span><span class="question-mark">?</span> }
+            <span class="ident">paren</span> <span class="op">=</span> { [<span class="string">&quot;(&quot;</span>] ~ <span class="ident">expression</span><span class="question-mark">?</span> ~ [<span class="string">&quot;)&quot;</span>] }
+            <span class="ident">zero</span> <span class="op">=</span> { [<span class="string">&quot;a&quot;</span>]<span class="op">*</span> }
+            <span class="ident">one</span> <span class="op">=</span> { [<span class="string">&quot;a&quot;</span>]<span class="op">+</span> }
+            <span class="ident">comment</span> <span class="op">=</span> _{ [<span class="string">&quot;//&quot;</span>] ~ (<span class="op">!</span>[<span class="string">&quot;\n&quot;</span>] ~ <span class="ident">any</span>)<span class="op">*</span> ~ [<span class="string">&quot;\n&quot;</span>] }
+            <span class="ident">whitespace</span> <span class="op">=</span> _{ [<span class="string">&quot; &quot;</span>] }
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>try</span>() {
-        <span class='kw'>let</span> <span class='ident'>input</span> <span class='op'>=</span> <span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;asdasdf&quot;</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>input</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">try</span>() {
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;asdasdf&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">input</span>);
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;asd&quot;</span>));
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;asd&quot;</span>));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>parser</span>.<span class='ident'>try</span>(<span class='bool-val'>false</span>, <span class='op'>|</span><span class='ident'>parser</span><span class='op'>|</span> {
-            <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;as&quot;</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;dd&quot;</span>)
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">parser</span>.<span class="ident">try</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">parser</span><span class="op">|</span> {
+            <span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;as&quot;</span>) <span class="op">&amp;&amp;</span> <span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;dd&quot;</span>)
         }));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>try</span>(<span class='bool-val'>false</span>, <span class='op'>|</span><span class='ident'>parser</span><span class='op'>|</span> {
-            <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;as&quot;</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;df&quot;</span>)
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">try</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">parser</span><span class="op">|</span> {
+            <span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;as&quot;</span>) <span class="op">&amp;&amp;</span> <span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;df&quot;</span>)
         }));
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>() {
-        <span class='kw'>let</span> <span class='ident'>input</span> <span class='op'>=</span> <span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;asdasdf&quot;</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>input</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">end</span>() {
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;asdasdf&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">input</span>);
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;asdasdf&quot;</span>));
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>end</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;asdasdf&quot;</span>));
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">end</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>reset</span>() {
-        <span class='kw'>let</span> <span class='ident'>input</span> <span class='op'>=</span> <span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;asdasdf&quot;</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>input</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">reset</span>() {
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;asdasdf&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">input</span>);
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;asdasdf&quot;</span>));
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;asdasdf&quot;</span>));
 
-        <span class='ident'>parser</span>.<span class='ident'>reset</span>();
+        <span class="ident">parser</span>.<span class="ident">reset</span>();
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>input_mut</span>().<span class='ident'>match_string</span>(<span class='string'>&quot;asdasdf&quot;</span>));
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">input_mut</span>().<span class="ident">match_string</span>(<span class="string">&quot;asdasdf&quot;</span>));
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>whitespace_seq</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;  (  ( ))(( () )() )() &quot;</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">whitespace_seq</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;  (  ( ))(( () )() )() &quot;</span>));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>expression</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>parser</span>.<span class='ident'>end</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">expression</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">parser</span>.<span class="ident">end</span>());
 
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>2</span>, <span class='number'>9</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>5</span>, <span class='number'>8</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>9</span>, <span class='number'>20</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>10</span>, <span class='number'>16</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>12</span>, <span class='number'>14</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>16</span>, <span class='number'>18</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>20</span>, <span class='number'>22</span>)
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">2</span>, <span class="number">9</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">5</span>, <span class="number">8</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">9</span>, <span class="number">20</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">10</span>, <span class="number">16</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">12</span>, <span class="number">14</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">16</span>, <span class="number">18</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">20</span>, <span class="number">22</span>)
         ];
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>queue</span>(), <span class='kw-2'>&amp;</span><span class='ident'>queue</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">queue</span>(), <span class="kw-2">&amp;</span><span class="ident">queue</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>whitespace_zero</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;  a a aa aaaa a  &quot;</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">whitespace_zero</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;  a a aa aaaa a  &quot;</span>));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>zero</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>parser</span>.<span class='ident'>end</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">zero</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">parser</span>.<span class="ident">end</span>());
 
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>zero</span>, <span class='number'>2</span>, <span class='number'>15</span>)
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">zero</span>, <span class="number">2</span>, <span class="number">15</span>)
         ];
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>queue</span>(), <span class='kw-2'>&amp;</span><span class='ident'>queue</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">queue</span>(), <span class="kw-2">&amp;</span><span class="ident">queue</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>whitespace_one</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;  a a aa aaaa a  &quot;</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">whitespace_one</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;  a a aa aaaa a  &quot;</span>));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>one</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>parser</span>.<span class='ident'>end</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">one</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">parser</span>.<span class="ident">end</span>());
 
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Token</span> {
-                             <span class='ident'>rule</span>: <span class='ident'>Rule</span>::<span class='ident'>one</span>,
-                             <span class='ident'>start</span>: <span class='number'>2</span>,
-                             <span class='ident'>end</span>: <span class='number'>15</span>,
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Token</span> {
+                             <span class="ident">rule</span>: <span class="ident">Rule</span>::<span class="ident">one</span>,
+                             <span class="ident">start</span>: <span class="number">2</span>,
+                             <span class="ident">end</span>: <span class="number">15</span>,
                          }];
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>queue</span>(), <span class='kw-2'>&amp;</span><span class='ident'>queue</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">queue</span>(), <span class="kw-2">&amp;</span><span class="ident">queue</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>comment</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;// hi\n(())&quot;</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">comment</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;// hi\n(())&quot;</span>));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>expression</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>end</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">expression</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">end</span>());
 
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>6</span>, <span class='number'>10</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>7</span>, <span class='number'>9</span>)
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">6</span>, <span class="number">10</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">7</span>, <span class="number">9</span>)
         ];
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>queue</span>(), <span class='kw-2'>&amp;</span><span class='ident'>queue</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">queue</span>(), <span class="kw-2">&amp;</span><span class="ident">queue</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>comment_whitespace</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='ident'>Rdp</span>::<span class='ident'>new</span>(<span class='ident'>StringInput</span>::<span class='ident'>new</span>(<span class='string'>&quot;   // hi\n  (())&quot;</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">comment_whitespace</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="string">&quot;   // hi\n  (())&quot;</span>));
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>expression</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>end</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">expression</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">end</span>());
 
-        <span class='kw'>let</span> <span class='ident'>queue</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>11</span>, <span class='number'>15</span>),
-            <span class='ident'>Token</span>::<span class='ident'>new</span>(<span class='ident'>Rule</span>::<span class='ident'>paren</span>, <span class='number'>12</span>, <span class='number'>14</span>)
+        <span class="kw">let</span> <span class="ident">queue</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">11</span>, <span class="number">15</span>),
+            <span class="ident">Token</span>::<span class="ident">new</span>(<span class="ident">Rule</span>::<span class="ident">paren</span>, <span class="number">12</span>, <span class="number">14</span>)
         ];
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>queue</span>(), <span class='kw-2'>&amp;</span><span class='ident'>queue</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">queue</span>(), <span class="kw-2">&amp;</span><span class="ident">queue</span>);
     }
 }
 </pre>

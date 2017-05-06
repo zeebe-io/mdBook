@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="https://avatars0.githubusercontent.com/u/7853871?s=256">
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -84,46 +84,46 @@
 <span id="39">39</span>
 <span id="40">40</span>
 <span id="41">41</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Helper macros. Note that these are relatively new and may change in a later version.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The idea is to use `itry` for internal server operations which can&#39;t be recovered from, and</span>
-<span class='doccomment'>//! `iexpect` for validating user input. Note that this kind of usage is completely non-normative.</span>
-<span class='doccomment'>//! Feedback about actual usability and usage is appreciated.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Helper macros. Note that these are relatively new and may change in a later version.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The idea is to use `itry` for internal server operations which can&#39;t be recovered from, and</span>
+<span class="doccomment">//! `iexpect` for validating user input. Note that this kind of usage is completely non-normative.</span>
+<span class="doccomment">//! Feedback about actual usability and usage is appreciated.</span>
 
-<span class='doccomment'>/// Like `try!()`, but wraps the error value in `IronError`. To be used in</span>
-<span class='doccomment'>/// request handlers.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The second (optional) parameter is any [modifier](modifiers/index.html).</span>
-<span class='doccomment'>/// The default modifier is `status::InternalServerError`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```ignore</span>
-<span class='doccomment'>/// let f = itry!(fs::File::create(&quot;foo.txt&quot;), status::BadRequest);</span>
-<span class='doccomment'>/// let f = itry!(fs::File::create(&quot;foo.txt&quot;), (status::NotFound, &quot;Not Found&quot;));</span>
-<span class='doccomment'>/// let f = itry!(fs::File::create(&quot;foo.txt&quot;));  // HTTP 500</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>itry</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> (<span class='macro'>itry</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>, <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>status</span>::<span class='ident'>InternalServerError</span>));
+<span class="doccomment">/// Like `try!()`, but wraps the error value in `IronError`. To be used in</span>
+<span class="doccomment">/// request handlers.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The second (optional) parameter is any [modifier](modifiers/index.html).</span>
+<span class="doccomment">/// The default modifier is `status::InternalServerError`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```ignore</span>
+<span class="doccomment">/// let f = itry!(fs::File::create(&quot;foo.txt&quot;), status::BadRequest);</span>
+<span class="doccomment">/// let f = itry!(fs::File::create(&quot;foo.txt&quot;), (status::NotFound, &quot;Not Found&quot;));</span>
+<span class="doccomment">/// let f = itry!(fs::File::create(&quot;foo.txt&quot;));  // HTTP 500</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">itry</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">result</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (<span class="macro">itry</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">result</span>, <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">status</span>::<span class="ident">InternalServerError</span>));
 
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modifier</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> (<span class='kw'>match</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span> {
-        ::<span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span>::<span class='prelude-val'>Ok</span>(<span class='ident'>val</span>) <span class='op'>=&gt;</span> <span class='ident'>val</span>,
-        ::<span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span>::<span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> ::<span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span>::<span class='prelude-val'>Err</span>(
-            <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>IronError</span>::<span class='ident'>new</span>(<span class='ident'>err</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modifier</span>))
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">result</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">modifier</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (<span class="kw">match</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">result</span> {
+        ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span>::<span class="prelude-val">Ok</span>(<span class="ident">val</span>) <span class="op">=&gt;</span> <span class="ident">val</span>,
+        ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span>::<span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="kw">return</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span>::<span class="prelude-val">Err</span>(
+            <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">IronError</span>::<span class="ident">new</span>(<span class="ident">err</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">modifier</span>))
     })
 }
 
-<span class='doccomment'>/// Unwrap the given `Option` or return a `Ok(Response::new())` with the given</span>
-<span class='doccomment'>/// modifier. The default modifier is `status::BadRequest`.</span>
-<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>iexpect</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>option</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> (<span class='macro'>iexpect</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>option</span>, <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>status</span>::<span class='ident'>BadRequest</span>));
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>option</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modifier</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> (<span class='kw'>match</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>option</span> {
-        ::<span class='ident'>std</span>::<span class='ident'>option</span>::<span class='prelude-ty'>Option</span>::<span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='ident'>x</span>,
-        ::<span class='ident'>std</span>::<span class='ident'>option</span>::<span class='prelude-ty'>Option</span>::<span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> ::<span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span>::<span class='prelude-val'>Ok</span>(
-            <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>response</span>::<span class='ident'>Response</span>::<span class='ident'>with</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>modifier</span>))
+<span class="doccomment">/// Unwrap the given `Option` or return a `Ok(Response::new())` with the given</span>
+<span class="doccomment">/// modifier. The default modifier is `status::BadRequest`.</span>
+<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">iexpect</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">option</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (<span class="macro">iexpect</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">option</span>, <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">status</span>::<span class="ident">BadRequest</span>));
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">option</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">modifier</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (<span class="kw">match</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">option</span> {
+        ::<span class="ident">std</span>::<span class="ident">option</span>::<span class="prelude-ty">Option</span>::<span class="prelude-val">Some</span>(<span class="ident">x</span>) <span class="op">=&gt;</span> <span class="ident">x</span>,
+        ::<span class="ident">std</span>::<span class="ident">option</span>::<span class="prelude-ty">Option</span>::<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span>::<span class="prelude-val">Ok</span>(
+            <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">response</span>::<span class="ident">Response</span>::<span class="ident">with</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">modifier</span>))
     })
 }
 </pre>

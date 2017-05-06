@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -118,81 +118,81 @@
 <span id="73">73</span>
 <span id="74">74</span>
 <span id="75">75</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
-<span class='kw'>use</span> {<span class='ident'>Errno</span>, <span class='prelude-ty'>Result</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
+<span class="kw">use</span> {<span class="ident">Errno</span>, <span class="prelude-ty">Result</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ffi</span>::<span class='ident'>PollFd</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ffi</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ffi</span>::<span class="ident">PollFd</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ffi</span>::<span class="ident">consts</span>::<span class="kw-2">*</span>;
 
-<span class='kw'>mod</span> <span class='ident'>ffi</span> {
-    <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>consts</span>::<span class='kw-2'>*</span>;
+<span class="kw">mod</span> <span class="ident">ffi</span> {
+    <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">consts</span>::<span class="kw-2">*</span>;
 
-    <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PollFd</span> {
-        <span class='kw'>pub</span> <span class='ident'>fd</span>: <span class='ident'>c_int</span>,
-        <span class='kw'>pub</span> <span class='ident'>events</span>: <span class='ident'>EventFlags</span>,
-        <span class='kw'>pub</span> <span class='ident'>revents</span>: <span class='ident'>EventFlags</span>
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
+    <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PollFd</span> {
+        <span class="kw">pub</span> <span class="ident">fd</span>: <span class="ident">c_int</span>,
+        <span class="kw">pub</span> <span class="ident">events</span>: <span class="ident">EventFlags</span>,
+        <span class="kw">pub</span> <span class="ident">revents</span>: <span class="ident">EventFlags</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>consts</span> {
-        <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_short</span>, <span class='ident'>c_ulong</span>};
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;linux&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">consts</span> {
+        <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_short</span>, <span class="ident">c_ulong</span>};
 
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>EventFlags</span>: <span class='ident'>c_short</span> {
-                <span class='kw'>const</span> <span class='ident'>POLLIN</span>     <span class='op'>=</span> <span class='number'>0x001</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLPRI</span>    <span class='op'>=</span> <span class='number'>0x002</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLOUT</span>    <span class='op'>=</span> <span class='number'>0x004</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLRDNORM</span> <span class='op'>=</span> <span class='number'>0x040</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLWRNORM</span> <span class='op'>=</span> <span class='number'>0x100</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLRDBAND</span> <span class='op'>=</span> <span class='number'>0x080</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLWRBAND</span> <span class='op'>=</span> <span class='number'>0x200</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLERR</span>    <span class='op'>=</span> <span class='number'>0x008</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLHUP</span>    <span class='op'>=</span> <span class='number'>0x010</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLNVAL</span>   <span class='op'>=</span> <span class='number'>0x020</span>,
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">EventFlags</span>: <span class="ident">c_short</span> {
+                <span class="kw">const</span> <span class="ident">POLLIN</span>     <span class="op">=</span> <span class="number">0x001</span>,
+                <span class="kw">const</span> <span class="ident">POLLPRI</span>    <span class="op">=</span> <span class="number">0x002</span>,
+                <span class="kw">const</span> <span class="ident">POLLOUT</span>    <span class="op">=</span> <span class="number">0x004</span>,
+                <span class="kw">const</span> <span class="ident">POLLRDNORM</span> <span class="op">=</span> <span class="number">0x040</span>,
+                <span class="kw">const</span> <span class="ident">POLLWRNORM</span> <span class="op">=</span> <span class="number">0x100</span>,
+                <span class="kw">const</span> <span class="ident">POLLRDBAND</span> <span class="op">=</span> <span class="number">0x080</span>,
+                <span class="kw">const</span> <span class="ident">POLLWRBAND</span> <span class="op">=</span> <span class="number">0x200</span>,
+                <span class="kw">const</span> <span class="ident">POLLERR</span>    <span class="op">=</span> <span class="number">0x008</span>,
+                <span class="kw">const</span> <span class="ident">POLLHUP</span>    <span class="op">=</span> <span class="number">0x010</span>,
+                <span class="kw">const</span> <span class="ident">POLLNVAL</span>   <span class="op">=</span> <span class="number">0x020</span>,
             }
         }
 
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>nfds_t</span> <span class='op'>=</span> <span class='ident'>c_ulong</span>;
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">nfds_t</span> <span class="op">=</span> <span class="ident">c_ulong</span>;
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;macos&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>consts</span> {
-        <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_short</span>, <span class='ident'>c_uint</span>};
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;macos&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">consts</span> {
+        <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">c_short</span>, <span class="ident">c_uint</span>};
 
-        <span class='macro'>bitflags</span><span class='macro'>!</span> {
-            <span class='ident'>flags</span> <span class='ident'>EventFlags</span>: <span class='ident'>c_short</span> {
-                <span class='kw'>const</span> <span class='ident'>POLLIN</span>     <span class='op'>=</span> <span class='number'>0x0001</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLPRI</span>    <span class='op'>=</span> <span class='number'>0x0002</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLOUT</span>    <span class='op'>=</span> <span class='number'>0x0004</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLRDNORM</span> <span class='op'>=</span> <span class='number'>0x0040</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLWRNORM</span> <span class='op'>=</span> <span class='number'>0x0004</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLRDBAND</span> <span class='op'>=</span> <span class='number'>0x0080</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLWRBAND</span> <span class='op'>=</span> <span class='number'>0x0100</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLERR</span>    <span class='op'>=</span> <span class='number'>0x0008</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLHUP</span>    <span class='op'>=</span> <span class='number'>0x0010</span>,
-                <span class='kw'>const</span> <span class='ident'>POLLNVAL</span>   <span class='op'>=</span> <span class='number'>0x0020</span>,
+        <span class="macro">bitflags</span><span class="macro">!</span> {
+            <span class="ident">flags</span> <span class="ident">EventFlags</span>: <span class="ident">c_short</span> {
+                <span class="kw">const</span> <span class="ident">POLLIN</span>     <span class="op">=</span> <span class="number">0x0001</span>,
+                <span class="kw">const</span> <span class="ident">POLLPRI</span>    <span class="op">=</span> <span class="number">0x0002</span>,
+                <span class="kw">const</span> <span class="ident">POLLOUT</span>    <span class="op">=</span> <span class="number">0x0004</span>,
+                <span class="kw">const</span> <span class="ident">POLLRDNORM</span> <span class="op">=</span> <span class="number">0x0040</span>,
+                <span class="kw">const</span> <span class="ident">POLLWRNORM</span> <span class="op">=</span> <span class="number">0x0004</span>,
+                <span class="kw">const</span> <span class="ident">POLLRDBAND</span> <span class="op">=</span> <span class="number">0x0080</span>,
+                <span class="kw">const</span> <span class="ident">POLLWRBAND</span> <span class="op">=</span> <span class="number">0x0100</span>,
+                <span class="kw">const</span> <span class="ident">POLLERR</span>    <span class="op">=</span> <span class="number">0x0008</span>,
+                <span class="kw">const</span> <span class="ident">POLLHUP</span>    <span class="op">=</span> <span class="number">0x0010</span>,
+                <span class="kw">const</span> <span class="ident">POLLNVAL</span>   <span class="op">=</span> <span class="number">0x0020</span>,
             }
         }
 
-        <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>nfds_t</span> <span class='op'>=</span> <span class='ident'>c_uint</span>;
+        <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">nfds_t</span> <span class="op">=</span> <span class="ident">c_uint</span>;
     }
 
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>improper_ctypes</span>)]</span>
-    <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>poll</span>(<span class='ident'>fds</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>PollFd</span>, <span class='ident'>nfds</span>: <span class='ident'>nfds_t</span>, <span class='ident'>timeout</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">improper_ctypes</span>)]</span>
+    <span class="kw">extern</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll</span>(<span class="ident">fds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PollFd</span>, <span class="ident">nfds</span>: <span class="ident">nfds_t</span>, <span class="ident">timeout</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>poll</span>(<span class='ident'>fds</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>PollFd</span>], <span class='ident'>timeout</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>c_int</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>ffi</span>::<span class='ident'>poll</span>(<span class='ident'>fds</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>fds</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>ffi</span>::<span class='ident'>nfds_t</span>, <span class='ident'>timeout</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll</span>(<span class="ident">fds</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">PollFd</span>], <span class="ident">timeout</span>: <span class="ident">c_int</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">c_int</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+        <span class="ident">ffi</span>::<span class="ident">poll</span>(<span class="ident">fds</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">fds</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">ffi</span>::<span class="ident">nfds_t</span>, <span class="ident">timeout</span>)
     };
 
-    <span class='ident'>Errno</span>::<span class='ident'>result</span>(<span class='ident'>res</span>)
+    <span class="ident">Errno</span>::<span class="ident">result</span>(<span class="ident">res</span>)
 }
 </pre>
 </section>

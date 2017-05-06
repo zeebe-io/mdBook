@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -222,185 +222,185 @@
 <span id="177">177</span>
 <span id="178">178</span>
 <span id="179">179</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 
-<span class='comment'>// Below are platform specific functions for testing the equality of two files.</span>
-<span class='comment'>// Namely, we want to know whether two paths points to precisely the same</span>
-<span class='comment'>// underlying file object.</span>
-<span class='comment'>//</span>
-<span class='comment'>// In our particular use case, the paths should only be directories. If we&#39;re</span>
-<span class='comment'>// assuming that directories cannot be hard linked, then it seems like equality</span>
-<span class='comment'>// could be determined by canonicalizing both paths.</span>
-<span class='comment'>//</span>
-<span class='comment'>// I&#39;d also note that other popular libraries (Java&#39;s NIO and Boost) expose</span>
-<span class='comment'>// a function like `is_same_file` whose implementation is similar. (i.e., check</span>
-<span class='comment'>// dev/inode on Unix and check `nFileIndex{High,Low}` on Windows.) So this may</span>
-<span class='comment'>// be a candidate for extracting into a separate crate.</span>
-<span class='comment'>//</span>
-<span class='comment'>// ---AG</span>
+<span class="comment">// Below are platform specific functions for testing the equality of two files.</span>
+<span class="comment">// Namely, we want to know whether two paths points to precisely the same</span>
+<span class="comment">// underlying file object.</span>
+<span class="comment">//</span>
+<span class="comment">// In our particular use case, the paths should only be directories. If we&#39;re</span>
+<span class="comment">// assuming that directories cannot be hard linked, then it seems like equality</span>
+<span class="comment">// could be determined by canonicalizing both paths.</span>
+<span class="comment">//</span>
+<span class="comment">// I&#39;d also note that other popular libraries (Java&#39;s NIO and Boost) expose</span>
+<span class="comment">// a function like `is_same_file` whose implementation is similar. (i.e., check</span>
+<span class="comment">// dev/inode on Unix and check `nFileIndex{High,Low}` on Windows.) So this may</span>
+<span class="comment">// be a candidate for extracting into a separate crate.</span>
+<span class="comment">//</span>
+<span class="comment">// ---AG</span>
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_same_file</span><span class='op'>&lt;</span><span class='ident'>P</span>, <span class='ident'>Q</span><span class='op'>&gt;</span>(
-    <span class='ident'>p1</span>: <span class='ident'>P</span>,
-    <span class='ident'>p2</span>: <span class='ident'>Q</span>,
-) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;</span>, <span class='ident'>Q</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>fs</span>::<span class='ident'>MetadataExt</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_same_file</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">Q</span><span class="op">&gt;</span>(
+    <span class="ident">p1</span>: <span class="ident">P</span>,
+    <span class="ident">p2</span>: <span class="ident">Q</span>,
+) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>, <span class="ident">Q</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">fs</span>::<span class="ident">MetadataExt</span>;
 
-    <span class='kw'>let</span> <span class='ident'>md1</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>metadata</span>(<span class='ident'>p1</span>));
-    <span class='kw'>let</span> <span class='ident'>md2</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>fs</span>::<span class='ident'>metadata</span>(<span class='ident'>p2</span>));
-    <span class='prelude-val'>Ok</span>((<span class='ident'>md1</span>.<span class='ident'>dev</span>(), <span class='ident'>md1</span>.<span class='ident'>ino</span>()) <span class='op'>==</span> (<span class='ident'>md2</span>.<span class='ident'>dev</span>(), <span class='ident'>md2</span>.<span class='ident'>ino</span>()))
+    <span class="kw">let</span> <span class="ident">md1</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="ident">p1</span>));
+    <span class="kw">let</span> <span class="ident">md2</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="ident">p2</span>));
+    <span class="prelude-val">Ok</span>((<span class="ident">md1</span>.<span class="ident">dev</span>(), <span class="ident">md1</span>.<span class="ident">ino</span>()) <span class="op">==</span> (<span class="ident">md2</span>.<span class="ident">dev</span>(), <span class="ident">md2</span>.<span class="ident">ino</span>()))
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_same_file</span><span class='op'>&lt;</span><span class='ident'>P</span>, <span class='ident'>Q</span><span class='op'>&gt;</span>(
-    <span class='ident'>p1</span>: <span class='ident'>P</span>,
-    <span class='ident'>p2</span>: <span class='ident'>Q</span>,
-) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;</span>, <span class='ident'>Q</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Deref</span>, <span class='ident'>Drop</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>windows</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_same_file</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">Q</span><span class="op">&gt;</span>(
+    <span class="ident">p1</span>: <span class="ident">P</span>,
+    <span class="ident">p2</span>: <span class="ident">Q</span>,
+) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>, <span class="ident">Q</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">Drop</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">windows</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
 
-    <span class='kw'>use</span> <span class='ident'>kernel32</span>;
-    <span class='kw'>use</span> <span class='ident'>winapi</span>::{<span class='self'>self</span>, <span class='ident'>HANDLE</span>};
+    <span class="kw">use</span> <span class="ident">kernel32</span>;
+    <span class="kw">use</span> <span class="ident">winapi</span>::{<span class="self">self</span>, <span class="ident">HANDLE</span>};
 
-    <span class='kw'>struct</span> <span class='ident'>Handle</span>(<span class='ident'>HANDLE</span>);
+    <span class="kw">struct</span> <span class="ident">Handle</span>(<span class="ident">HANDLE</span>);
 
-    <span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Handle</span> {
-        <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-            <span class='kw'>unsafe</span> { <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>kernel32</span>::<span class='ident'>CloseHandle</span>(<span class='self'>self</span>.<span class='number'>0</span>); }
+    <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+        <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+            <span class="kw">unsafe</span> { <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">kernel32</span>::<span class="ident">CloseHandle</span>(<span class="self">self</span>.<span class="number">0</span>); }
         }
     }
 
-    <span class='kw'>impl</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>Handle</span> {
-        <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>HANDLE</span>;
-        <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>HANDLE</span> { <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span> }
+    <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Handle</span> {
+        <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">HANDLE</span>;
+        <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">HANDLE</span> { <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> }
     }
 
-    <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_snake_case</span>)]</span>
-    <span class='kw'>struct</span> <span class='ident'>BY_HANDLE_FILE_INFORMATION</span> {
-        <span class='ident'>dwFileAttributes</span>: <span class='ident'>winapi</span>::<span class='ident'>DWORD</span>,
-        <span class='ident'>ftCreationTime</span>: <span class='ident'>winapi</span>::<span class='ident'>FILETIME</span>,
-        <span class='ident'>ftLastAccessTime</span>: <span class='ident'>winapi</span>::<span class='ident'>FILETIME</span>,
-        <span class='ident'>ftLastWriteTime</span>: <span class='ident'>winapi</span>::<span class='ident'>FILETIME</span>,
-        <span class='ident'>dwVolumeSerialNumber</span>: <span class='ident'>winapi</span>::<span class='ident'>DWORD</span>,
-        <span class='ident'>nFileSizeHigh</span>: <span class='ident'>winapi</span>::<span class='ident'>DWORD</span>,
-        <span class='ident'>nFileSizeLow</span>: <span class='ident'>winapi</span>::<span class='ident'>DWORD</span>,
-        <span class='ident'>nNumberOfLinks</span>: <span class='ident'>winapi</span>::<span class='ident'>DWORD</span>,
-        <span class='ident'>nFileIndexHigh</span>: <span class='ident'>winapi</span>::<span class='ident'>DWORD</span>,
-        <span class='ident'>nFileIndexLow</span>: <span class='ident'>winapi</span>::<span class='ident'>DWORD</span>,
+    <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
+    <span class="kw">struct</span> <span class="ident">BY_HANDLE_FILE_INFORMATION</span> {
+        <span class="ident">dwFileAttributes</span>: <span class="ident">winapi</span>::<span class="ident">DWORD</span>,
+        <span class="ident">ftCreationTime</span>: <span class="ident">winapi</span>::<span class="ident">FILETIME</span>,
+        <span class="ident">ftLastAccessTime</span>: <span class="ident">winapi</span>::<span class="ident">FILETIME</span>,
+        <span class="ident">ftLastWriteTime</span>: <span class="ident">winapi</span>::<span class="ident">FILETIME</span>,
+        <span class="ident">dwVolumeSerialNumber</span>: <span class="ident">winapi</span>::<span class="ident">DWORD</span>,
+        <span class="ident">nFileSizeHigh</span>: <span class="ident">winapi</span>::<span class="ident">DWORD</span>,
+        <span class="ident">nFileSizeLow</span>: <span class="ident">winapi</span>::<span class="ident">DWORD</span>,
+        <span class="ident">nNumberOfLinks</span>: <span class="ident">winapi</span>::<span class="ident">DWORD</span>,
+        <span class="ident">nFileIndexHigh</span>: <span class="ident">winapi</span>::<span class="ident">DWORD</span>,
+        <span class="ident">nFileIndexLow</span>: <span class="ident">winapi</span>::<span class="ident">DWORD</span>,
     }
 
-    <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
-    <span class='kw'>type</span> <span class='ident'>LPBY_HANDLE_FILE_INFORMATION</span> <span class='op'>=</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>BY_HANDLE_FILE_INFORMATION</span>;
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
+    <span class="kw">type</span> <span class="ident">LPBY_HANDLE_FILE_INFORMATION</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">BY_HANDLE_FILE_INFORMATION</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>file_info</span>(<span class='ident'>h</span>: <span class='kw-2'>&amp;</span><span class='ident'>Handle</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>BY_HANDLE_FILE_INFORMATION</span><span class='op'>&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;ws2_32&quot;</span>)]</span>
-        <span class='attribute'>#[<span class='ident'>link</span>(<span class='ident'>name</span> <span class='op'>=</span> <span class='string'>&quot;userenv&quot;</span>)]</span>
-        <span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> {
-            <span class='kw'>fn</span> <span class='ident'>GetFileInformationByHandle</span>(
-                <span class='ident'>hFile</span>: <span class='ident'>HANDLE</span>,
-                <span class='ident'>lpFileInformation</span>: <span class='ident'>LPBY_HANDLE_FILE_INFORMATION</span>,
-            ) <span class='op'>-&gt;</span> <span class='ident'>winapi</span>::<span class='ident'>BOOL</span>;
+    <span class="kw">fn</span> <span class="ident">file_info</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BY_HANDLE_FILE_INFORMATION</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;ws2_32&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">link</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;userenv&quot;</span>)]</span>
+        <span class="kw">extern</span> <span class="string">&quot;system&quot;</span> {
+            <span class="kw">fn</span> <span class="ident">GetFileInformationByHandle</span>(
+                <span class="ident">hFile</span>: <span class="ident">HANDLE</span>,
+                <span class="ident">lpFileInformation</span>: <span class="ident">LPBY_HANDLE_FILE_INFORMATION</span>,
+            ) <span class="op">-&gt;</span> <span class="ident">winapi</span>::<span class="ident">BOOL</span>;
         }
 
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>info</span>: <span class='ident'>BY_HANDLE_FILE_INFORMATION</span> <span class='op'>=</span> ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>zeroed</span>();
-            <span class='kw'>if</span> <span class='ident'>GetFileInformationByHandle</span>(<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='ident'>h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>info</span>) <span class='op'>==</span> <span class='number'>0</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>last_os_error</span>())
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>info</span>)
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">info</span>: <span class="ident">BY_HANDLE_FILE_INFORMATION</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">zeroed</span>();
+            <span class="kw">if</span> <span class="ident">GetFileInformationByHandle</span>(<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">h</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">info</span>) <span class="op">==</span> <span class="number">0</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>())
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">info</span>)
             }
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>open_read_attr</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>p</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Handle</span><span class='op'>&gt;</span> {
-        <span class='comment'>// According to MSDN, `FILE_FLAG_BACKUP_SEMANTICS`</span>
-        <span class='comment'>// must be set in order to get a handle to a directory:</span>
-        <span class='comment'>// https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx</span>
-        <span class='kw'>let</span> <span class='ident'>h</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>kernel32</span>::<span class='ident'>CreateFileW</span>(
-                <span class='ident'>to_utf16</span>(<span class='ident'>p</span>.<span class='ident'>as_ref</span>()).<span class='ident'>as_ptr</span>(),
-                <span class='number'>0</span>,
-                <span class='ident'>winapi</span>::<span class='ident'>FILE_SHARE_READ</span>
-                <span class='op'>|</span> <span class='ident'>winapi</span>::<span class='ident'>FILE_SHARE_WRITE</span>
-                <span class='op'>|</span> <span class='ident'>winapi</span>::<span class='ident'>FILE_SHARE_DELETE</span>,
-                <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(),
-                <span class='ident'>winapi</span>::<span class='ident'>OPEN_EXISTING</span>,
-                <span class='ident'>winapi</span>::<span class='ident'>FILE_FLAG_BACKUP_SEMANTICS</span>,
-                <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>())
+    <span class="kw">fn</span> <span class="ident">open_read_attr</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">p</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&gt;</span> {
+        <span class="comment">// According to MSDN, `FILE_FLAG_BACKUP_SEMANTICS`</span>
+        <span class="comment">// must be set in order to get a handle to a directory:</span>
+        <span class="comment">// https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx</span>
+        <span class="kw">let</span> <span class="ident">h</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="ident">kernel32</span>::<span class="ident">CreateFileW</span>(
+                <span class="ident">to_utf16</span>(<span class="ident">p</span>.<span class="ident">as_ref</span>()).<span class="ident">as_ptr</span>(),
+                <span class="number">0</span>,
+                <span class="ident">winapi</span>::<span class="ident">FILE_SHARE_READ</span>
+                <span class="op">|</span> <span class="ident">winapi</span>::<span class="ident">FILE_SHARE_WRITE</span>
+                <span class="op">|</span> <span class="ident">winapi</span>::<span class="ident">FILE_SHARE_DELETE</span>,
+                <span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+                <span class="ident">winapi</span>::<span class="ident">OPEN_EXISTING</span>,
+                <span class="ident">winapi</span>::<span class="ident">FILE_FLAG_BACKUP_SEMANTICS</span>,
+                <span class="ident">ptr</span>::<span class="ident">null_mut</span>())
         };
-        <span class='kw'>if</span> <span class='ident'>h</span> <span class='op'>==</span> <span class='ident'>winapi</span>::<span class='ident'>INVALID_HANDLE_VALUE</span> {
-            <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>last_os_error</span>())
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Handle</span>(<span class='ident'>h</span>))
+        <span class="kw">if</span> <span class="ident">h</span> <span class="op">==</span> <span class="ident">winapi</span>::<span class="ident">INVALID_HANDLE_VALUE</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">Handle</span>(<span class="ident">h</span>))
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>to_utf16</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>Path</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u16</span><span class='op'>&gt;</span> {
-        <span class='ident'>s</span>.<span class='ident'>as_os_str</span>().<span class='ident'>encode_wide</span>().<span class='ident'>chain</span>(<span class='prelude-val'>Some</span>(<span class='number'>0</span>)).<span class='ident'>collect</span>()
+    <span class="kw">fn</span> <span class="ident">to_utf16</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>.<span class="ident">as_os_str</span>().<span class="ident">encode_wide</span>().<span class="ident">chain</span>(<span class="prelude-val">Some</span>(<span class="number">0</span>)).<span class="ident">collect</span>()
     }
 
-    <span class='comment'>// For correctness, it is critical that both file handles remain open while</span>
-    <span class='comment'>// their attributes are checked for equality. In particular, the file index</span>
-    <span class='comment'>// numbers are not guaranteed to remain stable over time.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// See the docs and remarks on MSDN:</span>
-    <span class='comment'>// https://msdn.microsoft.com/en-us/library/windows/desktop/aa363788(v=vs.85).aspx</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// It gets worse. It appears that the index numbers are not always</span>
-    <span class='comment'>// guaranteed to be unqiue. Namely, ReFS uses 128 bit numbers for unique</span>
-    <span class='comment'>// identifiers. This requires a distinct syscall to get `FILE_ID_INFO`</span>
-    <span class='comment'>// documented here:</span>
-    <span class='comment'>// https://msdn.microsoft.com/en-us/library/windows/desktop/hh802691(v=vs.85).aspx</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// It seems straight-forward enough to modify this code to use</span>
-    <span class='comment'>// `FILE_ID_INFO` when available (minimum Windows Server 2012), but I don&#39;t</span>
-    <span class='comment'>// have access to such Windows machines.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// Two notes.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// 1. Java&#39;s NIO uses the approach implemented here and appears to ignore</span>
-    <span class='comment'>//    `FILE_ID_INFO` altogether. So Java&#39;s NIO and this code are</span>
-    <span class='comment'>//    susceptible to bugs when running on a file system where</span>
-    <span class='comment'>//    `nFileIndex{Low,High}` are not unique.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// 2. LLVM has a bug where they fetch the id of a file and continue to use</span>
-    <span class='comment'>//    it even after the handle has been closed, so that uniqueness is no</span>
-    <span class='comment'>//    longer guaranteed (when `nFileIndex{Low,High}` are unique).</span>
-    <span class='comment'>//    bug report: http://lists.llvm.org/pipermail/llvm-bugs/2014-December/037218.html</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// All said and done, checking whether two files are the same on Windows</span>
-    <span class='comment'>// seems quite tricky. Moreover, even if the code is technically incorrect,</span>
-    <span class='comment'>// it seems like the chances of actually observing incorrect behavior are</span>
-    <span class='comment'>// extremely small. Nevertheless, we mitigate this by checking size too.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// In the case where this code is erroneous, two files will be reported</span>
-    <span class='comment'>// as equivalent when they are in fact distinct. This will cause the loop</span>
-    <span class='comment'>// detection code to report a false positive, which will prevent descending</span>
-    <span class='comment'>// into the offending directory. As far as failure modes goes, this isn&#39;t</span>
-    <span class='comment'>// that bad.</span>
-    <span class='kw'>let</span> <span class='ident'>h1</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>open_read_attr</span>(<span class='kw-2'>&amp;</span><span class='ident'>p1</span>));
-    <span class='kw'>let</span> <span class='ident'>h2</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>open_read_attr</span>(<span class='kw-2'>&amp;</span><span class='ident'>p2</span>));
-    <span class='kw'>let</span> <span class='ident'>i1</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>file_info</span>(<span class='kw-2'>&amp;</span><span class='ident'>h1</span>));
-    <span class='kw'>let</span> <span class='ident'>i2</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>file_info</span>(<span class='kw-2'>&amp;</span><span class='ident'>h2</span>));
+    <span class="comment">// For correctness, it is critical that both file handles remain open while</span>
+    <span class="comment">// their attributes are checked for equality. In particular, the file index</span>
+    <span class="comment">// numbers are not guaranteed to remain stable over time.</span>
+    <span class="comment">//</span>
+    <span class="comment">// See the docs and remarks on MSDN:</span>
+    <span class="comment">// https://msdn.microsoft.com/en-us/library/windows/desktop/aa363788(v=vs.85).aspx</span>
+    <span class="comment">//</span>
+    <span class="comment">// It gets worse. It appears that the index numbers are not always</span>
+    <span class="comment">// guaranteed to be unqiue. Namely, ReFS uses 128 bit numbers for unique</span>
+    <span class="comment">// identifiers. This requires a distinct syscall to get `FILE_ID_INFO`</span>
+    <span class="comment">// documented here:</span>
+    <span class="comment">// https://msdn.microsoft.com/en-us/library/windows/desktop/hh802691(v=vs.85).aspx</span>
+    <span class="comment">//</span>
+    <span class="comment">// It seems straight-forward enough to modify this code to use</span>
+    <span class="comment">// `FILE_ID_INFO` when available (minimum Windows Server 2012), but I don&#39;t</span>
+    <span class="comment">// have access to such Windows machines.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Two notes.</span>
+    <span class="comment">//</span>
+    <span class="comment">// 1. Java&#39;s NIO uses the approach implemented here and appears to ignore</span>
+    <span class="comment">//    `FILE_ID_INFO` altogether. So Java&#39;s NIO and this code are</span>
+    <span class="comment">//    susceptible to bugs when running on a file system where</span>
+    <span class="comment">//    `nFileIndex{Low,High}` are not unique.</span>
+    <span class="comment">//</span>
+    <span class="comment">// 2. LLVM has a bug where they fetch the id of a file and continue to use</span>
+    <span class="comment">//    it even after the handle has been closed, so that uniqueness is no</span>
+    <span class="comment">//    longer guaranteed (when `nFileIndex{Low,High}` are unique).</span>
+    <span class="comment">//    bug report: http://lists.llvm.org/pipermail/llvm-bugs/2014-December/037218.html</span>
+    <span class="comment">//</span>
+    <span class="comment">// All said and done, checking whether two files are the same on Windows</span>
+    <span class="comment">// seems quite tricky. Moreover, even if the code is technically incorrect,</span>
+    <span class="comment">// it seems like the chances of actually observing incorrect behavior are</span>
+    <span class="comment">// extremely small. Nevertheless, we mitigate this by checking size too.</span>
+    <span class="comment">//</span>
+    <span class="comment">// In the case where this code is erroneous, two files will be reported</span>
+    <span class="comment">// as equivalent when they are in fact distinct. This will cause the loop</span>
+    <span class="comment">// detection code to report a false positive, which will prevent descending</span>
+    <span class="comment">// into the offending directory. As far as failure modes goes, this isn&#39;t</span>
+    <span class="comment">// that bad.</span>
+    <span class="kw">let</span> <span class="ident">h1</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">open_read_attr</span>(<span class="kw-2">&amp;</span><span class="ident">p1</span>));
+    <span class="kw">let</span> <span class="ident">h2</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">open_read_attr</span>(<span class="kw-2">&amp;</span><span class="ident">p2</span>));
+    <span class="kw">let</span> <span class="ident">i1</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">file_info</span>(<span class="kw-2">&amp;</span><span class="ident">h1</span>));
+    <span class="kw">let</span> <span class="ident">i2</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">file_info</span>(<span class="kw-2">&amp;</span><span class="ident">h2</span>));
 
-    <span class='kw'>let</span> <span class='ident'>k1</span> <span class='op'>=</span> (
-        <span class='ident'>i1</span>.<span class='ident'>dwVolumeSerialNumber</span>,
-        <span class='ident'>i1</span>.<span class='ident'>nFileIndexHigh</span>, <span class='ident'>i1</span>.<span class='ident'>nFileIndexLow</span>,
-        <span class='ident'>i1</span>.<span class='ident'>nFileSizeHigh</span>, <span class='ident'>i1</span>.<span class='ident'>nFileSizeLow</span>,
+    <span class="kw">let</span> <span class="ident">k1</span> <span class="op">=</span> (
+        <span class="ident">i1</span>.<span class="ident">dwVolumeSerialNumber</span>,
+        <span class="ident">i1</span>.<span class="ident">nFileIndexHigh</span>, <span class="ident">i1</span>.<span class="ident">nFileIndexLow</span>,
+        <span class="ident">i1</span>.<span class="ident">nFileSizeHigh</span>, <span class="ident">i1</span>.<span class="ident">nFileSizeLow</span>,
     );
-    <span class='kw'>let</span> <span class='ident'>k2</span> <span class='op'>=</span> (
-        <span class='ident'>i2</span>.<span class='ident'>dwVolumeSerialNumber</span>,
-        <span class='ident'>i2</span>.<span class='ident'>nFileIndexHigh</span>, <span class='ident'>i2</span>.<span class='ident'>nFileIndexLow</span>,
-        <span class='ident'>i2</span>.<span class='ident'>nFileSizeHigh</span>, <span class='ident'>i2</span>.<span class='ident'>nFileSizeLow</span>,
+    <span class="kw">let</span> <span class="ident">k2</span> <span class="op">=</span> (
+        <span class="ident">i2</span>.<span class="ident">dwVolumeSerialNumber</span>,
+        <span class="ident">i2</span>.<span class="ident">nFileIndexHigh</span>, <span class="ident">i2</span>.<span class="ident">nFileIndexLow</span>,
+        <span class="ident">i2</span>.<span class="ident">nFileSizeHigh</span>, <span class="ident">i2</span>.<span class="ident">nFileSizeLow</span>,
     );
-    <span class='prelude-val'>Ok</span>(<span class='ident'>k1</span> <span class='op'>==</span> <span class='ident'>k2</span>)
+    <span class="prelude-val">Ok</span>(<span class="ident">k1</span> <span class="op">==</span> <span class="ident">k2</span>)
 }
 </pre>
 </section>

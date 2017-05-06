@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -282,244 +282,244 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>PathBuf</span>, <span class='ident'>Path</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">PathBuf</span>, <span class="ident">Path</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>time</span>::{<span class='self'>self</span>, <span class='ident'>Timespec</span>};
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">time</span>::{<span class="self">self</span>, <span class="ident">Timespec</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 
-<span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
-<span class='kw'>use</span> <span class='ident'>iron</span>::{<span class='ident'>Handler</span>, <span class='ident'>Url</span>, <span class='ident'>status</span>};
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>modifier</span>::<span class='ident'>Modifier</span>;
-<span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>modifiers</span>::<span class='ident'>Redirect</span>;
-<span class='kw'>use</span> <span class='ident'>mount</span>::<span class='ident'>OriginalUrl</span>;
-<span class='kw'>use</span> <span class='ident'>requested_path</span>::<span class='ident'>RequestedPath</span>;
-<span class='kw'>use</span> <span class='ident'>url</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::{<span class="ident">Handler</span>, <span class="ident">Url</span>, <span class="ident">status</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">modifier</span>::<span class="ident">Modifier</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">modifiers</span>::<span class="ident">Redirect</span>;
+<span class="kw">use</span> <span class="ident">mount</span>::<span class="ident">OriginalUrl</span>;
+<span class="kw">use</span> <span class="ident">requested_path</span>::<span class="ident">RequestedPath</span>;
+<span class="kw">use</span> <span class="ident">url</span>;
 
-<span class='doccomment'>/// The static file-serving `Handler`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This handler serves files from a single filesystem path, which may be absolute or relative.</span>
-<span class='doccomment'>/// Incoming requests are mapped onto the filesystem by appending their URL path to the handler&#39;s</span>
-<span class='doccomment'>/// root path. If the filesystem path corresponds to a regular file, the handler will attempt to</span>
-<span class='doccomment'>/// serve it. Otherwise, if the path corresponds to a directory containing an `index.html`,</span>
-<span class='doccomment'>/// the handler will attempt to serve that instead.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ## Errors</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// If the path doesn&#39;t match any real object in the filesystem, the handler will return</span>
-<span class='doccomment'>/// a Response with `status::NotFound`. If an IO error occurs whilst attempting to serve</span>
-<span class='doccomment'>/// a file, `FileError(IoError)` will be returned.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Static</span> {
-    <span class='doccomment'>/// The path this handler is serving files from.</span>
-    <span class='kw'>pub</span> <span class='ident'>root</span>: <span class='ident'>PathBuf</span>,
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-    <span class='ident'>cache</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Cache</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// The static file-serving `Handler`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This handler serves files from a single filesystem path, which may be absolute or relative.</span>
+<span class="doccomment">/// Incoming requests are mapped onto the filesystem by appending their URL path to the handler&#39;s</span>
+<span class="doccomment">/// root path. If the filesystem path corresponds to a regular file, the handler will attempt to</span>
+<span class="doccomment">/// serve it. Otherwise, if the path corresponds to a directory containing an `index.html`,</span>
+<span class="doccomment">/// the handler will attempt to serve that instead.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ## Errors</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// If the path doesn&#39;t match any real object in the filesystem, the handler will return</span>
+<span class="doccomment">/// a Response with `status::NotFound`. If an IO error occurs whilst attempting to serve</span>
+<span class="doccomment">/// a file, `FileError(IoError)` will be returned.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Static</span> {
+    <span class="doccomment">/// The path this handler is serving files from.</span>
+    <span class="kw">pub</span> <span class="ident">root</span>: <span class="ident">PathBuf</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+    <span class="ident">cache</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cache</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Static</span> {
-    <span class='doccomment'>/// Create a new instance of `Static` with a given root path.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If `Path::new(&quot;&quot;)` is given, files will be served from the current directory.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;&gt;</span>(<span class='ident'>root</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>Static</span> {
-        <span class='ident'>Static</span> {
-            <span class='ident'>root</span>: <span class='ident'>root</span>.<span class='ident'>into</span>(),
-            <span class='ident'>cache</span>: <span class='prelude-val'>None</span>
+<span class="kw">impl</span> <span class="ident">Static</span> {
+    <span class="doccomment">/// Create a new instance of `Static` with a given root path.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If `Path::new(&quot;&quot;)` is given, files will be served from the current directory.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="ident">root</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">Static</span> {
+        <span class="ident">Static</span> {
+            <span class="ident">root</span>: <span class="ident">root</span>.<span class="ident">into</span>(),
+            <span class="ident">cache</span>: <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// Create a new instance of `Static` with a given root path.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If `Path::new(&quot;&quot;)` is given, files will be served from the current directory.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>))]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span><span class='op'>&gt;&gt;</span>(<span class='ident'>root</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>Static</span> {
-        <span class='ident'>Static</span> {
-            <span class='ident'>root</span>: <span class='ident'>root</span>.<span class='ident'>into</span>(),
+    <span class="doccomment">/// Create a new instance of `Static` with a given root path.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If `Path::new(&quot;&quot;)` is given, files will be served from the current directory.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="ident">root</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">Static</span> {
+        <span class="ident">Static</span> {
+            <span class="ident">root</span>: <span class="ident">root</span>.<span class="ident">into</span>(),
         }
     }
 
-    <span class='doccomment'>/// Specify the response&#39;s `cache-control` header with a given duration. Internally, this is</span>
-    <span class='doccomment'>/// a helper function to set a `Cache` on an instance of `Static`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ## Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```ignore</span>
-    <span class='doccomment'>/// let cached_static_handler = Static::new(path).cache(Duration::from_secs(30*24*60*60));</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cache</span>(<span class='self'>self</span>, <span class='ident'>duration</span>: <span class='ident'>Duration</span>) <span class='op'>-&gt;</span> <span class='ident'>Static</span> {
-        <span class='self'>self</span>.<span class='ident'>set</span>(<span class='ident'>Cache</span>::<span class='ident'>new</span>(<span class='ident'>duration</span>))
+    <span class="doccomment">/// Specify the response&#39;s `cache-control` header with a given duration. Internally, this is</span>
+    <span class="doccomment">/// a helper function to set a `Cache` on an instance of `Static`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```ignore</span>
+    <span class="doccomment">/// let cached_static_handler = Static::new(path).cache(Duration::from_secs(30*24*60*60));</span>
+    <span class="doccomment">/// ```</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cache</span>(<span class="self">self</span>, <span class="ident">duration</span>: <span class="ident">Duration</span>) <span class="op">-&gt;</span> <span class="ident">Static</span> {
+        <span class="self">self</span>.<span class="ident">set</span>(<span class="ident">Cache</span>::<span class="ident">new</span>(<span class="ident">duration</span>))
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>try_cache</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>cache</span> {
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Response</span>::<span class='ident'>with</span>((<span class='ident'>status</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>path</span>.<span class='ident'>as_ref</span>()))),
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>cache</span>) <span class='op'>=&gt;</span> <span class='ident'>cache</span>.<span class='ident'>handle</span>(<span class='ident'>req</span>, <span class='ident'>path</span>.<span class='ident'>as_ref</span>()),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">try_cache</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">path</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">cache</span> {
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">with</span>((<span class="ident">status</span>::<span class="prelude-val">Ok</span>, <span class="ident">path</span>.<span class="ident">as_ref</span>()))),
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">cache</span>) <span class="op">=&gt;</span> <span class="ident">cache</span>.<span class="ident">handle</span>(<span class="ident">req</span>, <span class="ident">path</span>.<span class="ident">as_ref</span>()),
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>Static</span> {
-    <span class='kw'>fn</span> <span class='ident'>handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class="kw">impl</span> <span class="ident">Handler</span> <span class="kw">for</span> <span class="ident">Static</span> {
+    <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
-        <span class='kw'>let</span> <span class='ident'>requested_path</span> <span class='op'>=</span> <span class='ident'>RequestedPath</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>root</span>, <span class='ident'>req</span>);
+        <span class="kw">let</span> <span class="ident">requested_path</span> <span class="op">=</span> <span class="ident">RequestedPath</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>, <span class="ident">req</span>);
 
-        <span class='kw'>let</span> <span class='ident'>metadata</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>fs</span>::<span class='ident'>metadata</span>(<span class='kw-2'>&amp;</span><span class='ident'>requested_path</span>.<span class='ident'>path</span>) {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>meta</span>) <span class='op'>=&gt;</span> <span class='ident'>meta</span>,
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>status</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>e</span>.<span class='ident'>kind</span>() {
-                    <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>NotFound</span> <span class='op'>=&gt;</span> <span class='ident'>status</span>::<span class='ident'>NotFound</span>,
-                    <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>PermissionDenied</span> <span class='op'>=&gt;</span> <span class='ident'>status</span>::<span class='ident'>Forbidden</span>,
-                    _ <span class='op'>=&gt;</span> <span class='ident'>status</span>::<span class='ident'>InternalServerError</span>,
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">requested_path</span>.<span class="ident">path</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">meta</span>) <span class="op">=&gt;</span> <span class="ident">meta</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">kind</span>() {
+                    <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">NotFound</span> <span class="op">=&gt;</span> <span class="ident">status</span>::<span class="ident">NotFound</span>,
+                    <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">PermissionDenied</span> <span class="op">=&gt;</span> <span class="ident">status</span>::<span class="ident">Forbidden</span>,
+                    _ <span class="op">=&gt;</span> <span class="ident">status</span>::<span class="ident">InternalServerError</span>,
                 };
 
-                <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>IronError</span>::<span class='ident'>new</span>(<span class='ident'>e</span>, <span class='ident'>status</span>))
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">IronError</span>::<span class="ident">new</span>(<span class="ident">e</span>, <span class="ident">status</span>))
             },
         };
 
-        <span class='comment'>// If the URL ends in a slash, serve the file directly.</span>
-        <span class='comment'>// Otherwise, redirect to the directory equivalent of the URL.</span>
-        <span class='kw'>if</span> <span class='ident'>requested_path</span>.<span class='ident'>should_redirect</span>(<span class='kw-2'>&amp;</span><span class='ident'>metadata</span>, <span class='ident'>req</span>) {
-            <span class='comment'>// Perform an HTTP 301 Redirect.</span>
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>original_url</span>: <span class='ident'>url</span>::<span class='ident'>Url</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>req</span>.<span class='ident'>extensions</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>OriginalUrl</span><span class='op'>&gt;</span>() {
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>req</span>.<span class='ident'>url</span>,
-                <span class='prelude-val'>Some</span>(<span class='ident'>original_url</span>) <span class='op'>=&gt;</span> <span class='ident'>original_url</span>,
-            }.<span class='ident'>clone</span>().<span class='ident'>into</span>();
+        <span class="comment">// If the URL ends in a slash, serve the file directly.</span>
+        <span class="comment">// Otherwise, redirect to the directory equivalent of the URL.</span>
+        <span class="kw">if</span> <span class="ident">requested_path</span>.<span class="ident">should_redirect</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>, <span class="ident">req</span>) {
+            <span class="comment">// Perform an HTTP 301 Redirect.</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">original_url</span>: <span class="ident">url</span>::<span class="ident">Url</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">req</span>.<span class="ident">extensions</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">OriginalUrl</span><span class="op">&gt;</span>() {
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">req</span>.<span class="ident">url</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">original_url</span>) <span class="op">=&gt;</span> <span class="ident">original_url</span>,
+            }.<span class="ident">clone</span>().<span class="ident">into</span>();
 
-            <span class='comment'>// Append the trailing slash</span>
-            <span class='comment'>//</span>
-            <span class='comment'>// rust-url automatically turns an empty string in the last</span>
-            <span class='comment'>// slot in the path into a trailing slash.</span>
-            <span class='ident'>original_url</span>.<span class='ident'>path_segments_mut</span>().<span class='ident'>unwrap</span>().<span class='ident'>push</span>(<span class='string'>&quot;&quot;</span>);
-            <span class='kw'>let</span> <span class='ident'>redirect_path</span> <span class='op'>=</span> <span class='ident'>Url</span>::<span class='ident'>from_generic_url</span>(<span class='ident'>original_url</span>).<span class='ident'>unwrap</span>();
+            <span class="comment">// Append the trailing slash</span>
+            <span class="comment">//</span>
+            <span class="comment">// rust-url automatically turns an empty string in the last</span>
+            <span class="comment">// slot in the path into a trailing slash.</span>
+            <span class="ident">original_url</span>.<span class="ident">path_segments_mut</span>().<span class="ident">unwrap</span>().<span class="ident">push</span>(<span class="string">&quot;&quot;</span>);
+            <span class="kw">let</span> <span class="ident">redirect_path</span> <span class="op">=</span> <span class="ident">Url</span>::<span class="ident">from_generic_url</span>(<span class="ident">original_url</span>).<span class="ident">unwrap</span>();
 
-            <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Response</span>::<span class='ident'>with</span>((<span class='ident'>status</span>::<span class='ident'>MovedPermanently</span>,
-                                      <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Redirecting to {}&quot;</span>, <span class='ident'>redirect_path</span>),
-                                      <span class='ident'>Redirect</span>(<span class='ident'>redirect_path</span>))));
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">with</span>((<span class="ident">status</span>::<span class="ident">MovedPermanently</span>,
+                                      <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Redirecting to {}&quot;</span>, <span class="ident">redirect_path</span>),
+                                      <span class="ident">Redirect</span>(<span class="ident">redirect_path</span>))));
         }
 
-        <span class='kw'>match</span> <span class='ident'>requested_path</span>.<span class='ident'>get_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>metadata</span>) {
-            <span class='comment'>// If no file is found, return a 404 response.</span>
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>IronError</span>::<span class='ident'>new</span>(<span class='ident'>NoFile</span>, <span class='ident'>status</span>::<span class='ident'>NotFound</span>)),
-            <span class='comment'>// Won&#39;t panic because we know the file exists from get_file.</span>
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-            <span class='prelude-val'>Some</span>(<span class='ident'>path</span>) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>try_cache</span>(<span class='ident'>req</span>, <span class='ident'>path</span>),
-            <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>))]</span>
-            <span class='prelude-val'>Some</span>(<span class='ident'>path</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>path</span>: <span class='kw-2'>&amp;</span><span class='ident'>Path</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>path</span>;
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Response</span>::<span class='ident'>with</span>((<span class='ident'>status</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>path</span>)))
+        <span class="kw">match</span> <span class="ident">requested_path</span>.<span class="ident">get_file</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>) {
+            <span class="comment">// If no file is found, return a 404 response.</span>
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">IronError</span>::<span class="ident">new</span>(<span class="ident">NoFile</span>, <span class="ident">status</span>::<span class="ident">NotFound</span>)),
+            <span class="comment">// Won&#39;t panic because we know the file exists from get_file.</span>
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+            <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">try_cache</span>(<span class="ident">req</span>, <span class="ident">path</span>),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>))]</span>
+            <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">path</span>;
+                <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">with</span>((<span class="ident">status</span>::<span class="prelude-val">Ok</span>, <span class="ident">path</span>)))
             },
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Set</span> <span class='kw'>for</span> <span class='ident'>Static</span> {}
+<span class="kw">impl</span> <span class="ident">Set</span> <span class="kw">for</span> <span class="ident">Static</span> {}
 
-<span class='doccomment'>/// A modifier for `Static` to specify a response&#39;s `cache-control`.</span>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Cache</span> {
-    <span class='doccomment'>/// The length of time the file should be cached for.</span>
-    <span class='kw'>pub</span> <span class='ident'>duration</span>: <span class='ident'>Duration</span>,
+<span class="doccomment">/// A modifier for `Static` to specify a response&#39;s `cache-control`.</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Cache</span> {
+    <span class="doccomment">/// The length of time the file should be cached for.</span>
+    <span class="kw">pub</span> <span class="ident">duration</span>: <span class="ident">Duration</span>,
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>Cache</span> {
-    <span class='doccomment'>/// Create a new instance of `Cache` with a given duration.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>duration</span>: <span class='ident'>Duration</span>) <span class='op'>-&gt;</span> <span class='ident'>Cache</span> {
-        <span class='ident'>Cache</span> { <span class='ident'>duration</span>: <span class='ident'>duration</span> }
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">Cache</span> {
+    <span class="doccomment">/// Create a new instance of `Cache` with a given duration.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">duration</span>: <span class="ident">Duration</span>) <span class="op">-&gt;</span> <span class="ident">Cache</span> {
+        <span class="ident">Cache</span> { <span class="ident">duration</span>: <span class="ident">duration</span> }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>handle</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>headers</span>::{<span class='ident'>IfModifiedSince</span>, <span class='ident'>HttpDate</span>};
+    <span class="kw">fn</span> <span class="ident">handle</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>, <span class="ident">path</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">headers</span>::{<span class="ident">IfModifiedSince</span>, <span class="ident">HttpDate</span>};
 
-        <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='ident'>path</span>.<span class='ident'>as_ref</span>();
+        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">as_ref</span>();
 
-        <span class='kw'>let</span> (<span class='ident'>size</span>, <span class='ident'>last_modified_time</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>fs</span>::<span class='ident'>metadata</span>(<span class='ident'>path</span>) {
-            <span class='prelude-val'>Err</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>IronError</span>::<span class='ident'>new</span>(<span class='ident'>error</span>, <span class='ident'>status</span>::<span class='ident'>InternalServerError</span>)),
-            <span class='prelude-val'>Ok</span>(<span class='ident'>metadata</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>use</span> <span class='ident'>filetime</span>::<span class='ident'>FileTime</span>;
+        <span class="kw">let</span> (<span class="ident">size</span>, <span class="ident">last_modified_time</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="ident">path</span>) {
+            <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">IronError</span>::<span class="ident">new</span>(<span class="ident">error</span>, <span class="ident">status</span>::<span class="ident">InternalServerError</span>)),
+            <span class="prelude-val">Ok</span>(<span class="ident">metadata</span>) <span class="op">=&gt;</span> {
+                <span class="kw">use</span> <span class="ident">filetime</span>::<span class="ident">FileTime</span>;
 
-                <span class='kw'>let</span> <span class='ident'>time</span> <span class='op'>=</span> <span class='ident'>FileTime</span>::<span class='ident'>from_last_modification_time</span>(<span class='kw-2'>&amp;</span><span class='ident'>metadata</span>);
-                (<span class='ident'>metadata</span>.<span class='ident'>len</span>(), <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='ident'>time</span>.<span class='ident'>seconds</span>() <span class='kw'>as</span> <span class='ident'>i64</span>, <span class='number'>0</span>))
+                <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+                (<span class="ident">metadata</span>.<span class="ident">len</span>(), <span class="ident">Timespec</span>::<span class="ident">new</span>(<span class="ident">time</span>.<span class="ident">seconds</span>() <span class="kw">as</span> <span class="ident">i64</span>, <span class="number">0</span>))
             },
         };
 
-        <span class='kw'>let</span> <span class='ident'>if_modified_since</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>req</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>IfModifiedSince</span><span class='op'>&gt;</span>().<span class='ident'>cloned</span>() {
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>response_with_cache</span>(<span class='ident'>req</span>, <span class='ident'>path</span>, <span class='ident'>size</span>, <span class='ident'>last_modified_time</span>),
-            <span class='prelude-val'>Some</span>(<span class='ident'>IfModifiedSince</span>(<span class='ident'>HttpDate</span>(<span class='ident'>time</span>))) <span class='op'>=&gt;</span> <span class='ident'>time</span>.<span class='ident'>to_timespec</span>(),
+        <span class="kw">let</span> <span class="ident">if_modified_since</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">req</span>.<span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">IfModifiedSince</span><span class="op">&gt;</span>().<span class="ident">cloned</span>() {
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">response_with_cache</span>(<span class="ident">req</span>, <span class="ident">path</span>, <span class="ident">size</span>, <span class="ident">last_modified_time</span>),
+            <span class="prelude-val">Some</span>(<span class="ident">IfModifiedSince</span>(<span class="ident">HttpDate</span>(<span class="ident">time</span>))) <span class="op">=&gt;</span> <span class="ident">time</span>.<span class="ident">to_timespec</span>(),
         };
 
-        <span class='kw'>if</span> <span class='ident'>last_modified_time</span> <span class='op'>&lt;=</span> <span class='ident'>if_modified_since</span> {
-            <span class='prelude-val'>Ok</span>(<span class='ident'>Response</span>::<span class='ident'>with</span>(<span class='ident'>status</span>::<span class='ident'>NotModified</span>))
-        } <span class='kw'>else</span> {
-            <span class='self'>self</span>.<span class='ident'>response_with_cache</span>(<span class='ident'>req</span>, <span class='ident'>path</span>, <span class='ident'>size</span>, <span class='ident'>last_modified_time</span>)
+        <span class="kw">if</span> <span class="ident">last_modified_time</span> <span class="op">&lt;=</span> <span class="ident">if_modified_since</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">with</span>(<span class="ident">status</span>::<span class="ident">NotModified</span>))
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">response_with_cache</span>(<span class="ident">req</span>, <span class="ident">path</span>, <span class="ident">size</span>, <span class="ident">last_modified_time</span>)
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>response_with_cache</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                                           <span class='ident'>req</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Request</span>,
-                                           <span class='ident'>path</span>: <span class='ident'>P</span>,
-                                           <span class='ident'>size</span>: <span class='ident'>u64</span>,
-                                           <span class='ident'>modified</span>: <span class='ident'>Timespec</span>) <span class='op'>-&gt;</span> <span class='ident'>IronResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-        <span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>headers</span>::{<span class='ident'>CacheControl</span>, <span class='ident'>LastModified</span>, <span class='ident'>CacheDirective</span>, <span class='ident'>HttpDate</span>};
-        <span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>headers</span>::{<span class='ident'>ContentLength</span>, <span class='ident'>ContentType</span>, <span class='ident'>ETag</span>, <span class='ident'>EntityTag</span>};
-        <span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>method</span>::<span class='ident'>Method</span>;
-        <span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>mime</span>::{<span class='ident'>Mime</span>, <span class='ident'>TopLevel</span>, <span class='ident'>SubLevel</span>};
-        <span class='kw'>use</span> <span class='ident'>iron</span>::<span class='ident'>modifiers</span>::<span class='ident'>Header</span>;
+    <span class="kw">fn</span> <span class="ident">response_with_cache</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+                                           <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>,
+                                           <span class="ident">path</span>: <span class="ident">P</span>,
+                                           <span class="ident">size</span>: <span class="ident">u64</span>,
+                                           <span class="ident">modified</span>: <span class="ident">Timespec</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">headers</span>::{<span class="ident">CacheControl</span>, <span class="ident">LastModified</span>, <span class="ident">CacheDirective</span>, <span class="ident">HttpDate</span>};
+        <span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">headers</span>::{<span class="ident">ContentLength</span>, <span class="ident">ContentType</span>, <span class="ident">ETag</span>, <span class="ident">EntityTag</span>};
+        <span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">method</span>::<span class="ident">Method</span>;
+        <span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">mime</span>::{<span class="ident">Mime</span>, <span class="ident">TopLevel</span>, <span class="ident">SubLevel</span>};
+        <span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">modifiers</span>::<span class="ident">Header</span>;
 
-        <span class='kw'>let</span> <span class='ident'>seconds</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>duration</span>.<span class='ident'>as_secs</span>() <span class='kw'>as</span> <span class='ident'>u32</span>;
-        <span class='kw'>let</span> <span class='ident'>cache</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>CacheDirective</span>::<span class='ident'>Public</span>, <span class='ident'>CacheDirective</span>::<span class='ident'>MaxAge</span>(<span class='ident'>seconds</span>)];
-        <span class='kw'>let</span> <span class='ident'>metadata</span> <span class='op'>=</span> <span class='ident'>fs</span>::<span class='ident'>metadata</span>(<span class='ident'>path</span>.<span class='ident'>as_ref</span>());
+        <span class="kw">let</span> <span class="ident">seconds</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">duration</span>.<span class="ident">as_secs</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+        <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">CacheDirective</span>::<span class="ident">Public</span>, <span class="ident">CacheDirective</span>::<span class="ident">MaxAge</span>(<span class="ident">seconds</span>)];
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="ident">path</span>.<span class="ident">as_ref</span>());
 
-        <span class='kw'>let</span> <span class='ident'>metadata</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>metadata</span>.<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>IronError</span>::<span class='ident'>new</span>(<span class='ident'>e</span>, <span class='ident'>status</span>::<span class='ident'>InternalServerError</span>)));
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">metadata</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">IronError</span>::<span class="ident">new</span>(<span class="ident">e</span>, <span class="ident">status</span>::<span class="ident">InternalServerError</span>)));
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>req</span>.<span class='ident'>method</span> <span class='op'>==</span> <span class='ident'>Method</span>::<span class='ident'>Head</span> {
-            <span class='kw'>let</span> <span class='ident'>has_ct</span> <span class='op'>=</span> <span class='ident'>req</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>ContentType</span><span class='op'>&gt;</span>();
-            <span class='kw'>let</span> <span class='ident'>cont_type</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>has_ct</span> {
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>ContentType</span>(<span class='ident'>Mime</span>(<span class='ident'>TopLevel</span>::<span class='ident'>Text</span>, <span class='ident'>SubLevel</span>::<span class='ident'>Plain</span>, <span class='macro'>vec</span><span class='macro'>!</span>[])),
-                <span class='prelude-val'>Some</span>(<span class='ident'>t</span>) <span class='op'>=&gt;</span> <span class='ident'>t</span>.<span class='ident'>clone</span>()
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">response</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">req</span>.<span class="ident">method</span> <span class="op">==</span> <span class="ident">Method</span>::<span class="ident">Head</span> {
+            <span class="kw">let</span> <span class="ident">has_ct</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">headers</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentType</span><span class="op">&gt;</span>();
+            <span class="kw">let</span> <span class="ident">cont_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">has_ct</span> {
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">ContentType</span>(<span class="ident">Mime</span>(<span class="ident">TopLevel</span>::<span class="ident">Text</span>, <span class="ident">SubLevel</span>::<span class="ident">Plain</span>, <span class="macro">vec</span><span class="macro">!</span>[])),
+                <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=&gt;</span> <span class="ident">t</span>.<span class="ident">clone</span>()
             };
-            <span class='ident'>Response</span>::<span class='ident'>with</span>((<span class='ident'>status</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Header</span>(<span class='ident'>cont_type</span>), <span class='ident'>Header</span>(<span class='ident'>ContentLength</span>(<span class='ident'>metadata</span>.<span class='ident'>len</span>()))))
-        } <span class='kw'>else</span> {
-            <span class='ident'>Response</span>::<span class='ident'>with</span>((<span class='ident'>status</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>path</span>.<span class='ident'>as_ref</span>()))
+            <span class="ident">Response</span>::<span class="ident">with</span>((<span class="ident">status</span>::<span class="prelude-val">Ok</span>, <span class="ident">Header</span>(<span class="ident">cont_type</span>), <span class="ident">Header</span>(<span class="ident">ContentLength</span>(<span class="ident">metadata</span>.<span class="ident">len</span>()))))
+        } <span class="kw">else</span> {
+            <span class="ident">Response</span>::<span class="ident">with</span>((<span class="ident">status</span>::<span class="prelude-val">Ok</span>, <span class="ident">path</span>.<span class="ident">as_ref</span>()))
         };
 
-        <span class='ident'>response</span>.<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>CacheControl</span>(<span class='ident'>cache</span>));
-        <span class='ident'>response</span>.<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>LastModified</span>(<span class='ident'>HttpDate</span>(<span class='ident'>time</span>::<span class='ident'>at</span>(<span class='ident'>modified</span>))));
-        <span class='ident'>response</span>.<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>ETag</span>(<span class='ident'>EntityTag</span>::<span class='ident'>weak</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{0:x}-{1:x}.{2:x}&quot;</span>, <span class='ident'>size</span>, <span class='ident'>modified</span>.<span class='ident'>sec</span>, <span class='ident'>modified</span>.<span class='ident'>nsec</span>))));
+        <span class="ident">response</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">CacheControl</span>(<span class="ident">cache</span>));
+        <span class="ident">response</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">LastModified</span>(<span class="ident">HttpDate</span>(<span class="ident">time</span>::<span class="ident">at</span>(<span class="ident">modified</span>))));
+        <span class="ident">response</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ETag</span>(<span class="ident">EntityTag</span>::<span class="ident">weak</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{0:x}-{1:x}.{2:x}&quot;</span>, <span class="ident">size</span>, <span class="ident">modified</span>.<span class="ident">sec</span>, <span class="ident">modified</span>.<span class="ident">nsec</span>))));
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>response</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">response</span>)
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cache&quot;</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>Modifier</span><span class='op'>&lt;</span><span class='ident'>Static</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Cache</span> {
-    <span class='kw'>fn</span> <span class='ident'>modify</span>(<span class='self'>self</span>, <span class='ident'>static_handler</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Static</span>) {
-        <span class='ident'>static_handler</span>.<span class='ident'>cache</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='self'>self</span>);
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cache&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">Modifier</span><span class="op">&lt;</span><span class="ident">Static</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Cache</span> {
+    <span class="kw">fn</span> <span class="ident">modify</span>(<span class="self">self</span>, <span class="ident">static_handler</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Static</span>) {
+        <span class="ident">static_handler</span>.<span class="ident">cache</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>);
     }
 }
 
-<span class='doccomment'>/// Thrown if no file is found. It is always accompanied by a NotFound response.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>NoFile</span>;
+<span class="doccomment">/// Thrown if no file is found. It is always accompanied by a NotFound response.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NoFile</span>;
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>NoFile</span> {
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> { <span class='string'>&quot;File not found&quot;</span> }
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">NoFile</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> { <span class="string">&quot;File not found&quot;</span> }
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>NoFile</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='ident'>f</span>.<span class='ident'>write_str</span>(<span class='self'>self</span>.<span class='ident'>description</span>())
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">NoFile</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="self">self</span>.<span class="ident">description</span>())
     }
 }
 </pre>
