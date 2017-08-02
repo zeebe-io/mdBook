@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.3/src/helpers/helper_with.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/helpers/helper_with.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>helper_with.rs.html -- source</title>
@@ -254,34 +254,14 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
 <span class="kw">use</span> <span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
 <span class="kw">use</span> <span class="ident">registry</span>::<span class="ident">Registry</span>;
 <span class="kw">use</span> <span class="ident">context</span>::{<span class="ident">JsonTruthy</span>, <span class="ident">to_json</span>};
-<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">RenderContext</span>, <span class="ident">RenderError</span>, <span class="ident">Helper</span>};
+<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>};
+<span class="kw">use</span> <span class="ident">error</span>::<span class="ident">RenderError</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WithHelper</span>;
@@ -340,44 +320,22 @@
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">WITH_HELPER</span>: <span class="ident">WithHelper</span> <span class="op">=</span> <span class="ident">WithHelper</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc_ser_type&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)))]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="ident">registry</span>::<span class="ident">Registry</span>;
     <span class="kw">use</span> <span class="ident">context</span>::<span class="ident">to_json</span>;
 
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
-    <span class="kw">use</span> <span class="ident">serialize</span>::<span class="ident">json</span>::{<span class="ident">Json</span>, <span class="ident">ToJson</span>};
-
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
     <span class="kw">struct</span> <span class="ident">Address</span> {
         <span class="ident">city</span>: <span class="ident">String</span>,
         <span class="ident">country</span>: <span class="ident">String</span>,
     }
 
-    <span class="kw">impl</span> <span class="ident">ToJson</span> <span class="kw">for</span> <span class="ident">Address</span> {
-        <span class="kw">fn</span> <span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Json</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
-            <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;city&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">city</span>.<span class="ident">to_json</span>());
-            <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;country&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">country</span>.<span class="ident">to_json</span>());
-            <span class="ident">Json</span>::<span class="ident">Object</span>(<span class="ident">m</span>)
-        }
-    }
-
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
     <span class="kw">struct</span> <span class="ident">Person</span> {
         <span class="ident">name</span>: <span class="ident">String</span>,
         <span class="ident">age</span>: <span class="ident">i16</span>,
         <span class="ident">addr</span>: <span class="ident">Address</span>,
         <span class="ident">titles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    }
-
-    <span class="kw">impl</span> <span class="ident">ToJson</span> <span class="kw">for</span> <span class="ident">Person</span> {
-        <span class="kw">fn</span> <span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Json</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
-            <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;name&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_json</span>());
-            <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;age&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">age</span>.<span class="ident">to_json</span>());
-            <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;addr&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">addr</span>.<span class="ident">to_json</span>());
-            <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;titles&quot;</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">titles</span>.<span class="ident">to_json</span>());
-            <span class="ident">Json</span>::<span class="ident">Object</span>(<span class="ident">m</span>)
-        }
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -566,7 +524,6 @@
         window.rootPath = "../../../";
         window.currentCrate = "handlebars";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>

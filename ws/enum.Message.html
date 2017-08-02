@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>ws</a></p><script>window.sidebarCurrent = {name: 'Message', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum Message</p><div class="block items"><ul><li><a href="#variants">Variants</a></li><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>ws</a></p><script>window.sidebarCurrent = {name: 'Message', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -53,13 +53,13 @@
     Text(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>),
     Binary(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;),
 }</pre><div class='docblock'><p>An enum representing the various forms of a WebSocket message.</p>
-</div><h2 class='variants'>Variants</h2>
+</div><h2 id='variants' class='variants'>Variants</h2>
 <span id='variant.Text' class='variant'><span id='Text.v' class='invisible'><code>Text(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>)</code></span></span><div class='docblock'><p>A text WebSocket message</p>
 </div><span id='variant.Binary' class='variant'><span id='Binary.v' class='invisible'><code>Binary(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;)</code></span></span><div class='docblock'><p>A binary WebSocket message</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="enum" href="../ws/enum.Message.html" title="enum ws::Message">Message</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/message.rs.html#20-102' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.text' class="method"><span id='text.v' class='invisible'><code>fn <a href='#method.text' class='fnname'>text</a>&lt;S&gt;(string: S) -&gt; <a class="enum" href="../ws/enum.Message.html" title="enum ws::Message">Message</a> <span class="where fmt-newline">where S: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>&gt;</span></code></span></h4>
+<div class='impl-items'><h4 id='method.text' class="method"><span id='text.v' class='invisible'><code>fn <a href='#method.text' class='fnname'>text</a>&lt;S&gt;(string: S) -&gt; <a class="enum" href="../ws/enum.Message.html" title="enum ws::Message">Message</a> <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;S: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>&gt;,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Create a new text WebSocket message from a stringable.</p>
-</div><h4 id='method.binary' class="method"><span id='binary.v' class='invisible'><code>fn <a href='#method.binary' class='fnname'>binary</a>&lt;B&gt;(bin: B) -&gt; <a class="enum" href="../ws/enum.Message.html" title="enum ws::Message">Message</a> <span class="where fmt-newline">where B: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;&gt;</span></code></span></h4>
+</div><h4 id='method.binary' class="method"><span id='binary.v' class='invisible'><code>fn <a href='#method.binary' class='fnname'>binary</a>&lt;B&gt;(bin: B) -&gt; <a class="enum" href="../ws/enum.Message.html" title="enum ws::Message">Message</a> <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;B: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;&gt;,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Create a new binary WebSocket message by converting to Vec<u8>.</p>
 </div><h4 id='method.is_text' class="method"><span id='is_text.v' class='invisible'><code>fn <a href='#method.is_text' class='fnname'>is_text</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>Indicates whether a message is a text message.</p>
@@ -163,7 +163,6 @@ this will try to convert binary data to utf8.</p>
         window.rootPath = "../";
         window.currentCrate = "ws";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

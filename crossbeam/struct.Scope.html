@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>crossbeam</a></p><script>window.sidebarCurrent = {name: 'Scope', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Scope</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>crossbeam</a></p><script>window.sidebarCurrent = {name: 'Scope', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -50,12 +50,12 @@
                    </a>
                </span><a class='srclink' href='../src/crossbeam/scoped.rs.html#12-14' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Scope&lt;'a&gt; { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="struct" href="../crossbeam/struct.Scope.html" title="struct crossbeam::Scope">Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/crossbeam/scoped.rs.html#79-256' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.defer' class="method"><span id='defer.v' class='invisible'><code>fn <a href='#method.defer' class='fnname'>defer</a>&lt;F&gt;(&amp;self, f: F) <span class="where fmt-newline">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html" title="trait core::ops::FnOnce">FnOnce</a>() + 'a</span></code></span></h4>
+<div class='impl-items'><h4 id='method.defer' class="method"><span id='defer.v' class='invisible'><code>fn <a href='#method.defer' class='fnname'>defer</a>&lt;F&gt;(&amp;self, f: F) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html" title="trait core::ops::FnOnce">FnOnce</a>() + 'a,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Schedule code to be executed when exiting the scope.</p>
 
 <p>This is akin to having a destructor on the stack, except that it is
 <em>guaranteed</em> to be run.</p>
-</div><h4 id='method.spawn' class="method"><span id='spawn.v' class='invisible'><code>fn <a href='#method.spawn' class='fnname'>spawn</a>&lt;F, T&gt;(&amp;self, f: F) -&gt; <a class="struct" href="../crossbeam/struct.ScopedJoinHandle.html" title="struct crossbeam::ScopedJoinHandle">ScopedJoinHandle</a>&lt;T&gt; <span class="where fmt-newline">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html" title="trait core::ops::FnOnce">FnOnce</a>() -&gt; T + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'a, T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'a</span></code></span></h4>
+</div><h4 id='method.spawn' class="method"><span id='spawn.v' class='invisible'><code>fn <a href='#method.spawn' class='fnname'>spawn</a>&lt;F, T&gt;(&amp;self, f: F) -&gt; <a class="struct" href="../crossbeam/struct.ScopedJoinHandle.html" title="struct crossbeam::ScopedJoinHandle">ScopedJoinHandle</a>&lt;T&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html" title="trait core::ops::FnOnce">FnOnce</a>() -&gt; T + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'a,<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'a,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Create a scoped thread.</p>
 
 <p><code>spawn</code> is similar to the <a href="http://doc.rust-lang.org/std/thread/fn.spawn.html"><code>spawn</code></a> function in Rust&#39;s standard library. The
@@ -226,7 +226,6 @@ than from <code>std::thread</code>:</p>
         window.rootPath = "../";
         window.currentCrate = "crossbeam";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

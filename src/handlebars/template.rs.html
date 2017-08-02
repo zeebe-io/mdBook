@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.3/src/template.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/template.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>template.rs.html -- source</title>
@@ -991,38 +991,6 @@
 <span id="946">946</span>
 <span id="947">947</span>
 <span id="948">948</span>
-<span id="949">949</span>
-<span id="950">950</span>
-<span id="951">951</span>
-<span id="952">952</span>
-<span id="953">953</span>
-<span id="954">954</span>
-<span id="955">955</span>
-<span id="956">956</span>
-<span id="957">957</span>
-<span id="958">958</span>
-<span id="959">959</span>
-<span id="960">960</span>
-<span id="961">961</span>
-<span id="962">962</span>
-<span id="963">963</span>
-<span id="964">964</span>
-<span id="965">965</span>
-<span id="966">966</span>
-<span id="967">967</span>
-<span id="968">968</span>
-<span id="969">969</span>
-<span id="970">970</span>
-<span id="971">971</span>
-<span id="972">972</span>
-<span id="973">973</span>
-<span id="974">974</span>
-<span id="975">975</span>
-<span id="976">976</span>
-<span id="977">977</span>
-<span id="978">978</span>
-<span id="979">979</span>
-<span id="980">980</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">slice</span>::<span class="ident">Iter</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Peekable</span>;
@@ -1030,11 +998,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::{<span class="ident">BTreeMap</span>, <span class="ident">VecDeque</span>};
 <span class="kw">use</span> <span class="ident">pest</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc_ser_type&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)))]</span>
-<span class="kw">use</span> <span class="ident">serialize</span>::<span class="ident">json</span>::<span class="ident">Json</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">value</span>::<span class="ident">Value</span> <span class="kw">as</span> <span class="ident">Json</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
 
 <span class="kw">use</span> <span class="ident">grammar</span>::{<span class="ident">Rdp</span>, <span class="ident">Rule</span>};
@@ -1273,11 +1237,12 @@
         <span class="comment">// identifier</span>
         <span class="kw">let</span> <span class="ident">p1</span> <span class="op">=</span> <span class="ident">source</span>[<span class="ident">p1_name</span>.<span class="ident">start</span>..<span class="ident">p1_name</span>.<span class="ident">end</span>].<span class="ident">to_owned</span>();
 
-        <span class="kw">let</span> <span class="ident">p2</span> <span class="op">=</span> <span class="ident">it</span>.<span class="ident">peek</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">p2_name</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">p2_name</span>.<span class="ident">end</span> <span class="op">&lt;=</span> <span class="ident">limit</span> {
-                                        <span class="prelude-val">Some</span>(<span class="ident">source</span>[<span class="ident">p2_name</span>.<span class="ident">start</span>..<span class="ident">p2_name</span>.<span class="ident">end</span>].<span class="ident">to_owned</span>())
-                                    } <span class="kw">else</span> {
-                                        <span class="prelude-val">None</span>
-                                    });
+        <span class="kw">let</span> <span class="ident">p2</span> <span class="op">=</span> <span class="ident">it</span>.<span class="ident">peek</span>()
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">p2_name</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">p2_name</span>.<span class="ident">end</span> <span class="op">&lt;=</span> <span class="ident">limit</span> {
+                          <span class="prelude-val">Some</span>(<span class="ident">source</span>[<span class="ident">p2_name</span>.<span class="ident">start</span>..<span class="ident">p2_name</span>.<span class="ident">end</span>].<span class="ident">to_owned</span>())
+                      } <span class="kw">else</span> {
+                          <span class="prelude-val">None</span>
+                      });
 
         <span class="kw">if</span> <span class="ident">p2</span>.<span class="ident">is_some</span>() {
             <span class="ident">it</span>.<span class="ident">next</span>();
@@ -1647,12 +1612,7 @@
         <span class="ident">HelperBlock</span>(<span class="kw-2">ref</span> <span class="ident">h</span>) <span class="op">=&gt;</span> {
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">name</span>, <span class="string">&quot;if&quot;</span>.<span class="ident">to_string</span>());
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">params</span>.<span class="ident">len</span>(), <span class="number">1</span>);
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">template</span>
-                           .<span class="ident">as_ref</span>()
-                           .<span class="ident">unwrap</span>()
-                           .<span class="ident">elements</span>
-                           .<span class="ident">len</span>(),
-                       <span class="number">1</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">template</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">elements</span>.<span class="ident">len</span>(), <span class="number">1</span>);
         }
         _ <span class="op">=&gt;</span> {
             <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Helper expected here.&quot;</span>);
@@ -1674,12 +1634,7 @@
         <span class="ident">HelperBlock</span>(<span class="kw-2">ref</span> <span class="ident">h</span>) <span class="op">=&gt;</span> {
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">name</span>, <span class="string">&quot;unless&quot;</span>.<span class="ident">to_string</span>());
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">params</span>.<span class="ident">len</span>(), <span class="number">1</span>);
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">inverse</span>
-                           .<span class="ident">as_ref</span>()
-                           .<span class="ident">unwrap</span>()
-                           .<span class="ident">elements</span>
-                           .<span class="ident">len</span>(),
-                       <span class="number">1</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">inverse</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">elements</span>.<span class="ident">len</span>(), <span class="number">1</span>);
         }
         _ <span class="op">=&gt;</span> {
             <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Helper expression here&quot;</span>);
@@ -1780,21 +1735,15 @@
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">elements</span>[<span class="number">1</span>], <span class="ident">Expression</span>(<span class="ident">Parameter</span>::<span class="ident">Name</span>(<span class="string">&quot;world&quot;</span>.<span class="ident">into</span>())));
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">elements</span>[<span class="number">2</span>], <span class="ident">RawString</span>(<span class="string">&quot;!&quot;</span>.<span class="ident">to_string</span>()));
 
-    <span class="kw">let</span> <span class="ident">t2</span> <span class="op">=</span> <span class="ident">Template</span>::<span class="ident">compile</span>(<span class="string">&quot;{{#if true}}1  {{~ else ~}} 2 {{~/if}}&quot;</span>.<span class="ident">to_string</span>()).<span class="ident">ok</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">t2</span> <span class="op">=</span> <span class="ident">Template</span>::<span class="ident">compile</span>(<span class="string">&quot;{{#if true}}1  {{~ else ~}} 2 {{~/if}}&quot;</span>.<span class="ident">to_string</span>())
+        .<span class="ident">ok</span>()
+        .<span class="ident">unwrap</span>();
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t2</span>.<span class="ident">elements</span>.<span class="ident">len</span>(), <span class="number">1</span>);
     <span class="kw">match</span> <span class="ident">t2</span>.<span class="ident">elements</span>[<span class="number">0</span>] {
         <span class="ident">HelperBlock</span>(<span class="kw-2">ref</span> <span class="ident">h</span>) <span class="op">=&gt;</span> {
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">template</span>
-                           .<span class="ident">as_ref</span>()
-                           .<span class="ident">unwrap</span>()
-                           .<span class="ident">elements</span>
-                           [<span class="number">0</span>],
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">template</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">elements</span>[<span class="number">0</span>],
                        <span class="ident">RawString</span>(<span class="string">&quot;1&quot;</span>.<span class="ident">to_string</span>()));
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">inverse</span>
-                           .<span class="ident">as_ref</span>()
-                           .<span class="ident">unwrap</span>()
-                           .<span class="ident">elements</span>
-                           [<span class="number">0</span>],
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">inverse</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">elements</span>[<span class="number">0</span>],
                        <span class="ident">RawString</span>(<span class="string">&quot;2&quot;</span>.<span class="ident">to_string</span>()));
         }
         _ <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
@@ -1905,11 +1854,7 @@
 <span class="kw">fn</span> <span class="ident">test_whitespace_elements</span>() {
     <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Template</span>::<span class="ident">compile</span>(<span class="string">&quot;  {{elem}}\n\t{{#if true}} \
                                {{/if}}\n{{{{raw}}}} {{{{/raw}}}}\n{{{{raw}}}}{{{{/raw}}}}\n&quot;</span>);
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">ok</span>()
-                   .<span class="ident">unwrap</span>()
-                   .<span class="ident">elements</span>
-                   .<span class="ident">len</span>(),
-               <span class="number">9</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">ok</span>().<span class="ident">unwrap</span>().<span class="ident">elements</span>.<span class="ident">len</span>(), <span class="number">9</span>);
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1948,7 +1893,6 @@
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;partial_legacy&quot;</span>))]</span>
 <span class="kw">fn</span> <span class="ident">test_directive</span>() {
     <span class="kw">match</span> <span class="ident">Template</span>::<span class="ident">compile</span>(<span class="string">&quot;hello {{* ssh}} world&quot;</span>) {
         <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>),
@@ -1977,11 +1921,7 @@
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">name</span>, <span class="ident">Parameter</span>::<span class="ident">Name</span>(<span class="string">&quot;inline&quot;</span>.<span class="ident">to_owned</span>()));
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">params</span>[<span class="number">0</span>],
                            <span class="ident">Parameter</span>::<span class="ident">Literal</span>(<span class="ident">Json</span>::<span class="ident">String</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_owned</span>())));
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">template</span>
-                               .<span class="ident">as_ref</span>()
-                               .<span class="ident">unwrap</span>()
-                               .<span class="ident">elements</span>
-                               [<span class="number">0</span>],
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">template</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">elements</span>[<span class="number">0</span>],
                            <span class="ident">TemplateElement</span>::<span class="ident">RawString</span>(<span class="string">&quot;expand to hello&quot;</span>.<span class="ident">to_owned</span>()));
             }
         }
@@ -1994,11 +1934,7 @@
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">name</span>, <span class="ident">Parameter</span>::<span class="ident">Name</span>(<span class="string">&quot;layout&quot;</span>.<span class="ident">to_owned</span>()));
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">params</span>[<span class="number">0</span>],
                            <span class="ident">Parameter</span>::<span class="ident">Literal</span>(<span class="ident">Json</span>::<span class="ident">String</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_owned</span>())));
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">template</span>
-                               .<span class="ident">as_ref</span>()
-                               .<span class="ident">unwrap</span>()
-                               .<span class="ident">elements</span>
-                               [<span class="number">0</span>],
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">db</span>.<span class="ident">template</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">elements</span>[<span class="number">0</span>],
                            <span class="ident">TemplateElement</span>::<span class="ident">RawString</span>(<span class="string">&quot;expand to hello&quot;</span>.<span class="ident">to_owned</span>()));
             }
         }
@@ -2062,7 +1998,6 @@
         window.rootPath = "../../";
         window.currentCrate = "handlebars";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

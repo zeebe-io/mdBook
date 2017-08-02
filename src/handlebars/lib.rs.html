@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.3/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -357,18 +357,6 @@
 <span id="312">312</span>
 <span id="313">313</span>
 <span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # Handlebars</span>
 <span class="doccomment">//!</span>
@@ -392,8 +380,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//!   // Prepare some data.</span>
 <span class="doccomment">//!   //</span>
-<span class="doccomment">//!   // The data type should implements `rustc_serialize::json::ToJson` or</span>
-<span class="doccomment">//!   // `serde::Serialize`</span>
+<span class="doccomment">//!   // The data type should implements `serde::Serialize`</span>
 <span class="doccomment">//!   let mut data = BTreeMap::new();</span>
 <span class="doccomment">//!   data.insert(&quot;world&quot;.to_string(), &quot;世界!&quot;.to_string());</span>
 <span class="doccomment">//!   assert_eq!(handlebars.render(&quot;t1&quot;, &amp;data).unwrap(), &quot;hello 世界!&quot;);</span>
@@ -464,12 +451,10 @@
 <span class="doccomment">//! #### Static typed</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! As a static typed language, it&#39;s a little verbose to use handlebars.</span>
-<span class="doccomment">//! You will have to make your data `ToJson`-able, so we can render</span>
-<span class="doccomment">//! it. If you are on nightly channel, we have [a syntax</span>
-<span class="doccomment">//! extension](https://github.com/sunng87/tojson_macros) to generate</span>
-<span class="doccomment">//! default `ToJson` implementation for you. If you prefer</span>
-<span class="doccomment">//! [serde](https://github.com/serde-rs/serde), you can enable `serde_type` feature</span>
-<span class="doccomment">//! of handlebars-rust and add `#[Serialize]` for your types.</span>
+<span class="doccomment">//! Handlebars templating language is designed against JSON data type. In rust,</span>
+<span class="doccomment">//! we will convert user&#39;s structs, vectors or maps to JSON type in order to use</span>
+<span class="doccomment">//! in template. You have to make sure your data implements the `Serialize` trait</span>
+<span class="doccomment">//! from the [Serde](https://serde.rs) project.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Usage</span>
 <span class="doccomment">//!</span>
@@ -515,30 +500,21 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Rendering Something</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Since handlebars is originally based on JavaScript type system. It supports dynamic features like duck-typing, truthy/falsey values. But for a static language like Rust, this is a little difficult. As a solution, we are using the `serialize::json::Json` internally for data rendering.</span>
+<span class="doccomment">//! Since handlebars is originally based on JavaScript type system. It supports dynamic features like duck-typing, truthy/falsey values. But for a static language like Rust, this is a little difficult. As a solution, we are using the `serde_json::value::Value` internally for data rendering.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! That means, if you want to render something, you have to ensure the data type implements the `rustc_serialize::json::ToJson` trait (or serde&#39;s `Serialize`). Luckily, most rust internal types already have that trait. However, if you want to render your custom struct, you need to implement it manually, or use [tojson_macros](https://github.com/sunng87/tojson_macros) to generate default `ToJson` implementation.</span>
+<span class="doccomment">//! That means, if you want to render something, you have to ensure the data type implements the `serde::Serialize` trait. Most rust internal types already have that trait. Use `#derive[Serialize]` for your types to generate default implementation.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! You can use default `render` function to render a template into `String`. From 0.9, there&#39;s `renderw` to render text into anything of `std::io::Write`.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```ignore</span>
-<span class="doccomment">//! use rustc_serialize::json::{Json, ToJson};</span>
 <span class="doccomment">//! use std::collections::BTreeMap;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! use handlebars::Handlebars;</span>
 <span class="doccomment">//!</span>
+<span class="doccomment">//! #[derive(Serialize)]</span>
 <span class="doccomment">//! struct Person {</span>
 <span class="doccomment">//!   name: String,</span>
 <span class="doccomment">//!   age: i16,</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! impl ToJson for Person {</span>
-<span class="doccomment">//!   fn to_json(&amp;self) -&gt; Json {</span>
-<span class="doccomment">//!     let mut m: BTreeMap&lt;String, Json&gt; = BTreeMap::new();</span>
-<span class="doccomment">//!     m.insert(&quot;name&quot;.to_string(), self.name.to_json());</span>
-<span class="doccomment">//!     m.insert(&quot;age&quot;.to_string(), self.age.to_json());</span>
-<span class="doccomment">//!     m.to_json()</span>
-<span class="doccomment">//!   }</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! fn main() {</span>
@@ -664,22 +640,23 @@
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">lazy_static</span>;
 
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">regex</span>;
-
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">maplit</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_derive</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc_ser_type&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)))]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rustc_serialize</span> <span class="kw">as</span> <span class="ident">serialize</span>;
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde_type&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">regex</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">template</span>::<span class="ident">Template</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">error</span>::{<span class="ident">TemplateError</span>, <span class="ident">TemplateFileError</span>, <span class="ident">TemplateRenderError</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">error</span>::{<span class="ident">RenderError</span>, <span class="ident">TemplateError</span>, <span class="ident">TemplateFileError</span>, <span class="ident">TemplateRenderError</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">registry</span>::{<span class="ident">EscapeFn</span>, <span class="ident">no_escape</span>, <span class="ident">html_escape</span>, <span class="ident">Registry</span> <span class="kw">as</span> <span class="ident">Handlebars</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">Evaluable</span>, <span class="ident">RenderError</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>, <span class="ident">ContextJson</span>,
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">Evaluable</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>, <span class="ident">ContextJson</span>,
                        <span class="ident">Directive</span> <span class="kw">as</span> <span class="ident">Decorator</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">directives</span>::<span class="ident">DirectiveDef</span> <span class="kw">as</span> <span class="ident">DecoratorDef</span>;
@@ -694,7 +671,6 @@
 <span class="kw">mod</span> <span class="ident">context</span>;
 <span class="kw">mod</span> <span class="ident">support</span>;
 <span class="kw">mod</span> <span class="ident">directives</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;partial_legacy&quot;</span>))]</span>
 <span class="kw">mod</span> <span class="ident">partial</span>;
 </pre>
 </section>
@@ -754,7 +730,6 @@
         window.rootPath = "../../";
         window.currentCrate = "handlebars";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

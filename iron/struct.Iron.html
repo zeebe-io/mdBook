@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         <a href='../iron/index.html'><img src='https://avatars0.githubusercontent.com/u/7853871?s=128' alt='logo' width='100'></a>
-        <p class='location'><a href='index.html'>iron</a></p><script>window.sidebarCurrent = {name: 'Iron', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Iron</p><div class="block items"><ul><li><a href="#fields">Fields</a></li><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='index.html'>iron</a></p><script>window.sidebarCurrent = {name: 'Iron', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -57,7 +57,7 @@
 
 <p><code>Iron</code> contains the <code>Handler</code> which takes a <code>Request</code> and produces a
 <code>Response</code>.</p>
-</div><h2 class='fields'>Fields</h2><span id='structfield.handler' class="structfield">
+</div><h2 id='fields' class='fields'>Fields</h2><span id='structfield.handler' class="structfield">
                            <span id='handler.v' class='invisible'>
                            <code>handler: H</code>
                            </span></span><div class='docblock'><p>Iron contains a <code>Handler</code>, which it uses to create responses for client
@@ -78,7 +78,7 @@ requests.</p>
 
 <p>This will create a new <code>Iron</code>, the base unit of the server, using the
 passed in <code>Handler</code>.</p>
-</div><h4 id='method.http' class="method"><span id='http.v' class='invisible'><code>fn <a href='#method.http' class='fnname'>http</a>&lt;A&gt;(self, addr: A) -&gt; <a class="type" href="../iron/error/type.HttpResult.html" title="type iron::error::HttpResult">HttpResult</a>&lt;<a class="struct" href="../iron/struct.Listening.html" title="struct iron::Listening">Listening</a>&gt; <span class="where fmt-newline">where A: <a class="trait" href="https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html" title="trait std::net::addr::ToSocketAddrs">ToSocketAddrs</a></span></code></span></h4>
+</div><h4 id='method.http' class="method"><span id='http.v' class='invisible'><code>fn <a href='#method.http' class='fnname'>http</a>&lt;A&gt;(self, addr: A) -&gt; <a class="type" href="../iron/error/type.HttpResult.html" title="type iron::error::HttpResult">HttpResult</a>&lt;<a class="struct" href="../iron/struct.Listening.html" title="struct iron::Listening">Listening</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;A: <a class="trait" href="https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html" title="trait std::net::addr::ToSocketAddrs">ToSocketAddrs</a>,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Kick off the server process using the HTTP protocol.</p>
 
 <p>Call this once to begin listening for requests on the server.
@@ -87,7 +87,7 @@ another task, so is not blocking.</p>
 
 <p>The thread returns a guard that will automatically join with the parent
 once it is dropped, blocking until this happens.</p>
-</div><h4 id='method.https' class="method"><span id='https.v' class='invisible'><code>fn <a href='#method.https' class='fnname'>https</a>&lt;A, S&gt;(self, addr: A, ssl: S) -&gt; <a class="type" href="../iron/error/type.HttpResult.html" title="type iron::error::HttpResult">HttpResult</a>&lt;<a class="struct" href="../iron/struct.Listening.html" title="struct iron::Listening">Listening</a>&gt; <span class="where fmt-newline">where A: <a class="trait" href="https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html" title="trait std::net::addr::ToSocketAddrs">ToSocketAddrs</a>, S: 'static + <a class="trait" href="../hyper/net/trait.SslServer.html" title="trait hyper::net::SslServer">SslServer</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a></span></code></span></h4>
+</div><h4 id='method.https' class="method"><span id='https.v' class='invisible'><code>fn <a href='#method.https' class='fnname'>https</a>&lt;A, S&gt;(self, addr: A, ssl: S) -&gt; <a class="type" href="../iron/error/type.HttpResult.html" title="type iron::error::HttpResult">HttpResult</a>&lt;<a class="struct" href="../iron/struct.Listening.html" title="struct iron::Listening">Listening</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;A: <a class="trait" href="https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html" title="trait std::net::addr::ToSocketAddrs">ToSocketAddrs</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;S: 'static + <a class="trait" href="../hyper/net/trait.SslServer.html" title="trait hyper::net::SslServer">SslServer</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Kick off the server process using the HTTPS protocol.</p>
 
 <p>Call this once to begin listening for requests on the server.
@@ -96,7 +96,7 @@ another task, so is not blocking.</p>
 
 <p>The thread returns a guard that will automatically join with the parent
 once it is dropped, blocking until this happens.</p>
-</div><h4 id='method.listen' class="method"><span id='listen.v' class='invisible'><code>fn <a href='#method.listen' class='fnname'>listen</a>&lt;L&gt;(self, listener: L, protocol: <a class="struct" href="../iron/struct.Protocol.html" title="struct iron::Protocol">Protocol</a>) -&gt; <a class="type" href="../iron/error/type.HttpResult.html" title="type iron::error::HttpResult">HttpResult</a>&lt;<a class="struct" href="../iron/struct.Listening.html" title="struct iron::Listening">Listening</a>&gt; <span class="where fmt-newline">where L: 'static + <a class="trait" href="../hyper/net/trait.NetworkListener.html" title="trait hyper::net::NetworkListener">NetworkListener</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a></span></code></span></h4>
+</div><h4 id='method.listen' class="method"><span id='listen.v' class='invisible'><code>fn <a href='#method.listen' class='fnname'>listen</a>&lt;L&gt;(self, listener: L, protocol: <a class="struct" href="../iron/struct.Protocol.html" title="struct iron::Protocol">Protocol</a>) -&gt; <a class="type" href="../iron/error/type.HttpResult.html" title="type iron::error::HttpResult">HttpResult</a>&lt;<a class="struct" href="../iron/struct.Listening.html" title="struct iron::Listening">Listening</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;L: 'static + <a class="trait" href="../hyper/net/trait.NetworkListener.html" title="trait hyper::net::NetworkListener">NetworkListener</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Kick off a server process on an arbitrary <code>Listener</code>.</p>
 
 <p>Most use cases may call <code>http</code> and <code>https</code> methods instead of this.</p>
@@ -157,7 +157,6 @@ once it is dropped, blocking until this happens.</p>
         window.rootPath = "../";
         window.currentCrate = "iron";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

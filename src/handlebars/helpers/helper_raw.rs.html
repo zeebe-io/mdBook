@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.3/src/helpers/helper_raw.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/helpers/helper_raw.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>helper_raw.rs.html -- source</title>
@@ -76,10 +76,15 @@
 <span id="31">31</span>
 <span id="32">32</span>
 <span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
 <span class="kw">use</span> <span class="ident">registry</span>::<span class="ident">Registry</span>;
-<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">RenderContext</span>, <span class="ident">RenderError</span>, <span class="ident">Helper</span>};
+<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>};
+<span class="kw">use</span> <span class="ident">error</span>::<span class="ident">RenderError</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawHelper</span>;
@@ -104,7 +109,10 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_raw_helper</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="string">&quot;a{{{{raw}}}}{{content}}{{else}}hello{{{{/raw}}}}&quot;</span>).<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>
+                    .<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>,
+                                              <span class="string">&quot;a{{{{raw}}}}{{content}}{{else}}hello{{{{/raw}}}}&quot;</span>)
+                    .<span class="ident">is_ok</span>());
 
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;t0&quot;</span>, <span class="kw-2">&amp;</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">ok</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;a{{content}}{{else}}hello&quot;</span>);
@@ -168,7 +176,6 @@
         window.rootPath = "../../../";
         window.currentCrate = "handlebars";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>

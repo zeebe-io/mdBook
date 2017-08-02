@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>hyper</a>::<wbr><a href='index.html'>header</a></p><script>window.sidebarCurrent = {name: 'Header', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait Header</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>hyper</a>::<wbr><a href='index.html'>header</a></p><script>window.sidebarCurrent = {name: 'Header', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/hyper/header/mod.rs.html#109-123' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/hyper/header/mod.rs.html#110-124' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Header: <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> {
     fn <a href='#tymethod.header_name' class='fnname'>header_name</a>() -&gt; &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>;
     fn <a href='#tymethod.parse_header' class='fnname'>parse_header</a>(raw: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="../../hyper/error/type.Result.html" title="type hyper::error::Result">Result</a>&lt;Self&gt;;
@@ -86,7 +86,7 @@ if <code>raw.len() &gt; 1</code>.</p>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.AcceptLanguage.html" title="struct hyper::header::AcceptLanguage">AcceptLanguage</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.AcceptRanges.html" title="struct hyper::header::AcceptRanges">AcceptRanges</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.Allow.html" title="struct hyper::header::Allow">Allow</a></code></li>
-<li><code>impl&lt;S:&nbsp;<a class="trait" href="../../hyper/header/trait.Scheme.html" title="trait hyper::header::Scheme">Scheme</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>&gt; Header for <a class="struct" href="../../hyper/header/struct.Authorization.html" title="struct hyper::header::Authorization">Authorization</a>&lt;S&gt; <span class="where fmt-newline">where S::<a class="trait" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html" title="trait core::str::FromStr">Err</a>: 'static</span></code></li>
+<li><code>impl&lt;S:&nbsp;<a class="trait" href="../../hyper/header/trait.Scheme.html" title="trait hyper::header::Scheme">Scheme</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>&gt; Header for <a class="struct" href="../../hyper/header/struct.Authorization.html" title="struct hyper::header::Authorization">Authorization</a>&lt;S&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;S as <a class="trait" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html" title="trait core::str::FromStr">FromStr</a>&gt;::<a class="trait" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html" title="trait core::str::FromStr">Err</a>: 'static,&nbsp;</span></code></li>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.CacheControl.html" title="struct hyper::header::CacheControl">CacheControl</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.Cookie.html" title="struct hyper::header::Cookie">Cookie</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.Connection.html" title="struct hyper::header::Connection">Connection</a></code></li>
@@ -123,6 +123,7 @@ if <code>raw.len() &gt; 1</code>.</p>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.Upgrade.html" title="struct hyper::header::Upgrade">Upgrade</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../hyper/header/struct.UserAgent.html" title="struct hyper::header::UserAgent">UserAgent</a></code></li>
 <li><code>impl Header for <a class="enum" href="../../hyper/header/enum.Vary.html" title="enum hyper::header::Vary">Vary</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../hyper/header/struct.Link.html" title="struct hyper::header::Link">Link</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/hyper/header/trait.Header.js">
                  </script></section>
@@ -182,7 +183,6 @@ if <code>raw.len() &gt; 1</code>.</p>
         window.rootPath = "../../";
         window.currentCrate = "hyper";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

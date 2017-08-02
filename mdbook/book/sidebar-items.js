@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["bookconfig",""],["bookitem",""]],"struct":[["MDBook",""]]});
+initSidebarItems({"mod":[["bookitem",""]],"struct":[["MDBook",""]]});

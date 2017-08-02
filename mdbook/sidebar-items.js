@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["book",""],["renderer",""],["theme",""],["utils",""]]});
+initSidebarItems({"mod":[["book",""],["config",""],["errors","The error types used through out this crate."],["renderer",""],["theme",""],["utils",""]]});

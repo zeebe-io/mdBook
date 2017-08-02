@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.25.3/src/grammar.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/grammar.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>grammar.rs.html -- source</title>
@@ -461,247 +461,9 @@
 <span id="416">416</span>
 <span id="417">417</span>
 <span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
-<span id="445">445</span>
-<span id="446">446</span>
-<span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">pest</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;partial_legacy&quot;</span>)]</span>
-<span class="macro">impl_rdp</span><span class="macro">!</span> {
-    <span class="macro">grammar</span><span class="macro">!</span> {
-        <span class="ident">whitespace</span> <span class="op">=</span> _{ [<span class="string">&quot; &quot;</span>]<span class="op">|</span>[<span class="string">&quot;\t&quot;</span>]<span class="op">|</span>[<span class="string">&quot;\n&quot;</span>]<span class="op">|</span>[<span class="string">&quot;\r&quot;</span>] }
-
-        <span class="ident">raw_text</span> <span class="op">=</span> @{ ( [<span class="string">&quot;\\{{{{&quot;</span>]<span class="question-mark">?</span> ~ [<span class="string">&quot;\\{{&quot;</span>]<span class="question-mark">?</span> ~ <span class="op">!</span>[<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">any</span> )<span class="op">+</span> }
-        <span class="ident">raw_block_text</span> <span class="op">=</span> @{ ( <span class="op">!</span>[<span class="string">&quot;{{{{&quot;</span>] ~ <span class="ident">any</span> )<span class="op">*</span> }
-
-<span class="comment">// Note: this is not full and strict json literal definition, just for tokenize string,</span>
-<span class="comment">// array and object types which may contains whitespace. We will use a real json parser</span>
-<span class="comment">// for real json processing</span>
-        <span class="ident">literal</span> <span class="op">=</span> { <span class="ident">string_literal</span> <span class="op">|</span>
-                    <span class="ident">array_literal</span> <span class="op">|</span>
-                    <span class="ident">object_literal</span> <span class="op">|</span>
-                    <span class="ident">number_literal</span> <span class="op">|</span>
-                    <span class="ident">null_literal</span> <span class="op">|</span>
-                    <span class="ident">boolean_literal</span> }
-
-        <span class="ident">null_literal</span> <span class="op">=</span> { [<span class="string">&quot;null&quot;</span>] }
-        <span class="ident">boolean_literal</span> <span class="op">=</span> { [<span class="string">&quot;true&quot;</span>]<span class="op">|</span>[<span class="string">&quot;false&quot;</span>] }
-        <span class="ident">number_literal</span> <span class="op">=</span> @{ [<span class="string">&quot;-&quot;</span>]<span class="question-mark">?</span> ~ [<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">+</span> ~ [<span class="string">&quot;.&quot;</span>]<span class="question-mark">?</span> ~ [<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">*</span> ~ ([<span class="string">&quot;E&quot;</span>] ~ [<span class="string">&quot;-&quot;</span>]<span class="question-mark">?</span> ~ [<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">+</span>)<span class="question-mark">?</span> }
-        <span class="ident">string_literal</span> <span class="op">=</span> @{ [<span class="string">&quot;\&quot;&quot;</span>] ~ (<span class="op">!</span>[<span class="string">&quot;\&quot;&quot;</span>] ~ ([<span class="string">&quot;\\\&quot;&quot;</span>] <span class="op">|</span> <span class="ident">any</span>))<span class="op">*</span> ~ [<span class="string">&quot;\&quot;&quot;</span>] }
-        <span class="ident">array_literal</span> <span class="op">=</span> { [<span class="string">&quot;[&quot;</span>] ~ <span class="ident">literal</span><span class="question-mark">?</span> ~ ([<span class="string">&quot;,&quot;</span>] ~ <span class="ident">literal</span>)<span class="op">*</span> ~ [<span class="string">&quot;]&quot;</span>] }
-        <span class="ident">object_literal</span> <span class="op">=</span> { [<span class="string">&quot;{&quot;</span>] ~ (<span class="ident">string_literal</span> ~ [<span class="string">&quot;:&quot;</span>] ~ <span class="ident">literal</span>)<span class="question-mark">?</span> ~ ([<span class="string">&quot;,&quot;</span>] ~ <span class="ident">string_literal</span> ~ [<span class="string">&quot;:&quot;</span>] ~ <span class="ident">literal</span>)<span class="op">*</span> ~ [<span class="string">&quot;}&quot;</span>] }
-
-<span class="comment">// FIXME: a[0], a[&quot;b]</span>
-        <span class="ident">symbol_char</span> <span class="op">=</span> _{ [<span class="string">&#39;a&#39;</span>..<span class="string">&#39;z&#39;</span>]<span class="op">|</span>[<span class="string">&#39;A&#39;</span>..<span class="string">&#39;Z&#39;</span>]<span class="op">|</span>[<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">|</span>[<span class="string">&quot;_&quot;</span>]<span class="op">|</span>[<span class="string">&quot;.&quot;</span>]<span class="op">|</span>[<span class="string">&quot;@&quot;</span>]<span class="op">|</span>[<span class="string">&quot;$&quot;</span>]<span class="op">|</span>[<span class="string">&quot;-&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&lt;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&gt;&quot;</span>] }
-        <span class="ident">path_char</span> <span class="op">=</span> _{ [<span class="string">&quot;/&quot;</span>] }
-
-        <span class="ident">identifier</span> <span class="op">=</span> @{ <span class="ident">symbol_char</span> ~ ( <span class="ident">symbol_char</span> <span class="op">|</span> <span class="ident">path_char</span> )<span class="op">*</span> }
-        <span class="ident">reference</span> <span class="op">=</span> @{ <span class="ident">identifier</span> ~ ([<span class="string">&quot;[&quot;</span>] ~ (<span class="ident">string_literal</span><span class="op">|</span>[<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">+</span>) ~ [<span class="string">&quot;]&quot;</span>])<span class="op">*</span> ~ [<span class="string">&quot;-&quot;</span>]<span class="op">*</span> ~ <span class="ident">reference</span><span class="op">*</span> }
-        <span class="ident">name</span> <span class="op">=</span> _{ <span class="ident">subexpression</span> <span class="op">|</span> <span class="ident">reference</span> }
-
-        <span class="ident">param</span> <span class="op">=</span> { <span class="op">!</span>[<span class="string">&quot;as&quot;</span>] ~ (<span class="ident">literal</span> <span class="op">|</span> <span class="ident">reference</span> <span class="op">|</span> <span class="ident">subexpression</span>) }
-        <span class="ident">hash</span> <span class="op">=</span> { <span class="ident">identifier</span> ~ [<span class="string">&quot;=&quot;</span>] ~ <span class="ident">param</span> }
-        <span class="ident">block_param</span> <span class="op">=</span> { [<span class="string">&quot;as&quot;</span>] ~ [<span class="string">&quot;|&quot;</span>] ~ <span class="ident">identifier</span> ~ <span class="ident">identifier</span><span class="question-mark">?</span> ~ [<span class="string">&quot;|&quot;</span>]}
-        <span class="ident">exp_line</span> <span class="op">=</span> _{ <span class="ident">identifier</span> ~ (<span class="ident">hash</span><span class="op">|</span><span class="ident">param</span>)<span class="op">*</span> ~ <span class="ident">block_param</span><span class="question-mark">?</span>}
-        <span class="ident">partial_exp_line</span> <span class="op">=</span> _{ <span class="ident">name</span> ~ (<span class="ident">hash</span><span class="op">|</span><span class="ident">param</span>)<span class="op">*</span> }
-
-        <span class="ident">subexpression</span> <span class="op">=</span> { [<span class="string">&quot;(&quot;</span>] ~ <span class="ident">name</span> ~ (<span class="ident">hash</span><span class="op">|</span><span class="ident">param</span>)<span class="op">*</span> ~ [<span class="string">&quot;)&quot;</span>] }
-
-        <span class="ident">pre_whitespace_omitter</span> <span class="op">=</span> { [<span class="string">&quot;~&quot;</span>] }
-        <span class="ident">pro_whitespace_omitter</span> <span class="op">=</span> { [<span class="string">&quot;~&quot;</span>] }
-        <span class="ident">escape</span> <span class="op">=</span> { [<span class="string">&quot;\\&quot;</span>] }
-
-        <span class="ident">expression</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ <span class="op">!</span><span class="ident">invert_tag</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ <span class="ident">name</span> ~
-                        <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-
-        <span class="ident">html_expression</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ <span class="ident">name</span> ~
-                                      <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}}&quot;</span>] }
-
-        <span class="ident">helper_expression</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ <span class="op">!</span><span class="ident">invert_tag</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ <span class="ident">exp_line</span> ~
-                               <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-
-        <span class="ident">directive_expression</span> <span class="op">=</span> {  <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;*&quot;</span>] ~ <span class="ident">exp_line</span> ~
-                                   <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-        <span class="ident">partial_expression</span> <span class="op">=</span> {  <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;&gt;&quot;</span>] ~ <span class="ident">partial_exp_line</span> ~
-                                 <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-
-        <span class="ident">invert_tag_item</span> <span class="op">=</span> { [<span class="string">&quot;else&quot;</span>]<span class="op">|</span>[<span class="string">&quot;^&quot;</span>] }
-        <span class="ident">invert_tag</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ <span class="ident">invert_tag_item</span>
-                                ~ <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>]}
-
-        <span class="ident">helper_block_start</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;#&quot;</span>] ~ <span class="ident">exp_line</span> ~
-                                        <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-        <span class="ident">helper_block_end</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;/&quot;</span>] ~ <span class="ident">name</span> ~
-                                      <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-        <span class="ident">helper_block</span> <span class="op">=</span> _{ <span class="ident">helper_block_start</span> ~ <span class="ident">template</span> ~
-                         (<span class="ident">invert_tag</span> ~ <span class="ident">template</span>)<span class="question-mark">?</span> ~
-                          <span class="ident">helper_block_end</span> }
-
-        <span class="ident">directive_block_start</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;#&quot;</span>] ~ [<span class="string">&quot;*&quot;</span>] ~ <span class="ident">exp_line</span> ~
-                                           <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-        <span class="ident">directive_block_end</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;/&quot;</span>] ~ <span class="ident">name</span> ~
-                                         <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-        <span class="ident">directive_block</span> <span class="op">=</span> _{ <span class="ident">directive_block_start</span> ~ <span class="ident">template</span> ~
-                             <span class="ident">directive_block_end</span> }
-
-        <span class="ident">partial_block_start</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;#&quot;</span>] ~ [<span class="string">&quot;&gt;&quot;</span>] ~ <span class="ident">partial_exp_line</span> ~
-                                 <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-        <span class="ident">partial_block_end</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;/&quot;</span>] ~ <span class="ident">name</span> ~
-                               <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-        <span class="ident">partial_block</span> <span class="op">=</span> _{ <span class="ident">partial_block_start</span> ~ <span class="ident">template</span> ~ <span class="ident">partial_block_end</span> }
-
-        <span class="ident">raw_block_start</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ <span class="ident">exp_line</span> ~
-                             <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}}}&quot;</span>] }
-        <span class="ident">raw_block_end</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{{{&quot;</span>] ~ <span class="ident">pre_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;/&quot;</span>] ~ <span class="ident">name</span> ~
-                           <span class="ident">pro_whitespace_omitter</span><span class="question-mark">?</span> ~ [<span class="string">&quot;}}}}&quot;</span>] }
-        <span class="ident">raw_block</span> <span class="op">=</span> _{ <span class="ident">raw_block_start</span> ~ <span class="ident">raw_block_text</span> ~ <span class="ident">raw_block_end</span> }
-
-        <span class="ident">hbs_comment</span> <span class="op">=</span> { <span class="op">!</span><span class="ident">escape</span> ~ [<span class="string">&quot;{{!&quot;</span>] ~ (<span class="op">!</span>[<span class="string">&quot;}}&quot;</span>] ~ <span class="ident">any</span>)<span class="op">*</span> ~ [<span class="string">&quot;}}&quot;</span>] }
-
-        <span class="ident">template</span> <span class="op">=</span> { (
-            <span class="ident">raw_text</span> <span class="op">|</span>
-            <span class="ident">expression</span> <span class="op">|</span>
-            <span class="ident">html_expression</span> <span class="op">|</span>
-            <span class="ident">helper_expression</span> <span class="op">|</span>
-            <span class="ident">helper_block</span> <span class="op">|</span>
-            <span class="ident">raw_block</span> <span class="op">|</span>
-            <span class="ident">hbs_comment</span> <span class="op">|</span>
-            <span class="ident">directive_expression</span> <span class="op">|</span>
-            <span class="ident">directive_block</span> )<span class="op">*</span>
-        }
-
-        <span class="ident">parameter</span> <span class="op">=</span> _{ <span class="ident">param</span> ~ <span class="ident">eoi</span> }
-        <span class="ident">handlebars</span> <span class="op">=</span> _{ <span class="ident">template</span> ~ <span class="ident">eoi</span> }
-
-<span class="comment">// json path visitor</span>
-        <span class="ident">path_ident</span> <span class="op">=</span> _{ [<span class="string">&#39;a&#39;</span>..<span class="string">&#39;z&#39;</span>]<span class="op">|</span>[<span class="string">&#39;A&#39;</span>..<span class="string">&#39;Z&#39;</span>]<span class="op">|</span>[<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">|</span>[<span class="string">&quot;_&quot;</span>]<span class="op">|</span>[<span class="string">&quot;@&quot;</span>]<span class="op">|</span>[<span class="string">&quot;$&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&lt;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&gt;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;-&quot;</span>]}
-        <span class="ident">path_id</span> <span class="op">=</span> { <span class="ident">path_ident</span><span class="op">+</span> }
-        <span class="ident">path_num_id</span> <span class="op">=</span> { [<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">+</span> }
-        <span class="ident">path_raw_id</span> <span class="op">=</span> { <span class="ident">path_ident</span><span class="op">*</span> }
-        <span class="ident">path_sep</span> <span class="op">=</span> _{ [<span class="string">&quot;/&quot;</span>] <span class="op">|</span> [<span class="string">&quot;.&quot;</span>] }
-        <span class="ident">path_up</span> <span class="op">=</span> { [<span class="string">&quot;..&quot;</span>] }
-        <span class="ident">path_var</span> <span class="op">=</span> { <span class="ident">path_id</span> }
-        <span class="ident">path_key</span> <span class="op">=</span> { [<span class="string">&quot;[&quot;</span>] ~ ([<span class="string">&quot;\&quot;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&#39;&quot;</span>])<span class="question-mark">?</span> ~ <span class="ident">path_raw_id</span> ~ ([<span class="string">&quot;\&quot;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&#39;&quot;</span>])<span class="question-mark">?</span> ~ [<span class="string">&quot;]&quot;</span>] }
-        <span class="ident">path_idx</span> <span class="op">=</span> { [<span class="string">&quot;[&quot;</span>] ~ <span class="ident">path_num_id</span> ~ [<span class="string">&quot;]&quot;</span>]}
-        <span class="ident">path_item</span> <span class="op">=</span> _{ <span class="ident">path_up</span><span class="op">|</span><span class="ident">path_var</span> }
-        <span class="ident">path</span> <span class="op">=</span> _{ [<span class="string">&quot;./&quot;</span>]<span class="question-mark">?</span> ~ <span class="ident">path_item</span> ~ ((<span class="ident">path_sep</span> ~ <span class="ident">path_item</span>) <span class="op">|</span> (<span class="ident">path_sep</span><span class="question-mark">?</span> ~  (<span class="ident">path_key</span> <span class="op">|</span> <span class="ident">path_idx</span>)))<span class="op">*</span> ~ <span class="ident">eoi</span> }
-    }
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;partial_legacy&quot;</span>))]</span>
 <span class="macro">impl_rdp</span><span class="macro">!</span> {
     <span class="macro">grammar</span><span class="macro">!</span> {
         <span class="ident">whitespace</span> <span class="op">=</span> _{ [<span class="string">&quot; &quot;</span>]<span class="op">|</span>[<span class="string">&quot;\t&quot;</span>]<span class="op">|</span>[<span class="string">&quot;\n&quot;</span>]<span class="op">|</span>[<span class="string">&quot;\r&quot;</span>] }
@@ -812,14 +574,15 @@
         <span class="ident">path_ident</span> <span class="op">=</span> _{ [<span class="string">&#39;a&#39;</span>..<span class="string">&#39;z&#39;</span>]<span class="op">|</span>[<span class="string">&#39;A&#39;</span>..<span class="string">&#39;Z&#39;</span>]<span class="op">|</span>[<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">|</span>[<span class="string">&quot;_&quot;</span>]<span class="op">|</span>[<span class="string">&quot;@&quot;</span>]<span class="op">|</span>[<span class="string">&quot;$&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&lt;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&gt;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;-&quot;</span>]}
         <span class="ident">path_id</span> <span class="op">=</span> { <span class="ident">path_ident</span><span class="op">+</span> }
         <span class="ident">path_num_id</span> <span class="op">=</span> { [<span class="string">&#39;0&#39;</span>..<span class="string">&#39;9&#39;</span>]<span class="op">+</span> }
-        <span class="ident">path_raw_id</span> <span class="op">=</span> { <span class="ident">path_ident</span><span class="op">*</span> }
+        <span class="ident">path_raw_id</span> <span class="op">=</span> { (<span class="ident">path_ident</span><span class="op">|</span>[<span class="string">&quot;/&quot;</span>])<span class="op">*</span> }
         <span class="ident">path_sep</span> <span class="op">=</span> _{ [<span class="string">&quot;/&quot;</span>] <span class="op">|</span> [<span class="string">&quot;.&quot;</span>] }
         <span class="ident">path_up</span> <span class="op">=</span> { [<span class="string">&quot;..&quot;</span>] }
         <span class="ident">path_var</span> <span class="op">=</span> { <span class="ident">path_id</span> }
         <span class="ident">path_key</span> <span class="op">=</span> { [<span class="string">&quot;[&quot;</span>] ~ ([<span class="string">&quot;\&quot;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&#39;&quot;</span>])<span class="question-mark">?</span> ~ <span class="ident">path_raw_id</span> ~ ([<span class="string">&quot;\&quot;&quot;</span>]<span class="op">|</span>[<span class="string">&quot;&#39;&quot;</span>])<span class="question-mark">?</span> ~ [<span class="string">&quot;]&quot;</span>] }
         <span class="ident">path_idx</span> <span class="op">=</span> { [<span class="string">&quot;[&quot;</span>] ~ <span class="ident">path_num_id</span> ~ [<span class="string">&quot;]&quot;</span>]}
         <span class="ident">path_item</span> <span class="op">=</span> _{ <span class="ident">path_up</span><span class="op">|</span><span class="ident">path_var</span> }
-        <span class="ident">path</span> <span class="op">=</span> _{ [<span class="string">&quot;./&quot;</span>]<span class="question-mark">?</span> ~ <span class="ident">path_item</span> ~ ((<span class="ident">path_sep</span> ~ <span class="ident">path_item</span>) <span class="op">|</span> (<span class="ident">path_sep</span><span class="question-mark">?</span> ~  (<span class="ident">path_key</span> <span class="op">|</span> <span class="ident">path_idx</span>)))<span class="op">*</span> ~ <span class="ident">eoi</span> }
+        <span class="ident">path_current</span> <span class="op">=</span> { [<span class="string">&quot;this&quot;</span>] <span class="op">|</span> [<span class="string">&quot;.&quot;</span>] }
+        <span class="ident">path</span> <span class="op">=</span> _{ (<span class="ident">path_current</span> ~ <span class="ident">eoi</span>) <span class="op">|</span> ([<span class="string">&quot;./&quot;</span>]<span class="question-mark">?</span> ~ <span class="ident">path_item</span> ~ ((<span class="ident">path_sep</span> ~ <span class="ident">path_item</span>) <span class="op">|</span> (<span class="ident">path_sep</span><span class="question-mark">?</span> ~  (<span class="ident">path_key</span> <span class="op">|</span> <span class="ident">path_idx</span>)))<span class="op">*</span> ~ <span class="ident">eoi</span>)  }
     }
 }
 
@@ -884,7 +647,10 @@
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test_hash</span>() {
-    <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;hello=world&quot;</span>, <span class="string">&quot;hello=\&quot;world\&quot;&quot;</span>, <span class="string">&quot;hello=(world)&quot;</span>, <span class="string">&quot;hello=(world 0)&quot;</span>];
+    <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;hello=world&quot;</span>,
+                 <span class="string">&quot;hello=\&quot;world\&quot;&quot;</span>,
+                 <span class="string">&quot;hello=(world)&quot;</span>,
+                 <span class="string">&quot;hello=(world 0)&quot;</span>];
     <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">iter</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rdp</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="ident">i</span>));
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rdp</span>.<span class="ident">hash</span>());
@@ -1061,7 +827,8 @@
                  <span class="string">&quot;a[\&quot;bbc\&quot;]/b/c/../d&quot;</span>,
                  <span class="string">&quot;../a/b[0][1]&quot;</span>,
                  <span class="string">&quot;./this[0][1]/this/../a&quot;</span>,
-                 <span class="string">&quot;./this_name&quot;</span>];
+                 <span class="string">&quot;./this_name&quot;</span>,
+                 <span class="string">&quot;./goo[/bar]&quot;</span>];
     <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">iter</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rdp</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="ident">i</span>));
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rdp</span>.<span class="ident">path</span>());
@@ -1093,7 +860,10 @@
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test_partial_expression</span>() {
-    <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;{{&gt; hello}}&quot;</span>, <span class="string">&quot;{{&gt; (hello)}}&quot;</span>, <span class="string">&quot;{{~&gt; hello a}}&quot;</span>, <span class="string">&quot;{{&gt; hello a=1}}&quot;</span>];
+    <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;{{&gt; hello}}&quot;</span>,
+                 <span class="string">&quot;{{&gt; (hello)}}&quot;</span>,
+                 <span class="string">&quot;{{~&gt; hello a}}&quot;</span>,
+                 <span class="string">&quot;{{&gt; hello a=1}}&quot;</span>];
     <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">iter</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rdp</span> <span class="op">=</span> <span class="ident">Rdp</span>::<span class="ident">new</span>(<span class="ident">StringInput</span>::<span class="ident">new</span>(<span class="ident">i</span>));
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rdp</span>.<span class="ident">partial_expression</span>());
@@ -1168,7 +938,6 @@
         window.rootPath = "../../";
         window.currentCrate = "handlebars";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

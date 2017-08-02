@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["handlebars"] = [];
 implementors["serde_json"] = [];
 
             if (window.register_implementors) {

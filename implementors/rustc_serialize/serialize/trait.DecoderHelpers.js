@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["hyper"] = [];
 implementors["iron"] = [];
 
             if (window.register_implementors) {

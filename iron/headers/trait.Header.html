@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         <a href='../../iron/index.html'><img src='https://avatars0.githubusercontent.com/u/7853871?s=128' alt='logo' width='100'></a>
-        <p class='location'><a href='../index.html'>iron</a>::<wbr><a href='index.html'>headers</a></p><script>window.sidebarCurrent = {name: 'Header', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait Header</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>iron</a>::<wbr><a href='index.html'>headers</a></p><script>window.sidebarCurrent = {name: 'Header', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/hyper/header/mod.rs.html#109-123' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/hyper/header/mod.rs.html#110-124' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Header: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a> {
     fn <a href='#tymethod.header_name' class='fnname'>header_name</a>() -&gt; &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>;
     fn <a href='#tymethod.parse_header' class='fnname'>parse_header</a>(raw: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="../../iron/error/enum.HttpError.html" title="enum iron::error::HttpError">Error</a>&gt;;
@@ -73,56 +73,57 @@ if <code>raw.len() &gt; 1</code>.</p>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlAllowCredentials.html" title="struct iron::headers::AccessControlAllowCredentials">AccessControlAllowCredentials</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.AccessControlAllowOrigin.html" title="enum iron::headers::AccessControlAllowOrigin">AccessControlAllowOrigin</a></code></li>
-<li><code>impl&lt;S&gt; Header for <a class="struct" href="../../iron/headers/struct.Authorization.html" title="struct iron::headers::Authorization">Authorization</a>&lt;S&gt; <span class="where fmt-newline">where S: <a class="trait" href="../../iron/headers/trait.Scheme.html" title="trait iron::headers::Scheme">Scheme</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>, S::<a class="trait" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html" title="trait core::str::FromStr">Err</a>: 'static</span></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.CacheControl.html" title="struct iron::headers::CacheControl">CacheControl</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Cookie.html" title="struct iron::headers::Cookie">Cookie</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentDisposition.html" title="struct iron::headers::ContentDisposition">ContentDisposition</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentLength.html" title="struct iron::headers::ContentLength">ContentLength</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.Expect.html" title="enum iron::headers::Expect">Expect</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Host.html" title="struct iron::headers::Host">Host</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.IfRange.html" title="enum iron::headers::IfRange">IfRange</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Origin.html" title="struct iron::headers::Origin">Origin</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.Pragma.html" title="enum iron::headers::Pragma">Pragma</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Prefer.html" title="struct iron::headers::Prefer">Prefer</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.PreferenceApplied.html" title="struct iron::headers::PreferenceApplied">PreferenceApplied</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.Range.html" title="enum iron::headers::Range">Range</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.ReferrerPolicy.html" title="enum iron::headers::ReferrerPolicy">ReferrerPolicy</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.SetCookie.html" title="struct iron::headers::SetCookie">SetCookie</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.StrictTransportSecurity.html" title="struct iron::headers::StrictTransportSecurity">StrictTransportSecurity</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Accept.html" title="struct iron::headers::Accept">Accept</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlAllowHeaders.html" title="struct iron::headers::AccessControlAllowHeaders">AccessControlAllowHeaders</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlAllowMethods.html" title="struct iron::headers::AccessControlAllowMethods">AccessControlAllowMethods</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlExposeHeaders.html" title="struct iron::headers::AccessControlExposeHeaders">AccessControlExposeHeaders</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlMaxAge.html" title="struct iron::headers::AccessControlMaxAge">AccessControlMaxAge</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Server.html" title="struct iron::headers::Server">Server</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.IfUnmodifiedSince.html" title="struct iron::headers::IfUnmodifiedSince">IfUnmodifiedSince</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlRequestHeaders.html" title="struct iron::headers::AccessControlRequestHeaders">AccessControlRequestHeaders</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentType.html" title="struct iron::headers::ContentType">ContentType</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Origin.html" title="struct iron::headers::Origin">Origin</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Cookie.html" title="struct iron::headers::Cookie">Cookie</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Link.html" title="struct iron::headers::Link">Link</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Accept.html" title="struct iron::headers::Accept">Accept</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.IfMatch.html" title="enum iron::headers::IfMatch">IfMatch</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlRequestMethod.html" title="struct iron::headers::AccessControlRequestMethod">AccessControlRequestMethod</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptCharset.html" title="struct iron::headers::AcceptCharset">AcceptCharset</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptEncoding.html" title="struct iron::headers::AcceptEncoding">AcceptEncoding</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptLanguage.html" title="struct iron::headers::AcceptLanguage">AcceptLanguage</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptRanges.html" title="struct iron::headers::AcceptRanges">AcceptRanges</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Allow.html" title="struct iron::headers::Allow">Allow</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlAllowHeaders.html" title="struct iron::headers::AccessControlAllowHeaders">AccessControlAllowHeaders</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Connection.html" title="struct iron::headers::Connection">Connection</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Upgrade.html" title="struct iron::headers::Upgrade">Upgrade</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.Range.html" title="enum iron::headers::Range">Range</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.Expect.html" title="enum iron::headers::Expect">Expect</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.TransferEncoding.html" title="struct iron::headers::TransferEncoding">TransferEncoding</a></code></li>
+<li><code>impl&lt;S&gt; Header for <a class="struct" href="../../iron/headers/struct.Authorization.html" title="struct iron::headers::Authorization">Authorization</a>&lt;S&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;S: <a class="trait" href="../../iron/headers/trait.Scheme.html" title="trait iron::headers::Scheme">Scheme</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;S as <a class="trait" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html" title="trait core::str::FromStr">FromStr</a>&gt;::<a class="trait" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html" title="trait core::str::FromStr">Err</a>: 'static,&nbsp;</span></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.StrictTransportSecurity.html" title="struct iron::headers::StrictTransportSecurity">StrictTransportSecurity</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentEncoding.html" title="struct iron::headers::ContentEncoding">ContentEncoding</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentLanguage.html" title="struct iron::headers::ContentLanguage">ContentLanguage</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentRange.html" title="struct iron::headers::ContentRange">ContentRange</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentType.html" title="struct iron::headers::ContentType">ContentType</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Date.html" title="struct iron::headers::Date">Date</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ETag.html" title="struct iron::headers::ETag">ETag</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Expires.html" title="struct iron::headers::Expires">Expires</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.From.html" title="struct iron::headers::From">From</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.IfMatch.html" title="enum iron::headers::IfMatch">IfMatch</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.IfModifiedSince.html" title="struct iron::headers::IfModifiedSince">IfModifiedSince</a></code></li>
-<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.IfNoneMatch.html" title="enum iron::headers::IfNoneMatch">IfNoneMatch</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.IfUnmodifiedSince.html" title="struct iron::headers::IfUnmodifiedSince">IfUnmodifiedSince</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.LastModified.html" title="struct iron::headers::LastModified">LastModified</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptLanguage.html" title="struct iron::headers::AcceptLanguage">AcceptLanguage</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Location.html" title="struct iron::headers::Location">Location</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlExposeHeaders.html" title="struct iron::headers::AccessControlExposeHeaders">AccessControlExposeHeaders</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.IfModifiedSince.html" title="struct iron::headers::IfModifiedSince">IfModifiedSince</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Date.html" title="struct iron::headers::Date">Date</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentRange.html" title="struct iron::headers::ContentRange">ContentRange</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.LastModified.html" title="struct iron::headers::LastModified">LastModified</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.Pragma.html" title="enum iron::headers::Pragma">Pragma</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.IfNoneMatch.html" title="enum iron::headers::IfNoneMatch">IfNoneMatch</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentLength.html" title="struct iron::headers::ContentLength">ContentLength</a></code></li>
 <li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Referer.html" title="struct iron::headers::Referer">Referer</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Server.html" title="struct iron::headers::Server">Server</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.TransferEncoding.html" title="struct iron::headers::TransferEncoding">TransferEncoding</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Upgrade.html" title="struct iron::headers::Upgrade">Upgrade</a></code></li>
-<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.UserAgent.html" title="struct iron::headers::UserAgent">UserAgent</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ETag.html" title="struct iron::headers::ETag">ETag</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.PreferenceApplied.html" title="struct iron::headers::PreferenceApplied">PreferenceApplied</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Expires.html" title="struct iron::headers::Expires">Expires</a></code></li>
 <li><code>impl Header for <a class="enum" href="../../iron/headers/enum.Vary.html" title="enum iron::headers::Vary">Vary</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.ContentDisposition.html" title="struct iron::headers::ContentDisposition">ContentDisposition</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptRanges.html" title="struct iron::headers::AcceptRanges">AcceptRanges</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Host.html" title="struct iron::headers::Host">Host</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.AccessControlAllowOrigin.html" title="enum iron::headers::AccessControlAllowOrigin">AccessControlAllowOrigin</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlAllowMethods.html" title="struct iron::headers::AccessControlAllowMethods">AccessControlAllowMethods</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.IfRange.html" title="enum iron::headers::IfRange">IfRange</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.From.html" title="struct iron::headers::From">From</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AccessControlMaxAge.html" title="struct iron::headers::AccessControlMaxAge">AccessControlMaxAge</a></code></li>
+<li><code>impl Header for <a class="enum" href="../../iron/headers/enum.ReferrerPolicy.html" title="enum iron::headers::ReferrerPolicy">ReferrerPolicy</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptEncoding.html" title="struct iron::headers::AcceptEncoding">AcceptEncoding</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Allow.html" title="struct iron::headers::Allow">Allow</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.Prefer.html" title="struct iron::headers::Prefer">Prefer</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.CacheControl.html" title="struct iron::headers::CacheControl">CacheControl</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.SetCookie.html" title="struct iron::headers::SetCookie">SetCookie</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.AcceptCharset.html" title="struct iron::headers::AcceptCharset">AcceptCharset</a></code></li>
+<li><code>impl Header for <a class="struct" href="../../iron/headers/struct.UserAgent.html" title="struct iron::headers::UserAgent">UserAgent</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/hyper/header/trait.Header.js">
                  </script></section>
@@ -182,7 +183,6 @@ if <code>raw.len() &gt; 1</code>.</p>
         window.rootPath = "../../";
         window.currentCrate = "iron";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

@@ -20,9 +20,20 @@
 
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
 
-        <!-- MathJax -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
 
         <!-- Fetch JQuery from CDN but have a local fallback -->
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -31,18 +42,25 @@
                 document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
             }
         </script>
+
+        <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
+        <script src="store.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = localStorage.getItem('theme');
-            if (theme == null) { theme = 'light'; }
+            var theme = store.get('theme');
+            if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = localStorage.getItem('sidebar');
+            var sidebar = store.get('sidebar');
             if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
             else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
         </script>
@@ -53,7 +71,7 @@
 
         <div id="page-wrapper" class="page-wrapper">
 
-            <div class="page">
+            <div class="page" tabindex="-1">
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
                         <i id="sidebar-toggle" class="fa fa-bars"></i>
@@ -68,8 +86,8 @@
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="format/rust.html#rust-code-specific-features" id="rust-code-specific-features"><h1>Rust code specific features</h1></a>
-<a class="header" href="format/rust.html#hiding-code-lines" id="hiding-code-lines"><h2>Hiding code lines</h2></a>
+                    <a class="header" href="print.html#rust code specific features" id="rust code specific features"><h1>Rust code specific features</h1></a>
+<a class="header" href="print.html#hiding code lines" id="hiding code lines"><h2>Hiding code lines</h2></a>
 <p>There is a feature in mdBook that let's you hide code lines by prepending them with a <code>#</code>.</p>
 <pre><code class="language-bash"># fn main() {
     let x = 5;
@@ -86,7 +104,7 @@
     println!(&quot;{}&quot;, x + y);
 # }
 </code></pre></pre>
-<a class="header" href="format/rust.html#inserting-runnable-rust-files" id="inserting-runnable-rust-files"><h2>Inserting runnable Rust files</h2></a>
+<a class="header" href="print.html#inserting runnable rust files" id="inserting runnable rust files"><h2>Inserting runnable Rust files</h2></a>
 <p>With the following syntax, you can insert runnable Rust files into your book:</p>
 <pre><code class="language-hbs">{{#playpen file.rs}}
 </code></pre>
@@ -94,24 +112,25 @@
 <p>When play is clicked, the code snippet will be send to the <a href="">Rust Playpen</a> to be compiled and run. The result is send back and displayed directly underneath the code.</p>
 <p>Here is what a rendered code snippet looks like:</p>
 <pre><pre class="playpen"><code class="language-rust">fn main() {
-    println!("Hello World!");
+    println!(&quot;Hello World!&quot;);
 #
 #    // You can even hide lines! :D
-#   println!("I am hidden! Expand the code snippet to see me");
+#   println!(&quot;I am hidden! Expand the code snippet to see me&quot;);
 }
+
 </code></pre></pre>
 
                 </div>
 
                 <!-- Mobile navigation buttons -->
                 
-                    <a href="format/mathjax.html" class="mobile-nav-chapters previous">
+                    <a rel="prev" href="format/mathjax.html" class="mobile-nav-chapters previous">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="lib/lib.html" class="mobile-nav-chapters next">
+                    <a rel="next" href="lib/lib.html" class="mobile-nav-chapters next">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -142,6 +161,9 @@
 
         <!-- Livereload script (if served using the cli tool) -->
         
+
+        
+
 
         <script src="highlight.js"></script>
         <script src="book.js"></script>

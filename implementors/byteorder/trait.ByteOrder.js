@@ -1,5 +1,7 @@
 (function() {var implementors = {};
 implementors["byteorder"] = [];
+implementors["hyper"] = [];
+implementors["iron"] = [];
 implementors["ws"] = [];
 
             if (window.register_implementors) {

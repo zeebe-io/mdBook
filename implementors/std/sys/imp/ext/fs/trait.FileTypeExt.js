@@ -1,5 +1,6 @@
 (function() {var implementors = {};
 implementors["bytes"] = [];
+implementors["error_chain"] = [];
 implementors["handlebars"] = [];
 implementors["hyper"] = [];
 implementors["iron"] = [];
@@ -8,6 +9,8 @@ implementors["mio"] = [];
 implementors["nix"] = [];
 implementors["regex_syntax"] = [];
 implementors["serde"] = [];
+implementors["syn"] = [];
+implementors["thread_local"] = [];
 implementors["ws"] = [];
 
             if (window.register_implementors) {

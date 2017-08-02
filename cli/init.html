@@ -20,9 +20,20 @@
 
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
 
-        <!-- MathJax -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
 
         <!-- Fetch JQuery from CDN but have a local fallback -->
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -31,18 +42,25 @@
                 document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
             }
         </script>
+
+        <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
+        <script src="store.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = localStorage.getItem('theme');
-            if (theme == null) { theme = 'light'; }
+            var theme = store.get('theme');
+            if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = localStorage.getItem('sidebar');
+            var sidebar = store.get('sidebar');
             if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
             else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
         </script>
@@ -53,7 +71,7 @@
 
         <div id="page-wrapper" class="page-wrapper">
 
-            <div class="page">
+            <div class="page" tabindex="-1">
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
                         <i id="sidebar-toggle" class="fa fa-bars"></i>
@@ -68,7 +86,7 @@
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="cli/init.html#the-init-command" id="the-init-command"><h1>The init command</h1></a>
+                    <a class="header" href="print.html#the init command" id="the init command"><h1>The init command</h1></a>
 <p>There is some minimal boilerplate that is the same for every new book. It's for this purpose that mdBook includes an <code>init</code> command.</p>
 <p>The <code>init</code> command is used like this:</p>
 <pre><code class="language-bash">mdbook init
@@ -93,14 +111,14 @@ to a server to be seen by your audience.</p>
 <p>The <code>SUMMARY.md</code> file is the most important file, it's the skeleton of your book and is discussed in more detail in another  <a href="format/summary.html">chapter</a>.</p>
 </li>
 </ul>
-<a class="header" href="cli/init.html#tip--trick-hidden-feature" id="tip--trick-hidden-feature"><h4>Tip &amp; Trick: Hidden Feature</h4></a>
+<a class="header" href="print.html#tip  trick hidden feature" id="tip  trick hidden feature"><h4>Tip &amp; Trick: Hidden Feature</h4></a>
 <p>When a <code>SUMMARY.md</code> file already exists, the <code>init</code> command will first parse it and generate the missing files according to the paths used in the <code>SUMMARY.md</code>. This allows you to think and create the whole structure of your book and then let mdBook generate it for you.</p>
-<a class="header" href="cli/init.html#specify-a-directory" id="specify-a-directory"><h4>Specify a directory</h4></a>
+<a class="header" href="print.html#specify a directory" id="specify a directory"><h4>Specify a directory</h4></a>
 <p>When using the <code>init</code> command, you can also specify a directory, instead of using the current working directory,
 by appending a path to the command:</p>
 <pre><code class="language-bash">mdbook init path/to/book
 </code></pre>
-<a class="header" href="cli/init.html#--theme" id="--theme"><h2>--theme</h2></a>
+<a class="header" href="print.html#--theme" id="--theme"><h2>--theme</h2></a>
 <p>When you use the <code>--theme</code> argument, the default theme will be copied into a directory
 called <code>theme</code> in your source directory so that you can modify it.</p>
 <p>The theme is selectively overwritten, this means that if you don't want to overwrite a
@@ -110,13 +128,13 @@ specific file, just delete it and the default file will be used.</p>
 
                 <!-- Mobile navigation buttons -->
                 
-                    <a href="cli/cli-tool.html" class="mobile-nav-chapters previous">
+                    <a rel="prev" href="cli/cli-tool.html" class="mobile-nav-chapters previous">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="cli/build.html" class="mobile-nav-chapters next">
+                    <a rel="next" href="cli/build.html" class="mobile-nav-chapters next">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -147,6 +165,9 @@ specific file, just delete it and the default file will be used.</p>
 
         <!-- Livereload script (if served using the cli tool) -->
         
+
+        
+
 
         <script src="highlight.js"></script>
         <script src="book.js"></script>

@@ -1,5 +1,7 @@
 (function() {var implementors = {};
+implementors["bitflags"] = ["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/fmt/trait.LowerHex.html\" title=\"trait core::fmt::LowerHex\">LowerHex</a> for <a class=\"struct\" href=\"bitflags/example_generated/struct.Flags.html\" title=\"struct bitflags::example_generated::Flags\">Flags</a>",];
 implementors["bytes"] = [];
+implementors["error_chain"] = [];
 implementors["handlebars"] = [];
 implementors["hyper"] = [];
 implementors["iron"] = [];
@@ -8,6 +10,8 @@ implementors["mio"] = [];
 implementors["nix"] = [];
 implementors["regex_syntax"] = [];
 implementors["serde"] = [];
+implementors["syn"] = [];
+implementors["thread_local"] = [];
 implementors["void"] = [];
 implementors["ws"] = [];
 

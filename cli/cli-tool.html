@@ -20,9 +20,20 @@
 
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
 
-        <!-- MathJax -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
 
         <!-- Fetch JQuery from CDN but have a local fallback -->
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -31,18 +42,25 @@
                 document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
             }
         </script>
+
+        <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
+        <script src="store.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = localStorage.getItem('theme');
-            if (theme == null) { theme = 'light'; }
+            var theme = store.get('theme');
+            if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = localStorage.getItem('sidebar');
+            var sidebar = store.get('sidebar');
             if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
             else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
         </script>
@@ -53,7 +71,7 @@
 
         <div id="page-wrapper" class="page-wrapper">
 
-            <div class="page">
+            <div class="page" tabindex="-1">
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
                         <i id="sidebar-toggle" class="fa fa-bars"></i>
@@ -68,19 +86,19 @@
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="cli/cli-tool.html#command-line-tool" id="command-line-tool"><h1>Command Line Tool</h1></a>
+                    <a class="header" href="print.html#command line tool" id="command line tool"><h1>Command Line Tool</h1></a>
 <p>mdBook can be used either as a command line tool or a <a href="https://crates.io/crates/mdbook">Rust crate</a>.
 Let's focus on the command line tool capabilities first.</p>
-<a class="header" href="cli/cli-tool.html#install" id="install"><h2>Install</h2></a>
-<a class="header" href="cli/cli-tool.html#pre-requisite" id="pre-requisite"><h3>Pre-requisite</h3></a>
+<a class="header" href="print.html#install" id="install"><h2>Install</h2></a>
+<a class="header" href="print.html#pre-requisite" id="pre-requisite"><h3>Pre-requisite</h3></a>
 <p>mdBook is written in <strong><a href="https://www.rust-lang.org/">Rust</a></strong> and therefore needs to be compiled with <strong>Cargo</strong>, because we don't yet offer ready-to-go binaries. If you haven't already installed Rust, please go ahead and <a href="https://www.rust-lang.org/downloads.html">install it</a> now.</p>
-<a class="header" href="cli/cli-tool.html#install-cratesio-version" id="install-cratesio-version"><h3>Install Crates.io version</h3></a>
+<a class="header" href="print.html#install cratesio version" id="install cratesio version"><h3>Install Crates.io version</h3></a>
 <p>Installing mdBook is relatively easy if you already have Rust and Cargo installed. You just have to type this snippet in your terminal:</p>
 <pre><code class="language-bash">cargo install mdbook
 </code></pre>
 <p>This will fetch the source code from <a href="https://crates.io/">Crates.io</a> and compile it. You will have to add Cargo's <code>bin</code> directory to your <code>PATH</code>.</p>
 <p>Run <code>mdbook help</code> in your terminal to verify if it works. Congratulations, you have installed mdBook!</p>
-<a class="header" href="cli/cli-tool.html#install-git-version" id="install-git-version"><h3>Install Git version</h3></a>
+<a class="header" href="print.html#install git version" id="install git version"><h3>Install Git version</h3></a>
 <p>The <strong><a href="https://github.com/azerupi/mdBook">git version</a></strong> contains all the latest bug-fixes and features, that will be released in the next version on <strong>Crates.io</strong>, if you can't wait until the next release. You can build the git version yourself. Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
 <pre><code class="language-bash">git clone --depth=1 https://github.com/azerupi/mdBook.git
 cd mdBook
@@ -92,13 +110,13 @@ cargo build --release
 
                 <!-- Mobile navigation buttons -->
                 
-                    <a href="README.html" class="mobile-nav-chapters previous">
+                    <a rel="prev" href="README.html" class="mobile-nav-chapters previous">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="cli/init.html" class="mobile-nav-chapters next">
+                    <a rel="next" href="cli/init.html" class="mobile-nav-chapters next">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -129,6 +147,9 @@ cargo build --release
 
         <!-- Livereload script (if served using the cli tool) -->
         
+
+        
+
 
         <script src="highlight.js"></script>
         <script src="book.js"></script>

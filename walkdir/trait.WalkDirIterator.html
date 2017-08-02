@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>walkdir</a></p><script>window.sidebarCurrent = {name: 'WalkDirIterator', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait WalkDirIterator</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#provided-methods">Provided Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='index.html'>walkdir</a></p><script>window.sidebarCurrent = {name: 'WalkDirIterator', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -52,7 +52,8 @@
 <pre class='rust trait'>pub trait WalkDirIterator: <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html" title="trait core::iter::iterator::Iterator">Iterator</a> {
     fn <a href='#tymethod.skip_current_dir' class='fnname'>skip_current_dir</a>(&amp;mut self);
 
-    fn <a href='#method.filter_entry' class='fnname'>filter_entry</a>&lt;P&gt;(self, predicate: P) -&gt; <a class="struct" href="../walkdir/struct.IterFilterEntry.html" title="struct walkdir::IterFilterEntry">IterFilterEntry</a>&lt;Self, P&gt; <span class="where fmt-newline">where Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>, P: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html" title="trait core::ops::FnMut">FnMut</a>(&amp;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></span> { ... }
+    fn <a href='#method.filter_entry' class='fnname'>filter_entry</a>&lt;P&gt;(self, predicate: P) -&gt; <a class="struct" href="../walkdir/struct.IterFilterEntry.html" title="struct walkdir::IterFilterEntry">IterFilterEntry</a>&lt;Self, P&gt;<br>&nbsp;&nbsp;&nbsp; <span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html" title="trait core::ops::FnMut">FnMut</a>(&amp;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></span>,
+    { ... }
 }</pre><div class='docblock'><p>A trait for recursive directory iterators.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
@@ -100,7 +101,7 @@ above.)</p>
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.filter_entry' class='method'><span id='filter_entry.v' class='invisible'><code>fn <a href='#method.filter_entry' class='fnname'>filter_entry</a>&lt;P&gt;(self, predicate: P) -&gt; <a class="struct" href="../walkdir/struct.IterFilterEntry.html" title="struct walkdir::IterFilterEntry">IterFilterEntry</a>&lt;Self, P&gt; <span class="where fmt-newline">where Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>, P: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html" title="trait core::ops::FnMut">FnMut</a>(&amp;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></span></code></span></h3><div class='docblock'><p>Yields only entries which satisfy the given predicate and skips
+        <h3 id='method.filter_entry' class='method'><span id='filter_entry.v' class='invisible'><code>fn <a href='#method.filter_entry' class='fnname'>filter_entry</a>&lt;P&gt;(self, predicate: P) -&gt; <a class="struct" href="../walkdir/struct.IterFilterEntry.html" title="struct walkdir::IterFilterEntry">IterFilterEntry</a>&lt;Self, P&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;P: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html" title="trait core::ops::FnMut">FnMut</a>(&amp;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Yields only entries which satisfy the given predicate and skips
 descending into directories that do not satisfy the given predicate.</p>
 
 <p>The predicate is applied to all entries. If the predicate is
@@ -137,7 +138,7 @@ passed to this predicate.</p>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     <li><code>impl WalkDirIterator for <a class="struct" href="../walkdir/struct.Iter.html" title="struct walkdir::Iter">Iter</a></code></li>
-<li><code>impl&lt;I, P&gt; WalkDirIterator for <a class="struct" href="../walkdir/struct.IterFilterEntry.html" title="struct walkdir::IterFilterEntry">IterFilterEntry</a>&lt;I, P&gt; <span class="where fmt-newline">where I: <a class="trait" href="../walkdir/trait.WalkDirIterator.html" title="trait walkdir::WalkDirIterator">WalkDirIterator</a>&lt;Item=<a class="type" href="../walkdir/type.Result.html" title="type walkdir::Result">Result</a>&lt;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>&gt;&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html" title="trait core::ops::FnMut">FnMut</a>(&amp;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></span></code></li>
+<li><code>impl&lt;I, P&gt; WalkDirIterator for <a class="struct" href="../walkdir/struct.IterFilterEntry.html" title="struct walkdir::IterFilterEntry">IterFilterEntry</a>&lt;I, P&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="../walkdir/trait.WalkDirIterator.html" title="trait walkdir::WalkDirIterator">WalkDirIterator</a>&lt;Item = <a class="type" href="../walkdir/type.Result.html" title="type walkdir::Result">Result</a>&lt;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>&gt;&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;P: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html" title="trait core::ops::FnMut">FnMut</a>(&amp;<a class="struct" href="../walkdir/struct.DirEntry.html" title="struct walkdir::DirEntry">DirEntry</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,&nbsp;</span></code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/walkdir/trait.WalkDirIterator.js">
                  </script></section>
@@ -197,7 +198,6 @@ passed to this predicate.</p>
         window.rootPath = "../";
         window.currentCrate = "walkdir";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

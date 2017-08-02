@@ -526,36 +526,49 @@
 <span id="481">481</span>
 <span id="482">482</span>
 <span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
 </pre><pre class="rust ">
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">bookitem</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">bookconfig</span>;
-
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">bookconfig_test</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bookitem</span>::{<span class="ident">BookItem</span>, <span class="ident">BookItems</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bookconfig</span>::<span class="ident">BookConfig</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::{<span class="self">self</span>, <span class="ident">File</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">ErrorKind</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">Read</span>, <span class="ident">Write</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">process</span>::<span class="ident">Command</span>;
 
 <span class="kw">use</span> {<span class="ident">theme</span>, <span class="ident">parse</span>, <span class="ident">utils</span>};
 <span class="kw">use</span> <span class="ident">renderer</span>::{<span class="ident">Renderer</span>, <span class="ident">HtmlHandlebars</span>};
+<span class="kw">use</span> <span class="ident">errors</span>::<span class="kw-2">*</span>;
+
+<span class="kw">use</span> <span class="ident">config</span>::<span class="ident">BookConfig</span>;
+<span class="kw">use</span> <span class="ident">config</span>::<span class="ident">tomlconfig</span>::<span class="ident">TomlConfig</span>;
+<span class="kw">use</span> <span class="ident">config</span>::<span class="ident">jsonconfig</span>::<span class="ident">JsonConfig</span>;
 
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MDBook</span> {
-    <span class="ident">root</span>: <span class="ident">PathBuf</span>,
-    <span class="ident">dest</span>: <span class="ident">PathBuf</span>,
-    <span class="ident">src</span>: <span class="ident">PathBuf</span>,
-    <span class="ident">theme_path</span>: <span class="ident">PathBuf</span>,
-
-    <span class="kw">pub</span> <span class="ident">title</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">author</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
+    <span class="ident">config</span>: <span class="ident">BookConfig</span>,
 
     <span class="kw">pub</span> <span class="ident">content</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BookItem</span><span class="op">&gt;</span>,
     <span class="ident">renderer</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Renderer</span><span class="op">&gt;</span>,
@@ -575,14 +588,16 @@
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # extern crate mdbook;</span>
     <span class="doccomment">/// # use mdbook::MDBook;</span>
-    <span class="doccomment">/// # use std::path::Path;</span>
+    <span class="doccomment">/// # #[allow(unused_variables)]</span>
     <span class="doccomment">/// # fn main() {</span>
-    <span class="doccomment">/// let book = MDBook::new(Path::new(&quot;root_dir&quot;));</span>
+    <span class="doccomment">/// let book = MDBook::new(&quot;root_dir&quot;);</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// In this example, `root_dir` will be the root directory of our book and is specified in function</span>
-    <span class="doccomment">/// of the current working directory by using a relative path instead of an absolute path.</span>
+    <span class="doccomment">/// In this example, `root_dir` will be the root directory of our book</span>
+    <span class="doccomment">/// and is specified in function of the current working directory</span>
+    <span class="doccomment">/// by using a relative path instead of an</span>
+    <span class="doccomment">/// absolute path.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default directory paths:</span>
     <span class="doccomment">///</span>
@@ -590,23 +605,18 @@
     <span class="doccomment">/// - output: `root/book`</span>
     <span class="doccomment">/// - theme: `root/theme`</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// They can both be changed by using [`set_src()`](#method.set_src) and [`set_dest()`](#method.set_dest)</span>
+    <span class="doccomment">/// They can both be changed by using [`set_src()`](#method.set_src) and</span>
+    <span class="doccomment">/// [`set_dest()`](#method.set_dest)</span>
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="ident">MDBook</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="ident">root</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">MDBook</span> {
 
+        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">into</span>();
         <span class="kw">if</span> <span class="op">!</span><span class="ident">root</span>.<span class="ident">exists</span>() <span class="op">||</span> <span class="op">!</span><span class="ident">root</span>.<span class="ident">is_dir</span>() {
             <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;{:?} No directory with that name&quot;</span>, <span class="ident">root</span>);
         }
 
         <span class="ident">MDBook</span> {
-            <span class="ident">root</span>: <span class="ident">root</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">dest</span>: <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;book&quot;</span>),
-            <span class="ident">src</span>: <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;src&quot;</span>),
-            <span class="ident">theme_path</span>: <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;theme&quot;</span>),
-
-            <span class="ident">title</span>: <span class="ident">String</span>::<span class="ident">new</span>(),
-            <span class="ident">author</span>: <span class="ident">String</span>::<span class="ident">new</span>(),
-            <span class="ident">description</span>: <span class="ident">String</span>::<span class="ident">new</span>(),
+            <span class="ident">config</span>: <span class="ident">BookConfig</span>::<span class="ident">new</span>(<span class="ident">root</span>),
 
             <span class="ident">content</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">renderer</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">HtmlHandlebars</span>::<span class="ident">new</span>()),
@@ -616,16 +626,17 @@
         }
     }
 
-    <span class="doccomment">/// Returns a flat depth-first iterator over the elements of the book, it returns an [BookItem enum](bookitem.html):</span>
+    <span class="doccomment">/// Returns a flat depth-first iterator over the elements of the book,</span>
+    <span class="doccomment">/// it returns an [BookItem enum](bookitem.html):</span>
     <span class="doccomment">/// `(section: String, bookitem: &amp;BookItem)`</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # extern crate mdbook;</span>
     <span class="doccomment">/// # use mdbook::MDBook;</span>
     <span class="doccomment">/// # use mdbook::BookItem;</span>
-    <span class="doccomment">/// # use std::path::Path;</span>
+    <span class="doccomment">/// # #[allow(unused_variables)]</span>
     <span class="doccomment">/// # fn main() {</span>
-    <span class="doccomment">/// # let mut book = MDBook::new(Path::new(&quot;mybook&quot;));</span>
+    <span class="doccomment">/// # let book = MDBook::new(&quot;mybook&quot;);</span>
     <span class="doccomment">/// for item in book.iter() {</span>
     <span class="doccomment">///     match item {</span>
     <span class="doccomment">///         &amp;BookItem::Chapter(ref section, ref chapter) =&gt; {},</span>
@@ -652,7 +663,8 @@
         }
     }
 
-    <span class="doccomment">/// `init()` creates some boilerplate files and directories to get you started with your book.</span>
+    <span class="doccomment">/// `init()` creates some boilerplate files and directories</span>
+    <span class="doccomment">/// to get you started with your book.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```text</span>
     <span class="doccomment">/// book-test/</span>
@@ -662,49 +674,50 @@
     <span class="doccomment">///     └── SUMMARY.md</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// It uses the paths given as source and output directories and adds a `SUMMARY.md` and a</span>
+    <span class="doccomment">/// It uses the paths given as source and output directories</span>
+    <span class="doccomment">/// and adds a `SUMMARY.md` and a</span>
     <span class="doccomment">/// `chapter_1.md` to the source directory.</span>
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
 
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[fn]: init&quot;</span>);
 
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">root</span>.<span class="ident">exists</span>() {
-            <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>).<span class="ident">unwrap</span>();
-            <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;{:?} created&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>);
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>().<span class="ident">exists</span>() {
+            <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>()).<span class="ident">unwrap</span>();
+            <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;{:?} created&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>());
         }
 
         {
 
-            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">dest</span>.<span class="ident">exists</span>() {
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class="self">self</span>.<span class="ident">dest</span>);
-                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">dest</span>));
+            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">get_destination</span>().<span class="ident">exists</span>() {
+                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class="self">self</span>.<span class="ident">get_destination</span>());
+                <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="self">self</span>.<span class="ident">get_destination</span>())<span class="question-mark">?</span>;
             }
 
-            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">src</span>.<span class="ident">exists</span>() {
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class="self">self</span>.<span class="ident">src</span>);
-                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">src</span>));
+
+            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_source</span>().<span class="ident">exists</span>() {
+                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_source</span>());
+                <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_source</span>())<span class="question-mark">?</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">summary</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;SUMMARY.md&quot;</span>);
+            <span class="kw">let</span> <span class="ident">summary</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_source</span>().<span class="ident">join</span>(<span class="string">&quot;SUMMARY.md&quot;</span>);
 
             <span class="kw">if</span> <span class="op">!</span><span class="ident">summary</span>.<span class="ident">exists</span>() {
 
                 <span class="comment">// Summary does not exist, create it</span>
-
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create SUMMARY.md&quot;</span>, <span class="self">self</span>.<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;SUMMARY.md&quot;</span>));
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;SUMMARY.md&quot;</span>)));
+                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create SUMMARY.md&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">summary</span>);
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">summary</span>)<span class="question-mark">?</span>;
 
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: Writing to SUMMARY.md&quot;</span>);
 
-                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;# Summary&quot;</span>));
-                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;&quot;</span>));
-                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;- [Chapter 1](./chapter_1.md)&quot;</span>));
+                <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;# Summary&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;- [Chapter 1](./chapter_1.md)&quot;</span>)<span class="question-mark">?</span>;
             }
         }
 
         <span class="comment">// parse SUMMARY.md, and create the missing item related file</span>
-        <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">parse_summary</span>());
+        <span class="self">self</span>.<span class="ident">parse_summary</span>()<span class="question-mark">?</span>;
 
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: constructing paths for missing files&quot;</span>);
         <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>() {
@@ -715,20 +728,19 @@
                 <span class="ident">BookItem</span>::<span class="ident">Affix</span>(<span class="kw-2">ref</span> <span class="ident">ch</span>) <span class="op">=&gt;</span> <span class="ident">ch</span>,
             };
             <span class="kw">if</span> <span class="op">!</span><span class="ident">ch</span>.<span class="ident">path</span>.<span class="ident">as_os_str</span>().<span class="ident">is_empty</span>() {
-                <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">src</span>.<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>);
+                <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_source</span>().<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>);
 
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">path</span>.<span class="ident">exists</span>() {
                     <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">create_missing</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="macro">format</span><span class="macro">!</span>(
-                            <span class="string">&quot;&#39;{}&#39; referenced from SUMMARY.md does not exist.&quot;</span>,
-                            <span class="ident">path</span>.<span class="ident">to_string_lossy</span>()).<span class="ident">into</span>());
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;&#39;{}&#39; referenced from SUMMARY.md does not exist.&quot;</span>, <span class="ident">path</span>.<span class="ident">to_string_lossy</span>())
+                                       .<span class="ident">into</span>());
                     }
                     <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create file&quot;</span>, <span class="ident">path</span>);
-                    <span class="macro">try</span><span class="macro">!</span>(::<span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="ident">path</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>()));
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">path</span>));
+                    ::<span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="ident">path</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
                     <span class="comment">// debug!(&quot;[*]: Writing to {:?}&quot;, path);</span>
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;# {}&quot;</span>, <span class="ident">ch</span>.<span class="ident">name</span>));
+                    <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;# {}&quot;</span>, <span class="ident">ch</span>.<span class="ident">name</span>)<span class="question-mark">?</span>;
                 }
             }
         }
@@ -740,20 +752,19 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_gitignore</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">let</span> <span class="ident">gitignore</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_gitignore</span>();
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">gitignore</span>.<span class="ident">exists</span>() {
-            <span class="comment">// Gitignore does not exist, create it</span>
+        <span class="kw">let</span> <span class="ident">destination</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+                                     .<span class="ident">get_destination</span>();
 
-            <span class="comment">// Because of `src/book/mdbook.rs#L37-L39`, `dest` will always start with `root`. If it</span>
-            <span class="comment">// is not, `strip_prefix` will return an Error.</span>
-            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">get_dest</span>().<span class="ident">starts_with</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>) {
-                <span class="kw">return</span>;
-            }
+        <span class="comment">// Check that the gitignore does not extist and that the destination path begins with the root path</span>
+        <span class="comment">// We assume tha if it does begin with the root path it is contained within. This assumption</span>
+        <span class="comment">// will not hold true for paths containing double dots to go back up e.g. `root/../destination`</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">gitignore</span>.<span class="ident">exists</span>() <span class="op">&amp;&amp;</span> <span class="ident">destination</span>.<span class="ident">starts_with</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>()) {
 
-            <span class="kw">let</span> <span class="ident">relative</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_dest</span>()
-                               .<span class="ident">strip_prefix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>)
-                               .<span class="ident">expect</span>(<span class="string">&quot;Destination is not relative to root.&quot;</span>);
-            <span class="kw">let</span> <span class="ident">relative</span> <span class="op">=</span> <span class="ident">relative</span>.<span class="ident">to_str</span>()
-                                   .<span class="ident">expect</span>(<span class="string">&quot;Path could not be yielded into a string slice.&quot;</span>);
+            <span class="kw">let</span> <span class="ident">relative</span> <span class="op">=</span> <span class="ident">destination</span>
+                .<span class="ident">strip_prefix</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>())
+                .<span class="ident">expect</span>(<span class="string">&quot;Could not strip the root prefix, path is not relative to root&quot;</span>)
+                .<span class="ident">to_str</span>()
+                .<span class="ident">expect</span>(<span class="string">&quot;Could not convert to &amp;str&quot;</span>);
 
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create .gitignore&quot;</span>, <span class="ident">gitignore</span>);
 
@@ -765,145 +776,152 @@
         }
     }
 
-    <span class="doccomment">/// The `build()` method is the one where everything happens. First it parses `SUMMARY.md` to</span>
-    <span class="doccomment">/// construct the book&#39;s structure in the form of a `Vec&lt;BookItem&gt;` and then calls `render()`</span>
+    <span class="doccomment">/// The `build()` method is the one where everything happens.</span>
+    <span class="doccomment">/// First it parses `SUMMARY.md` to construct the book&#39;s structure</span>
+    <span class="doccomment">/// in the form of a `Vec&lt;BookItem&gt;` and then calls `render()`</span>
     <span class="doccomment">/// method of the current renderer.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// It is the renderer who generates all the output files.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[fn]: build&quot;</span>);
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">init</span>());
+        <span class="self">self</span>.<span class="ident">init</span>()<span class="question-mark">?</span>;
 
         <span class="comment">// Clean output directory</span>
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">utils</span>::<span class="ident">fs</span>::<span class="ident">remove_dir_content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">dest</span>));
+        <span class="ident">utils</span>::<span class="ident">fs</span>::<span class="ident">remove_dir_content</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>().<span class="ident">get_destination</span>())<span class="question-mark">?</span>;
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">renderer</span>.<span class="ident">render</span>(<span class="kw-2">&amp;</span><span class="self">self</span>));
-
-        <span class="prelude-val">Ok</span>(())
+        <span class="self">self</span>.<span class="ident">renderer</span>.<span class="ident">render</span>(<span class="self">self</span>)
     }
 
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_gitignore</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">PathBuf</span> {
-        <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;.gitignore&quot;</span>)
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>().<span class="ident">join</span>(<span class="string">&quot;.gitignore&quot;</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_theme</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_theme</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[fn]: copy_theme&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">theme_dir</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;theme&quot;</span>);
-
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">theme_dir</span>.<span class="ident">exists</span>() {
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class="ident">theme_dir</span>);
-            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">create_dir</span>(<span class="kw-2">&amp;</span><span class="ident">theme_dir</span>));
+        <span class="kw">let</span> <span class="ident">themedir</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>().<span class="ident">get_theme</span>();
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">themedir</span>.<span class="ident">exists</span>() {
+            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: {:?} does not exist, trying to create directory&quot;</span>, <span class="ident">themedir</span>);
+            <span class="ident">fs</span>::<span class="ident">create_dir</span>(<span class="kw-2">&amp;</span><span class="ident">themedir</span>)<span class="question-mark">?</span>;
         }
 
         <span class="comment">// index.hbs</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;index.hbs&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">index</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">INDEX</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">themedir</span>.<span class="ident">join</span>(<span class="string">&quot;index.hbs&quot;</span>))<span class="question-mark">?</span>;
+        <span class="ident">index</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">INDEX</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// book.css</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">css</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;book.css&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">css</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">CSS</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">css</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">themedir</span>.<span class="ident">join</span>(<span class="string">&quot;book.css&quot;</span>))<span class="question-mark">?</span>;
+        <span class="ident">css</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">CSS</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// favicon.png</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">favicon</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;favicon.png&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">favicon</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">FAVICON</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">favicon</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">themedir</span>.<span class="ident">join</span>(<span class="string">&quot;favicon.png&quot;</span>))<span class="question-mark">?</span>;
+        <span class="ident">favicon</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">FAVICON</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// book.js</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">js</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;book.js&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">js</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">JS</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">js</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">themedir</span>.<span class="ident">join</span>(<span class="string">&quot;book.js&quot;</span>))<span class="question-mark">?</span>;
+        <span class="ident">js</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">JS</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// highlight.css</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">highlight_css</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.css&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">highlight_css</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">HIGHLIGHT_CSS</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">highlight_css</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">themedir</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.css&quot;</span>))<span class="question-mark">?</span>;
+        <span class="ident">highlight_css</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">HIGHLIGHT_CSS</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// highlight.js</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">highlight_js</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.js&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">highlight_js</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">HIGHLIGHT_JS</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">highlight_js</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">themedir</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.js&quot;</span>))<span class="question-mark">?</span>;
+        <span class="ident">highlight_js</span>.<span class="ident">write_all</span>(<span class="ident">theme</span>::<span class="ident">HIGHLIGHT_JS</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_file</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filename</span>: <span class="ident">P</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> {
-        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_dest</span>().<span class="ident">join</span>(<span class="ident">filename</span>);
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">utils</span>::<span class="ident">fs</span>::<span class="ident">create_file</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">file</span><span class="op">|</span> {
-            <span class="ident">file</span>.<span class="ident">write_all</span>(<span class="ident">content</span>)
-        }).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-            <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Could not create {}: {}&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>(), <span class="ident">e</span>))
-        }));
-        <span class="prelude-val">Ok</span>(())
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_file</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">filename</span>: <span class="ident">P</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_destination</span>()
+            .<span class="ident">join</span>(<span class="ident">filename</span>);
+
+        <span class="ident">utils</span>::<span class="ident">fs</span>::<span class="ident">create_file</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>)<span class="question-mark">?</span>
+            .<span class="ident">write_all</span>(<span class="ident">content</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>())
     }
 
-    <span class="doccomment">/// Parses the `book.json` file (if it exists) to extract the configuration parameters.</span>
+    <span class="doccomment">/// Parses the `book.json` file (if it exists) to extract</span>
+    <span class="doccomment">/// the configuration parameters.</span>
     <span class="doccomment">/// The `book.json` file should be in the root directory of the book.</span>
     <span class="doccomment">/// The root directory is the one specified when creating a new `MDBook`</span>
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_config</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_config</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
 
-        <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">BookConfig</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>)
-                         .<span class="ident">read_config</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>)
-                         .<span class="ident">to_owned</span>();
+        <span class="kw">let</span> <span class="ident">toml</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_root</span>().<span class="ident">join</span>(<span class="string">&quot;book.toml&quot;</span>);
+        <span class="kw">let</span> <span class="ident">json</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_root</span>().<span class="ident">join</span>(<span class="string">&quot;book.json&quot;</span>);
 
-        <span class="self">self</span>.<span class="ident">title</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">title</span>;
-        <span class="self">self</span>.<span class="ident">description</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">description</span>;
-        <span class="self">self</span>.<span class="ident">author</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">author</span>;
+        <span class="kw">if</span> <span class="ident">toml</span>.<span class="ident">exists</span>() {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">toml</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+            <span class="ident">file</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">content</span>)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">dest</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">dest</span>;
-        <span class="self">self</span>.<span class="ident">src</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">src</span>;
-        <span class="self">self</span>.<span class="ident">theme_path</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">theme_path</span>;
+            <span class="kw">let</span> <span class="ident">parsed_config</span> <span class="op">=</span> <span class="ident">TomlConfig</span>::<span class="ident">from_toml</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">fill_from_tomlconfig</span>(<span class="ident">parsed_config</span>);
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">json</span>.<span class="ident">exists</span>() {
+            <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;The JSON configuration file is deprecated, please use the TOML configuration.&quot;</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">json</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+            <span class="ident">file</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">content</span>)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>
+            <span class="kw">let</span> <span class="ident">parsed_config</span> <span class="op">=</span> <span class="ident">JsonConfig</span>::<span class="ident">from_json</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">fill_from_jsonconfig</span>(<span class="ident">parsed_config</span>);
+        }
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// You can change the default renderer to another one by using this method. The only requirement</span>
-    <span class="doccomment">/// is for your renderer to implement the [Renderer trait](../../renderer/renderer/trait.Renderer.html)</span>
+    <span class="doccomment">/// You can change the default renderer to another one</span>
+    <span class="doccomment">/// by using this method. The only requirement</span>
+    <span class="doccomment">/// is for your renderer to implement the</span>
+    <span class="doccomment">/// [Renderer trait](../../renderer/renderer/trait.Renderer.html)</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// extern crate mdbook;</span>
     <span class="doccomment">/// use mdbook::MDBook;</span>
     <span class="doccomment">/// use mdbook::renderer::HtmlHandlebars;</span>
-    <span class="doccomment">/// # use std::path::Path;</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// # #[allow(unused_variables)]</span>
     <span class="doccomment">/// fn main() {</span>
-    <span class="doccomment">///     let mut book = MDBook::new(Path::new(&quot;mybook&quot;))</span>
+    <span class="doccomment">///     let book = MDBook::new(&quot;mybook&quot;)</span>
     <span class="doccomment">///                         .set_renderer(Box::new(HtmlHandlebars::new()));</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">///     // In this example we replace the default renderer by the default renderer...</span>
-    <span class="doccomment">///     // Don&#39;t forget to put your renderer in a Box</span>
+    <span class="doccomment">/// // In this example we replace the default renderer</span>
+    <span class="doccomment">/// // by the default renderer...</span>
+    <span class="doccomment">/// // Don&#39;t forget to put your renderer in a Box</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// **note:** Don&#39;t forget to put your renderer in a `Box` before passing it to `set_renderer()`</span>
+    <span class="doccomment">/// **note:** Don&#39;t forget to put your renderer in a `Box`</span>
+    <span class="doccomment">/// before passing it to `set_renderer()`</span>
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_renderer</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">renderer</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Renderer</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">renderer</span> <span class="op">=</span> <span class="ident">renderer</span>;
         <span class="self">self</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">library_paths</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// read in the chapters</span>
-        <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">parse_summary</span>());
+        <span class="self">self</span>.<span class="ident">parse_summary</span>().<span class="ident">chain_err</span>(<span class="op">||</span> <span class="string">&quot;Couldn&#39;t parse summary&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">library_args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">library_paths</span>.<span class="ident">len</span>()).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="string">&quot;-L&quot;</span>)
+                                                              .<span class="ident">zip</span>(<span class="ident">library_paths</span>.<span class="ident">into_iter</span>())
+                                                              .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">x</span>.<span class="number">0</span>, <span class="ident">x</span>.<span class="number">1</span>])
+                                                              .<span class="ident">collect</span>();
         <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>() {
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(_, <span class="kw-2">ref</span> <span class="ident">ch</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">item</span> {
                 <span class="kw">if</span> <span class="ident">ch</span>.<span class="ident">path</span> <span class="op">!=</span> <span class="ident">PathBuf</span>::<span class="ident">new</span>() {
 
-                    <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_src</span>().<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>);
+                    <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_source</span>().<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>);
 
                     <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;[*]: Testing file: {:?}&quot;</span>, <span class="ident">path</span>);
 
-                    <span class="kw">let</span> <span class="ident">output_result</span> <span class="op">=</span> <span class="ident">Command</span>::<span class="ident">new</span>(<span class="string">&quot;rustdoc&quot;</span>)
-                                            .<span class="ident">arg</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>)
-                                            .<span class="ident">arg</span>(<span class="string">&quot;--test&quot;</span>)
-                                            .<span class="ident">output</span>();
-                    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">output_result</span>);
+                    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">Command</span>::<span class="ident">new</span>(<span class="string">&quot;rustdoc&quot;</span>).<span class="ident">arg</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">arg</span>(<span class="string">&quot;--test&quot;</span>).<span class="ident">args</span>(<span class="kw-2">&amp;</span><span class="ident">library_args</span>).<span class="ident">output</span>()<span class="question-mark">?</span>;
 
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">output</span>.<span class="ident">status</span>.<span class="ident">success</span>() {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="macro">format</span><span class="macro">!</span>(
-                                        <span class="string">&quot;{}\n{}&quot;</span>,
-                                        <span class="ident">String</span>::<span class="ident">from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">stdout</span>),
-                                        <span class="ident">String</span>::<span class="ident">from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>.<span class="ident">stderr</span>)))) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>);
+                        <span class="macro">bail</span><span class="macro">!</span>(<span class="ident">ErrorKind</span>::<span class="ident">Subprocess</span>(<span class="string">&quot;Rustdoc returned an error&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">output</span>));
                     }
                 }
             }
@@ -912,68 +930,48 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">root</span>
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_dest</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
 
-        <span class="comment">// Handle absolute and relative paths</span>
-        <span class="kw">if</span> <span class="ident">dest</span>.<span class="ident">is_absolute</span>() {
-            <span class="self">self</span>.<span class="ident">dest</span> <span class="op">=</span> <span class="ident">dest</span>.<span class="ident">to_owned</span>();
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">dest</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">join</span>(<span class="ident">dest</span>).<span class="ident">to_owned</span>();
-            <span class="self">self</span>.<span class="ident">dest</span> <span class="op">=</span> <span class="ident">dest</span>;
-        }
-
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_destination</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">destination</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>().<span class="ident">to_owned</span>();
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_mut_html_config</span>()
+            .<span class="ident">set_destination</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">destination</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_dest</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">dest</span>
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_destination</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">get_destination</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_src</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-
-        <span class="comment">// Handle absolute and relative paths</span>
-        <span class="kw">if</span> <span class="ident">src</span>.<span class="ident">is_absolute</span>() {
-            <span class="self">self</span>.<span class="ident">src</span> <span class="op">=</span> <span class="ident">src</span>.<span class="ident">to_owned</span>();
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">src</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">join</span>(<span class="ident">src</span>).<span class="ident">to_owned</span>();
-            <span class="self">self</span>.<span class="ident">src</span> <span class="op">=</span> <span class="ident">src</span>;
-        }
-
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_source</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">source</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">set_source</span>(<span class="ident">source</span>);
         <span class="self">self</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_src</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">src</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_source</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_title</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">title</span> <span class="op">=</span> <span class="ident">title</span>.<span class="ident">to_owned</span>();
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_title</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">title</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">set_title</span>(<span class="ident">title</span>);
         <span class="self">self</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_title</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">title</span>
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_title</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_author</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">author</span> <span class="op">=</span> <span class="ident">author</span>.<span class="ident">to_owned</span>();
-        <span class="self">self</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_author</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">author</span>
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">description</span> <span class="op">=</span> <span class="ident">description</span>.<span class="ident">to_owned</span>();
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_description</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">set_description</span>(<span class="ident">description</span>);
         <span class="self">self</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">description</span>
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_description</span>()
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_livereload</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">livereload</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
@@ -990,23 +988,69 @@
         <span class="self">self</span>.<span class="ident">livereload</span>.<span class="ident">as_ref</span>()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_theme_path</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">theme_path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">theme_path</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">theme_path</span>.<span class="ident">is_absolute</span>() {
-            <span class="ident">theme_path</span>.<span class="ident">to_owned</span>()
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">join</span>(<span class="ident">theme_path</span>).<span class="ident">to_owned</span>()
-        };
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_theme_path</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">theme_path</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_root</span>().<span class="ident">to_owned</span>();
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_mut_html_config</span>()
+            .<span class="ident">set_theme</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">theme_path</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_theme_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">theme_path</span>
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">get_theme</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_curly_quotes</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">curly_quotes</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_mut_html_config</span>()
+            .<span class="ident">set_curly_quotes</span>(<span class="ident">curly_quotes</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_curly_quotes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">get_curly_quotes</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_mathjax_support</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mathjax_support</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_mut_html_config</span>()
+            .<span class="ident">set_mathjax_support</span>(<span class="ident">mathjax_support</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mathjax_support</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">get_mathjax_support</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_google_analytics_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">get_google_analytics_id</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_additional_js</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">has_additional_js</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_additional_js</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">PathBuf</span>] {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">get_additional_js</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">has_additional_css</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">has_additional_css</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_additional_css</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">PathBuf</span>] {
+        <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">get_html_config</span>()
+            .<span class="ident">get_additional_css</span>()
     }
 
     <span class="comment">// Construct book</span>
-    <span class="kw">fn</span> <span class="ident">parse_summary</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">parse_summary</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// When append becomes stable, use self.content.append() ...</span>
-        <span class="self">self</span>.<span class="ident">content</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">parse</span>::<span class="ident">construct_bookitems</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;SUMMARY.md&quot;</span>)));
+        <span class="self">self</span>.<span class="ident">content</span> <span class="op">=</span> <span class="ident">parse</span>::<span class="ident">construct_bookitems</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">get_source</span>().<span class="ident">join</span>(<span class="string">&quot;SUMMARY.md&quot;</span>))<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -1068,7 +1112,6 @@
         window.rootPath = "../../../";
         window.currentCrate = "mdbook";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>

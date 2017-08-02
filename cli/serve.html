@@ -20,9 +20,20 @@
 
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
 
-        <!-- MathJax -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
 
         <!-- Fetch JQuery from CDN but have a local fallback -->
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -31,18 +42,25 @@
                 document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
             }
         </script>
+
+        <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
+        <script src="store.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = localStorage.getItem('theme');
-            if (theme == null) { theme = 'light'; }
+            var theme = store.get('theme');
+            if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = localStorage.getItem('sidebar');
+            var sidebar = store.get('sidebar');
             if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
             else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
         </script>
@@ -53,7 +71,7 @@
 
         <div id="page-wrapper" class="page-wrapper">
 
-            <div class="page">
+            <div class="page" tabindex="-1">
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
                         <i id="sidebar-toggle" class="fa fa-bars"></i>
@@ -68,25 +86,25 @@
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="cli/serve.html#the-serve-command" id="the-serve-command"><h1>The serve command</h1></a>
+                    <a class="header" href="print.html#the serve command" id="the serve command"><h1>The serve command</h1></a>
 <p>The <code>serve</code> command is useful when you want to preview your book. It also does hot reloading of the webpage whenever a file changes.
 It achieves this by serving the books content over <code>localhost:3000</code> (unless otherwise configured, see below) and runs a websocket server on <code>localhost:3001</code> which triggers the reloads.
 This preferred by many for writing books with mdbook because it allows for you to see the result of your work instantly after every file change.</p>
-<a class="header" href="cli/serve.html#specify-a-directory" id="specify-a-directory"><h4>Specify a directory</h4></a>
+<a class="header" href="print.html#specify a directory" id="specify a directory"><h4>Specify a directory</h4></a>
 <p>Like <code>watch</code>, <code>serve</code> can take a directory as argument to use instead of the
 current working directory.</p>
 <pre><code class="language-bash">mdbook serve path/to/book
 </code></pre>
-<a class="header" href="cli/serve.html#server-options" id="server-options"><h4>Server options</h4></a>
+<a class="header" href="print.html#server options" id="server options"><h4>Server options</h4></a>
 <p><code>serve</code> has four options: the http port, the websocket port, the interface to serve on, and the public address of the server so that the browser may reach the websocket server.</p>
 <p>For example: suppose you had an nginx server for SSL termination which has a public address of 192.168.1.100 on port 80 and proxied that to 127.0.0.1 on port 8000. To run use the nginx proxy do:</p>
 <pre><code class="language-bash">mdbook server path/to/book -p 8000 -i 127.0.0.1 -a 192.168.1.100
 </code></pre>
 <p>If you were to want live reloading for this you would need to proxy the websocket calls through nginx as well from <code>192.168.1.100:&lt;WS_PORT&gt;</code> to <code>127.0.0.1:&lt;WS_PORT&gt;</code>. The <code>-w</code> flag allows for the websocket port to be configured.</p>
-<a class="header" href="cli/serve.html#--open" id="--open"><h4>--open</h4></a>
+<a class="header" href="print.html#--open" id="--open"><h4>--open</h4></a>
 <p>When you use the <code>--open</code> (<code>-o</code>) option, mdbook will open the book in your
 your default web browser after starting the server.</p>
-<a class="header" href="cli/serve.html#--dest-dir" id="--dest-dir"><h4>--dest-dir</h4></a>
+<a class="header" href="print.html#--dest-dir" id="--dest-dir"><h4>--dest-dir</h4></a>
 <p>The <code>--dest-dir</code> (<code>-d</code>) option allows you to change the output directory for your book.</p>
 <hr />
 <p><strong><em>note:</em></strong> <em>the <code>serve</code> command has not gotten a lot of testing yet, there could be some rough edges. If you discover a problem, please report it <a href="https://github.com/azerupi/mdBook/issues">on Github</a></em></p>
@@ -95,13 +113,13 @@ your default web browser after starting the server.</p>
 
                 <!-- Mobile navigation buttons -->
                 
-                    <a href="cli/watch.html" class="mobile-nav-chapters previous">
+                    <a rel="prev" href="cli/watch.html" class="mobile-nav-chapters previous">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="cli/test.html" class="mobile-nav-chapters next">
+                    <a rel="next" href="cli/test.html" class="mobile-nav-chapters next">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -132,6 +150,9 @@ your default web browser after starting the server.</p>
 
         <!-- Livereload script (if served using the cli tool) -->
         
+
+        
+
 
         <script src="highlight.js"></script>
         <script src="book.js"></script>

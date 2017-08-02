@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.3.2/src/tokens.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/toml-0.4.4/src/tokens.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>tokens.rs.html -- source</title>
@@ -732,7 +732,7 @@
         };
         <span class="comment">// Eat utf-8 BOM</span>
         <span class="ident">t</span>.<span class="ident">eatc</span>(<span class="string">&#39;\u{feff}&#39;</span>);
-        <span class="kw">return</span> <span class="ident">t</span>
+        <span class="ident">t</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -807,7 +807,7 @@
                 <span class="kw">if</span> <span class="ident">val</span> <span class="op">==</span> <span class="string">&quot;&quot;</span> {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">EmptyTableKey</span>(<span class="ident">offset</span>))
                 }
-                <span class="kw">match</span> <span class="ident">src</span>.<span class="ident">find</span>(<span class="string">&quot;\n&quot;</span>) {
+                <span class="kw">match</span> <span class="ident">src</span>.<span class="ident">find</span>(<span class="string">&#39;\n&#39;</span>) {
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">val</span>),
                     <span class="prelude-val">Some</span>(<span class="ident">i</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">NewlineInTableKey</span>(<span class="ident">offset</span> <span class="op">+</span> <span class="ident">i</span>)),
                 }
@@ -1088,7 +1088,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">into_cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">into_cow</span>(<span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">MaybeString</span>::<span class="ident">NotEscaped</span>(<span class="ident">start</span>) <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>[<span class="ident">start</span>..]),
             <span class="ident">MaybeString</span>::<span class="ident">Owned</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">s</span>),
@@ -1342,7 +1342,6 @@
         window.rootPath = "../../";
         window.currentCrate = "toml";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

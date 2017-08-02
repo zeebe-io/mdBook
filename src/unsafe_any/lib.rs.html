@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/unsafe-any-0.4.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/unsafe-any-0.4.2/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -294,13 +294,13 @@
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">any</span>::<span class="ident">Any</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span> <span class="kw">fn</span> <span class="ident">test_simple_downcast_ext</span>() {
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Any</span><span class="op">&gt;</span>;
+        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7usize</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Any</span><span class="op">&gt;</span>;
         <span class="kw">unsafe</span> { <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_ref_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(), <span class="number">7</span>); }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Any</span><span class="op">&gt;</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7usize</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Any</span><span class="op">&gt;</span>;
         <span class="kw">unsafe</span> { <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_mut_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(), <span class="number">7</span>); }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Any</span><span class="op">&gt;</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7usize</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Any</span><span class="op">&gt;</span>;
         <span class="kw">unsafe</span> {
             <span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_mut_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>() <span class="op">=</span> <span class="number">8</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_mut_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(), <span class="number">8</span>);
@@ -308,13 +308,13 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span> <span class="kw">fn</span> <span class="ident">test_simple_downcast_inherent</span>() {
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">UnsafeAny</span><span class="op">&gt;</span>;
+        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7usize</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">UnsafeAny</span><span class="op">&gt;</span>;
         <span class="kw">unsafe</span> { <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_ref_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(), <span class="number">7</span>); }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">UnsafeAny</span><span class="op">&gt;</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7usize</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">UnsafeAny</span><span class="op">&gt;</span>;
         <span class="kw">unsafe</span> { <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_mut_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(), <span class="number">7</span>); }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">UnsafeAny</span><span class="op">&gt;</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="number">7usize</span>) <span class="kw">as</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">UnsafeAny</span><span class="op">&gt;</span>;
         <span class="kw">unsafe</span> {
             <span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_mut_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>() <span class="op">=</span> <span class="number">8</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">downcast_mut_unchecked</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>(), <span class="number">8</span>);
@@ -412,7 +412,6 @@
         window.rootPath = "../../";
         window.currentCrate = "unsafe_any";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

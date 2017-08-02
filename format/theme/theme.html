@@ -20,9 +20,20 @@
 
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
 
-        <!-- MathJax -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <!-- Custom theme -->
+        
+
+        
+
+        <!-- Fetch Clipboard.js from CDN but have a local fallback -->
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
+        <script>
+            if (typeof Clipboard == 'undefined') {
+                document.write(unescape("%3Cscript src='clipboard.min.js'%3E%3C/script%3E"));
+            }
+        </script>
 
         <!-- Fetch JQuery from CDN but have a local fallback -->
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -31,18 +42,25 @@
                 document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
             }
         </script>
+
+        <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
+        <script src="store.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = localStorage.getItem('theme');
-            if (theme == null) { theme = 'light'; }
+            var theme = store.get('theme');
+            if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = localStorage.getItem('sidebar');
+            var sidebar = store.get('sidebar');
             if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
             else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
         </script>
@@ -53,7 +71,7 @@
 
         <div id="page-wrapper" class="page-wrapper">
 
-            <div class="page">
+            <div class="page" tabindex="-1">
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
                         <i id="sidebar-toggle" class="fa fa-bars"></i>
@@ -68,11 +86,11 @@
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="format/theme/theme.html#theme" id="theme"><h1>Theme</h1></a>
+                    <a class="header" href="print.html#theme" id="theme"><h1>Theme</h1></a>
 <p>The default renderer uses a <a href="http://handlebarsjs.com/">handlebars</a> template to render your markdown files and comes with a default theme
 included in the mdBook binary.</p>
 <p>The theme is totally customizable, you can selectively replace every file from the theme by your own by adding a
-<code>theme</code> directory in your source folder. Create a new file with the name of the file you want to override
+<code>theme</code> directory next to <code>src</code> folder in your project root. Create a new file with the name of the file you want to override
 and now that file will be used instead of the default file.</p>
 <p>Here are the files you can override:</p>
 <ul>
@@ -91,13 +109,13 @@ there is no point in overriding all the other files. Because custom files take p
 
                 <!-- Mobile navigation buttons -->
                 
-                    <a href="format/config.html" class="mobile-nav-chapters previous">
+                    <a rel="prev" href="format/config.html" class="mobile-nav-chapters previous">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="format/theme/index-hbs.html" class="mobile-nav-chapters next">
+                    <a rel="next" href="format/theme/index-hbs.html" class="mobile-nav-chapters next">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -128,6 +146,9 @@ there is no point in overriding all the other files. Because custom files take p
 
         <!-- Livereload script (if served using the cli tool) -->
         
+
+        
+
 
         <script src="highlight.js"></script>
         <script src="book.js"></script>

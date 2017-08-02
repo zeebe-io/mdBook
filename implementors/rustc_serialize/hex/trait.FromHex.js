@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["hyper"] = [];
 implementors["iron"] = [];
 implementors["rustc_serialize"] = [];
 
