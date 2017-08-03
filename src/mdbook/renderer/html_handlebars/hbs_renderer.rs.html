@@ -646,7 +646,6 @@
 <span id="601">601</span>
 <span id="602">602</span>
 <span id="603">603</span>
-<span id="604">604</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">renderer</span>::<span class="ident">html_handlebars</span>::<span class="ident">helpers</span>;
 <span class="kw">use</span> <span class="ident">preprocess</span>;
@@ -719,9 +718,8 @@
                     <span class="comment">// Render the handlebars template with the data</span>
                     <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: Render template&quot;</span>);
                     <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;index&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">data</span>)<span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">post_process</span>(<span class="ident">rendered</span>);
-
                     <span class="kw">let</span> <span class="ident">filename</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>).<span class="ident">with_extension</span>(<span class="string">&quot;html&quot;</span>);
+                    <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">post_process</span>(<span class="ident">rendered</span>, <span class="ident">filename</span>.<span class="ident">file_name</span>().<span class="ident">unwrap</span>().<span class="ident">to_str</span>().<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>));
 
                     <span class="comment">// Write to file</span>
                     <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;[*] Creating {:?} ✓&quot;</span>, <span class="ident">filename</span>.<span class="ident">display</span>());
@@ -767,9 +765,9 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">post_process</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rendered</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">build_header_links</span>(<span class="kw-2">&amp;</span><span class="ident">rendered</span>, <span class="string">&quot;print.html&quot;</span>);
-        <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">fix_anchor_links</span>(<span class="kw-2">&amp;</span><span class="ident">rendered</span>, <span class="string">&quot;print.html&quot;</span>);
+    <span class="kw">fn</span> <span class="ident">post_process</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rendered</span>: <span class="ident">String</span>, <span class="ident">filename</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">build_header_links</span>(<span class="kw-2">&amp;</span><span class="ident">rendered</span>, <span class="ident">filename</span>);
+        <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">fix_anchor_links</span>(<span class="kw-2">&amp;</span><span class="ident">rendered</span>, <span class="ident">filename</span>);
         <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">fix_code_blocks</span>(<span class="kw-2">&amp;</span><span class="ident">rendered</span>);
         <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">add_playpen_pre</span>(<span class="kw-2">&amp;</span><span class="ident">rendered</span>);
 
@@ -924,7 +922,7 @@
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: Render template&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;index&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">post_process</span>(<span class="ident">rendered</span>);
+        <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">post_process</span>(<span class="ident">rendered</span>, <span class="string">&quot;print.html&quot;</span>);
 
         <span class="ident">book</span>.<span class="ident">write_file</span>(
             <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;print&quot;</span>).<span class="ident">with_extension</span>(<span class="string">&quot;html&quot;</span>),
