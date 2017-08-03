@@ -178,10 +178,56 @@
 <span id="133">133</span>
 <span id="134">134</span>
 <span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
+
+<span class="kw">use</span> <span class="ident">errors</span>::<span class="kw-2">*</span>;
 
 
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">INDEX</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;index.hbs&quot;</span>);
@@ -192,7 +238,7 @@
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">TOMORROW_NIGHT_CSS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;tomorrow-night.css&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">HIGHLIGHT_CSS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;highlight.css&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">AYU_HIGHLIGHT_CSS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;ayu-highlight.css&quot;</span>);
-<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">JQUERY</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;jquery-2.1.4.min.js&quot;</span>);
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">JQUERY</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;jquery.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">CLIPBOARD_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;clipboard.min.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">STORE_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;store.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">FONT_AWESOME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;_FontAwesome/css/font-awesome.min.css&quot;</span>);
@@ -203,15 +249,14 @@
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">FONT_AWESOME_WOFF2</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.woff2&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">FONT_AWESOME_OTF</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;_FontAwesome/fonts/FontAwesome.otf&quot;</span>);
 
+
 <span class="doccomment">/// The `Theme` struct should be used instead of the static variables because</span>
-<span class="doccomment">/// the `new()` method</span>
-<span class="doccomment">/// will look if the user has a theme directory in his source folder and use</span>
-<span class="doccomment">/// the users theme instead</span>
-<span class="doccomment">/// of the default.</span>
+<span class="doccomment">/// the `new()` method will look if the user has a theme directory in his</span>
+<span class="doccomment">/// source folder and use the users theme instead of the default.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// You should exceptionnaly use the static variables only if you need the</span>
-<span class="doccomment">/// default theme even if the</span>
-<span class="doccomment">/// user has specified another theme.</span>
+<span class="doccomment">/// You should only ever use the static variables directly if you want to</span>
+<span class="doccomment">/// override the user&#39;s theme with the defaults.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Theme</span> {
     <span class="kw">pub</span> <span class="ident">index</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">css</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
@@ -227,10 +272,49 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Theme</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">theme_dir</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">theme_dir</span> <span class="op">=</span> <span class="ident">theme_dir</span>.<span class="ident">as_ref</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">theme</span> <span class="op">=</span> <span class="ident">Theme</span>::<span class="ident">default</span>();
 
-        <span class="comment">// Default theme</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">theme</span> <span class="op">=</span> <span class="ident">Theme</span> {
+        <span class="comment">// If the theme directory doesn&#39;t exist there&#39;s no point continuing...</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">theme_dir</span>.<span class="ident">exists</span>() <span class="op">||</span> <span class="op">!</span><span class="ident">theme_dir</span>.<span class="ident">is_dir</span>() {
+            <span class="kw">return</span> <span class="ident">theme</span>;
+        }
+
+        <span class="comment">// Check for individual files, if they exist copy them across</span>
+        {
+            <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;index.hbs&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">index</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;book.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">js</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;book.css&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">css</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;favicon.png&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">favicon</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">highlight_js</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;clipboard.min.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">clipboard_js</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;store.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">store_js</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.css&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">highlight_css</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;tomorrow-night.css&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">tomorrow_night_css</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;ayu-highlight.css&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">ayu_highlight_css</span>),
+                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;jquery.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">jquery</span>),
+            ];
+
+            <span class="kw">for</span> (<span class="ident">filename</span>, <span class="ident">dest</span>) <span class="kw">in</span> <span class="ident">files</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">filename</span>.<span class="ident">exists</span>() {
+                    <span class="kw">continue</span>;
+                }
+
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">load_file_contents</span>(<span class="kw-2">&amp;</span><span class="ident">filename</span>, <span class="ident">dest</span>) {
+                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Couldn&#39;t load custom file, {}: {}&quot;</span>, <span class="ident">filename</span>.<span class="ident">display</span>(), <span class="ident">e</span>);
+                }
+            }
+        }
+
+        <span class="ident">theme</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Theme</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Theme</span> {
+        <span class="ident">Theme</span> {
             <span class="ident">index</span>: <span class="ident">INDEX</span>.<span class="ident">to_owned</span>(),
             <span class="ident">css</span>: <span class="ident">CSS</span>.<span class="ident">to_owned</span>(),
             <span class="ident">favicon</span>: <span class="ident">FAVICON</span>.<span class="ident">to_owned</span>(),
@@ -242,76 +326,80 @@
             <span class="ident">clipboard_js</span>: <span class="ident">CLIPBOARD_JS</span>.<span class="ident">to_owned</span>(),
             <span class="ident">store_js</span>: <span class="ident">STORE_JS</span>.<span class="ident">to_owned</span>(),
             <span class="ident">jquery</span>: <span class="ident">JQUERY</span>.<span class="ident">to_owned</span>(),
+        }
+    }
+}
+
+<span class="doccomment">/// Checks if a file exists, if so, the destination buffer will be filled with</span>
+<span class="doccomment">/// its contents.</span>
+<span class="kw">fn</span> <span class="ident">load_file_contents</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">filename</span>: <span class="ident">P</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">filename</span> <span class="op">=</span> <span class="ident">filename</span>.<span class="ident">as_ref</span>();
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+    <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">filename</span>)<span class="question-mark">?</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer</span>)<span class="question-mark">?</span>;
+
+    <span class="comment">// We needed the buffer so we&#39;d only overwrite the existing content if we</span>
+    <span class="comment">// could successfully load the file into memory.</span>
+    <span class="ident">dest</span>.<span class="ident">clear</span>();
+    <span class="ident">dest</span>.<span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer</span>);
+
+    <span class="prelude-val">Ok</span>(())
+}
+
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">tempdir</span>::<span class="ident">TempDir</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">theme_uses_defaults_with_nonexistent_src_dir</span>() {
+        <span class="kw">let</span> <span class="ident">non_existent</span> <span class="op">=</span> <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;/non/existent/directory/&quot;</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">non_existent</span>.<span class="ident">exists</span>());
+
+        <span class="kw">let</span> <span class="ident">should_be</span> <span class="op">=</span> <span class="ident">Theme</span>::<span class="ident">default</span>();
+        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">Theme</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">non_existent</span>);
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, <span class="ident">should_be</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">theme_dir_overrides_defaults</span>() {
+        <span class="comment">// Get all the non-Rust files in the theme directory</span>
+        <span class="kw">let</span> <span class="ident">special_files</span> <span class="op">=</span> <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_MANIFEST_DIR&quot;</span>))
+            .<span class="ident">join</span>(<span class="string">&quot;src/theme&quot;</span>)
+            .<span class="ident">read_dir</span>()
+            .<span class="ident">unwrap</span>()
+            .<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">ok</span>())
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">path</span>())
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">is_file</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">p</span>.<span class="ident">ends_with</span>(<span class="string">&quot;.rs&quot;</span>));
+
+        <span class="kw">let</span> <span class="ident">temp</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;mdbook&quot;</span>).<span class="ident">unwrap</span>();
+
+        <span class="comment">// &quot;touch&quot; all of the special files so we have empty copies</span>
+        <span class="kw">for</span> <span class="ident">special_file</span> <span class="kw">in</span> <span class="ident">special_files</span> {
+            <span class="kw">let</span> <span class="ident">filename</span> <span class="op">=</span> <span class="ident">temp</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="ident">special_file</span>.<span class="ident">file_name</span>().<span class="ident">unwrap</span>());
+            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">filename</span>);
+        }
+
+        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">Theme</span>::<span class="ident">new</span>(<span class="ident">temp</span>.<span class="ident">path</span>());
+
+        <span class="kw">let</span> <span class="ident">empty</span> <span class="op">=</span> <span class="ident">Theme</span> {
+            <span class="ident">index</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">css</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">favicon</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">js</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">highlight_css</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">tomorrow_night_css</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">ayu_highlight_css</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">highlight_js</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">clipboard_js</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">store_js</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+            <span class="ident">jquery</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
         };
 
-        <span class="comment">// Check if the given path exists</span>
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">src</span>.<span class="ident">exists</span>() <span class="op">||</span> <span class="op">!</span><span class="ident">src</span>.<span class="ident">is_dir</span>() {
-            <span class="kw">return</span> <span class="ident">theme</span>;
-        }
-
-        <span class="comment">// Check for individual files if they exist</span>
-
-        <span class="comment">// index.hbs</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;index.hbs&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">index</span>.<span class="ident">clear</span>(); <span class="comment">// Reset the value, because read_to_string appends...</span>
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">index</span>);
-        }
-
-        <span class="comment">// book.js</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;book.js&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">js</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">js</span>);
-        }
-
-        <span class="comment">// book.css</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;book.css&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">css</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">css</span>);
-        }
-
-        <span class="comment">// favicon.png</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;favicon.png&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">favicon</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">favicon</span>);
-        }
-
-        <span class="comment">// highlight.js</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.js&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">highlight_js</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">highlight_js</span>);
-        }
-
-        <span class="comment">// clipboard.js</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;clipboard.min.js&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">clipboard_js</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">clipboard_js</span>);
-        }
-
-        <span class="comment">// store.js</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;store.js&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">store_js</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">store_js</span>);
-        }
-
-        <span class="comment">// highlight.css</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.css&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">highlight_css</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">highlight_css</span>);
-        }
-
-        <span class="comment">// tomorrow-night.css</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;tomorrow-night.css&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">tomorrow_night_css</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">tomorrow_night_css</span>);
-        }
-
-        <span class="comment">// ayu-highlight.css</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;ayu-highlight.css&quot;</span>)) {
-            <span class="ident">theme</span>.<span class="ident">ayu_highlight_css</span>.<span class="ident">clear</span>();
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">ayu_highlight_css</span>);
-        }
-
-        <span class="ident">theme</span>
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, <span class="ident">empty</span>);
     }
 }
 </pre>

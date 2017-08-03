@@ -159,6 +159,11 @@
 <span id="114">114</span>
 <span id="115">115</span>
 <span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # mdBook</span>
 <span class="doccomment">//!</span>
@@ -213,7 +218,7 @@
 <span class="doccomment">//! # fn main() {</span>
 <span class="doccomment">//! #   let your_renderer = HtmlHandlebars::new();</span>
 <span class="doccomment">//! #</span>
-<span class="doccomment">//!     let book =  MDBook::new(&quot;my-book&quot;).set_renderer(Box::new(your_renderer));</span>
+<span class="doccomment">//! let book = MDBook::new(&quot;my-book&quot;).set_renderer(Box::new(your_renderer));</span>
 <span class="doccomment">//! # }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! If you make a renderer, you get the book constructed in form of `Vec&lt;BookItems&gt;` and you get</span>
@@ -227,7 +232,9 @@
 <span class="doccomment">//! following function [`utils::fs::create_file(path:</span>
 <span class="doccomment">//! &amp;Path)`](utils/fs/fn.create_file.html)</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This function creates a file and returns it. But before creating the file it checks every directory in the path to see if it exists, and if it does not it will be created.</span>
+<span class="doccomment">//! This function creates a file and returns it. But before creating the file</span>
+<span class="doccomment">//! it checks every directory in the path to see if it exists, and if it does</span>
+<span class="doccomment">//! not it will be created.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Make sure to take a look at it.</span>
 
@@ -245,6 +252,9 @@
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">tempdir</span>;
 
 <span class="kw">mod</span> <span class="ident">parse</span>;
 <span class="kw">mod</span> <span class="ident">preprocess</span>;
