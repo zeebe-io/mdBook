@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["bookconfig",""],["htmlconfig",""],["jsonconfig",""],["tomlconfig",""]]});
+initSidebarItems({"mod":[["bookconfig",""],["htmlconfig",""],["jsonconfig",""],["playpenconfig",""],["tomlconfig",""]]});

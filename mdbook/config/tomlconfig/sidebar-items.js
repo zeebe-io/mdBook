@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["TomlConfig",""],["TomlHtmlConfig",""],["TomlOutputConfig",""]]});
+initSidebarItems({"struct":[["TomlConfig",""],["TomlHtmlConfig",""],["TomlOutputConfig",""],["TomlPlaypenConfig",""]]});
