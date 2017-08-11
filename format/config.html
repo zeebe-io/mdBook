@@ -26,6 +26,9 @@
         
 
         
+        <!-- MathJax -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
 
         <!-- Fetch Clipboard.js from CDN but have a local fallback -->
         <script src="https://cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js"></script>
@@ -88,9 +91,12 @@
                 <div id="content" class="content">
                     <a class="header" href="config.html#configuration" id="configuration"><h1>Configuration</h1></a>
 <p>You can configure the parameters for your book in the <strong><em>book.toml</em></strong> file.</p>
-<p><strong>Note:</strong> JSON configuration files were previously supported but have been deprecated in favor of
+<blockquote>
+<p><strong>Note:</strong><br />
+JSON configuration files were previously supported but have been deprecated in favor of
 the TOML configuration file. If you are still using JSON we strongly encourage you to migrate to
 the TOML configuration because JSON support will be removed in the future.</p>
+</blockquote>
 <p>Here is an example of what a <strong><em>book.toml</em></strong> file might look like:</p>
 <pre><code class="language-toml">title = &quot;Example book&quot;
 author = &quot;John Doe&quot;
@@ -135,12 +141,13 @@ source = &quot;my-src&quot;  # the source files will be found in `root/my-src` i
 <p>The HTML renderer has a couple of options aswell. All the options for the renderer need to be specified under the TOML table <code>[output.html]</code>.
 The following configuration options are available:</p>
 <ul>
-<li><strong>destination:</strong> By default, the HTML book will be rendered in the <code>root/book</code> directory, but this option lets you specify another
+<li><strong><code>destination</code>:</strong> By default, the HTML book will be rendered in the <code>root/book</code> directory, but this option lets you specify another
 destination fodler.</li>
-<li><strong>theme:</strong> mdBook comes with a default theme and all the resource files needed for it. But if this option is set, mdBook will selectively overwrite the theme files with the ones found in the specified folder.</li>
-<li><strong>curly-quotes:</strong> Convert straight quotes to curly quotes, except for those that occur in code blocks and code spans. Defaults to <code>false</code>.</li>
-<li><strong>google-analytics:</strong> If you use Google Analytics, this option lets you enable it by simply specifying your ID in the configuration file.</li>
-<li><strong>additional-css:</strong> If you need to slightly change the appearance of your book without overwriting the whole style, you can specify a set of stylesheets that will be loaded after the default ones where you can surgically change the style.</li>
+<li><strong><code>theme</code>:</strong> mdBook comes with a default theme and all the resource files needed for it. But if this option is set, mdBook will selectively overwrite the theme files with the ones found in the specified folder.</li>
+<li><strong><code>curly-quotes</code>:</strong> Convert straight quotes to curly quotes, except for those that occur in code blocks and code spans. Defaults to <code>false</code>.</li>
+<li><strong><code>google-analytics</code>:</strong> If you use Google Analytics, this option lets you enable it by simply specifying your ID in the configuration file.</li>
+<li><strong><code>additional-css</code>:</strong> If you need to slightly change the appearance of your book without overwriting the whole style, you can specify a set of stylesheets that will be loaded after the default ones where you can surgically change the style.</li>
+<li><strong><code>additional-js</code>:</strong> If you need to add some behaviour to your book without removing the current behaviour, you can specify a set of javascript files that will be loaded alongside the default one.</li>
 </ul>
 <p><strong>book.toml</strong></p>
 <pre><code class="language-toml">title = &quot;Example book&quot;
@@ -153,6 +160,7 @@ theme = &quot;my-theme&quot;
 curly-quotes = true
 google-analytics = &quot;123456&quot;
 additional-css = [&quot;custom.css&quot;, &quot;custom2.css&quot;]
+additional-js = [&quot;custom.js&quot;]
 </code></pre>
 
                 </div>
