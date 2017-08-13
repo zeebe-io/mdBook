@@ -26,9 +26,9 @@ always be taken relative from the root of the book where the configuration file 
 
 ### General metadata
 
-- **title:** The title of the book
-- **author:** The author of the book
-- **description:** A description for the book, which is added as meta information in the html `<head>` of each page
+- **`title`:** The title of the book
+- **`author`:** The author of the book
+- **`description`:** A description for the book, which is added as meta information in the html `<head>` of each page
 
 **book.toml**
 ```toml
