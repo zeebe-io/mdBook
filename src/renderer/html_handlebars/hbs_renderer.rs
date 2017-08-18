@@ -43,6 +43,8 @@ impl HtmlHandlebars {
 
                 // Parse and expand links
                 let content = preprocess::links::replace_all(&content, base)?;
+                // Preprocess mathjax
+                let content = preprocess::mathjax::prepare_math(&content);
                 let content = utils::render_markdown(&content, ctx.book.get_curly_quotes());
                 print_content.push_str(&content);
 
