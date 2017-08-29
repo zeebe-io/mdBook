@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.12/src/client/pool.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.13/src/client/pool.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>pool.rs.html -- source</title>
@@ -524,6 +524,24 @@
 <span id="479">479</span>
 <span id="480">480</span>
 <span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Client Connection Pooling</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">ToOwned</span>;
@@ -650,7 +668,7 @@
         <span class="kw">let</span> <span class="ident">deadline</span> <span class="op">=</span> <span class="ident">locked</span>.<span class="ident">config</span>.<span class="ident">idle_timeout</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">dur</span><span class="op">|</span> <span class="ident">Instant</span>::<span class="ident">now</span>() <span class="op">-</span> <span class="ident">dur</span>);
         <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">locked</span>.<span class="ident">conns</span>.<span class="ident">get_mut</span>(<span class="ident">key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">vec</span><span class="op">|</span> {
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">inner</span>) <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">pop</span>() {
-                <span class="ident">should_remove</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">&lt;=</span> <span class="number">1</span>;
+                <span class="ident">should_remove</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">is_empty</span>();
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">deadline</span>) <span class="op">=</span> <span class="ident">deadline</span> {
                     <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">idle</span>.<span class="ident">expect</span>(<span class="string">&quot;idle is never missing inside pool&quot;</span>) <span class="op">&lt;</span> <span class="ident">deadline</span> {
                         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;ejecting expired connection&quot;</span>);
@@ -815,7 +833,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">NetworkStream</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">PooledStream</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">inner</span>.<span class="ident">stream</span>.<span class="ident">read</span>(<span class="ident">buf</span>));
         <span class="kw">if</span> <span class="ident">n</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="comment">// if the wrapped stream returns EOF (Ok(0)), that means the</span>
@@ -957,6 +975,24 @@
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">locked</span>.<span class="ident">conns</span>.<span class="ident">len</span>(), <span class="number">1</span>);
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">locked</span>.<span class="ident">conns</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>).<span class="ident">unwrap</span>().<span class="ident">len</span>(), <span class="number">1</span>);
         }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_double_connect_reuse</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pool</span> <span class="op">=</span> <span class="macro">mocked</span><span class="macro">!</span>();
+        <span class="ident">pool</span>.<span class="ident">set_idle_timeout</span>(<span class="prelude-val">Some</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>)));
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">key</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">3000</span>, <span class="string">&quot;http&quot;</span>);
+        <span class="kw">let</span> <span class="ident">stream1</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">3000</span>, <span class="string">&quot;http&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">stream2</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">3000</span>, <span class="string">&quot;http&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">drop</span>(<span class="ident">stream1</span>);
+        <span class="ident">drop</span>(<span class="ident">stream2</span>);
+        <span class="kw">let</span> <span class="ident">stream1</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">3000</span>, <span class="string">&quot;http&quot;</span>).<span class="ident">unwrap</span>();
+        {
+            <span class="kw">let</span> <span class="ident">locked</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">locked</span>.<span class="ident">conns</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">locked</span>.<span class="ident">conns</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>).<span class="ident">unwrap</span>().<span class="ident">len</span>(), <span class="number">1</span>);
+        }
+        <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">stream1</span>;
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

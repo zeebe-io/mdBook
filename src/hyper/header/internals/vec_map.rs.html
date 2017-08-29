@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.12/src/header/internals/vec_map.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.13/src/header/internals/vec_map.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>vec_map.rs.html -- source</title>
@@ -205,7 +205,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">VacantEntry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="self">self</span>, <span class="ident">val</span>: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">V</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">vec</span>;
+        <span class="kw">let</span> <span class="ident">vec</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">vec</span>;
         <span class="ident">vec</span>.<span class="ident">vec</span>.<span class="ident">push</span>((<span class="self">self</span>.<span class="ident">key</span>, <span class="ident">val</span>));
         <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">vec</span>.<span class="ident">vec</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>;
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">vec</span>.<span class="ident">vec</span>[<span class="ident">pos</span>].<span class="number">1</span>
