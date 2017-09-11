@@ -24,9 +24,6 @@ to a server to be seen by your audience.
 
 - The `SUMMARY.md` file is the most important file, it's the skeleton of your book and is discussed in more detail in another  [chapter](format/summary.html).
 
-#### Tip & Trick: Hidden Feature
-When a `SUMMARY.md` file already exists, the `init` command will first parse it and generate the missing files according to the paths used in the `SUMMARY.md`. This allows you to think and create the whole structure of your book and then let mdBook generate it for you.
-
 #### Specify a directory
 
 When using the `init` command, you can also specify a directory, instead of using the current working directory,
@@ -35,6 +32,9 @@ by appending a path to the command:
 ```bash
 mdbook init path/to/book
 ```
+
+#### Tip & Trick: Hidden Feature
+When a `SUMMARY.md` file already exists, the `init` command will first parse it and generate the missing files according to the paths used in the `SUMMARY.md`. This allows you to define the structure of your book ahead of time and let mdBook generate all the necessary files for you.
 
 ## --theme
 

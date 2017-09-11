@@ -22,6 +22,21 @@ rename it to `highlight.css` and put it in `src/theme` (or the equivalent if you
 
 Now your theme will be used instead of the default theme.
 
+## Copy code snippets to clipboard
+
+You may have noticed the icons on the upper right side of code snippets. More particularly the copy icon <i class="fa fa-copy"></i>. By clicking on this icon, the content of the code block will be copied over to your clipboard for easy use. Try it out with the C++ code snippet below!
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() 
+{
+    cout << "Hello, World!";
+    return 0;
+}
+```
+
 ## Hiding code lines
 
 There is a feature in mdBook that let's you hide code lines by prepending them with a `#`.
@@ -47,7 +62,7 @@ Will render as
 # }
 ```
 
-**At the moment, this only works for code examples that are annotated with `rust`. Because it would collide with semantics of some programming languages. In the future, we want to make this configurable through the `book.toml` so that everyone can benefit from it.**
+>**Note:** At the moment, this only works for code examples that are annotated with `rust`. Because it would collide with semantics of some programming languages. In the future, we want to make this configurable through the `book.toml` so that everyone can benefit from it.
 
 
 ## Improve default theme

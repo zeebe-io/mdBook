@@ -40,3 +40,13 @@ When play is clicked, the code snippet will be send to the [Rust Playpen]() to b
 Here is what a rendered code snippet looks like:
 
 {{#playpen example.rs}}
+
+## Inline editor
+
+If you want to go even further, you can make Rust code snippets editable directly in your book!
+
+```rust,editable
+fn main() {
+    println!("Hello, world!");
+}
+```

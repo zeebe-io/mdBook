@@ -1,13 +1,14 @@
 # Configuration
 
-You can configure the parameters for your book in the ***book.toml*** file.
+Your book can be configured and customized by using the ***book.toml*** file. The `book.toml` file needs to be located at the root of your book.
+That means, outside of your `src` and `book` directory.
 
 >**Note:**  
 JSON configuration files were previously supported but have been deprecated in favor of 
 the TOML configuration file. If you are still using JSON we strongly encourage you to migrate to
-the TOML configuration because JSON support will be removed in the future.
+the TOML configuration because JSON support will be removed in the near future.
 
-Here is an example of what a ***book.toml*** file might look like:
+Here is an example of what typical a ***book.toml*** file might look like:
 
 ```toml
 title = "Example book"
@@ -21,7 +22,7 @@ additional-css = ["custom.css"]
 
 ## Supported configuration options
 
-It is important to note that **any** relative path specified in the in the configuration will
+It is important to note that **any** relative path specified in the the configuration will
 always be taken relative from the root of the book where the configuration file is located.
 
 ### General metadata
@@ -30,17 +31,16 @@ always be taken relative from the root of the book where the configuration file 
 - **author:** The author of the book
 - **description:** A description for the book, which is added as meta information in the html `<head>` of each page
 
-**book.toml**
+
 ```toml
 title = "Example book"
 author = "John Doe"
 description = "The example book covers examples."
 ```
 
-Some books may have multiple authors, there is an alternative key called `authors` plural that lets you specify an array
-of authors.
+Some books may have multiple authors, there is an alternative key in the configuration filed called `authors` (plural) that lets you specify multiple authors with the following format.
 
-**book.toml**
+
 ```toml
 title = "Example book"
 authors = ["John Doe", "Jane Doe"]
@@ -61,7 +61,7 @@ source = "my-src"  # the source files will be found in `root/my-src` instead of 
 ```
 
 ### HTML renderer options
-The HTML renderer has a couple of options aswell. All the options for the renderer need to be specified under the TOML table `[output.html]`.
+The HTML renderer has a couple of options as well. All the options for the renderer need to be specified under the `[output.html]` TOML table.
 The following configuration options are available:
 
 - **`destination`:** By default, the HTML book will be rendered in the `root/book` directory, but this option lets you specify another

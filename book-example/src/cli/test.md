@@ -11,9 +11,3 @@ mdBook supports a `test` command that will run all available tests in mdBook. At
 - ...
 
 In the future I would like the user to be able to enable / disable test from the `book.toml` configuration file and support custom tests.
-
-**How to use it:**
-```bash
-$ mdbook test
-[*]: Testing file: "/mdBook/book-example/src/README.md”
-```
