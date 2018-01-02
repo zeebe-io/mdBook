@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/render.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/render.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>render.rs.html -- source</title>
@@ -956,6 +956,45 @@
 <span id="911">911</span>
 <span id="912">912</span>
 <span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
+<span id="950">950</span>
+<span id="951">951</span>
+<span id="952">952</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">BTreeMap</span>, <span class="ident">VecDeque</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
@@ -1001,10 +1040,11 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">RenderContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Create a render context from a `Write`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">ctx</span>: <span class="ident">Context</span>,
-               <span class="ident">local_helpers</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">HelperDef</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
-               <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Write</span>)
-               <span class="op">-&gt;</span> <span class="ident">RenderContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
+        <span class="ident">ctx</span>: <span class="ident">Context</span>,
+        <span class="ident">local_helpers</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">HelperDef</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Write</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">RenderContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="ident">RenderContext</span> {
             <span class="ident">partials</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>(),
             <span class="ident">path</span>: <span class="string">&quot;.&quot;</span>.<span class="ident">to_string</span>(),
@@ -1129,19 +1169,22 @@
         <span class="self">self</span>.<span class="ident">writer</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_block_context</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>)
-        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Serialize</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_block_context</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Serialize</span>,
     {
-        <span class="self">self</span>.<span class="ident">block_context</span>.<span class="ident">push_front</span>(<span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="ident">ctx</span>));
+        <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">block_context</span>.<span class="ident">push_front</span>(<span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="ident">ctx</span>)<span class="question-mark">?</span>);
+        <span class="prelude-val">Ok</span>(<span class="ident">r</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pop_block_context</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="self">self</span>.<span class="ident">block_context</span>.<span class="ident">pop_front</span>();
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">evaluate_in_block_context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                     <span class="ident">local_path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>)
-                                     <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Json</span><span class="op">&gt;</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">evaluate_in_block_context</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">local_path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Json</span><span class="op">&gt;</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="ident">bc</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">block_context</span>.<span class="ident">iter</span>() {
             <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">bc</span>.<span class="ident">navigate</span>(<span class="string">&quot;.&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">local_path_root</span>, <span class="ident">local_path</span>)<span class="question-mark">?</span>;
             <span class="kw">if</span> <span class="op">!</span><span class="ident">v</span>.<span class="ident">is_null</span>() {
@@ -1153,10 +1196,9 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_current_template</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">current_template</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="ident">p</span>)
-            .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
+        <span class="self">self</span>.<span class="ident">current_template</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span> <span class="op">==</span> <span class="ident">p</span>).<span class="ident">unwrap_or</span>(
+            <span class="bool-val">false</span>,
+        )
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">context</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Context</span> {
@@ -1167,10 +1209,11 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">context</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_local_helper</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                                 <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                                 <span class="ident">def</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">HelperDef</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>)
-                                 <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">HelperDef</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_local_helper</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">def</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">HelperDef</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">HelperDef</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">local_helpers</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">def</span>))
     }
 
@@ -1183,8 +1226,11 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">evaluate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Json</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">context</span>
-            .<span class="ident">navigate</span>(<span class="self">self</span>.<span class="ident">get_path</span>(), <span class="self">self</span>.<span class="ident">get_local_path_root</span>(), <span class="ident">path</span>)
+        <span class="self">self</span>.<span class="ident">context</span>.<span class="ident">navigate</span>(
+            <span class="self">self</span>.<span class="ident">get_path</span>(),
+            <span class="self">self</span>.<span class="ident">get_local_path_root</span>(),
+            <span class="ident">path</span>,
+        )
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">evaluate_absolute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Json</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
@@ -1194,16 +1240,18 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">RenderContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>,
-               <span class="string">&quot;partials: {:?}, path: {:?}, local_variables: {:?}, current_template: {:?}, \
+        <span class="macro">write</span><span class="macro">!</span>(
+            <span class="ident">f</span>,
+            <span class="string">&quot;partials: {:?}, path: {:?}, local_variables: {:?}, current_template: {:?}, \
                 root_template: {:?}, disable_escape: {:?}, local_path_root: {:?}&quot;</span>,
-               <span class="self">self</span>.<span class="ident">partials</span>,
-               <span class="self">self</span>.<span class="ident">path</span>,
-               <span class="self">self</span>.<span class="ident">local_variables</span>,
-               <span class="self">self</span>.<span class="ident">current_template</span>,
-               <span class="self">self</span>.<span class="ident">root_template</span>,
-               <span class="self">self</span>.<span class="ident">disable_escape</span>,
-               <span class="self">self</span>.<span class="ident">local_path_root</span>)
+            <span class="self">self</span>.<span class="ident">partials</span>,
+            <span class="self">self</span>.<span class="ident">path</span>,
+            <span class="self">self</span>.<span class="ident">local_variables</span>,
+            <span class="self">self</span>.<span class="ident">current_template</span>,
+            <span class="self">self</span>.<span class="ident">root_template</span>,
+            <span class="self">self</span>.<span class="ident">disable_escape</span>,
+            <span class="self">self</span>.<span class="ident">local_path_root</span>
+        )
     }
 }
 
@@ -1224,9 +1272,9 @@
 
     <span class="doccomment">/// Return root level of this path if any</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path_root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">path</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">split</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;.&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;/&#39;</span>).<span class="ident">nth</span>(<span class="number">0</span>))
+        <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
+            <span class="ident">p</span>.<span class="ident">split</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;.&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">&#39;/&#39;</span>).<span class="ident">nth</span>(<span class="number">0</span>)
+        })
     }
 
     <span class="doccomment">/// Returns the value</span>
@@ -1247,10 +1295,11 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span> <span class="ident">Helper</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from_template</span>(<span class="ident">ht</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">HelperTemplate</span>,
-                     <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
-                     <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="kw-2">mut</span> <span class="ident">RenderContext</span>)
-                     <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Helper</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_template</span>(
+        <span class="ident">ht</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">HelperTemplate</span>,
+        <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
+        <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="kw-2">mut</span> <span class="ident">RenderContext</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Helper</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">evaluated_params</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
         <span class="kw">for</span> <span class="ident">p</span> <span class="kw">in</span> <span class="ident">ht</span>.<span class="ident">params</span>.<span class="ident">iter</span>() {
             <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">p</span>.<span class="ident">expand</span>(<span class="ident">registry</span>, <span class="ident">rc</span>));
@@ -1264,14 +1313,14 @@
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">Helper</span> {
-               <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">name</span>,
-               <span class="ident">params</span>: <span class="ident">evaluated_params</span>,
-               <span class="ident">hash</span>: <span class="ident">evaluated_hash</span>,
-               <span class="ident">block_param</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">block_param</span>,
-               <span class="ident">template</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">template</span>,
-               <span class="ident">inverse</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">inverse</span>,
-               <span class="ident">block</span>: <span class="ident">ht</span>.<span class="ident">block</span>,
-           })
+            <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">name</span>,
+            <span class="ident">params</span>: <span class="ident">evaluated_params</span>,
+            <span class="ident">hash</span>: <span class="ident">evaluated_hash</span>,
+            <span class="ident">block_param</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">block_param</span>,
+            <span class="ident">template</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">template</span>,
+            <span class="ident">inverse</span>: <span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">inverse</span>,
+            <span class="ident">block</span>: <span class="ident">ht</span>.<span class="ident">block</span>,
+        })
     }
 
     <span class="doccomment">/// Returns helper name</span>
@@ -1361,7 +1410,8 @@
     <span class="doccomment">/// Return block param pair (for example |key, val|) if any</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">block_param_pair</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>)<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">BlockParam</span>::<span class="ident">Pair</span>((<span class="ident">Parameter</span>::<span class="ident">Name</span>(<span class="kw-2">ref</span> <span class="ident">s1</span>), <span class="ident">Parameter</span>::<span class="ident">Name</span>(<span class="kw-2">ref</span> <span class="ident">s2</span>)))) <span class="op">=</span>
-            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">block_param</span> {
+            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">block_param</span>
+        {
             <span class="prelude-val">Some</span>((<span class="ident">s1</span>, <span class="ident">s2</span>))
         } <span class="kw">else</span> {
             <span class="prelude-val">None</span>
@@ -1378,10 +1428,11 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span><span class="op">&gt;</span> <span class="ident">Directive</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from_template</span>(<span class="ident">dt</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">DirectiveTemplate</span>,
-                     <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
-                     <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="kw-2">mut</span> <span class="ident">RenderContext</span>)
-                     <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Directive</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_template</span>(
+        <span class="ident">dt</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">DirectiveTemplate</span>,
+        <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
+        <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="kw-2">mut</span> <span class="ident">RenderContext</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Directive</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">dt</span>.<span class="ident">name</span>.<span class="ident">expand_as_name</span>(<span class="ident">registry</span>, <span class="ident">rc</span>));
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">evaluated_params</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
@@ -1397,11 +1448,11 @@
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">Directive</span> {
-               <span class="ident">name</span>: <span class="ident">name</span>,
-               <span class="ident">params</span>: <span class="ident">evaluated_params</span>,
-               <span class="ident">hash</span>: <span class="ident">evaluated_hash</span>,
-               <span class="ident">template</span>: <span class="kw-2">&amp;</span><span class="ident">dt</span>.<span class="ident">template</span>,
-           })
+            <span class="ident">name</span>: <span class="ident">name</span>,
+            <span class="ident">params</span>: <span class="ident">evaluated_params</span>,
+            <span class="ident">hash</span>: <span class="ident">evaluated_hash</span>,
+            <span class="ident">template</span>: <span class="kw-2">&amp;</span><span class="ident">dt</span>.<span class="ident">template</span>,
+        })
     }
 
     <span class="doccomment">/// Returns helper name</span>
@@ -1461,10 +1512,11 @@
 
 
 <span class="kw">impl</span> <span class="ident">Parameter</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expand_as_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                          <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
-                          <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>)
-                          <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expand_as_name</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
+        <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="kw-2">&amp;</span><span class="ident">Parameter</span>::<span class="ident">Name</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>()),
             <span class="kw-2">&amp;</span><span class="ident">Parameter</span>::<span class="ident">Subexpression</span>(<span class="kw-2">ref</span> <span class="ident">t</span>) <span class="op">=&gt;</span> {
@@ -1484,18 +1536,19 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expand</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                  <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
-                  <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>)
-                  <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ContextJson</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expand</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
+        <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ContextJson</span>, <span class="ident">RenderError</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="kw-2">&amp;</span><span class="ident">Parameter</span>::<span class="ident">Name</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">local_value</span> <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">get_local_var</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>);
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">local_value</span> {
                     <span class="prelude-val">Ok</span>(<span class="ident">ContextJson</span> {
-                           <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>()),
-                           <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">clone</span>(),
-                       })
+                        <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>()),
+                        <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">clone</span>(),
+                    })
                 } <span class="kw">else</span> {
                     <span class="kw">let</span> <span class="ident">block_context_value</span> <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">evaluate_in_block_context</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
                     <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">block_context_value</span>.<span class="ident">is_none</span>() {
@@ -1504,23 +1557,23 @@
                         <span class="ident">block_context_value</span>.<span class="ident">unwrap</span>()
                     };
                     <span class="prelude-val">Ok</span>(<span class="ident">ContextJson</span> {
-                           <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>()),
-                           <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">clone</span>(),
-                       })
+                        <span class="ident">path</span>: <span class="prelude-val">Some</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>()),
+                        <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">clone</span>(),
+                    })
                 }
             }
             <span class="kw-2">&amp;</span><span class="ident">Parameter</span>::<span class="ident">Literal</span>(<span class="kw-2">ref</span> <span class="ident">j</span>) <span class="op">=&gt;</span> {
                 <span class="prelude-val">Ok</span>(<span class="ident">ContextJson</span> {
-                       <span class="ident">path</span>: <span class="prelude-val">None</span>,
-                       <span class="ident">value</span>: <span class="ident">j</span>.<span class="ident">clone</span>(),
-                   })
+                    <span class="ident">path</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">value</span>: <span class="ident">j</span>.<span class="ident">clone</span>(),
+                })
             }
             <span class="kw-2">&amp;</span><span class="ident">Parameter</span>::<span class="ident">Subexpression</span>(_) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">text_value</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">expand_as_name</span>(<span class="ident">registry</span>, <span class="ident">rc</span>));
                 <span class="prelude-val">Ok</span>(<span class="ident">ContextJson</span> {
-                       <span class="ident">path</span>: <span class="prelude-val">None</span>,
-                       <span class="ident">value</span>: <span class="ident">Json</span>::<span class="ident">String</span>(<span class="ident">text_value</span>),
-                   })
+                    <span class="ident">path</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">value</span>: <span class="ident">Json</span>::<span class="ident">String</span>(<span class="ident">text_value</span>),
+                })
             }
         }
     }
@@ -1532,8 +1585,7 @@
         <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">elements</span>.<span class="ident">iter</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">for</span> <span class="ident">t</span> <span class="kw">in</span> <span class="ident">iter</span> {
-            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">render</span>(<span class="ident">registry</span>, <span class="ident">rc</span>)
-                     .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">e</span><span class="op">|</span> {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">render</span>(<span class="ident">registry</span>, <span class="ident">rc</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">e</span><span class="op">|</span> {
                 <span class="comment">// add line/col number if the template has mapping data</span>
                 <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">line_no</span>.<span class="ident">is_none</span>() {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">mapping</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">mapping</span> {
@@ -1562,8 +1614,7 @@
         <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">elements</span>.<span class="ident">iter</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">for</span> <span class="ident">t</span> <span class="kw">in</span> <span class="ident">iter</span> {
-            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">eval</span>(<span class="ident">registry</span>, <span class="ident">rc</span>)
-                     .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">e</span><span class="op">|</span> {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">t</span>.<span class="ident">eval</span>(<span class="ident">registry</span>, <span class="ident">rc</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">e</span><span class="op">|</span> {
                 <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">line_no</span>.<span class="ident">is_none</span>() {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">mapping</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">mapping</span> {
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">TemplateMapping</span>(<span class="ident">line</span>, <span class="ident">col</span>)) <span class="op">=</span> <span class="ident">mapping</span>.<span class="ident">get</span>(<span class="ident">idx</span>) {
@@ -1585,7 +1636,6 @@
 
 <span class="kw">impl</span> <span class="ident">Renderable</span> <span class="kw">for</span> <span class="ident">TemplateElement</span> {
     <span class="kw">fn</span> <span class="ident">render</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
-        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;rendering {:?}, {:?}&quot;</span>, <span class="self">self</span>, <span class="ident">rc</span>);
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">RawString</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
                 <span class="macro">try</span><span class="macro">!</span>(<span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write</span>(<span class="ident">v</span>.<span class="ident">clone</span>().<span class="ident">into_bytes</span>().<span class="ident">as_ref</span>()));
@@ -1618,11 +1668,13 @@
                     <span class="ident">registry</span>
                         .<span class="ident">get_helper</span>(<span class="kw-2">&amp;</span><span class="ident">ht</span>.<span class="ident">name</span>)
                         .<span class="ident">or</span>(<span class="ident">registry</span>.<span class="ident">get_helper</span>(<span class="kw">if</span> <span class="ident">ht</span>.<span class="ident">block</span> {
-                                                    <span class="string">&quot;blockHelperMissing&quot;</span>
-                                                } <span class="kw">else</span> {
-                                                    <span class="string">&quot;helperMissing&quot;</span>
-                                                }))
-                        .<span class="ident">ok_or</span>(<span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Helper not defined: {:?}&quot;</span>, <span class="ident">ht</span>.<span class="ident">name</span>)))
+                            <span class="string">&quot;blockHelperMissing&quot;</span>
+                        } <span class="kw">else</span> {
+                            <span class="string">&quot;helperMissing&quot;</span>
+                        }))
+                        .<span class="ident">ok_or</span>(<span class="ident">RenderError</span>::<span class="ident">new</span>(
+                            <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Helper not defined: {:?}&quot;</span>, <span class="ident">ht</span>.<span class="ident">name</span>),
+                        ))
                         .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="ident">helper</span>, <span class="ident">registry</span>, <span class="ident">rc</span>))
                 }
             }
@@ -1630,8 +1682,9 @@
             <span class="ident">DirectiveBlock</span>(_) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">eval</span>(<span class="ident">registry</span>, <span class="ident">rc</span>),
             <span class="ident">PartialExpression</span>(<span class="kw-2">ref</span> <span class="ident">dt</span>) <span class="op">|</span>
             <span class="ident">PartialBlock</span>(<span class="kw-2">ref</span> <span class="ident">dt</span>) <span class="op">=&gt;</span> {
-                <span class="ident">Directive</span>::<span class="ident">from_template</span>(<span class="ident">dt</span>, <span class="ident">registry</span>, <span class="ident">rc</span>)
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">di</span><span class="op">|</span> <span class="ident">partial</span>::<span class="ident">expand_partial</span>(<span class="kw-2">&amp;</span><span class="ident">di</span>, <span class="ident">registry</span>, <span class="ident">rc</span>))
+                <span class="ident">Directive</span>::<span class="ident">from_template</span>(<span class="ident">dt</span>, <span class="ident">registry</span>, <span class="ident">rc</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">di</span><span class="op">|</span> {
+                    <span class="ident">partial</span>::<span class="ident">expand_partial</span>(<span class="kw-2">&amp;</span><span class="ident">di</span>, <span class="ident">registry</span>, <span class="ident">rc</span>)
+                })
             }
             _ <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
         }
@@ -1643,14 +1696,16 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">DirectiveExpression</span>(<span class="kw-2">ref</span> <span class="ident">dt</span>) <span class="op">|</span>
             <span class="ident">DirectiveBlock</span>(<span class="kw-2">ref</span> <span class="ident">dt</span>) <span class="op">=&gt;</span> {
-                <span class="ident">Directive</span>::<span class="ident">from_template</span>(<span class="ident">dt</span>, <span class="ident">registry</span>, <span class="ident">rc</span>)
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">di</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">registry</span>.<span class="ident">get_decorator</span>(<span class="kw-2">&amp;</span><span class="ident">di</span>.<span class="ident">name</span>) {
-                                  <span class="prelude-val">Some</span>(<span class="ident">d</span>) <span class="op">=&gt;</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">d</span>).<span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="ident">di</span>, <span class="ident">registry</span>, <span class="ident">rc</span>),
-                                  <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                                      <span class="prelude-val">Err</span>(<span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Directive not defined: {:?}&quot;</span>,
-                                                                   <span class="ident">dt</span>.<span class="ident">name</span>)))
-                                  }
-                              })
+                <span class="ident">Directive</span>::<span class="ident">from_template</span>(<span class="ident">dt</span>, <span class="ident">registry</span>, <span class="ident">rc</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">di</span><span class="op">|</span> {
+                    <span class="kw">match</span> <span class="ident">registry</span>.<span class="ident">get_decorator</span>(<span class="kw-2">&amp;</span><span class="ident">di</span>.<span class="ident">name</span>) {
+                        <span class="prelude-val">Some</span>(<span class="ident">d</span>) <span class="op">=&gt;</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">d</span>).<span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="ident">di</span>, <span class="ident">registry</span>, <span class="ident">rc</span>),
+                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                            <span class="prelude-val">Err</span>(<span class="ident">RenderError</span>::<span class="ident">new</span>(
+                                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Directive not defined: {:?}&quot;</span>, <span class="ident">dt</span>.<span class="ident">name</span>),
+                            ))
+                        }
+                    }
+                })
             }
             _ <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
         }
@@ -1680,7 +1735,7 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
     <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="string">&quot;&lt;p&gt;&lt;/p&gt;&quot;</span>.<span class="ident">to_string</span>();
     <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">value</span>);
-    <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="kw-2">&amp;</span><span class="ident">m</span>);
+    <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="kw-2">&amp;</span><span class="ident">m</span>).<span class="ident">unwrap</span>();
     {
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rc</span> <span class="op">=</span> <span class="ident">RenderContext</span>::<span class="ident">new</span>(<span class="ident">ctx</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hlps</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sw</span>);
@@ -1700,7 +1755,7 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
     <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="string">&quot;world&quot;</span>;
     <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">value</span>.<span class="ident">to_string</span>());
-    <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="kw-2">&amp;</span><span class="ident">m</span>);
+    <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="kw-2">&amp;</span><span class="ident">m</span>).<span class="ident">unwrap</span>();
     {
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rc</span> <span class="op">=</span> <span class="ident">RenderContext</span>::<span class="ident">new</span>(<span class="ident">ctx</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hlps</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sw</span>);
@@ -1719,7 +1774,7 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
     <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="string">&quot;world&quot;</span>.<span class="ident">to_string</span>();
     <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">value</span>);
-    <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="kw-2">&amp;</span><span class="ident">m</span>);
+    <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="kw-2">&amp;</span><span class="ident">m</span>).<span class="ident">unwrap</span>();
 
     {
 
@@ -1763,15 +1818,19 @@
 
     <span class="ident">render_context</span>.<span class="ident">promote_local_vars</span>();
 
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">render_context</span>
-                   .<span class="ident">get_local_var</span>(<span class="kw-2">&amp;</span><span class="string">&quot;@../index&quot;</span>.<span class="ident">to_string</span>())
-                   .<span class="ident">unwrap</span>(),
-               <span class="kw-2">&amp;</span><span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="number">0</span>));
+    <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="ident">render_context</span>
+            .<span class="ident">get_local_var</span>(<span class="kw-2">&amp;</span><span class="string">&quot;@../index&quot;</span>.<span class="ident">to_string</span>())
+            .<span class="ident">unwrap</span>(),
+        <span class="kw-2">&amp;</span><span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="number">0</span>)
+    );
 
     <span class="ident">render_context</span>.<span class="ident">demote_local_vars</span>();
 
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">render_context</span>.<span class="ident">get_local_var</span>(<span class="kw-2">&amp;</span><span class="string">&quot;@index&quot;</span>.<span class="ident">to_string</span>()).<span class="ident">unwrap</span>(),
-               <span class="kw-2">&amp;</span><span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="number">0</span>));
+    <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="ident">render_context</span>.<span class="ident">get_local_var</span>(<span class="kw-2">&amp;</span><span class="string">&quot;@index&quot;</span>.<span class="ident">to_string</span>()).<span class="ident">unwrap</span>(),
+        <span class="kw-2">&amp;</span><span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="number">0</span>)
+    );
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1785,9 +1844,12 @@
     <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;const&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;truthy&quot;</span>.<span class="ident">to_string</span>());
 
     {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">r</span>.<span class="ident">template_renderw</span>(<span class="string">&quot;&lt;h1&gt;{{#if (const)}}{{(hello)}}{{/if}}&lt;/h1&gt;&quot;</span>,
-                                           <span class="kw-2">&amp;</span><span class="ident">m</span>,
-                                           <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sw</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">r</span>.<span class="ident">template_renderw</span>(
+            <span class="string">&quot;&lt;h1&gt;{{#if (const)}}{{(hello)}}{{/if}}&lt;/h1&gt;&quot;</span>,
+            <span class="kw-2">&amp;</span><span class="ident">m</span>,
+            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sw</span>,
+        )
+        {
             <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>);
         }
     }
@@ -1798,18 +1860,22 @@
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test_render_subexpression_issue_115</span>() {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
-    <span class="ident">r</span>.<span class="ident">register_helper</span>(<span class="string">&quot;format&quot;</span>,
-                      <span class="ident">Box</span>::<span class="ident">new</span>(<span class="op">|</span><span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>,
-                                _: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
-                                <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span><span class="op">|</span>
-                                <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
-        <span class="ident">rc</span>.<span class="ident">writer</span>
-            .<span class="ident">write</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>).<span class="ident">unwrap</span>().<span class="ident">value</span>().<span class="ident">render</span>())
-                       .<span class="ident">into_bytes</span>()
-                       .<span class="ident">as_ref</span>())
-            .<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
-            .<span class="ident">map_err</span>(<span class="ident">RenderError</span>::<span class="ident">from</span>)
-    }));
+    <span class="ident">r</span>.<span class="ident">register_helper</span>(
+        <span class="string">&quot;format&quot;</span>,
+        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="op">|</span><span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>,
+         _: <span class="kw-2">&amp;</span><span class="ident">Registry</span>,
+         <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span><span class="op">|</span>
+         <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
+            <span class="ident">rc</span>.<span class="ident">writer</span>
+                .<span class="ident">write</span>(
+                    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>).<span class="ident">unwrap</span>().<span class="ident">value</span>().<span class="ident">render</span>())
+                        .<span class="ident">into_bytes</span>()
+                        .<span class="ident">as_ref</span>(),
+                )
+                .<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
+                .<span class="ident">map_err</span>(<span class="ident">RenderError</span>::<span class="ident">from</span>)
+        }),
+    );
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sw</span> <span class="op">=</span> <span class="ident">StringWriter</span>::<span class="ident">new</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
@@ -1830,8 +1896,10 @@
     <span class="kw">let</span> <span class="ident">m</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
 
     <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;invalid_template&quot;</span>;
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="ident">name</span>, <span class="string">&quot;&lt;h1&gt;\n{{#if true}}\n  {{#each}}{{/each}}\n{{/if}}&quot;</span>)
-                .<span class="ident">is_ok</span>());
+    <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="ident">name</span>, <span class="string">&quot;&lt;h1&gt;\n{{#if true}}\n  {{#each}}{{/each}}\n{{/if}}&quot;</span>)
+            .<span class="ident">is_ok</span>()
+    );
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">r</span>.<span class="ident">render</span>(<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">m</span>) {
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">e</span>.<span class="ident">line_no</span>.<span class="ident">unwrap</span>(), <span class="number">3</span>);
@@ -1846,9 +1914,16 @@
 <span class="kw">fn</span> <span class="ident">test_partial_failback_render</span>() {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
 
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;parent&quot;</span>, <span class="string">&quot;&lt;html&gt;{{&gt; layout}}&lt;/html&gt;&quot;</span>)
-                .<span class="ident">is_ok</span>());
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;child&quot;</span>, <span class="string">&quot;{{#*inline \&quot;layout\&quot;}}content{{/inline}}{{#&gt; parent}}{{&gt; seg}}{{/parent}}&quot;</span>).<span class="ident">is_ok</span>());
+    <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;parent&quot;</span>, <span class="string">&quot;&lt;html&gt;{{&gt; layout}}&lt;/html&gt;&quot;</span>)
+            .<span class="ident">is_ok</span>()
+    );
+    <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="ident">r</span>.<span class="ident">register_template_string</span>(
+            <span class="string">&quot;child&quot;</span>,
+            <span class="string">&quot;{{#*inline \&quot;layout\&quot;}}content{{/inline}}{{#&gt; parent}}{{&gt; seg}}{{/parent}}&quot;</span>,
+        ).<span class="ident">is_ok</span>()
+    );
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;seg&quot;</span>, <span class="string">&quot;1234&quot;</span>).<span class="ident">is_ok</span>());
 
     <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">render</span>(<span class="string">&quot;child&quot;</span>, <span class="kw-2">&amp;</span><span class="bool-val">true</span>).<span class="ident">expect</span>(<span class="string">&quot;should work&quot;</span>);
@@ -1859,14 +1934,17 @@
 <span class="kw">fn</span> <span class="ident">test_key_with_slash</span>() {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
 
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t&quot;</span>, <span class="string">&quot;{{#each .}}{{@key}}: {{this}}\n{{/each}}&quot;</span>)
-                .<span class="ident">is_ok</span>());
+    <span class="macro">assert</span><span class="macro">!</span>(
+        <span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t&quot;</span>, <span class="string">&quot;{{#each .}}{{@key}}: {{this}}\n{{/each}}&quot;</span>)
+            .<span class="ident">is_ok</span>()
+    );
 
-    <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">render</span>(<span class="string">&quot;t&quot;</span>,
-                     <span class="kw-2">&amp;</span><span class="macro">json</span><span class="macro">!</span>({
+    <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">render</span>(
+        <span class="string">&quot;t&quot;</span>,
+        <span class="kw-2">&amp;</span><span class="macro">json</span><span class="macro">!</span>({
         <span class="string">&quot;/foo&quot;</span>: <span class="string">&quot;bar&quot;</span>
-    }))
-        .<span class="ident">expect</span>(<span class="string">&quot;should work&quot;</span>);
+    }),
+    ).<span class="ident">expect</span>(<span class="string">&quot;should work&quot;</span>);
 
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">r</span>, <span class="string">&quot;/foo: bar\n&quot;</span>);
 }

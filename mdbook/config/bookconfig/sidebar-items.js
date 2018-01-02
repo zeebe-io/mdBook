@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["BookConfig","Configuration struct containing all the configuration options available in mdBook."]]});

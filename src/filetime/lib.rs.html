@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/filetime-0.1.10/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/filetime-0.1.14/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -329,25 +329,6 @@
 <span id="284">284</span>
 <span id="285">285</span>
 <span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Timestamps for files in Rust</span>
 <span class="doccomment">//!</span>
@@ -356,7 +337,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Installation</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Add this to you `Cargo.toml`:</span>
+<span class="doccomment">//! Add this to your `Cargo.toml`:</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```toml</span>
 <span class="doccomment">//! [dependencies]</span>
@@ -385,15 +366,26 @@
 <span class="doccomment">//! println!(&quot;{}&quot;, mtime.seconds());</span>
 <span class="doccomment">//! ```</span>
 
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span> <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span> <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">windows</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cfg_if</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
+
+<span class="macro">cfg_if</span><span class="macro">!</span> {
+    <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;redox&quot;</span>)]</span> {
+        <span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;redox.rs&quot;</span>]</span>
+        <span class="kw">mod</span> <span class="ident">imp</span>;
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span> {
+        <span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;windows.rs&quot;</span>]</span>
+        <span class="kw">mod</span> <span class="ident">imp</span>;
+    } <span class="kw">else</span> {
+        <span class="attribute">#[<span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;unix/mod.rs&quot;</span>]</span>
+        <span class="kw">mod</span> <span class="ident">imp</span>;
+    }
+}
 
 <span class="doccomment">/// A helper structure to represent a timestamp for a file.</span>
 <span class="doccomment">///</span>
@@ -434,15 +426,7 @@
     <span class="doccomment">/// The returned value corresponds to the `mtime` field of `stat` on Unix</span>
     <span class="doccomment">/// platforms and the `ftLastWriteTime` field on Windows platforms.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_last_modification_time</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">imp</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-            <span class="ident">FileTime</span>::<span class="ident">from_os_repr</span>(<span class="ident">meta</span>.<span class="ident">mtime</span>() <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">meta</span>.<span class="ident">mtime_nsec</span>() <span class="kw">as</span> <span class="ident">u32</span>)
-        }
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">imp</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-            <span class="ident">FileTime</span>::<span class="ident">from_os_repr</span>(<span class="ident">meta</span>.<span class="ident">last_write_time</span>())
-        }
-        <span class="ident">imp</span>(<span class="ident">meta</span>)
+        <span class="ident">imp</span>::<span class="ident">from_last_modification_time</span>(<span class="ident">meta</span>)
     }
 
     <span class="doccomment">/// Creates a new timestamp from the last access time listed in the</span>
@@ -451,15 +435,7 @@
     <span class="doccomment">/// The returned value corresponds to the `atime` field of `stat` on Unix</span>
     <span class="doccomment">/// platforms and the `ftLastAccessTime` field on Windows platforms.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_last_access_time</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">imp</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-            <span class="ident">FileTime</span>::<span class="ident">from_os_repr</span>(<span class="ident">meta</span>.<span class="ident">atime</span>() <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">meta</span>.<span class="ident">atime_nsec</span>() <span class="kw">as</span> <span class="ident">u32</span>)
-        }
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">imp</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-            <span class="ident">FileTime</span>::<span class="ident">from_os_repr</span>(<span class="ident">meta</span>.<span class="ident">last_access_time</span>())
-        }
-        <span class="ident">imp</span>(<span class="ident">meta</span>)
+        <span class="ident">imp</span>::<span class="ident">from_last_access_time</span>(<span class="ident">meta</span>)
     }
 
     <span class="doccomment">/// Creates a new timestamp from the creation time listed in the specified</span>
@@ -470,55 +446,7 @@
     <span class="doccomment">/// that not all Unix platforms have this field available and may return</span>
     <span class="doccomment">/// `None` in some circumstances.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_creation_time</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FileTime</span><span class="op">&gt;</span> {
-        <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">birthtim</span> {
-            ($((<span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">i</span>:<span class="ident">ident</span>)),<span class="kw-2">*</span>) <span class="op">=&gt;</span> {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>($(<span class="ident">target_os</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span>),<span class="kw-2">*</span>))]</span>
-                <span class="kw">fn</span> <span class="ident">imp</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FileTime</span><span class="op">&gt;</span> {
-                    $(
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span>)]</span>
-                        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">i</span>::<span class="ident">fs</span>::<span class="ident">MetadataExt</span>;
-                    )<span class="op">*</span>
-                    <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">meta</span>.<span class="ident">as_raw_stat</span>();
-                    <span class="prelude-val">Some</span>(<span class="ident">FileTime</span>::<span class="ident">from_os_repr</span>(<span class="ident">raw</span>.<span class="ident">st_birthtime</span> <span class="kw">as</span> <span class="ident">u64</span>,
-                                                <span class="ident">raw</span>.<span class="ident">st_birthtime_nsec</span> <span class="kw">as</span> <span class="ident">u32</span>))
-                }
-
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">windows</span>),
-                          $(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span>)),<span class="kw-2">*</span>))]</span>
-                <span class="kw">fn</span> <span class="ident">imp</span>(<span class="ident">_meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FileTime</span><span class="op">&gt;</span> {
-                    <span class="prelude-val">None</span>
-                }
-            }
-        }
-
-        <span class="macro">birthtim</span><span class="macro">!</span> {
-            (<span class="string">&quot;bitrig&quot;</span>, <span class="ident">bitrig</span>),
-            (<span class="string">&quot;freebsd&quot;</span>, <span class="ident">freebsd</span>),
-            (<span class="string">&quot;ios&quot;</span>, <span class="ident">ios</span>),
-            (<span class="string">&quot;macos&quot;</span>, <span class="ident">macos</span>),
-            (<span class="string">&quot;openbsd&quot;</span>, <span class="ident">openbsd</span>)
-        }
-
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">imp</span>(<span class="ident">meta</span>: <span class="kw-2">&amp;</span><span class="ident">fs</span>::<span class="ident">Metadata</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">FileTime</span><span class="op">&gt;</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">FileTime</span>::<span class="ident">from_os_repr</span>(<span class="ident">meta</span>.<span class="ident">last_access_time</span>()))
-        }
-        <span class="ident">imp</span>(<span class="ident">meta</span>)
-    }
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">from_os_repr</span>(<span class="ident">time</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-        <span class="comment">// Windows write times are in 100ns intervals, so do a little math to</span>
-        <span class="comment">// get it into the right representation.</span>
-        <span class="ident">FileTime</span> {
-            <span class="ident">seconds</span>: <span class="ident">time</span> <span class="op">/</span> (<span class="number">1_000_000_000</span> <span class="op">/</span> <span class="number">100</span>),
-            <span class="ident">nanos</span>: ((<span class="ident">time</span> <span class="op">%</span> (<span class="number">1_000_000_000</span> <span class="op">/</span> <span class="number">100</span>)) <span class="op">*</span> <span class="number">100</span>) <span class="kw">as</span> <span class="ident">u32</span>,
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">from_os_repr</span>(<span class="ident">seconds</span>: <span class="ident">u64</span>, <span class="ident">nanos</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">FileTime</span> {
-        <span class="ident">FileTime</span> { <span class="ident">seconds</span>: <span class="ident">seconds</span>, <span class="ident">nanos</span>: <span class="ident">nanos</span> }
+        <span class="ident">imp</span>::<span class="ident">from_creation_time</span>(<span class="ident">meta</span>)
     }
 
     <span class="doccomment">/// Returns the whole number of seconds represented by this timestamp.</span>
@@ -556,84 +484,51 @@
 <span class="doccomment">/// This function will set the `atime` and `mtime` metadata fields for a file</span>
 <span class="doccomment">/// on the local filesystem, returning any error encountered.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_file_times</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="ident">p</span>: <span class="ident">P</span>, <span class="ident">atime</span>: <span class="ident">FileTime</span>, <span class="ident">mtime</span>: <span class="ident">FileTime</span>)
-                         <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> {
-    <span class="ident">set_file_times_</span>(<span class="ident">p</span>.<span class="ident">as_ref</span>(), <span class="ident">atime</span>, <span class="ident">mtime</span>)
+    <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>
+{
+    <span class="ident">imp</span>::<span class="ident">set_file_times</span>(<span class="ident">p</span>.<span class="ident">as_ref</span>(), <span class="ident">atime</span>, <span class="ident">mtime</span>)
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
-<span class="kw">fn</span> <span class="ident">set_file_times_</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">atime</span>: <span class="ident">FileTime</span>, <span class="ident">mtime</span>: <span class="ident">FileTime</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CString</span>;
-    <span class="kw">use</span> <span class="ident">libc</span>::{<span class="ident">timeval</span>, <span class="ident">time_t</span>, <span class="ident">suseconds_t</span>, <span class="ident">utimes</span>};
-
-    <span class="kw">let</span> <span class="ident">times</span> <span class="op">=</span> [<span class="ident">to_timeval</span>(<span class="kw-2">&amp;</span><span class="ident">atime</span>), <span class="ident">to_timeval</span>(<span class="kw-2">&amp;</span><span class="ident">mtime</span>)];
-    <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">CString</span>::<span class="ident">new</span>(<span class="ident">p</span>.<span class="ident">as_os_str</span>().<span class="ident">as_bytes</span>()));
-    <span class="kw">return</span> <span class="kw">unsafe</span> {
-        <span class="kw">if</span> <span class="ident">utimes</span>(<span class="ident">p</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> _, <span class="ident">times</span>.<span class="ident">as_ptr</span>()) <span class="op">==</span> <span class="number">0</span> {
-            <span class="prelude-val">Ok</span>(())
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>())
-        }
-    };
-
-    <span class="kw">fn</span> <span class="ident">to_timeval</span>(<span class="ident">ft</span>: <span class="kw-2">&amp;</span><span class="ident">FileTime</span>) <span class="op">-&gt;</span> <span class="ident">timeval</span> {
-        <span class="ident">timeval</span> {
-            <span class="ident">tv_sec</span>: <span class="ident">ft</span>.<span class="ident">seconds</span>() <span class="kw">as</span> <span class="ident">time_t</span>,
-            <span class="ident">tv_usec</span>: (<span class="ident">ft</span>.<span class="ident">nanoseconds</span>() <span class="op">/</span> <span class="number">1000</span>) <span class="kw">as</span> <span class="ident">suseconds_t</span>,
-        }
-    }
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">bad_style</span>)]</span>
-<span class="kw">fn</span> <span class="ident">set_file_times_</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">atime</span>: <span class="ident">FileTime</span>, <span class="ident">mtime</span>: <span class="ident">FileTime</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">OpenOptions</span>;
-
-    <span class="kw">type</span> <span class="ident">BOOL</span> <span class="op">=</span> <span class="ident">i32</span>;
-    <span class="kw">type</span> <span class="ident">HANDLE</span> <span class="op">=</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>;
-    <span class="kw">type</span> <span class="ident">DWORD</span> <span class="op">=</span> <span class="ident">u32</span>;
-    <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
-    <span class="kw">struct</span> <span class="ident">FILETIME</span> {
-        <span class="ident">dwLowDateTime</span>: <span class="ident">u32</span>,
-        <span class="ident">dwHighDateTime</span>: <span class="ident">u32</span>,
-    }
-    <span class="kw">extern</span> <span class="string">&quot;system&quot;</span> {
-        <span class="kw">fn</span> <span class="ident">SetFileTime</span>(<span class="ident">hFile</span>: <span class="ident">HANDLE</span>,
-                       <span class="ident">lpCreationTime</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">FILETIME</span>,
-                       <span class="ident">lpLastAccessTime</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">FILETIME</span>,
-                       <span class="ident">lpLastWriteTime</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">FILETIME</span>) <span class="op">-&gt;</span> <span class="ident">BOOL</span>;
-    }
-
-    <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">OpenOptions</span>::<span class="ident">new</span>().<span class="ident">write</span>(<span class="bool-val">true</span>).<span class="ident">open</span>(<span class="ident">p</span>));
-    <span class="kw">let</span> <span class="ident">atime</span> <span class="op">=</span> <span class="ident">to_filetime</span>(<span class="kw-2">&amp;</span><span class="ident">atime</span>);
-    <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">to_filetime</span>(<span class="kw-2">&amp;</span><span class="ident">mtime</span>);
-    <span class="kw">return</span> <span class="kw">unsafe</span> {
-        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">SetFileTime</span>(<span class="ident">f</span>.<span class="ident">as_raw_handle</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _,
-                              <span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> _,
-                              <span class="kw-2">&amp;</span><span class="ident">atime</span>, <span class="kw-2">&amp;</span><span class="ident">mtime</span>);
-        <span class="kw">if</span> <span class="ident">ret</span> <span class="op">!=</span> <span class="number">0</span> {
-            <span class="prelude-val">Ok</span>(())
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>())
-        }
-    };
-
-    <span class="kw">fn</span> <span class="ident">to_filetime</span>(<span class="ident">ft</span>: <span class="kw-2">&amp;</span><span class="ident">FileTime</span>) <span class="op">-&gt;</span> <span class="ident">FILETIME</span> {
-        <span class="kw">let</span> <span class="ident">intervals</span> <span class="op">=</span> <span class="ident">ft</span>.<span class="ident">seconds</span>() <span class="op">*</span> (<span class="number">1_000_000_000</span> <span class="op">/</span> <span class="number">100</span>) <span class="op">+</span>
-                        ((<span class="ident">ft</span>.<span class="ident">nanoseconds</span>() <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">/</span> <span class="number">100</span>);
-        <span class="ident">FILETIME</span> {
-            <span class="ident">dwLowDateTime</span>: <span class="ident">intervals</span> <span class="kw">as</span> <span class="ident">DWORD</span>,
-            <span class="ident">dwHighDateTime</span>: (<span class="ident">intervals</span> <span class="op">&gt;&gt;</span> <span class="number">32</span>) <span class="kw">as</span> <span class="ident">DWORD</span>,
-        }
-    }
+<span class="doccomment">/// Set the last access and modification times for a file on the filesystem.</span>
+<span class="doccomment">/// This function does not follow symlink.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This function will set the `atime` and `mtime` metadata fields for a file</span>
+<span class="doccomment">/// on the local filesystem, returning any error encountered.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_symlink_file_times</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="ident">p</span>: <span class="ident">P</span>, <span class="ident">atime</span>: <span class="ident">FileTime</span>, <span class="ident">mtime</span>: <span class="ident">FileTime</span>)
+    <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>
+{
+    <span class="ident">imp</span>::<span class="ident">set_symlink_file_times</span>(<span class="ident">p</span>.<span class="ident">as_ref</span>(), <span class="ident">atime</span>, <span class="ident">mtime</span>)
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">tempdir</span>;
 
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::{<span class="self">self</span>, <span class="ident">File</span>};
     <span class="kw">use</span> <span class="self">self</span>::<span class="ident">tempdir</span>::<span class="ident">TempDir</span>;
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">FileTime</span>, <span class="ident">set_file_times</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">FileTime</span>, <span class="ident">set_file_times</span>, <span class="ident">set_symlink_file_times</span>};
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">make_symlink</span><span class="op">&lt;</span><span class="ident">P</span>,<span class="ident">Q</span><span class="op">&gt;</span>(<span class="ident">src</span>: <span class="ident">P</span>, <span class="ident">dst</span>: <span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>,
+              <span class="ident">Q</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>,
+    {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">unix</span>::<span class="ident">fs</span>::<span class="ident">symlink</span>;
+        <span class="ident">symlink</span>(<span class="ident">src</span>, <span class="ident">dst</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">make_symlink</span><span class="op">&lt;</span><span class="ident">P</span>,<span class="ident">Q</span><span class="op">&gt;</span>(<span class="ident">src</span>: <span class="ident">P</span>, <span class="ident">dst</span>: <span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>,
+              <span class="ident">Q</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>,
+    {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">windows</span>::<span class="ident">fs</span>::<span class="ident">symlink_file</span>;
+        <span class="ident">symlink_file</span>(<span class="ident">src</span>, <span class="ident">dst</span>)
+    }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_file_times_test</span>() {
@@ -652,6 +547,73 @@
         <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">new_mtime</span>);
+
+        <span class="kw">let</span> <span class="ident">spath</span> <span class="op">=</span> <span class="ident">td</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;bar.txt&quot;</span>);
+        <span class="ident">make_symlink</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">symlink_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">smtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+
+        <span class="ident">set_file_times</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>, <span class="ident">atime</span>, <span class="ident">mtime</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">cur_mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">cur_mtime</span>);
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">symlink_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">cur_mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">smtime</span>, <span class="ident">cur_mtime</span>);
+
+        <span class="ident">set_file_times</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>, <span class="ident">atime</span>, <span class="ident">new_mtime</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">new_mtime</span>);
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">symlink_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">smtime</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">set_symlink_file_times_test</span>() {
+        <span class="kw">let</span> <span class="ident">td</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;filetime&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">td</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;foo.txt&quot;</span>);
+        <span class="ident">File</span>::<span class="ident">create</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="kw">let</span> <span class="ident">atime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_access_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="ident">set_symlink_file_times</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>, <span class="ident">atime</span>, <span class="ident">mtime</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">new_mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_seconds_since_1970</span>(<span class="number">10_000</span>, <span class="number">0</span>);
+        <span class="ident">set_symlink_file_times</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>, <span class="ident">atime</span>, <span class="ident">new_mtime</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">new_mtime</span>);
+
+        <span class="kw">let</span> <span class="ident">spath</span> <span class="op">=</span> <span class="ident">td</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;bar.txt&quot;</span>);
+        <span class="ident">make_symlink</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">symlink_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">smtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="kw">let</span> <span class="ident">satime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_access_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="ident">set_symlink_file_times</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>, <span class="ident">smtime</span>, <span class="ident">satime</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">new_mtime</span>);
+
+        <span class="kw">let</span> <span class="ident">new_smtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_seconds_since_1970</span>(<span class="number">20_000</span>, <span class="number">0</span>);
+        <span class="ident">set_symlink_file_times</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>, <span class="ident">atime</span>, <span class="ident">new_smtime</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">new_mtime</span>);
+
+        <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">symlink_metadata</span>(<span class="kw-2">&amp;</span><span class="ident">spath</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">mtime</span> <span class="op">=</span> <span class="ident">FileTime</span>::<span class="ident">from_last_modification_time</span>(<span class="kw-2">&amp;</span><span class="ident">metadata</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mtime</span>, <span class="ident">new_smtime</span>);
     }
 }
 </pre>

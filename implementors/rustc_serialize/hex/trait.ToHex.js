@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["iron"] = [];
 implementors["rustc_serialize"] = [];
 
             if (window.register_implementors) {

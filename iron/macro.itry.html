@@ -60,7 +60,7 @@ request handlers.</p>
 <p>The second (optional) parameter is any <a href="modifiers/index.html">modifier</a>.
 The default modifier is <code>status::InternalServerError</code>.</p>
 
-<pre class="rust rust-example-rendered">
+<div class='information'><div class='tooltip ignore'>⚠<span class='tooltiptext'>Be careful when using this code, it's not being tested!</span></div></div><pre class="rust rust-example-rendered ignore">
 <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="macro">itry</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">create</span>(<span class="string">&quot;foo.txt&quot;</span>), <span class="ident">status</span>::<span class="ident">BadRequest</span>);
 <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="macro">itry</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">create</span>(<span class="string">&quot;foo.txt&quot;</span>), (<span class="ident">status</span>::<span class="ident">NotFound</span>, <span class="string">&quot;Not Found&quot;</span>));
 <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="macro">itry</span><span class="macro">!</span>(<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">create</span>(<span class="string">&quot;foo.txt&quot;</span>));  <span class="comment">// HTTP 500</span></pre>

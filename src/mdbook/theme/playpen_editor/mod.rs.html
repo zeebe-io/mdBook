@@ -113,7 +113,6 @@
 <span id="68">68</span>
 <span id="69">69</span>
 <span id="70">70</span>
-<span id="71">71</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 
@@ -164,13 +163,12 @@
 
         <span class="comment">// Check for individual files if they exist</span>
         {
-            <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
-                (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;editor.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">js</span>),
-                (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;ace.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">ace_js</span>),
-                (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;mode-rust.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">mode_rust_js</span>),
-                (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;theme-dawn.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">theme_dawn_js</span>),
-                (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;theme-tomorrow_night.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">theme_tomorrow_night_js</span>),
-            ];
+            <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[(<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;editor.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">js</span>),
+                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;ace.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">ace_js</span>),
+                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;mode-rust.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">mode_rust_js</span>),
+                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;theme-dawn.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">theme_dawn_js</span>),
+                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;theme-tomorrow_night.js&quot;</span>),
+                             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">theme_tomorrow_night_js</span>)];
 
             <span class="kw">for</span> (<span class="ident">filename</span>, <span class="ident">dest</span>) <span class="kw">in</span> <span class="ident">files</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">filename</span>.<span class="ident">exists</span>() {

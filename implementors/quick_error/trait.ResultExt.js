@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["handlebars"] = [];
 implementors["quick_error"] = [];
 
             if (window.register_implementors) {

@@ -49,23 +49,21 @@
         <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
         <script src="store.js"></script>
 
-        <!-- Custom JS script -->
-        
-
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = store.get('theme');
+            var theme = store.get('mdbook-theme');
             if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = store.get('sidebar');
-            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
-            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080)
+                sidebar = store.get('mdbook-sidebar') || 'visible';
+            $("html").addClass("sidebar-" + sidebar);
         </script>
 
         <div id="sidebar" class="sidebar">
@@ -75,21 +73,24 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page" tabindex="-1">
+                
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
-                        <i id="sidebar-toggle" class="fa fa-bars"></i>
-                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                        <i id="sidebar-toggle" class="fa fa-bars" title="Toggle sidebar"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush" title="Change theme"></i>
                     </div>
 
                     <h1 class="menu-title">mdBook Documentation</h1>
 
                     <div class="right-buttons">
-                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        <a href="print.html">
+                            <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="test.html#the test command" id="the test command"><h1>The test command</h1></a>
+                    <a class="header" href="cli/test.html#the-test-command" id="the-test-command"><h1>The test command</h1></a>
 <p>When writing a book, you sometimes need to automate some tests. For example, <a href="https://doc.rust-lang.org/stable/book/">The Rust Programming Book</a> uses a lot of code examples that could get outdated.
 Therefore it is very important for them to be able to automatically test these code examples.</p>
 <p>mdBook supports a <code>test</code> command that will run all available tests in mdBook. At the moment, only one test is available:
@@ -105,21 +106,24 @@ Therefore it is very important for them to be able to automatically test these c
 [*]: Testing file: &quot;/mdBook/book-example/src/README.md”
 </code></pre>
 
+
+                    <div class="nav-wrapper">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="cli/serve.html" class="mobile-nav-chapters previous" title="Previous chapter">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="format/format.html" class="mobile-nav-chapters next" title="Next chapter">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </div>
                 </div>
-
-                <!-- Mobile navigation buttons -->
-                
-                    <a rel="prev" href="cli/serve.html" class="mobile-nav-chapters previous">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                
-
-                
-                    <a rel="next" href="format/format.html" class="mobile-nav-chapters next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                
-
             </div>
 
             
@@ -151,7 +155,13 @@ Therefore it is very important for them to be able to automatically test these c
 
         
 
+        
+
         <script src="highlight.js"></script>
         <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </body>
 </html>

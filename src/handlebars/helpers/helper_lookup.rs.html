@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/helpers/helper_lookup.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/helpers/helper_lookup.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>helper_lookup.rs.html -- source</title>
@@ -129,6 +129,9 @@
 <span id="84">84</span>
 <span id="85">85</span>
 <span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">value</span>::<span class="ident">Value</span> <span class="kw">as</span> <span class="ident">Json</span>;
 
@@ -161,11 +164,9 @@
                     .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">null</span>)
             }
             <span class="kw-2">&amp;</span><span class="ident">Json</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">m</span>) <span class="op">=&gt;</span> {
-                <span class="ident">index</span>
-                    .<span class="ident">value</span>()
-                    .<span class="ident">as_str</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">k</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">get</span>(<span class="ident">k</span>))
-                    .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">null</span>)
+                <span class="ident">index</span>.<span class="ident">value</span>().<span class="ident">as_str</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">k</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">get</span>(<span class="ident">k</span>)).<span class="ident">unwrap_or</span>(
+                    <span class="kw-2">&amp;</span><span class="ident">null</span>,
+                )
             }
             _ <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">null</span>,
         };
@@ -186,23 +187,28 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_lookup</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>
-                    .<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>,
-                                              <span class="string">&quot;{{#each v1}}{{lookup ../../v2 @index}}{{/each}}&quot;</span>)
-                    .<span class="ident">is_ok</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>
-                    .<span class="ident">register_template_string</span>(<span class="string">&quot;t1&quot;</span>,
-                                              <span class="string">&quot;{{#each v1}}{{lookup ../../v2 1}}{{/each}}&quot;</span>)
-                    .<span class="ident">is_ok</span>());
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>
-                    .<span class="ident">register_template_string</span>(<span class="string">&quot;t2&quot;</span>, <span class="string">&quot;{{lookup kk \&quot;a\&quot;}}&quot;</span>)
-                    .<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">handlebars</span>
+                .<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="string">&quot;{{#each v1}}{{lookup ../../v2 @index}}{{/each}}&quot;</span>)
+                .<span class="ident">is_ok</span>()
+        );
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">handlebars</span>
+                .<span class="ident">register_template_string</span>(<span class="string">&quot;t1&quot;</span>, <span class="string">&quot;{{#each v1}}{{lookup ../../v2 1}}{{/each}}&quot;</span>)
+                .<span class="ident">is_ok</span>()
+        );
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">handlebars</span>
+                .<span class="ident">register_template_string</span>(<span class="string">&quot;t2&quot;</span>, <span class="string">&quot;{{lookup kk \&quot;a\&quot;}}&quot;</span>)
+                .<span class="ident">is_ok</span>()
+        );
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
         <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;v1&quot;</span>.<span class="ident">to_string</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="number">1u16</span>, <span class="number">2u16</span>, <span class="number">3u16</span>]);
         <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;v2&quot;</span>.<span class="ident">to_string</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="number">9u16</span>, <span class="number">8u16</span>, <span class="number">7u16</span>]);
 
-        <span class="kw">let</span> <span class="ident">m2</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span>{
+        <span class="kw">let</span> <span class="ident">m2</span> <span class="op">=</span>
+            <span class="macro">btreemap</span><span class="macro">!</span>{
             <span class="string">&quot;kk&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="macro">btreemap</span><span class="macro">!</span>{<span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="string">&quot;world&quot;</span>.<span class="ident">to_string</span>()}
         };
 

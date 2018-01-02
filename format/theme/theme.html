@@ -49,23 +49,21 @@
         <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
         <script src="store.js"></script>
 
-        <!-- Custom JS script -->
-        
-
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = store.get('theme');
+            var theme = store.get('mdbook-theme');
             if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = store.get('sidebar');
-            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
-            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080)
+                sidebar = store.get('mdbook-sidebar') || 'visible';
+            $("html").addClass("sidebar-" + sidebar);
         </script>
 
         <div id="sidebar" class="sidebar">
@@ -75,21 +73,24 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page" tabindex="-1">
+                
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
-                        <i id="sidebar-toggle" class="fa fa-bars"></i>
-                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                        <i id="sidebar-toggle" class="fa fa-bars" title="Toggle sidebar"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush" title="Change theme"></i>
                     </div>
 
                     <h1 class="menu-title">mdBook Documentation</h1>
 
                     <div class="right-buttons">
-                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        <a href="print.html">
+                            <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="theme.html#theme" id="theme"><h1>Theme</h1></a>
+                    <a class="header" href="format/theme/theme.html#theme" id="theme"><h1>Theme</h1></a>
 <p>The default renderer uses a <a href="http://handlebarsjs.com/">handlebars</a> template to render your markdown files and comes with a default theme
 included in the mdBook binary.</p>
 <p>The theme is totally customizable, you can selectively replace every file from the theme by your own by adding a
@@ -108,21 +109,24 @@ and now that file will be used instead of the default file.</p>
 there is no point in overriding all the other files. Because custom files take precedence over built-in ones, they will not get updated with new fixes / features.</p>
 <p><strong>Note:</strong> When you override a file, it is possible that you break some functionality. Therefore I recommend to use the file from the default theme as template and only add / modify what you need. You can copy the default theme into your source directory automatically by using <code>mdbook init --theme</code> just remove the files you don't want to override.</p>
 
+
+                    <div class="nav-wrapper">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="format/config.html" class="mobile-nav-chapters previous" title="Previous chapter">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="format/theme/index-hbs.html" class="mobile-nav-chapters next" title="Next chapter">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </div>
                 </div>
-
-                <!-- Mobile navigation buttons -->
-                
-                    <a rel="prev" href="format/config.html" class="mobile-nav-chapters previous">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                
-
-                
-                    <a rel="next" href="format/theme/index-hbs.html" class="mobile-nav-chapters next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                
-
             </div>
 
             
@@ -154,7 +158,13 @@ there is no point in overriding all the other files. Because custom files take p
 
         
 
+        
+
         <script src="highlight.js"></script>
         <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </body>
 </html>

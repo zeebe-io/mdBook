@@ -48,16 +48,109 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/env_logger/lib.rs.html#163-168' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Logger { /* fields omitted */ }</pre><div class='docblock'><p>The logger.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#312-341' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code></span></h4>
-<h4 id='method.filter' class="method"><span id='filter.v' class='invisible'><code>fn <a href='#method.filter' class='fnname'>filter</a>(&amp;self) -&gt; <a class="enum" href="../log/enum.LogLevelFilter.html" title="enum log::LogLevelFilter">LogLevelFilter</a></code></span></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../log/trait.Log.html" title="trait log::Log">Log</a> for <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#343-366' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.enabled' class="method"><span id='enabled.v' class='invisible'><code>fn <a href='../log/trait.Log.html#tymethod.enabled' class='fnname'>enabled</a>(&amp;self, metadata: &amp;<a class="struct" href="../log/struct.LogMetadata.html" title="struct log::LogMetadata">LogMetadata</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
+               </span><a class='srclink' href='../src/env_logger/lib.rs.html#191-195' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Logger { /* fields omitted */ }</pre><div class='docblock'><p>The env logger.</p>
+
+<p>This struct implements the <code>Log</code> trait from the <a href="https://docs.rs/log/"><code>log</code> crate</a>,
+which allows it to act as a logger.</p>
+
+<p>The <a href="fn.init.html"><code>init()</code></a>, <a href="fn.try_init.html"><code>try_init()</code></a>, <a href="struct.Builder.html#method.init"><code>Builder::init()</code></a> and <a href="struct.Builder.html#method.try_init"><code>Builder::try_init()</code></a>
+methods will each construct a <code>Logger</code> and immediately initialize it as the
+default global logger.</p>
+
+<p>If you&#39;d instead need access to the constructed <code>Logger</code>, you can use
+<a href="#method.new"><code>Logger::new()</code></a> or the associated <a href="struct.Builder.html"><code>Builder</code></a> and install it with the
+<a href="https://docs.rs/log/"><code>log</code> crate</a> directly.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#358-463' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#387-389' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new env logger by parsing the <code>RUST_LOG</code> environment variable.</p>
+
+<p>The returned logger can be passed to the <a href="https://docs.rs/log/"><code>log</code> crate</a>
+for initialization as a global logger.</p>
+
+<p>If you do not need to interact directly with the <code>Logger</code>, you should
+prefer the <a href="fn.init.html"><code>init()</code></a> or <a href="fn.try_init.html"><code>try_init()</code></a> methods, which
+construct a <code>Logger</code> and configure it as the default logger.</p>
+
+<h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">env_logger</span>;
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">env</span>;
+<span class="kw">use</span> <span class="ident">env_logger</span>::<span class="ident">Logger</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="ident">Logger</span>::<span class="ident">new</span>();
+ 
+    <span class="ident">log</span>::<span class="ident">set_max_level</span>(<span class="ident">logger</span>.<span class="ident">filter</span>());
+    <span class="ident">log</span>::<span class="ident">set_boxed_logger</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">logger</span>));
+}</pre>
+</div><h4 id='method.from_env' class="method"><span id='from_env.v' class='invisible'><code>pub fn <a href='#method.from_env' class='fnname'>from_env</a>(env: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#420-428' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a new env logger by parsing the environment variable with the
+given name.</p>
+
+<p>This is identical to the <a href="#method.new"><code>new()</code></a> constructor, except it allows the
+name of the environment variable to be customized. For additional
+customization, use the <a href="struct.Builder.html"><code>Builder</code></a> type instead.</p>
+
+<p>The returned logger can be passed to the <a href="https://docs.rs/log/"><code>log</code> crate</a>
+for initialization as a global logger.</p>
+
+<h1 id='example-1' class='section-header'><a href='#example-1'>Example</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">env_logger</span>;
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">env</span>;
+<span class="kw">use</span> <span class="ident">env_logger</span>::<span class="ident">Logger</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="ident">Logger</span>::<span class="ident">from_env</span>(<span class="string">&quot;MY_LOG&quot;</span>);
+ 
+    <span class="ident">log</span>::<span class="ident">set_max_level</span>(<span class="ident">logger</span>.<span class="ident">filter</span>());
+    <span class="ident">log</span>::<span class="ident">set_boxed_logger</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">logger</span>));
+}</pre>
+</div><h4 id='method.filter' class="method"><span id='filter.v' class='invisible'><code>pub fn <a href='#method.filter' class='fnname'>filter</a>(&amp;self) -&gt; <a class="enum" href="../log/enum.LevelFilter.html" title="enum log::LevelFilter">LevelFilter</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#451-453' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the maximum <code>LevelFilter</code> that this env logger instance is
+configured to output.</p>
+
+<h1 id='example-2' class='section-header'><a href='#example-2'>Example</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">env_logger</span>;
+
+<span class="kw">use</span> <span class="ident">log</span>::<span class="ident">LevelFilter</span>;
+<span class="kw">use</span> <span class="ident">env_logger</span>::<span class="ident">Builder</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">Builder</span>::<span class="ident">new</span>();
+    <span class="ident">builder</span>.<span class="ident">filter</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;module1&quot;</span>), <span class="ident">LevelFilter</span>::<span class="ident">Info</span>);
+    <span class="ident">builder</span>.<span class="ident">filter</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;module2&quot;</span>), <span class="ident">LevelFilter</span>::<span class="ident">Error</span>);
+
+    <span class="kw">let</span> <span class="ident">logger</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">build</span>();
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">logger</span>.<span class="ident">filter</span>(), <span class="ident">LevelFilter</span>::<span class="ident">Info</span>);
+}</pre>
+</div><h4 id='method.matches' class="method"><span id='matches.v' class='invisible'><code>pub fn <a href='#method.matches' class='fnname'>matches</a>(&amp;self, record: &amp;<a class="struct" href="../log/struct.Record.html" title="struct log::Record">Record</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#456-458' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Checks if this record matches the configured filter.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#506-512' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#507-511' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 id='impl-Log' class='impl'><span class='in-band'><code>impl <a class="trait" href="../log/trait.Log.html" title="trait log::Log">Log</a> for <a class="struct" href="../env_logger/struct.Logger.html" title="struct env_logger::Logger">Logger</a></code><a href='#impl-Log' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#465-500' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.enabled' class="method"><span id='enabled.v' class='invisible'><code>fn <a href='../log/trait.Log.html#tymethod.enabled' class='fnname'>enabled</a>(&amp;self, metadata: &amp;<a class="struct" href="../log/struct.Metadata.html" title="struct log::Metadata">Metadata</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#466-468' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Determines if a log message with the specified metadata would be logged. <a href="../log/trait.Log.html#tymethod.enabled">Read more</a></p>
-</div><h4 id='method.log' class="method"><span id='log.v' class='invisible'><code>fn <a href='../log/trait.Log.html#tymethod.log' class='fnname'>log</a>(&amp;self, record: &amp;<a class="struct" href="../log/struct.LogRecord.html" title="struct log::LogRecord">LogRecord</a>)</code></span></h4>
-<div class='docblock'><p>Logs the <code>LogRecord</code>. <a href="../log/trait.Log.html#tymethod.log">Read more</a></p>
+</div><h4 id='method.log' class="method"><span id='log.v' class='invisible'><code>fn <a href='../log/trait.Log.html#tymethod.log' class='fnname'>log</a>(&amp;self, record: &amp;<a class="struct" href="../log/struct.Record.html" title="struct log::Record">Record</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#470-497' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Logs the <code>Record</code>. <a href="../log/trait.Log.html#tymethod.log">Read more</a></p>
+</div><h4 id='method.flush' class="method"><span id='flush.v' class='invisible'><code>fn <a href='../log/trait.Log.html#tymethod.flush' class='fnname'>flush</a>(&amp;self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/env_logger/lib.rs.html#499' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Flushes any buffered records.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

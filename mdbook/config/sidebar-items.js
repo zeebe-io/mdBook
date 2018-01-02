@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["bookconfig",""],["htmlconfig",""],["jsonconfig",""],["playpenconfig",""],["tomlconfig",""]]});
+initSidebarItems({"struct":[["BookConfig","Configuration options which are specific to the book and required for loading it from disk."],["BuildConfig","Configuration for the build procedure."],["Config","The overall configuration object for MDBook."],["HtmlConfig",""],["Playpen","Configuration for tweaking how the the HTML renderer handles the playpen."]]});

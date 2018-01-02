@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.10/src/scoped.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.3.0/src/scoped.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>scoped.rs.html -- source</title>
@@ -318,6 +318,45 @@
 <span id="273">273</span>
 <span id="274">274</span>
 <span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">RefCell</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
@@ -326,8 +365,9 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::<span class="ident">Ordering</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">thread</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
-<span class="kw">use</span> {<span class="ident">spawn_unsafe</span>, <span class="ident">FnBox</span>};
+<span class="kw">use</span> {<span class="ident">builder_spawn_unsafe</span>, <span class="ident">FnBox</span>};
 <span class="kw">use</span> <span class="ident">sync</span>::<span class="ident">AtomicOption</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Scope</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -406,7 +446,7 @@
     <span class="kw">fn</span> <span class="ident">drop_all</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="kw">loop</span> {
             <span class="comment">// use a separate scope to ensure that the RefCell borrow</span>
-            <span class="comment">// is relinquishe before running `dtor`</span>
+            <span class="comment">// is relinquished before running `dtor`</span>
             <span class="kw">let</span> <span class="ident">dtor</span> <span class="op">=</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dtors</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dtors</span>.<span class="ident">borrow_mut</span>();
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">node</span>) <span class="op">=</span> <span class="ident">dtors</span>.<span class="ident">take</span>() {
@@ -511,7 +551,7 @@
     <span class="doccomment">/// let array = Arc::new([1, 2, 3]);</span>
     <span class="doccomment">/// let mut guards = vec![];</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// for i in (0..array.len()) {</span>
+    <span class="doccomment">/// for i in 0..array.len() {</span>
     <span class="doccomment">///     let a = array.clone();</span>
     <span class="doccomment">///</span>
     <span class="doccomment">///     let guard = std::thread::spawn(move || {</span>
@@ -550,29 +590,67 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">ScopedJoinHandle</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">FnOnce</span>() <span class="op">-&gt;</span> <span class="ident">T</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>
     {
+        <span class="self">self</span>.<span class="ident">builder</span>().<span class="ident">spawn</span>(<span class="ident">f</span>).<span class="ident">unwrap</span>()
+    }
+
+    <span class="doccomment">/// Generates the base configuration for spawning a scoped thread, from which configuration</span>
+    <span class="doccomment">/// methods can be chained.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScopedThreadBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">ScopedThreadBuilder</span> {
+            <span class="ident">scope</span>: <span class="self">self</span>,
+            <span class="ident">builder</span>: <span class="ident">thread</span>::<span class="ident">Builder</span>::<span class="ident">new</span>(),
+        }
+    }
+}
+
+<span class="doccomment">/// Scoped thread configuration. Provides detailed control over the properties and behavior of new</span>
+<span class="doccomment">/// scoped threads.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScopedThreadBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
+    <span class="ident">scope</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">Scope</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    <span class="ident">builder</span>: <span class="ident">thread</span>::<span class="ident">Builder</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;a</span>: <span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">ScopedThreadBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Names the thread-to-be. Currently the name is used for identification only in panic</span>
+    <span class="doccomment">/// messages.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="ident">ScopedThreadBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">builder</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">name</span>(<span class="ident">name</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the size of the stack for the new thread.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stack_size</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">ScopedThreadBuilder</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">builder</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">stack_size</span>(<span class="ident">size</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Spawns a new thread, and returns a join handle for it.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScopedJoinHandle</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>
+            <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>() <span class="op">-&gt;</span> <span class="ident">T</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>
+    {
         <span class="kw">let</span> <span class="ident">their_packet</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">AtomicOption</span>::<span class="ident">new</span>());
         <span class="kw">let</span> <span class="ident">my_packet</span> <span class="op">=</span> <span class="ident">their_packet</span>.<span class="ident">clone</span>();
 
-        <span class="kw">let</span> <span class="ident">join_handle</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-            <span class="ident">spawn_unsafe</span>(<span class="kw">move</span> <span class="op">||</span> {
+        <span class="kw">let</span> <span class="ident">join_handle</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="kw">unsafe</span> {
+            <span class="ident">builder_spawn_unsafe</span>(<span class="self">self</span>.<span class="ident">builder</span>, <span class="kw">move</span> <span class="op">||</span> {
                 <span class="ident">their_packet</span>.<span class="ident">swap</span>(<span class="ident">f</span>(), <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>);
             })
-        };
+        });
 
         <span class="kw">let</span> <span class="ident">thread</span> <span class="op">=</span> <span class="ident">join_handle</span>.<span class="ident">thread</span>().<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">deferred_handle</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">JoinState</span>::<span class="ident">Running</span>(<span class="ident">join_handle</span>)));
         <span class="kw">let</span> <span class="ident">my_handle</span> <span class="op">=</span> <span class="ident">deferred_handle</span>.<span class="ident">clone</span>();
 
-        <span class="self">self</span>.<span class="ident">defer</span>(<span class="kw">move</span> <span class="op">||</span> {
+        <span class="self">self</span>.<span class="ident">scope</span>.<span class="ident">defer</span>(<span class="kw">move</span> <span class="op">||</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">deferred_handle</span>.<span class="ident">borrow_mut</span>();
             <span class="ident">state</span>.<span class="ident">join</span>();
         });
 
-        <span class="ident">ScopedJoinHandle</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">ScopedJoinHandle</span> {
             <span class="ident">inner</span>: <span class="ident">my_handle</span>,
             <span class="ident">packet</span>: <span class="ident">my_packet</span>,
             <span class="ident">thread</span>: <span class="ident">thread</span>,
-        }
+        })
     }
 }
 

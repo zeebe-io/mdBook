@@ -49,23 +49,21 @@
         <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
         <script src="store.js"></script>
 
-        <!-- Custom JS script -->
-        
-
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = store.get('theme');
+            var theme = store.get('mdbook-theme');
             if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = store.get('sidebar');
-            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
-            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080)
+                sidebar = store.get('mdbook-sidebar') || 'visible';
+            $("html").addClass("sidebar-" + sidebar);
         </script>
 
         <div id="sidebar" class="sidebar">
@@ -75,21 +73,24 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page" tabindex="-1">
+                
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
-                        <i id="sidebar-toggle" class="fa fa-bars"></i>
-                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                        <i id="sidebar-toggle" class="fa fa-bars" title="Toggle sidebar"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush" title="Change theme"></i>
                     </div>
 
                     <h1 class="menu-title">mdBook Documentation</h1>
 
                     <div class="right-buttons">
-                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        <a href="print.html">
+                            <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="build.html#the build command" id="the build command"><h1>The build command</h1></a>
+                    <a class="header" href="cli/build.html#the-build-command" id="the-build-command"><h1>The build command</h1></a>
 <p>The build command is used to render your book:</p>
 <pre><code class="language-bash">mdbook build
 </code></pre>
@@ -97,34 +98,37 @@
 and fetch the corresponding files.</p>
 <p>The rendered output will maintain the same directory structure as the source for
 convenience. Large books will therefore remain structured when rendered.</p>
-<a class="header" href="build.html#specify a directory" id="specify a directory"><h4>Specify a directory</h4></a>
+<a class="header" href="cli/build.html#specify-a-directory" id="specify-a-directory"><h4>Specify a directory</h4></a>
 <p>Like <code>init</code>, the <code>build</code> command can take a directory as argument to use instead of the
 current working directory.</p>
 <pre><code class="language-bash">mdbook build path/to/book
 </code></pre>
-<a class="header" href="build.html#--open" id="--open"><h4>--open</h4></a>
+<a class="header" href="cli/build.html#--open" id="--open"><h4>--open</h4></a>
 <p>When you use the <code>--open</code> (<code>-o</code>) option, mdbook will open the rendered book in
 your default web browser after building it.</p>
-<a class="header" href="build.html#--dest-dir" id="--dest-dir"><h4>--dest-dir</h4></a>
+<a class="header" href="cli/build.html#--dest-dir" id="--dest-dir"><h4>--dest-dir</h4></a>
 <p>The <code>--dest-dir</code> (<code>-d</code>) option allows you to change the output directory for your book.</p>
 <hr />
 <p><strong><em>note:</em></strong> <em>make sure to run the build command in the root directory and not in the source directory</em></p>
 
+
+                    <div class="nav-wrapper">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="cli/init.html" class="mobile-nav-chapters previous" title="Previous chapter">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="cli/watch.html" class="mobile-nav-chapters next" title="Next chapter">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </div>
                 </div>
-
-                <!-- Mobile navigation buttons -->
-                
-                    <a rel="prev" href="cli/init.html" class="mobile-nav-chapters previous">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                
-
-                
-                    <a rel="next" href="cli/watch.html" class="mobile-nav-chapters next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                
-
             </div>
 
             
@@ -156,7 +160,13 @@ your default web browser after building it.</p>
 
         
 
+        
+
         <script src="highlight.js"></script>
         <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </body>
 </html>

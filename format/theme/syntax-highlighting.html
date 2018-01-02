@@ -49,23 +49,21 @@
         <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
         <script src="store.js"></script>
 
-        <!-- Custom JS script -->
-        
-
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = store.get('theme');
+            var theme = store.get('mdbook-theme');
             if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = store.get('sidebar');
-            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
-            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080)
+                sidebar = store.get('mdbook-sidebar') || 'visible';
+            $("html").addClass("sidebar-" + sidebar);
         </script>
 
         <div id="sidebar" class="sidebar">
@@ -75,21 +73,24 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page" tabindex="-1">
+                
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
-                        <i id="sidebar-toggle" class="fa fa-bars"></i>
-                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                        <i id="sidebar-toggle" class="fa fa-bars" title="Toggle sidebar"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush" title="Change theme"></i>
                     </div>
 
                     <h1 class="menu-title">mdBook Documentation</h1>
 
                     <div class="right-buttons">
-                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        <a href="print.html">
+                            <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="syntax-highlighting.html#syntax highlighting" id="syntax highlighting"><h1>Syntax Highlighting</h1></a>
+                    <a class="header" href="format/theme/syntax-highlighting.html#syntax-highlighting" id="syntax-highlighting"><h1>Syntax Highlighting</h1></a>
 <p>For syntax highlighting I use <a href="https://highlightjs.org">Highlight.js</a> with a custom theme.</p>
 <p>Automatic language detection has been turned off, so you will probably want to
 specify the programming language you use like this</p>
@@ -98,7 +99,7 @@ fn main() {
     // Some code
 }
 ```</code></pre>
-<a class="header" href="syntax-highlighting.html#custom theme" id="custom theme"><h2>Custom theme</h2></a>
+<a class="header" href="format/theme/syntax-highlighting.html#custom-theme" id="custom-theme"><h2>Custom theme</h2></a>
 <p>Like the rest of the theme, the files used for syntax highlighting can be overridden with your own.</p>
 <ul>
 <li><strong><em>highlight.js</em></strong> normally you shouldn't have to overwrite this file, unless you want to use a more recent version.</li>
@@ -107,7 +108,7 @@ fn main() {
 <p>If you want to use another theme for <code>highlight.js</code> download it from their website, or make it yourself,
 rename it to <code>highlight.css</code> and put it in <code>src/theme</code> (or the equivalent if you changed your source folder)</p>
 <p>Now your theme will be used instead of the default theme.</p>
-<a class="header" href="syntax-highlighting.html#hiding code lines" id="hiding code lines"><h2>Hiding code lines</h2></a>
+<a class="header" href="format/theme/syntax-highlighting.html#hiding-code-lines" id="hiding-code-lines"><h2>Hiding code lines</h2></a>
 <p>There is a feature in mdBook that let's you hide code lines by prepending them with a <code>#</code>.</p>
 <pre><code class="language-bash"># fn main() {
     let x = 5;
@@ -125,27 +126,30 @@ rename it to <code>highlight.css</code> and put it in <code>src/theme</code> (or
 # }
 </code></pre></pre>
 <p><strong>At the moment, this only works for code examples that are annotated with <code>rust</code>. Because it would collide with semantics of some programming languages. In the future, we want to make this configurable through the <code>book.toml</code> so that everyone can benefit from it.</strong></p>
-<a class="header" href="syntax-highlighting.html#improve default theme" id="improve default theme"><h2>Improve default theme</h2></a>
+<a class="header" href="format/theme/syntax-highlighting.html#improve-default-theme" id="improve-default-theme"><h2>Improve default theme</h2></a>
 <p>If you think the default theme doesn't look quite right for a specific language, or could be improved.
-Feel free to <a href="https://github.com/azerupi/mdBook/issues">submit a new issue</a> explaining what you have in mind and I will take a look at it.</p>
+Feel free to <a href="https://github.com/rust-lang-nursery/mdBook/issues">submit a new issue</a> explaining what you have in mind and I will take a look at it.</p>
 <p>You could also create a pull-request with the proposed improvements.</p>
 <p>Overall the theme should be light and sober, without to many flashy colors.</p>
 
+
+                    <div class="nav-wrapper">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="format/theme/index-hbs.html" class="mobile-nav-chapters previous" title="Previous chapter">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="format/mathjax.html" class="mobile-nav-chapters next" title="Next chapter">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </div>
                 </div>
-
-                <!-- Mobile navigation buttons -->
-                
-                    <a rel="prev" href="format/theme/index-hbs.html" class="mobile-nav-chapters previous">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                
-
-                
-                    <a rel="next" href="format/mathjax.html" class="mobile-nav-chapters next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                
-
             </div>
 
             
@@ -177,7 +181,13 @@ Feel free to <a href="https://github.com/azerupi/mdBook/issues">submit a new iss
 
         
 
+        
+
         <script src="highlight.js"></script>
         <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </body>
 </html>

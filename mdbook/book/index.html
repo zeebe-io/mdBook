@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Module book</p><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../index.html'>mdbook</a></p><script>window.sidebarCurrent = {name: 'book', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module book</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>mdbook</a></p><script>window.sidebarCurrent = {name: 'book', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -48,23 +48,101 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/mdbook/book/mod.rs.html#1-522' title='goto source code'>[src]</a></span></h1>
-<h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use self::<a class="mod" href="./bookitem/index.html">bookitem</a>::<a class="enum" href="../../mdbook/book/bookitem/enum.BookItem.html" title="enum mdbook::book::bookitem::BookItem">BookItem</a>;</code></td></tr><tr><td><code>pub use self::<a class="mod" href="./bookitem/index.html">bookitem</a>::<a class="struct" href="../../mdbook/book/bookitem/struct.BookItems.html" title="struct mdbook::book::bookitem::BookItems">BookItems</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+               </span><a class='srclink' href='../../src/mdbook/book/mod.rs.html#1-237' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>The internal representation of a book and infrastructure for loading it from
+disk and building it.</p>
+
+<p>For examples on using <code>MDBook</code>, consult the <a href="../index.html">top-level documentation</a>.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="mod" href="bookitem/index.html"
-                                  title='mod mdbook::book::bookitem'>bookitem</a></td>
+                           <td><a class="struct" href="struct.Book.html"
+                                  title='struct mdbook::book::Book'>Book</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A dumb tree structure representing a book.</p>
                            </td>
-                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BookBuilder.html"
+                                  title='struct mdbook::book::BookBuilder'>BookBuilder</a></td>
+                           <td class='docblock-short'>
+                                <p>A helper for setting up a new book and its directory structure.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.BookItems.html"
+                                  title='struct mdbook::book::BookItems'>BookItems</a></td>
+                           <td class='docblock-short'>
+                                <p>A depth-first iterator over the items in a book.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Chapter.html"
+                                  title='struct mdbook::book::Chapter'>Chapter</a></td>
+                           <td class='docblock-short'>
+                                <p>The representation of a &quot;chapter&quot;, usually mapping to a single file on
+disk however it may contain multiple sub-chapters.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Link.html"
+                                  title='struct mdbook::book::Link'>Link</a></td>
+                           <td class='docblock-short'>
+                                <p>A struct representing an entry in the <code>SUMMARY.md</code>, possibly with nested
+entries.</p>
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class="struct" href="struct.MDBook.html"
                                   title='struct mdbook::book::MDBook'>MDBook</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>The object used to manage and build a book.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.SectionNumber.html"
+                                  title='struct mdbook::book::SectionNumber'>SectionNumber</a></td>
+                           <td class='docblock-short'>
+                                <p>A section number like &quot;1.2.3&quot;, basically just a newtype&#39;d <code>Vec&lt;u32&gt;</code> with
+a pretty <code>Display</code> impl.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Summary.html"
+                                  title='struct mdbook::book::Summary'>Summary</a></td>
+                           <td class='docblock-short'>
+                                <p>The parsed <code>SUMMARY.md</code>, specifying how the book should be laid out.</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.BookItem.html"
+                                  title='enum mdbook::book::BookItem'>BookItem</a></td>
+                           <td class='docblock-short'>
+                                <p>Enum representing any type of item which can be added to a book.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.SummaryItem.html"
+                                  title='enum mdbook::book::SummaryItem'>SummaryItem</a></td>
+                           <td class='docblock-short'>
+                                <p>An item in <code>SUMMARY.md</code> which could be either a separator or a <code>Link</code>.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.load_book.html"
+                                  title='fn mdbook::book::load_book'>load_book</a></td>
+                           <td class='docblock-short'>
+                                <p>Load a book into memory from its <code>src/</code> directory.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.parse_summary.html"
+                                  title='fn mdbook::book::parse_summary'>parse_summary</a></td>
+                           <td class='docblock-short'>
+                                <p>Parse the text from a <code>SUMMARY.md</code> file into a sort of &quot;recipe&quot; to be
+used when loading a book from disk.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

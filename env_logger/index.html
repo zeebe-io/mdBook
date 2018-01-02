@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         <a href='../env_logger/index.html'><img src='http://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
-        <p class='location'>Crate env_logger</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'env_logger', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate env_logger</p><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'env_logger', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -48,24 +48,25 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/env_logger/lib.rs.html#11-652' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>A logger configured via an environment variable which writes to standard
-error.</p>
+               </span><a class='srclink' href='../src/env_logger/lib.rs.html#11-582' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>A simple logger configured via an environment variable which writes 
+to stdout or stderr, for use with the logging facade exposed by the
+<a href="https://docs.rs/log/"><code>log</code> crate</a>.</p>
 
 <h2 id='example' class='section-header'><a href='#example'>Example</a></h2>
 <pre class="rust rust-example-rendered">
 <span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">env_logger</span>;
 
-<span class="kw">use</span> <span class="ident">log</span>::<span class="ident">LogLevel</span>;
+<span class="kw">use</span> <span class="ident">log</span>::<span class="ident">Level</span>;
 
 <span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="ident">env_logger</span>::<span class="ident">init</span>().<span class="ident">unwrap</span>();
+    <span class="ident">env_logger</span>::<span class="ident">init</span>();
 
     <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;this is a debug {}&quot;</span>, <span class="string">&quot;message&quot;</span>);
     <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;this is printed by default&quot;</span>);
 
-    <span class="kw">if</span> <span class="macro">log_enabled</span><span class="macro">!</span>(<span class="ident">LogLevel</span>::<span class="ident">Info</span>) {
+    <span class="kw">if</span> <span class="macro">log_enabled</span><span class="macro">!</span>(<span class="ident">Level</span>::<span class="ident">Info</span>) {
         <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">3</span> <span class="op">*</span> <span class="number">4</span>; <span class="comment">// expensive computation</span>
         <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;the answer was: {}&quot;</span>, <span class="ident">x</span>);
     }
@@ -74,36 +75,37 @@ error.</p>
 <p>Assumes the binary is <code>main</code>:</p>
 
 <pre><code class="language-{.bash}">$ RUST_LOG=error ./main
-ERROR:main: this is printed by default
+ERROR: 2017-11-09T02:12:24Z: main: this is printed by default
 </code></pre>
 
 <pre><code class="language-{.bash}">$ RUST_LOG=info ./main
-ERROR:main: this is printed by default
-INFO:main: the answer was: 12
+ERROR: 2017-11-09T02:12:24Z: main: this is printed by default
+INFO: 2017-11-09T02:12:24Z: main: the answer was: 12
 </code></pre>
 
 <pre><code class="language-{.bash}">$ RUST_LOG=debug ./main
-DEBUG:main: this is a debug message
-ERROR:main: this is printed by default
-INFO:main: the answer was: 12
+DEBUG: 2017-11-09T02:12:24Z: main: this is a debug message
+ERROR: 2017-11-09T02:12:24Z: main: this is printed by default
+INFO: 2017-11-09T02:12:24Z: main: the answer was: 12
 </code></pre>
 
 <p>You can also set the log level on a per module basis:</p>
 
 <pre><code class="language-{.bash}">$ RUST_LOG=main=info ./main
-ERROR:main: this is printed by default
-INFO:main: the answer was: 12
+ERROR: 2017-11-09T02:12:24Z: main: this is printed by default
+INFO: 2017-11-09T02:12:24Z: main: the answer was: 12
 </code></pre>
 
 <p>And enable all logging:</p>
 
 <pre><code class="language-{.bash}">$ RUST_LOG=main ./main
-DEBUG:main: this is a debug message
-ERROR:main: this is printed by default
-INFO:main: the answer was: 12
+DEBUG: 2017-11-09T02:12:24Z: main: this is a debug message
+ERROR: 2017-11-09T02:12:24Z: main: this is printed by default
+INFO: 2017-11-09T02:12:24Z: main: the answer was: 12
 </code></pre>
 
-<p>See the documentation for the log crate for more information about its API.</p>
+<p>See the documentation for the <a href="https://docs.rs/log/"><code>log</code> crate</a> for more
+information about its API.</p>
 
 <h2 id='enabling-logging' class='section-header'><a href='#enabling-logging'>Enabling logging</a></h2>
 <p>Log levels are controlled on a per-module basis, and by default all logging
@@ -112,7 +114,7 @@ environment variable. The value of this environment variable is a
 comma-separated list of logging directives. A logging directive is of the
 form:</p>
 
-<pre><code class="language-text">path::to::module=log_level
+<pre><code class="language-text">path::to::module=level
 </code></pre>
 
 <p>The path to the module is rooted in the name of the crate it was compiled
@@ -121,12 +123,12 @@ turn on logging for this file you would use a value of <code>RUST_LOG=hello</cod
 Furthermore, this path is a prefix-search, so all modules nested in the
 specified module will also have logging enabled.</p>
 
-<p>The actual <code>log_level</code> is optional to specify. If omitted, all logging will
+<p>The actual <code>level</code> is optional to specify. If omitted, all logging will
 be enabled. If specified, it must be one of the strings <code>debug</code>, <code>error</code>,
 <code>info</code>, <code>warn</code>, or <code>trace</code>.</p>
 
 <p>As the log level for a module is optional, the module to enable logging for
-is also optional. If only a <code>log_level</code> is provided, then the global log
+is also optional. If only a <code>level</code> is provided, then the global log
 level for all modules is set to this value.</p>
 
 <p>Some examples of valid values of <code>RUST_LOG</code> are:</p>
@@ -140,7 +142,7 @@ level for all modules is set to this value.</p>
 </ul>
 
 <h2 id='filtering-results' class='section-header'><a href='#filtering-results'>Filtering results</a></h2>
-<p>A RUST_LOG directive may include a regex filter. The syntax is to append <code>/</code>
+<p>A <code>RUST_LOG</code> directive may include a regex filter. The syntax is to append <code>/</code>
 followed by a regex. Each message is checked against the regex, and is only
 logged if it matches. Note that the matching is done after formatting the
 log string but before adding any logging meta-data. There is a single filter
@@ -155,32 +157,45 @@ message includes &#39;foo&#39;.</li>
 &#39;f1o&#39;, &#39;fao&#39;, etc.</li>
 <li><code>hello=debug/foo*foo</code> turns on debug logging for &#39;hello&#39; where the log
 message includes &#39;foofoo&#39; or &#39;fofoo&#39; or &#39;fooooooofoo&#39;, etc.</li>
-<li><code>error,hello=warn/[0-9] scopes</code> turn on global error logging and also
+<li><code>error,hello=warn/[0-9]scopes</code> turn on global error logging and also
 warn for hello. In both cases the log message must include a single digit
 number followed by &#39;scopes&#39;.</li>
 </ul>
-</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.LogBuilder.html"
-                                  title='struct env_logger::LogBuilder'>LogBuilder</a></td>
+                           <td><a class="mod" href="filter/index.html"
+                                  title='mod env_logger::filter'>filter</a></td>
                            <td class='docblock-short'>
-                                <p>LogBuilder acts as builder for initializing the Logger.
-It can be used to customize the log format, change the enviromental variable used
-to provide the logging directives and also set the default log level filter.</p>
+                                <p>Filtering for log records.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="fmt/index.html"
+                                  title='mod env_logger::fmt'>fmt</a></td>
+                           <td class='docblock-short'>
+                                <p>Formatting for log records.</p>
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Builder.html"
+                                  title='struct env_logger::Builder'>Builder</a></td>
+                           <td class='docblock-short'>
+                                <p><code>Builder</code> acts as builder for initializing a <code>Logger</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="struct" href="struct.Logger.html"
                                   title='struct env_logger::Logger'>Logger</a></td>
                            <td class='docblock-short'>
-                                <p>The logger.</p>
+                                <p>The env logger.</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.LogTarget.html"
-                                  title='enum env_logger::LogTarget'>LogTarget</a></td>
+                           <td><a class="enum" href="enum.Target.html"
+                                  title='enum env_logger::Target'>Target</a></td>
                            <td class='docblock-short'>
                                 <p>Log target, either stdout or stderr.</p>
                            </td>
@@ -191,6 +206,29 @@ to provide the logging directives and also set the default log level filter.</p>
                                   title='fn env_logger::init'>init</a></td>
                            <td class='docblock-short'>
                                 <p>Initializes the global logger with an env logger.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.init_from_env.html"
+                                  title='fn env_logger::init_from_env'>init_from_env</a></td>
+                           <td class='docblock-short'>
+                                <p>Initializes the global logger with an env logger from the given environment
+variable.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.try_init.html"
+                                  title='fn env_logger::try_init'>try_init</a></td>
+                           <td class='docblock-short'>
+                                <p>Attempts to initialize the global logger with an env logger.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.try_init_from_env.html"
+                                  title='fn env_logger::try_init_from_env'>try_init_from_env</a></td>
+                           <td class='docblock-short'>
+                                <p>Attempts to initialize the global logger with an env logger from the given
+environment variable.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

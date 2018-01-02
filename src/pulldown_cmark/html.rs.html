@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/pulldown-cmark-0.0.14/src/html.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/git/checkouts/pulldown-cmark-fb4e4912891a85f5/c1ac912/src/html.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>html.rs.html -- source</title>
@@ -300,6 +300,33 @@
 <span id="255">255</span>
 <span id="256">256</span>
 <span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015 Google Inc. All rights reserved.</span>
 <span class="comment">//</span>
@@ -548,6 +575,33 @@
     }
 }
 
+<span class="doccomment">/// Iterate over an `Iterator` of `Event`s, generate HTML for each `Event`, and</span>
+<span class="doccomment">/// push it to a `String`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use pulldown_cmark::{html, Parser};</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let markdown_str = r#&quot;</span>
+<span class="doccomment">/// hello</span>
+<span class="doccomment">/// =====</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * alpha</span>
+<span class="doccomment">/// * beta</span>
+<span class="doccomment">/// &quot;#;</span>
+<span class="doccomment">/// let parser = Parser::new(markdown_str);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut html_buf = String::new();</span>
+<span class="doccomment">/// html::push_html(&amp;mut html_buf, parser);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(html_buf, r#&quot;&lt;h1&gt;hello&lt;/h1&gt;</span>
+<span class="doccomment">/// &lt;ul&gt;</span>
+<span class="doccomment">/// &lt;li&gt;alpha&lt;/li&gt;</span>
+<span class="doccomment">/// &lt;li&gt;beta&lt;/li&gt;</span>
+<span class="doccomment">/// &lt;/ul&gt;</span>
+<span class="doccomment">/// &quot;#);</span>
+<span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_html</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">String</span>, <span class="ident">iter</span>: <span class="ident">I</span>) {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">Ctx</span> {
         <span class="ident">iter</span>: <span class="ident">iter</span>,

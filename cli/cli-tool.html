@@ -49,23 +49,21 @@
         <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
         <script src="store.js"></script>
 
-        <!-- Custom JS script -->
-        
-
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = store.get('theme');
+            var theme = store.get('mdbook-theme');
             if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = store.get('sidebar');
-            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
-            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080)
+                sidebar = store.get('mdbook-sidebar') || 'visible';
+            $("html").addClass("sidebar-" + sidebar);
         </script>
 
         <div id="sidebar" class="sidebar">
@@ -75,55 +73,61 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page" tabindex="-1">
+                
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
-                        <i id="sidebar-toggle" class="fa fa-bars"></i>
-                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                        <i id="sidebar-toggle" class="fa fa-bars" title="Toggle sidebar"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush" title="Change theme"></i>
                     </div>
 
                     <h1 class="menu-title">mdBook Documentation</h1>
 
                     <div class="right-buttons">
-                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        <a href="print.html">
+                            <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="cli-tool.html#command line tool" id="command line tool"><h1>Command Line Tool</h1></a>
+                    <a class="header" href="cli/cli-tool.html#command-line-tool" id="command-line-tool"><h1>Command Line Tool</h1></a>
 <p>mdBook can be used either as a command line tool or a <a href="https://crates.io/crates/mdbook">Rust crate</a>.
 Let's focus on the command line tool capabilities first.</p>
-<a class="header" href="cli-tool.html#install" id="install"><h2>Install</h2></a>
-<a class="header" href="cli-tool.html#pre-requisite" id="pre-requisite"><h3>Pre-requisite</h3></a>
+<a class="header" href="cli/cli-tool.html#install" id="install"><h2>Install</h2></a>
+<a class="header" href="cli/cli-tool.html#pre-requisite" id="pre-requisite"><h3>Pre-requisite</h3></a>
 <p>mdBook is written in <strong><a href="https://www.rust-lang.org/">Rust</a></strong> and therefore needs to be compiled with <strong>Cargo</strong>, because we don't yet offer ready-to-go binaries. If you haven't already installed Rust, please go ahead and <a href="https://www.rust-lang.org/downloads.html">install it</a> now.</p>
-<a class="header" href="cli-tool.html#install cratesio version" id="install cratesio version"><h3>Install Crates.io version</h3></a>
+<a class="header" href="cli/cli-tool.html#install-cratesio-version" id="install-cratesio-version"><h3>Install Crates.io version</h3></a>
 <p>Installing mdBook is relatively easy if you already have Rust and Cargo installed. You just have to type this snippet in your terminal:</p>
 <pre><code class="language-bash">cargo install mdbook
 </code></pre>
 <p>This will fetch the source code from <a href="https://crates.io/">Crates.io</a> and compile it. You will have to add Cargo's <code>bin</code> directory to your <code>PATH</code>.</p>
 <p>Run <code>mdbook help</code> in your terminal to verify if it works. Congratulations, you have installed mdBook!</p>
-<a class="header" href="cli-tool.html#install git version" id="install git version"><h3>Install Git version</h3></a>
-<p>The <strong><a href="https://github.com/azerupi/mdBook">git version</a></strong> contains all the latest bug-fixes and features, that will be released in the next version on <strong>Crates.io</strong>, if you can't wait until the next release. You can build the git version yourself. Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
-<pre><code class="language-bash">git clone --depth=1 https://github.com/azerupi/mdBook.git
+<a class="header" href="cli/cli-tool.html#install-git-version" id="install-git-version"><h3>Install Git version</h3></a>
+<p>The <strong><a href="https://github.com/rust-lang-nursery/mdBook">git version</a></strong> contains all the latest bug-fixes and features, that will be released in the next version on <strong>Crates.io</strong>, if you can't wait until the next release. You can build the git version yourself. Open your terminal and navigate to the directory of you choice. We need to clone the git repository and then build it with Cargo.</p>
+<pre><code class="language-bash">git clone --depth=1 https://github.com/rust-lang-nursery/mdBook.git
 cd mdBook
 cargo build --release
 </code></pre>
 <p>The executable <code>mdbook</code> will be in the <code>./target/release</code> folder, this should be added to the path.</p>
 
+
+                    <div class="nav-wrapper">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="README.html" class="mobile-nav-chapters previous" title="Previous chapter">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="cli/init.html" class="mobile-nav-chapters next" title="Next chapter">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </div>
                 </div>
-
-                <!-- Mobile navigation buttons -->
-                
-                    <a rel="prev" href="README.html" class="mobile-nav-chapters previous">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                
-
-                
-                    <a rel="next" href="cli/init.html" class="mobile-nav-chapters next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                
-
             </div>
 
             
@@ -155,7 +159,13 @@ cargo build --release
 
         
 
+        
+
         <script src="highlight.js"></script>
         <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </body>
 </html>

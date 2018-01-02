@@ -51,16 +51,18 @@
                </span><a class='srclink' href='../src/notify/lib.rs.html#512-568' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Watcher: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a> {
     fn <a href='#tymethod.new_raw' class='fnname'>new_raw</a>(tx: <a class="struct" href="https://doc.rust-lang.org/nightly/std/sync/mpsc/struct.Sender.html" title="struct std::sync::mpsc::Sender">Sender</a>&lt;<a class="struct" href="../notify/struct.RawEvent.html" title="struct notify::RawEvent">RawEvent</a>&gt;) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;Self&gt;;
-    fn <a href='#tymethod.new' class='fnname'>new</a>(tx: <a class="struct" href="https://doc.rust-lang.org/nightly/std/sync/mpsc/struct.Sender.html" title="struct std::sync::mpsc::Sender">Sender</a>&lt;<a class="enum" href="../notify/enum.DebouncedEvent.html" title="enum notify::DebouncedEvent">DebouncedEvent</a>&gt;, delay: <a class="struct" href="https://doc.rust-lang.org/nightly/std/time/duration/struct.Duration.html" title="struct std::time::duration::Duration">Duration</a>) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;Self&gt;;
-    fn <a href='#tymethod.watch' class='fnname'>watch</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recursive_mode: <a class="enum" href="../notify/enum.RecursiveMode.html" title="enum notify::RecursiveMode">RecursiveMode</a><br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;;
-    fn <a href='#tymethod.unwatch' class='fnname'>unwatch</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(&amp;mut self, path: P) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;;
+<div class='item-spacer'></div>    fn <a href='#tymethod.new' class='fnname'>new</a>(tx: <a class="struct" href="https://doc.rust-lang.org/nightly/std/sync/mpsc/struct.Sender.html" title="struct std::sync::mpsc::Sender">Sender</a>&lt;<a class="enum" href="../notify/enum.DebouncedEvent.html" title="enum notify::DebouncedEvent">DebouncedEvent</a>&gt;, delay: <a class="struct" href="https://doc.rust-lang.org/nightly/std/time/duration/struct.Duration.html" title="struct std::time::duration::Duration">Duration</a>) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;Self&gt;;
+<div class='item-spacer'></div>    fn <a href='#tymethod.watch' class='fnname'>watch</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recursive_mode: <a class="enum" href="../notify/enum.RecursiveMode.html" title="enum notify::RecursiveMode">RecursiveMode</a><br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;;
+<div class='item-spacer'></div>    fn <a href='#tymethod.unwatch' class='fnname'>unwatch</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(&amp;mut self, path: P) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;;
 }</pre><div class='docblock'><p>Type that can deliver file activity notifications</p>
 
 <p>Watcher is implemented per platform using the best implementation available on that platform.
 In addition to such event driven implementations, a polling implementation is also provided
 that should work on any platform.</p>
 </div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
         <h3 id='tymethod.new_raw' class='method'><span id='new_raw.v' class='invisible'><code>fn <a href='#tymethod.new_raw' class='fnname'>new_raw</a>(tx: <a class="struct" href="https://doc.rust-lang.org/nightly/std/sync/mpsc/struct.Sender.html" title="struct std::sync::mpsc::Sender">Sender</a>&lt;<a class="struct" href="../notify/struct.RawEvent.html" title="struct notify::RawEvent">RawEvent</a>&gt;) -&gt; <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;Self&gt;</code></span></h3><div class='docblock'><p>Create a new watcher in <em>raw</em> mode.</p>
 
@@ -107,11 +109,13 @@ for the file.</p>
 <p>Returns an error in the case that <code>path</code> has not been watched or if removing the watch
 fails.</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl Watcher for <a class="struct" href="../notify/inotify/struct.INotifyWatcher.html" title="struct notify::inotify::INotifyWatcher">INotifyWatcher</a></code></li>
-<li><code>impl Watcher for <a class="struct" href="../notify/null/struct.NullWatcher.html" title="struct notify::null::NullWatcher">NullWatcher</a></code></li>
-<li><code>impl Watcher for <a class="struct" href="../notify/poll/struct.PollWatcher.html" title="struct notify::poll::PollWatcher">PollWatcher</a></code></li>
+    <li><div class='out-of-band'><a class='srclink' href='../src/notify/inotify/mod.rs.html#363-466' title='goto source code'>[src]</a></div><code>impl Watcher for <a class="struct" href="../notify/inotify/struct.INotifyWatcher.html" title="struct notify::inotify::INotifyWatcher">INotifyWatcher</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../src/notify/null.rs.html#15-31' title='goto source code'>[src]</a></div><code>impl Watcher for <a class="struct" href="../notify/null/struct.NullWatcher.html" title="struct notify::null::NullWatcher">NullWatcher</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../src/notify/poll.rs.html#176-274' title='goto source code'>[src]</a></div><code>impl Watcher for <a class="struct" href="../notify/poll/struct.PollWatcher.html" title="struct notify::poll::PollWatcher">PollWatcher</a></code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/notify/trait.Watcher.js">
                  </script></section>

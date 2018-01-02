@@ -368,14 +368,14 @@ result.</p>
 <p>Let&#39;s start by defining the signature of the <code>compute</code> matcher that will do the computation. We
 need it to return an <code>i32</code> in the end.</p>
 
-<pre class="rust rust-example-rendered">
+<div class='information'><div class='tooltip ignore'>⚠<span class='tooltiptext'>Be careful when using this code, it's not being tested!</span></div></div><pre class="rust rust-example-rendered ignore">
 <span class="ident">compute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span></pre>
 
 <p>Now all we need to do is to write the three cases of interest, namely <code>number</code>, <code>addition</code>, and
 <code>multiplication</code>. <code>number</code> is captured (its <code>&amp;str</code> is being sliced from the <code>Input</code>) with the
 <code>&amp;</code> pattern and then parsed to an <code>i32</code>.</p>
 
-<pre class="rust rust-example-rendered">
+<div class='information'><div class='tooltip ignore'>⚠<span class='tooltiptext'>Be careful when using this code, it's not being tested!</span></div></div><pre class="rust rust-example-rendered ignore">
 (<span class="kw-2">&amp;</span><span class="ident">number</span>: <span class="ident">number</span>) <span class="op">=&gt;</span> <span class="ident">number</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()</pre>
 
 <p><code>addition</code> and <code>multiplication</code> are virtually identical:</p>
@@ -388,7 +388,7 @@ need it to return an <code>i32</code> in the end.</p>
 <li>match <code>sign</code> inside the block and return the appropriate result</li>
 </ul>
 
-<pre class="rust rust-example-rendered">
+<div class='information'><div class='tooltip ignore'>⚠<span class='tooltiptext'>Be careful when using this code, it's not being tested!</span></div></div><pre class="rust rust-example-rendered ignore">
 (_: <span class="ident">addition</span>, <span class="ident">left</span>: <span class="ident">compute</span>(), <span class="ident">sign</span>, <span class="ident">right</span>: <span class="ident">compute</span>()) <span class="op">=&gt;</span> {
     <span class="kw">match</span> <span class="ident">sign</span>.<span class="ident">rule</span> {
         <span class="ident">Rule</span>::<span class="ident">plus</span>  <span class="op">=&gt;</span> <span class="ident">left</span> <span class="op">+</span> <span class="ident">right</span>,

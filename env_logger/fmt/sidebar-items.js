@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Formatter","A formatter to write logs into."]]});

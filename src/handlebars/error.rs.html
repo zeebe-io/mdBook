@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.27.0/src/error.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/error.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>error.rs.html -- source</title>
@@ -223,34 +223,67 @@
 <span id="178">178</span>
 <span id="179">179</span>
 <span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IOError</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
+<span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">SerdeError</span>;
+
 <span class="kw">use</span> <span class="ident">template</span>::<span class="ident">Parameter</span>;
 
 <span class="doccomment">/// Error when rendering data on template.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RenderError</span> {
     <span class="kw">pub</span> <span class="ident">desc</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">template_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">line_no</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">column_no</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">RenderError</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">line_no</span>, <span class="self">self</span>.<span class="ident">column_no</span>) {
             (<span class="prelude-val">Some</span>(<span class="ident">line</span>), <span class="prelude-val">Some</span>(<span class="ident">col</span>)) <span class="op">=&gt;</span> {
-                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>,
-                       <span class="string">&quot;Error rendering \&quot;{}\&quot; line {}, col {}: {}&quot;</span>,
-                       <span class="self">self</span>.<span class="ident">template_name</span>
-                           .<span class="ident">as_ref</span>()
-                           .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>()),
-                       <span class="ident">line</span>,
-                       <span class="ident">col</span>,
-                       <span class="self">self</span>.<span class="ident">desc</span>)
+                <span class="macro">write</span><span class="macro">!</span>(
+                    <span class="ident">f</span>,
+                    <span class="string">&quot;Error rendering \&quot;{}\&quot; line {}, col {}: {}&quot;</span>,
+                    <span class="self">self</span>.<span class="ident">template_name</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(
+                        <span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>(),
+                    ),
+                    <span class="ident">line</span>,
+                    <span class="ident">col</span>,
+                    <span class="self">self</span>.<span class="ident">desc</span>
+                )
             }
             _ <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">desc</span>),
         }
@@ -262,11 +295,21 @@
     <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">desc</span>[..]
     }
+
+    <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">cause</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">e</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">Error</span>)
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">IOError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RenderError</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(_: <span class="ident">IOError</span>) <span class="op">-&gt;</span> <span class="ident">RenderError</span> {
-        <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;IO Error&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">IOError</span>) <span class="op">-&gt;</span> <span class="ident">RenderError</span> {
+        <span class="ident">RenderError</span>::<span class="ident">with</span>(<span class="ident">e</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">SerdeError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RenderError</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">e</span>: <span class="ident">SerdeError</span>) <span class="op">-&gt;</span> <span class="ident">RenderError</span> {
+        <span class="ident">RenderError</span>::<span class="ident">with</span>(<span class="ident">e</span>)
     }
 }
 
@@ -277,7 +320,18 @@
             <span class="ident">template_name</span>: <span class="prelude-val">None</span>,
             <span class="ident">line_no</span>: <span class="prelude-val">None</span>,
             <span class="ident">column_no</span>: <span class="prelude-val">None</span>,
+            <span class="ident">cause</span>: <span class="prelude-val">None</span>,
         }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">RenderError</span>
+    <span class="kw">where</span>
+        <span class="ident">E</span>: <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e</span> <span class="op">=</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="ident">cause</span>.<span class="ident">description</span>());
+        <span class="ident">e</span>.<span class="ident">cause</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">cause</span>));
+
+        <span class="ident">e</span>
     }
 }
 
@@ -351,14 +405,16 @@
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">line_no</span>, <span class="self">self</span>.<span class="ident">column_no</span>) {
             (<span class="prelude-val">Some</span>(<span class="ident">line</span>), <span class="prelude-val">Some</span>(<span class="ident">col</span>)) <span class="op">=&gt;</span> {
-                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>,
-                       <span class="string">&quot;Template \&quot;{}\&quot; line {}, col {}: {}&quot;</span>,
-                       <span class="self">self</span>.<span class="ident">template_name</span>
-                           .<span class="ident">as_ref</span>()
-                           .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>()),
-                       <span class="ident">line</span>,
-                       <span class="ident">col</span>,
-                       <span class="self">self</span>.<span class="ident">reason</span>)
+                <span class="macro">write</span><span class="macro">!</span>(
+                    <span class="ident">f</span>,
+                    <span class="string">&quot;Template \&quot;{}\&quot; line {}, col {}: {}&quot;</span>,
+                    <span class="self">self</span>.<span class="ident">template_name</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(
+                        <span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>(),
+                    ),
+                    <span class="ident">line</span>,
+                    <span class="ident">col</span>,
+                    <span class="self">self</span>.<span class="ident">reason</span>
+                )
             }
             _ <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">reason</span>),
         }

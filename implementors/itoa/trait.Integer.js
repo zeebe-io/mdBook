@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["handlebars"] = [];
 implementors["itoa"] = [];
 
             if (window.register_implementors) {

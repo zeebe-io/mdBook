@@ -49,23 +49,21 @@
         <!-- Fetch store.js from local - TODO add CDN when 2.x.x is available on cdnjs -->
         <script src="store.js"></script>
 
-        <!-- Custom JS script -->
-        
-
     </head>
     <body class="light">
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script type="text/javascript">
-            var theme = store.get('theme');
+            var theme = store.get('mdbook-theme');
             if (theme === null || theme === undefined) { theme = 'light'; }
             $('body').removeClass().addClass(theme);
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script type="text/javascript">
-            var sidebar = store.get('sidebar');
-            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
-            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080)
+                sidebar = store.get('mdbook-sidebar') || 'visible';
+            $("html").addClass("sidebar-" + sidebar);
         </script>
 
         <div id="sidebar" class="sidebar">
@@ -75,109 +73,177 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page" tabindex="-1">
+                
                 <div id="menu-bar" class="menu-bar">
                     <div class="left-buttons">
-                        <i id="sidebar-toggle" class="fa fa-bars"></i>
-                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                        <i id="sidebar-toggle" class="fa fa-bars" title="Toggle sidebar"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush" title="Change theme"></i>
                     </div>
 
                     <h1 class="menu-title">mdBook Documentation</h1>
 
                     <div class="right-buttons">
-                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        <a href="print.html">
+                            <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div id="content" class="content">
-                    <a class="header" href="config.html#configuration" id="configuration"><h1>Configuration</h1></a>
+                    <a class="header" href="format/config.html#configuration" id="configuration"><h1>Configuration</h1></a>
 <p>You can configure the parameters for your book in the <strong><em>book.toml</em></strong> file.</p>
-<blockquote>
-<p><strong>Note:</strong><br />
-JSON configuration files were previously supported but have been deprecated in favor of
-the TOML configuration file. If you are still using JSON we strongly encourage you to migrate to
-the TOML configuration because JSON support will be removed in the future.</p>
-</blockquote>
 <p>Here is an example of what a <strong><em>book.toml</em></strong> file might look like:</p>
-<pre><code class="language-toml">title = &quot;Example book&quot;
+<pre><code class="language-toml">[book]
+title = &quot;Example book&quot;
 author = &quot;John Doe&quot;
 description = &quot;The example book covers examples.&quot;
 
+[build]
+build-dir = &quot;my-example-book&quot;
+create-missing = false
+
 [output.html]
-destination = &quot;my-example-book&quot;
 additional-css = [&quot;custom.css&quot;]
 </code></pre>
-<a class="header" href="config.html#supported configuration options" id="supported configuration options"><h2>Supported configuration options</h2></a>
+<a class="header" href="format/config.html#supported-configuration-options" id="supported-configuration-options"><h2>Supported configuration options</h2></a>
 <p>It is important to note that <strong>any</strong> relative path specified in the in the configuration will
 always be taken relative from the root of the book where the configuration file is located.</p>
-<a class="header" href="config.html#general metadata" id="general metadata"><h3>General metadata</h3></a>
+<a class="header" href="format/config.html#general-metadata" id="general-metadata"><h3>General metadata</h3></a>
+<p>This is general information about your book.</p>
 <ul>
 <li><strong>title:</strong> The title of the book</li>
-<li><strong>author:</strong> The author of the book</li>
-<li><strong>description:</strong> A description for the book, which is added as meta information in the html <code>&lt;head&gt;</code> of each page</li>
+<li><strong>authors:</strong> The author(s) of the book</li>
+<li><strong>description:</strong> A description for the book, which is added as meta
+information in the html <code>&lt;head&gt;</code> of each page</li>
+<li><strong>src:</strong> By default, the source directory is found in the directory named
+<code>src</code> directly under the root folder. But this is configurable with the <code>src</code>
+key in the configuration file.</li>
 </ul>
 <p><strong>book.toml</strong></p>
-<pre><code class="language-toml">title = &quot;Example book&quot;
-author = &quot;John Doe&quot;
-description = &quot;The example book covers examples.&quot;
-</code></pre>
-<p>Some books may have multiple authors, there is an alternative key called <code>authors</code> plural that lets you specify an array
-of authors.</p>
-<p><strong>book.toml</strong></p>
-<pre><code class="language-toml">title = &quot;Example book&quot;
+<pre><code class="language-toml">[book]
+title = &quot;Example book&quot;
 authors = [&quot;John Doe&quot;, &quot;Jane Doe&quot;]
 description = &quot;The example book covers examples.&quot;
+src = &quot;my-src&quot;  # the source files will be found in `root/my-src` instead of `root/src`
 </code></pre>
-<a class="header" href="config.html#source directory" id="source directory"><h3>Source directory</h3></a>
-<p>By default, the source directory is found in the directory named <code>src</code> directly under the root folder. But this is configurable
-with the <code>source</code> key in the configuration file.</p>
-<p><strong>book.toml</strong></p>
-<pre><code class="language-toml">title = &quot;Example book&quot;
-authors = [&quot;John Doe&quot;, &quot;Jane Doe&quot;]
-description = &quot;The example book covers examples.&quot;
-
-source = &quot;my-src&quot;  # the source files will be found in `root/my-src` instead of `root/src`
-</code></pre>
-<a class="header" href="config.html#html renderer options" id="html renderer options"><h3>HTML renderer options</h3></a>
-<p>The HTML renderer has a couple of options aswell. All the options for the renderer need to be specified under the TOML table <code>[output.html]</code>.
-The following configuration options are available:</p>
+<a class="header" href="format/config.html#build-options" id="build-options"><h3>Build options</h3></a>
+<p>This controls the build process of your book.</p>
 <ul>
-<li><strong><code>destination</code>:</strong> By default, the HTML book will be rendered in the <code>root/book</code> directory, but this option lets you specify another
-destination fodler.</li>
-<li><strong><code>theme</code>:</strong> mdBook comes with a default theme and all the resource files needed for it. But if this option is set, mdBook will selectively overwrite the theme files with the ones found in the specified folder.</li>
-<li><strong><code>curly-quotes</code>:</strong> Convert straight quotes to curly quotes, except for those that occur in code blocks and code spans. Defaults to <code>false</code>.</li>
-<li><strong><code>google-analytics</code>:</strong> If you use Google Analytics, this option lets you enable it by simply specifying your ID in the configuration file.</li>
-<li><strong><code>additional-css</code>:</strong> If you need to slightly change the appearance of your book without overwriting the whole style, you can specify a set of stylesheets that will be loaded after the default ones where you can surgically change the style.</li>
-<li><strong><code>additional-js</code>:</strong> If you need to add some behaviour to your book without removing the current behaviour, you can specify a set of javascript files that will be loaded alongside the default one.</li>
+<li><strong>build-dir:</strong> The directory to put the rendered book in. By default this is
+<code>book/</code> in the book's root directory.</li>
+<li><strong>create-missing:</strong> By default, any missing files specified in <code>SUMMARY.md</code>
+will be created when the book is built (i.e. <code>create-missing = true</code>). If this
+is <code>false</code> then the build process will instead exit with an error if any files
+do not exist.</li>
 </ul>
 <p><strong>book.toml</strong></p>
-<pre><code class="language-toml">title = &quot;Example book&quot;
+<pre><code class="language-toml">[build]
+build-dir = &quot;build&quot;
+create-missing = false
+</code></pre>
+<a class="header" href="format/config.html#html-renderer-options" id="html-renderer-options"><h3>HTML renderer options</h3></a>
+<p>The HTML renderer has a couple of options as well. All the options for the
+renderer need to be specified under the TOML table <code>[output.html]</code>.</p>
+<p>The following configuration options are available:</p>
+<pre><code>pub playpen: Playpen,
+</code></pre>
+<ul>
+<li><strong>theme:</strong> mdBook comes with a default theme and all the resource files
+needed for it. But if this option is set, mdBook will selectively overwrite
+the theme files with the ones found in the specified folder.</li>
+<li><strong>curly-quotes:</strong> Convert straight quotes to curly quotes, except for
+those that occur in code blocks and code spans. Defaults to <code>false</code>.</li>
+<li><strong>google-analytics:</strong> If you use Google Analytics, this option lets you
+enable it by simply specifying your ID in the configuration file.</li>
+<li><strong>additional-css:</strong> If you need to slightly change the appearance of your
+book without overwriting the whole style, you can specify a set of
+stylesheets that will be loaded after the default ones where you can
+surgically change the style.</li>
+<li><strong>additional-js:</strong> If you need to add some behaviour to your book without
+removing the current behaviour, you can specify a set of javascript files
+that will be loaded alongside the default one.</li>
+<li><strong>playpen:</strong> A subtable for configuring various playpen settings.</li>
+</ul>
+<p><strong>book.toml</strong></p>
+<pre><code class="language-toml">[book]
+title = &quot;Example book&quot;
 authors = [&quot;John Doe&quot;, &quot;Jane Doe&quot;]
 description = &quot;The example book covers examples.&quot;
 
 [output.html]
-destination = &quot;my-book&quot; # the output files will be generated in `root/my-book` instead of `root/book`
 theme = &quot;my-theme&quot;
 curly-quotes = true
 google-analytics = &quot;123456&quot;
 additional-css = [&quot;custom.css&quot;, &quot;custom2.css&quot;]
 additional-js = [&quot;custom.js&quot;]
+
+[output.html.playpen]
+editor = &quot;./path/to/editor&quot;
+editable = false
 </code></pre>
+<a class="header" href="format/config.html#for-developers" id="for-developers"><h2>For Developers</h2></a>
+<p>If you are developing a plugin or alternate backend then whenever your code is
+called you will almost certainly be passed a reference to the book's <code>Config</code>.
+This can be treated roughly as a nested hashmap which lets you call methods like
+<code>get()</code> and <code>get_mut()</code> to get access to the config's contents.</p>
+<p>By convention, plugin developers will have their settings as a subtable inside
+<code>plugins</code> (e.g. a link checker would put its settings in <code>plugins.link_check</code>)
+and backends should put their configuration under <code>output</code>, like the HTML
+renderer does in the previous examples.</p>
+<p>As an example, some hypothetical <code>random</code> renderer would typically want to load
+its settings from the <code>Config</code> at the very start of its rendering process. The
+author can take advantage of serde to deserialize the generic <code>toml::Value</code>
+object retrieved from <code>Config</code> into a struct specific to its use case.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+#[derive(Debug, Deserialize, PartialEq)]
+struct RandomOutput {
+    foo: u32,
+    bar: String,
+    baz: Vec&lt;bool&gt;,
+}
 
+let src = r#&quot;
+[output.random]
+foo = 5
+bar = &quot;Hello World&quot;
+baz = [true, true, false]
+&quot;#;
+
+let book_config = Config::from_str(src)?; // usually passed in by mdbook
+let random: Value = book_config.get(&quot;output.random&quot;).unwrap_or_default();
+let got: RandomOutput = random.try_into()?;
+
+assert_eq!(got, should_be);
+
+if let Some(baz) = book_config.get_deserialized::&lt;Vec&lt;bool&gt;&gt;(&quot;output.random.baz&quot;) {
+  println!(&quot;{:?}&quot;, baz); // prints [true, true, false]
+
+  // do something interesting with baz
+}
+
+// start the rendering process
+#}</code></pre></pre>
+
+
+                    <div class="nav-wrapper">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="format/summary.html" class="mobile-nav-chapters previous" title="Previous chapter">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="format/theme/theme.html" class="mobile-nav-chapters next" title="Next chapter">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </div>
                 </div>
-
-                <!-- Mobile navigation buttons -->
-                
-                    <a rel="prev" href="format/summary.html" class="mobile-nav-chapters previous">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                
-
-                
-                    <a rel="next" href="format/theme/theme.html" class="mobile-nav-chapters next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                
-
             </div>
 
             
@@ -209,7 +275,13 @@ additional-js = [&quot;custom.js&quot;]
 
         
 
+        
+
         <script src="highlight.js"></script>
         <script src="book.js"></script>
+
+        <!-- Custom JS script -->
+        
+
     </body>
 </html>

@@ -54,8 +54,10 @@
     pub op: <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;<a class="struct" href="../notify/op/struct.Op.html" title="struct notify::op::Op">Op</a>&gt;,
     pub cookie: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>&gt;,
 }</pre><div class='docblock'><p>Event delivered when action occurs on a watched path in <em>raw</em> mode</p>
-</div><h2 id='fields' class='fields'>Fields</h2><span id='structfield.path' class="structfield">
-                           <span id='path.v' class='invisible'>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.path" class="structfield small-section-header">
+                           <a href="#structfield.path" class="anchor field"></a>
+                           <span id="path.v" class='invisible'>
                            <code>path: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;</code>
                            </span></span><div class='docblock'><p>Path where the event originated.</p>
 
@@ -65,8 +67,9 @@
 
 <p>Keep in mind that the path may be false if the watched file or directory or any parent
 directory is renamed. (See: <a href="op/index.html#rename">notify::op</a>)</p>
-</div><span id='structfield.op' class="structfield">
-                           <span id='op.v' class='invisible'>
+</div><span id="structfield.op" class="structfield small-section-header">
+                           <a href="#structfield.op" class="anchor field"></a>
+                           <span id="op.v" class='invisible'>
                            <code>op: <a class="type" href="../notify/type.Result.html" title="type notify::Result">Result</a>&lt;<a class="struct" href="../notify/op/struct.Op.html" title="struct notify::op::Op">Op</a>&gt;</code>
                            </span></span><div class='docblock'><p>Operation detected on that path.</p>
 
@@ -74,8 +77,9 @@ directory is renamed. (See: <a href="op/index.html#rename">notify::op</a>)</p>
 
 <p>When using the <code>INotifyWatcher</code>, <code>op</code> may be <code>Err</code> if activity is detected on the file and
 there is an error reading from inotify.</p>
-</div><span id='structfield.cookie' class="structfield">
-                           <span id='cookie.v' class='invisible'>
+</div><span id="structfield.cookie" class="structfield small-section-header">
+                           <a href="#structfield.cookie" class="anchor field"></a>
+                           <span id="cookie.v" class='invisible'>
                            <code>cookie: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>&gt;</code>
                            </span></span><div class='docblock'><p>Unique cookie associating related events (for <code>RENAME</code> events).</p>
 
@@ -85,10 +89,14 @@ directory.</p>
 
 <p>For details on handling <code>RENAME</code> events with the <code>FsEventWatcher</code> have a look at the
 <a href="op/index.html">notify::op</a> documentation.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../notify/struct.RawEvent.html" title="struct notify::RawEvent">RawEvent</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/notify/lib.rs.html#328' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../notify/struct.RawEvent.html" title="struct notify::RawEvent">RawEvent</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/notify/lib.rs.html#328' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/notify/lib.rs.html#328' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../notify/struct.RawEvent.html" title="struct notify::RawEvent">RawEvent</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/notify/lib.rs.html#359' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 id='impl-Send' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../notify/struct.RawEvent.html" title="struct notify::RawEvent">RawEvent</a></code><a href='#impl-Send' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/notify/lib.rs.html#359' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/open-1.2.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/open-1.2.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -98,27 +98,65 @@
 <span id="53">53</span>
 <span id="54">54</span>
 <span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Use this library to open a path or URL using the program configured on the system.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Usage</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The following should open the given URL in a web browser</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```test_harness,no_run</span>
 <span class="doccomment">//! extern crate open;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # #[test]</span>
 <span class="doccomment">//! # fn doit() {</span>
-<span class="doccomment">//! open::that(&quot;/path/to/file/with.fancy-extension&quot;);</span>
-<span class="doccomment">//! if open::that(&quot;https://rust-lang.org&quot;).is_ok() {</span>
-<span class="doccomment">//!     println!(&quot;Look at your browser !&quot;);</span>
-<span class="doccomment">//! }</span>
+<span class="doccomment">//! open::that(&quot;http://rust-lang.org&quot;).unwrap();</span>
 <span class="doccomment">//! # }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Notes</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! As an operating system program is used, chances are that the open operation fails.</span>
-<span class="doccomment">//! Therfore, you are advised to at least check the result with `.is_err()` and</span>
+<span class="doccomment">//! Therefore, you are advised to at least check the result with `.is_err()` and</span>
 <span class="doccomment">//! behave accordingly, e.g. by letting the user know what you tried to open, and failed.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # fn doit() {</span>
+<span class="doccomment">//! match open::that(&quot;http://rust-lang.org&quot;) {</span>
+<span class="doccomment">//!     Ok(exit_status) =&gt; {</span>
+<span class="doccomment">//!         if exit_status.success() {</span>
+<span class="doccomment">//!             println!(&quot;Look at your browser !&quot;);</span>
+<span class="doccomment">//!         } else {</span>
+<span class="doccomment">//!             if let Some(code) = exit_status.code() {</span>
+<span class="doccomment">//!                 println!(&quot;Command returned non-zero exit status {}!&quot;, code);</span>
+<span class="doccomment">//!             } else {</span>
+<span class="doccomment">//!                 println!(&quot;Command returned with unknown exit status!&quot;);</span>
+<span class="doccomment">//!             }</span>
+<span class="doccomment">//!         }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//!     Err(why) =&gt; println!(&quot;Failure to execute command: {}&quot;, why),</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">process</span>::{<span class="ident">Command</span>, <span class="ident">ExitStatus</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">OsStr</span>;
@@ -141,7 +179,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">that</span><span class="op">&lt;</span><span class="ident">T</span>:<span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">OsStr</span><span class="op">&gt;</span><span class="op">+</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ExitStatus</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cmd</span> <span class="op">=</span> <span class="ident">Command</span>::<span class="ident">new</span>(<span class="string">&quot;cmd&quot;</span>);
-    <span class="ident">cmd</span>.<span class="ident">arg</span>(<span class="string">&quot;/C&quot;</span>).<span class="ident">arg</span>(<span class="string">&quot;start&quot;</span>);
+    <span class="ident">cmd</span>.<span class="ident">arg</span>(<span class="string">&quot;/C&quot;</span>).<span class="ident">arg</span>(<span class="string">&quot;start&quot;</span>).<span class="ident">arg</span>(<span class="string">&quot;&quot;</span>);
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">path</span>.<span class="ident">as_ref</span>().<span class="ident">to_str</span>() {
         <span class="ident">cmd</span>.<span class="ident">arg</span>(<span class="ident">s</span>.<span class="ident">replace</span>(<span class="string">&quot;&amp;&quot;</span>, <span class="string">&quot;^&amp;&quot;</span>));
     } <span class="kw">else</span> {
