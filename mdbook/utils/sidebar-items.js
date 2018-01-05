@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["render_markdown",""]],"mod":[["fs",""]]});
+initSidebarItems({"fn":[["render_markdown",""],["take_lines","Take a range of lines from a string."]],"mod":[["fs",""]],"trait":[["RangeArgument",""]]});
