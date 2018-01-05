@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Struct Frame</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>ws</a></p><script>window.sidebarCurrent = {name: 'Frame', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Frame</p><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.len">len</a><a href="#method.is_final">is_final</a><a href="#method.has_rsv1">has_rsv1</a><a href="#method.has_rsv2">has_rsv2</a><a href="#method.has_rsv3">has_rsv3</a><a href="#method.opcode">opcode</a><a href="#method.is_control">is_control</a><a href="#method.payload">payload</a><a href="#method.set_final">set_final</a><a href="#method.set_rsv1">set_rsv1</a><a href="#method.set_rsv2">set_rsv2</a><a href="#method.set_rsv3">set_rsv3</a><a href="#method.set_opcode">set_opcode</a><a href="#method.payload_mut">payload_mut</a><a href="#method.into_data">into_data</a><a href="#method.message">message</a><a href="#method.pong">pong</a><a href="#method.ping">ping</a><a href="#method.close">close</a><a href="#method.parse">parse</a><a href="#method.format">format</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Clone">Clone</a><a href="#impl-Default">Default</a><a href="#impl-Display">Display</a></div></div><p class='location'><a href='index.html'>ws</a></p><script>window.sidebarCurrent = {name: 'Frame', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -96,7 +96,7 @@ This is the length of the header + the length of the payload.</p>
 <div class='docblock'><p>Create a new Close control frame.</p>
 </div><h4 id='method.parse' class="method"><span id='parse.v' class='invisible'><code>pub fn <a href='#method.parse' class='fnname'>parse</a>(cursor: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/cursor/struct.Cursor.html" title="struct std::io::cursor::Cursor">Cursor</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;&gt;) -&gt; <a class="type" href="../ws/type.Result.html" title="type ws::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../ws/struct.Frame.html" title="struct ws::Frame">Frame</a>&gt;&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/frame.rs.html#240-349' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Parse the input stream into a frame.</p>
-</div><h4 id='method.format' class="method"><span id='format.v' class='invisible'><code>pub fn <a href='#method.format' class='fnname'>format</a>&lt;W&gt;(&amp;mut self, w: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W) -&gt; <a class="type" href="../ws/type.Result.html" title="type ws::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/frame.rs.html#352-405' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.format' class="method"><span id='format.v' class='invisible'><code>pub fn <a href='#method.format' class='fnname'>format</a>&lt;W&gt;(&amp;mut self, w: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W) -&gt; <a class="type" href="../ws/type.Result.html" title="type ws::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/frame.rs.html#352-405' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Write a frame out to a buffer</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
@@ -104,7 +104,7 @@ This is the length of the header + the length of the payload.</p>
             </h2>
         <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../ws/struct.Frame.html" title="struct ws::Frame">Frame</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/frame.rs.html#20' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/frame.rs.html#20' title='goto source code'>[src]</a></span></h4>
-<div class='docblock'><p>Formats the value using the given formatter.</p>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
 </div></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../ws/struct.Frame.html" title="struct ws::Frame">Frame</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/frame.rs.html#20' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../ws/struct.Frame.html" title="struct ws::Frame">Frame</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/frame.rs.html#20' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
@@ -133,13 +133,15 @@ This is the length of the header + the length of the payload.</p>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

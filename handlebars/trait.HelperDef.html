@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Trait HelperDef</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='index.html'>handlebars</a></p><script>window.sidebarCurrent = {name: 'HelperDef', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait HelperDef</p><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.call">call</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>handlebars</a></p><script>window.sidebarCurrent = {name: 'HelperDef', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -50,7 +50,7 @@
                    </a>
                </span><a class='srclink' href='../src/handlebars/helpers/mod.rs.html#48-50' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait HelperDef: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> {
-    fn <a href='#tymethod.call' class='fnname'>call</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h: &amp;<a class="struct" href="../handlebars/struct.Helper.html" title="struct handlebars::Helper">Helper</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r: &amp;<a class="struct" href="../handlebars/struct.Handlebars.html" title="struct handlebars::Handlebars">Registry</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rc: &amp;mut <a class="struct" href="../handlebars/struct.RenderContext.html" title="struct handlebars::RenderContext">RenderContext</a><br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="../handlebars/struct.RenderError.html" title="struct handlebars::RenderError">RenderError</a>&gt;;
+    fn <a href='#tymethod.call' class='fnname'>call</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h: &amp;<a class="struct" href="../handlebars/struct.Helper.html" title="struct handlebars::Helper">Helper</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r: &amp;<a class="struct" href="../handlebars/struct.Handlebars.html" title="struct handlebars::Handlebars">Registry</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rc: &amp;mut <a class="struct" href="../handlebars/struct.RenderContext.html" title="struct handlebars::RenderContext">RenderContext</a><br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="../handlebars/struct.RenderError.html" title="struct handlebars::RenderError">RenderError</a>&gt;;
 }</pre><div class='docblock'><p>Helper Definition</p>
 
 <p>Implement <code>HelperDef</code> to create custom helper. You can retrieve useful information from these arguments.</p>
@@ -64,7 +64,7 @@
 <p>By default, you can use bare function as helper definition because we have supported unboxed_closure. If you have stateful or configurable helper, you can create a struct to implement <code>HelperDef</code>.</p>
 
 <h2 id='define-an-inline-helper' class='section-header'><a href='#define-an-inline-helper'>Define an inline helper</a></h2>
-<div class='information'><div class='tooltip ignore'>⚠<span class='tooltiptext'>Be careful when using this code, it's not being tested!</span></div></div><pre class="rust rust-example-rendered ignore">
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
 <span class="kw">use</span> <span class="ident">handlebars</span>::<span class="kw-2">*</span>;
 
 <span class="kw">fn</span> <span class="ident">upper</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, _: <span class="kw-2">&amp;</span><span class="ident">Handlebars</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
@@ -88,12 +88,12 @@
               Required Methods<a href='#required-methods' class='anchor'></a>
             </h2>
             <div class='methods'>
-        <h3 id='tymethod.call' class='method'><span id='call.v' class='invisible'><code>fn <a href='#tymethod.call' class='fnname'>call</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;h: &amp;<a class="struct" href="../handlebars/struct.Helper.html" title="struct handlebars::Helper">Helper</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;r: &amp;<a class="struct" href="../handlebars/struct.Handlebars.html" title="struct handlebars::Handlebars">Registry</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;rc: &amp;mut <a class="struct" href="../handlebars/struct.RenderContext.html" title="struct handlebars::RenderContext">RenderContext</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="../handlebars/struct.RenderError.html" title="struct handlebars::RenderError">RenderError</a>&gt;</code></span></h3></div>
+        <h3 id='tymethod.call' class='method'><span id='call.v' class='invisible'><code>fn <a href='#tymethod.call' class='fnname'>call</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;h: &amp;<a class="struct" href="../handlebars/struct.Helper.html" title="struct handlebars::Helper">Helper</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;r: &amp;<a class="struct" href="../handlebars/struct.Handlebars.html" title="struct handlebars::Handlebars">Registry</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;rc: &amp;mut <a class="struct" href="../handlebars/struct.RenderContext.html" title="struct handlebars::RenderContext">RenderContext</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="../handlebars/struct.RenderError.html" title="struct handlebars::RenderError">RenderError</a>&gt;</code></span></h3></div>
         <h2 id='implementors' class='small-section-header'>
           Implementors<a href='#implementors' class='anchor'></a>
         </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;F:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + for&lt;'b, 'c, 'd, 'e&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(&amp;'b <a class="struct" href="../handlebars/struct.Helper.html" title="struct handlebars::Helper">Helper</a>, &amp;'c <a class="struct" href="../handlebars/struct.Handlebars.html" title="struct handlebars::Handlebars">Registry</a>, &amp;'d mut <a class="struct" href="../handlebars/struct.RenderContext.html" title="struct handlebars::RenderContext">RenderContext</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="../handlebars/struct.RenderError.html" title="struct handlebars::RenderError">RenderError</a>&gt;&gt; HelperDef for F</code></li>
+    <li><code>impl&lt;F:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + for&lt;'b, 'c, 'd, 'e&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(&amp;'b <a class="struct" href="../handlebars/struct.Helper.html" title="struct handlebars::Helper">Helper</a>, &amp;'c <a class="struct" href="../handlebars/struct.Handlebars.html" title="struct handlebars::Handlebars">Registry</a>, &amp;'d mut <a class="struct" href="../handlebars/struct.RenderContext.html" title="struct handlebars::RenderContext">RenderContext</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="../handlebars/struct.RenderError.html" title="struct handlebars::RenderError">RenderError</a>&gt;&gt; HelperDef for F</code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/handlebars/trait.HelperDef.js">
                  </script></section>
@@ -113,13 +113,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

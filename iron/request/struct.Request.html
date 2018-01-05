@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         <a href='../../iron/index.html'><img src='https://avatars0.githubusercontent.com/u/7853871?s=128' alt='logo' width='100'></a>
-        <p class='location'>Struct Request</p><div class="block items"><ul><li><a href="#fields">Fields</a></li><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>iron</a>::<wbr><a href='index.html'>request</a></p><script>window.sidebarCurrent = {name: 'Request', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Request</p><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.url">url</a><a href="#structfield.remote_addr">remote_addr</a><a href="#structfield.local_addr">local_addr</a><a href="#structfield.headers">headers</a><a href="#structfield.body">body</a><a href="#structfield.method">method</a><a href="#structfield.extensions">extensions</a><a href="#structfield.version">version</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.from_http">from_http</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Extensible">Extensible</a><a href="#impl-Plugin">Plugin</a><a href="#impl-Set">Set</a><a href="#impl-Modifier%3CRequest%3C%27a%2C%20%27b%3E%3E">Modifier&lt;Request&lt;&#39;a, &#39;b&gt;&gt;</a></div></div><p class='location'><a href='../index.html'>iron</a>::<wbr><a href='index.html'>request</a></p><script>window.sidebarCurrent = {name: 'Request', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -119,7 +119,7 @@ an <code>TypeMap</code> for data communication between middleware.</p>
             </h2>
         <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl&lt;'a, 'b&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>&lt;'a, 'b&gt;</code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/iron/request/mod.rs.html#60-72' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/iron/request/mod.rs.html#61-71' title='goto source code'>[src]</a></span></h4>
-<div class='docblock'><p>Formats the value using the given formatter.</p>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
 </div></div><h3 id='impl-Extensible' class='impl'><span class='in-band'><code>impl&lt;'a, 'b&gt; <a class="trait" href="../../plugin/trait.Extensible.html" title="trait plugin::Extensible">Extensible</a> for <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>&lt;'a, 'b&gt;</code><a href='#impl-Extensible' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/iron/request/mod.rs.html#166-174' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.extensions' class="method"><span id='extensions.v-1' class='invisible'><code>fn <a href='../../plugin/trait.Extensible.html#tymethod.extensions' class='fnname'>extensions</a>(&amp;self) -&gt; &amp;<a class="struct" href="../../iron/typemap/struct.TypeMap.html" title="struct iron::typemap::TypeMap">TypeMap</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/iron/request/mod.rs.html#167-169' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get a reference to the type&#39;s extension storage.</p>
@@ -139,6 +139,9 @@ an <code>TypeMap</code> for data communication between middleware.</p>
 <div class='docblock'><p>Modify self using the provided modifier.</p>
 </div><h4 id='method.set_mut' class="method"><span id='set_mut.v' class='invisible'><code>fn <a href='../../iron/trait.Set.html#method.set_mut' class='fnname'>set_mut</a>&lt;M&gt;(&amp;mut self, modifier: M) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>Self <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;M: <a class="trait" href="../../modifier/trait.Modifier.html" title="trait modifier::Modifier">Modifier</a>&lt;Self&gt;,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/modifier/lib.rs.html#29-32' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Modify self through a mutable reference with the provided modifier.</p>
+</div></div><h3 id='impl-Modifier%3CRequest%3C%27a%2C%20%27b%3E%3E' class='impl'><span class='in-band'><code>impl&lt;'a, 'b, H&gt; <a class="trait" href="../../modifier/trait.Modifier.html" title="trait modifier::Modifier">Modifier</a>&lt;<a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>&lt;'a, 'b&gt;&gt; for <a class="struct" href="../../iron/modifiers/struct.Header.html" title="struct iron::modifiers::Header">Header</a>&lt;H&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="../../iron/headers/trait.Header.html" title="trait iron::headers::Header">Header</a> + <a class="trait" href="../../iron/headers/trait.HeaderFormat.html" title="trait iron::headers::HeaderFormat">HeaderFormat</a>,&nbsp;</span></code><a href='#impl-Modifier%3CRequest%3C%27a%2C%20%27b%3E%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/iron/modifiers.rs.html#173-178' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.modify' class="method"><span id='modify.v' class='invisible'><code>fn <a href='../../modifier/trait.Modifier.html#tymethod.modify' class='fnname'>modify</a>(self, res: &amp;mut <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/iron/modifiers.rs.html#175-177' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Modify <code>F</code> with self.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 
@@ -156,13 +159,15 @@ an <code>TypeMap</code> for data communication between middleware.</p>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
