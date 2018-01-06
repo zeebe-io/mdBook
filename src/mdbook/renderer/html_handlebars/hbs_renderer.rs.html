@@ -724,6 +724,11 @@
 <span id="679">679</span>
 <span id="680">680</span>
 <span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">renderer</span>::<span class="ident">html_handlebars</span>::<span class="ident">helpers</span>;
 <span class="kw">use</span> <span class="ident">preprocess</span>;
@@ -780,6 +785,11 @@
                                                                           <span class="string">&quot;Could not convert path \
                                                                            to str&quot;</span>)
                                                        })<span class="question-mark">?</span>;
+
+                <span class="comment">// &quot;print.html&quot; is used for the print page.</span>
+                <span class="kw">if</span> <span class="ident">ch</span>.<span class="ident">path</span> <span class="op">==</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;print.md&quot;</span>) {
+                    <span class="macro">bail</span><span class="macro">!</span>(<span class="ident">ErrorKind</span>::<span class="ident">ReservedFilenameError</span>(<span class="ident">ch</span>.<span class="ident">path</span>.<span class="ident">clone</span>()));
+                };
 
                 <span class="comment">// Non-lexical lifetimes needed :&#39;(</span>
                 <span class="kw">let</span> <span class="ident">title</span>: <span class="ident">String</span>;
