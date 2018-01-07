@@ -729,22 +729,49 @@
 <span id="684">684</span>
 <span id="685">685</span>
 <span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
+<span id="710">710</span>
+<span id="711">711</span>
+<span id="712">712</span>
+<span id="713">713</span>
+<span id="714">714</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">renderer</span>::<span class="ident">html_handlebars</span>::<span class="ident">helpers</span>;
 <span class="kw">use</span> <span class="ident">preprocess</span>;
-<span class="kw">use</span> <span class="ident">renderer</span>::<span class="ident">Renderer</span>;
-<span class="kw">use</span> <span class="ident">book</span>::<span class="ident">MDBook</span>;
-<span class="kw">use</span> <span class="ident">book</span>::{<span class="ident">BookItem</span>, <span class="ident">Chapter</span>};
-<span class="kw">use</span> <span class="ident">config</span>::{<span class="ident">Config</span>, <span class="ident">Playpen</span>, <span class="ident">HtmlConfig</span>};
-<span class="kw">use</span> {<span class="ident">utils</span>, <span class="ident">theme</span>};
-<span class="kw">use</span> <span class="ident">theme</span>::{<span class="ident">Theme</span>, <span class="ident">playpen_editor</span>};
+<span class="kw">use</span> <span class="ident">renderer</span>::{<span class="ident">RenderContext</span>, <span class="ident">Renderer</span>};
+<span class="kw">use</span> <span class="ident">book</span>::{<span class="ident">Book</span>, <span class="ident">BookItem</span>, <span class="ident">Chapter</span>};
+<span class="kw">use</span> <span class="ident">config</span>::{<span class="ident">Config</span>, <span class="ident">HtmlConfig</span>, <span class="ident">Playpen</span>};
+<span class="kw">use</span> {<span class="ident">theme</span>, <span class="ident">utils</span>};
+<span class="kw">use</span> <span class="ident">theme</span>::{<span class="ident">playpen_editor</span>, <span class="ident">Theme</span>};
 <span class="kw">use</span> <span class="ident">errors</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">regex</span>::{<span class="ident">Captures</span>, <span class="ident">Regex</span>};
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span> <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ascii</span>::<span class="ident">AsciiExt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::{<span class="self">self</span>, <span class="ident">File</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Read</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Read</span>, <span class="ident">Write</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 
@@ -760,15 +787,28 @@
         <span class="ident">HtmlHandlebars</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">render_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
+    <span class="kw">fn</span> <span class="ident">write_file</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">build_dir</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
+        <span class="ident">filename</span>: <span class="ident">P</span>,
+        <span class="ident">content</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">build_dir</span>.<span class="ident">join</span>(<span class="ident">filename</span>);
+
+        <span class="ident">utils</span>::<span class="ident">fs</span>::<span class="ident">create_file</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>)<span class="question-mark">?</span>
+            .<span class="ident">write_all</span>(<span class="ident">content</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>())
+    }
+
+    <span class="kw">fn</span> <span class="ident">render_item</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
                    <span class="ident">item</span>: <span class="kw-2">&amp;</span><span class="ident">BookItem</span>,
                    <span class="kw-2">mut</span> <span class="ident">ctx</span>: <span class="ident">RenderItemContext</span>,
-                   <span class="ident">print_content</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">String</span>)
-                   <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="ident">print_content</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">String</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// FIXME: This should be made DRY-er and rely less on mutable state</span>
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">item</span> {
-            <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="kw-2">ref</span> <span class="ident">ch</span>)  <span class="op">=&gt;</span> 
-            {
+            <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="kw-2">ref</span> <span class="ident">ch</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">ch</span>.<span class="ident">content</span>.<span class="ident">clone</span>();
                 <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="ident">ch</span>.<span class="ident">path</span>.<span class="ident">parent</span>()
                     .<span class="ident">map</span>(<span class="op">|</span><span class="ident">dir</span><span class="op">|</span> <span class="ident">ctx</span>.<span class="ident">src_dir</span>.<span class="ident">join</span>(<span class="ident">dir</span>))
@@ -815,18 +855,18 @@
                 <span class="kw">let</span> <span class="ident">filepath</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>).<span class="ident">with_extension</span>(<span class="string">&quot;html&quot;</span>);
                 <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">post_process</span>(
                     <span class="ident">rendered</span>,
-                    <span class="kw-2">&amp;</span><span class="ident">normalize_path</span>(<span class="ident">filepath</span>.<span class="ident">to_str</span>().<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">Error</span>::<span class="ident">from</span>(
-                        <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Bad file name: {}&quot;</span>, <span class="ident">filepath</span>.<span class="ident">display</span>()),
-                    ))<span class="question-mark">?</span>),
-                    <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">book</span>.<span class="ident">config</span>.<span class="ident">html_config</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">playpen</span>,
+                    <span class="kw-2">&amp;</span><span class="ident">normalize_path</span>(<span class="ident">filepath</span>.<span class="ident">to_str</span>().<span class="ident">ok_or_else</span>(<span class="op">||</span> {
+                        <span class="ident">Error</span>::<span class="ident">from</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Bad file name: {}&quot;</span>, <span class="ident">filepath</span>.<span class="ident">display</span>()))
+                    })<span class="question-mark">?</span>),
+                    <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">html_config</span>.<span class="ident">playpen</span>,
                 );
 
                 <span class="comment">// Write to file</span>
                 <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;[*] Creating {:?} ✓&quot;</span>, <span class="ident">filepath</span>.<span class="ident">display</span>());
-                <span class="ident">ctx</span>.<span class="ident">book</span>.<span class="ident">write_file</span>(<span class="ident">filepath</span>, <span class="kw-2">&amp;</span><span class="ident">rendered</span>.<span class="ident">into_bytes</span>())<span class="question-mark">?</span>;
+                <span class="self">self</span>.<span class="ident">write_file</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">destination</span>, <span class="ident">filepath</span>, <span class="kw-2">&amp;</span><span class="ident">rendered</span>.<span class="ident">into_bytes</span>())<span class="question-mark">?</span>;
 
                 <span class="kw">if</span> <span class="ident">ctx</span>.<span class="ident">is_index</span> {
-                    <span class="self">self</span>.<span class="ident">render_index</span>(<span class="ident">ctx</span>.<span class="ident">book</span>, <span class="ident">ch</span>, <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">destination</span>)<span class="question-mark">?</span>;
+                    <span class="self">self</span>.<span class="ident">render_index</span>(<span class="ident">ch</span>, <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">destination</span>)<span class="question-mark">?</span>;
                 }
             }
             _ <span class="op">=&gt;</span> {}
@@ -836,7 +876,7 @@
     }
 
     <span class="doccomment">/// Create an index.html from the first element in SUMMARY.md</span>
-    <span class="kw">fn</span> <span class="ident">render_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="ident">MDBook</span>, <span class="ident">ch</span>: <span class="kw-2">&amp;</span><span class="ident">Chapter</span>, <span class="ident">destination</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">render_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ch</span>: <span class="kw-2">&amp;</span><span class="ident">Chapter</span>, <span class="ident">destination</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: index.html&quot;</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
@@ -852,10 +892,10 @@
                          .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;&gt;</span>()
                          .<span class="ident">join</span>(<span class="string">&quot;\n&quot;</span>);
 
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;index.html&quot;</span>, <span class="ident">content</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;index.html&quot;</span>, <span class="ident">content</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
 
         <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;[*] Creating index.html from {:?} ✓&quot;</span>,
-              <span class="ident">book</span>.<span class="ident">get_destination</span>().<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>.<span class="ident">with_extension</span>(<span class="string">&quot;html&quot;</span>)));
+            <span class="ident">destination</span>.<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">ch</span>.<span class="ident">path</span>.<span class="ident">with_extension</span>(<span class="string">&quot;html&quot;</span>)));
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -874,30 +914,57 @@
         <span class="ident">rendered</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">copy_static_files</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="ident">MDBook</span>, <span class="ident">theme</span>: <span class="kw-2">&amp;</span><span class="ident">Theme</span>, <span class="ident">html_config</span>: <span class="kw-2">&amp;</span><span class="ident">HtmlConfig</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;book.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">js</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;book.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">css</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;favicon.png&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">favicon</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;jquery.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">jquery</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;highlight.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">highlight_css</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;tomorrow-night.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">tomorrow_night_css</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;ayu-highlight.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">ayu_highlight_css</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;highlight.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">highlight_js</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;clipboard.min.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">clipboard_js</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;store.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">store_js</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;_FontAwesome/css/font-awesome.css&quot;</span>, <span class="ident">theme</span>::<span class="ident">FONT_AWESOME</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.eot&quot;</span>,
-                        <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_EOT</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.svg&quot;</span>,
-                        <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_SVG</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.ttf&quot;</span>,
-                        <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_TTF</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.woff&quot;</span>,
-                        <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_WOFF</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.woff2&quot;</span>,
-                        <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_WOFF2</span>)<span class="question-mark">?</span>;
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;_FontAwesome/fonts/FontAwesome.ttf&quot;</span>,
-                        <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_TTF</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">copy_static_files</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">destination</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
+        <span class="ident">theme</span>: <span class="kw-2">&amp;</span><span class="ident">Theme</span>,
+        <span class="ident">html_config</span>: <span class="kw-2">&amp;</span><span class="ident">HtmlConfig</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;book.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">js</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;book.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">css</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;favicon.png&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">favicon</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;jquery.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">jquery</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;highlight.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">highlight_css</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;tomorrow-night.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">tomorrow_night_css</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;ayu-highlight.css&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">ayu_highlight_css</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;highlight.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">highlight_js</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;clipboard.min.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">clipboard_js</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;store.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>.<span class="ident">store_js</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(
+            <span class="ident">destination</span>,
+            <span class="string">&quot;_FontAwesome/css/font-awesome.css&quot;</span>,
+            <span class="ident">theme</span>::<span class="ident">FONT_AWESOME</span>,
+        )<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(
+            <span class="ident">destination</span>,
+            <span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.eot&quot;</span>,
+            <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_EOT</span>,
+        )<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(
+            <span class="ident">destination</span>,
+            <span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.svg&quot;</span>,
+            <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_SVG</span>,
+        )<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(
+            <span class="ident">destination</span>,
+            <span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.ttf&quot;</span>,
+            <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_TTF</span>,
+        )<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(
+            <span class="ident">destination</span>,
+            <span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.woff&quot;</span>,
+            <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_WOFF</span>,
+        )<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(
+            <span class="ident">destination</span>,
+            <span class="string">&quot;_FontAwesome/fonts/fontawesome-webfont.woff2&quot;</span>,
+            <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_WOFF2</span>,
+        )<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(
+            <span class="ident">destination</span>,
+            <span class="string">&quot;_FontAwesome/fonts/FontAwesome.ttf&quot;</span>,
+            <span class="ident">theme</span>::<span class="ident">FONT_AWESOME_TTF</span>,
+        )<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">playpen_config</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">html_config</span>.<span class="ident">playpen</span>;
 
@@ -905,34 +972,15 @@
         <span class="kw">if</span> <span class="ident">playpen_config</span>.<span class="ident">editable</span> {
             <span class="comment">// Load the editor</span>
             <span class="kw">let</span> <span class="ident">editor</span> <span class="op">=</span> <span class="ident">playpen_editor</span>::<span class="ident">PlaypenEditor</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">playpen_config</span>.<span class="ident">editor</span>);
-            <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;editor.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">js</span>)<span class="question-mark">?</span>;
-            <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;ace.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">ace_js</span>)<span class="question-mark">?</span>;
-            <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;mode-rust.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">mode_rust_js</span>)<span class="question-mark">?</span>;
-            <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;theme-dawn.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">theme_dawn_js</span>)<span class="question-mark">?</span>;
-            <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="string">&quot;theme-tomorrow_night.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">theme_tomorrow_night_js</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;editor.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">js</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;ace.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">ace_js</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;mode-rust.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">mode_rust_js</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>, <span class="string">&quot;theme-dawn.js&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">theme_dawn_js</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">write_file</span>(<span class="ident">destination</span>,
+                <span class="string">&quot;theme-tomorrow_night.js&quot;</span>,
+                <span class="kw-2">&amp;</span><span class="ident">editor</span>.<span class="ident">theme_tomorrow_night_js</span>,
+            )<span class="question-mark">?</span>;
         }
-
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="doccomment">/// Helper function to write a file to the build directory, normalizing</span>
-    <span class="doccomment">/// the path to be relative to the book root.</span>
-    <span class="kw">fn</span> <span class="ident">write_custom_file</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">custom_file</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="ident">MDBook</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">custom_file</span>)<span class="question-mark">?</span>;
-        <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">custom_file</span>.<span class="ident">strip_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">book</span>.<span class="ident">root</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="ident">p</span>.<span class="ident">to_str</span>().<span class="ident">expect</span>(<span class="string">&quot;Could not convert to str&quot;</span>),
-            <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> {
-                <span class="ident">custom_file</span>.<span class="ident">file_name</span>()
-                           .<span class="ident">expect</span>(<span class="string">&quot;File has a file name&quot;</span>)
-                           .<span class="ident">to_str</span>()
-                           .<span class="ident">expect</span>(<span class="string">&quot;Could not convert to str&quot;</span>)
-            }
-        };
-
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -959,27 +1007,42 @@
 
     <span class="doccomment">/// Copy across any additional CSS and JavaScript files which the book</span>
     <span class="doccomment">/// has been configured to use.</span>
-    <span class="kw">fn</span> <span class="ident">copy_additional_css_and_js</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="ident">MDBook</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">html</span> <span class="op">=</span> <span class="ident">book</span>.<span class="ident">config</span>.<span class="ident">html_config</span>().<span class="ident">unwrap_or_default</span>();
+    <span class="kw">fn</span> <span class="ident">copy_additional_css_and_js</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">html</span>: <span class="kw-2">&amp;</span><span class="ident">HtmlConfig</span>, <span class="ident">destination</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">custom_files</span> <span class="op">=</span> <span class="ident">html</span>.<span class="ident">additional_css</span>.<span class="ident">iter</span>().<span class="ident">chain</span>(<span class="ident">html</span>.<span class="ident">additional_js</span>.<span class="ident">iter</span>());
 
-        <span class="kw">let</span> <span class="ident">custom_files</span> <span class="op">=</span> <span class="ident">html</span>.<span class="ident">additional_css</span>
-                               .<span class="ident">iter</span>()
-                               .<span class="ident">chain</span>(<span class="ident">html</span>.<span class="ident">additional_js</span>.<span class="ident">iter</span>());
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Copying additional CSS and JS&quot;</span>);
 
         <span class="kw">for</span> <span class="ident">custom_file</span> <span class="kw">in</span> <span class="ident">custom_files</span> {
-            <span class="self">self</span>.<span class="ident">write_custom_file</span>(<span class="kw-2">&amp;</span><span class="ident">custom_file</span>, <span class="ident">book</span>)
-                .<span class="ident">chain_err</span>(<span class="op">||</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Copying {} failed&quot;</span>, <span class="ident">custom_file</span>.<span class="ident">display</span>()))<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">output_location</span> <span class="op">=</span> <span class="ident">destination</span>.<span class="ident">join</span>(<span class="ident">custom_file</span>);
+            <span class="macro">debug</span><span class="macro">!</span>(
+                <span class="string">&quot;Copying {} -&gt; {}&quot;</span>,
+                <span class="ident">custom_file</span>.<span class="ident">display</span>(),
+                <span class="ident">output_location</span>.<span class="ident">display</span>()
+            );
+
+            <span class="ident">fs</span>::<span class="ident">copy</span>(<span class="ident">custom_file</span>, <span class="kw-2">&amp;</span><span class="ident">output_location</span>).<span class="ident">chain_err</span>(<span class="op">||</span> {
+                <span class="macro">format</span><span class="macro">!</span>(
+                    <span class="string">&quot;Unable to copy {} to {}&quot;</span>,
+                    <span class="ident">custom_file</span>.<span class="ident">display</span>(),
+                    <span class="ident">output_location</span>.<span class="ident">display</span>()
+                )
+            })<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-
 <span class="kw">impl</span> <span class="ident">Renderer</span> <span class="kw">for</span> <span class="ident">HtmlHandlebars</span> {
-    <span class="kw">fn</span> <span class="ident">render</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="ident">MDBook</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">html_config</span> <span class="op">=</span> <span class="ident">book</span>.<span class="ident">config</span>.<span class="ident">html_config</span>().<span class="ident">unwrap_or_default</span>();
-        <span class="kw">let</span> <span class="ident">src_dir</span> <span class="op">=</span> <span class="ident">book</span>.<span class="ident">root</span>.<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">book</span>.<span class="ident">config</span>.<span class="ident">book</span>.<span class="ident">src</span>);
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="string">&quot;html&quot;</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">render</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">html_config</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">config</span>.<span class="ident">html_config</span>().<span class="ident">unwrap_or_default</span>();
+        <span class="kw">let</span> <span class="ident">src_dir</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">root</span>.<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">config</span>.<span class="ident">book</span>.<span class="ident">src</span>);
+        <span class="kw">let</span> <span class="ident">destination</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">destination</span>;
+        <span class="kw">let</span> <span class="ident">book</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">book</span>;
 
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[fn]: render&quot;</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Handlebars</span>::<span class="ident">new</span>();
@@ -1006,13 +1069,10 @@
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: Register handlebars helpers&quot;</span>);
         <span class="self">self</span>.<span class="ident">register_hbs_helpers</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">handlebars</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">make_data</span>(<span class="ident">book</span>, <span class="kw-2">&amp;</span><span class="ident">book</span>.<span class="ident">config</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">make_data</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">book</span>, <span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="ident">html_config</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// Print version</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">print_content</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
-
-        <span class="comment">// TODO: The Renderer trait should really pass in where it wants us to build to...</span>
-        <span class="kw">let</span> <span class="ident">destination</span> <span class="op">=</span> <span class="ident">book</span>.<span class="ident">get_destination</span>();
 
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*]: Check if destination directory exists&quot;</span>);
         <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="kw-2">&amp;</span><span class="ident">destination</span>)
@@ -1020,7 +1080,6 @@
 
         <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="ident">book</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
             <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">RenderItemContext</span> {
-                <span class="ident">book</span>: <span class="ident">book</span>,
                 <span class="ident">handlebars</span>: <span class="kw-2">&amp;</span><span class="ident">handlebars</span>,
                 <span class="ident">destination</span>: <span class="ident">destination</span>.<span class="ident">to_path_buf</span>(),
                 <span class="ident">src_dir</span>: <span class="ident">src_dir</span>.<span class="ident">clone</span>(),
@@ -1033,7 +1092,7 @@
 
         <span class="comment">// Print version</span>
         <span class="self">self</span>.<span class="ident">configure_print_version</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="ident">print_content</span>);
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">title</span>) <span class="op">=</span> <span class="ident">book</span>.<span class="ident">config</span>.<span class="ident">book</span>.<span class="ident">title</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">title</span>) <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">config</span>.<span class="ident">book</span>.<span class="ident">title</span> {
             <span class="ident">data</span>.<span class="ident">insert</span>(<span class="string">&quot;title&quot;</span>.<span class="ident">to_owned</span>(), <span class="macro">json</span><span class="macro">!</span>(<span class="ident">title</span>));
         }
 
@@ -1046,25 +1105,23 @@
                                          <span class="string">&quot;print.html&quot;</span>,
                                          <span class="kw-2">&amp;</span><span class="ident">html_config</span>.<span class="ident">playpen</span>);
 
-        <span class="ident">book</span>.<span class="ident">write_file</span>(<span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;print&quot;</span>).<span class="ident">with_extension</span>(<span class="string">&quot;html&quot;</span>),
-                        <span class="kw-2">&amp;</span><span class="ident">rendered</span>.<span class="ident">into_bytes</span>())<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">write_file</span>(<span class="kw-2">&amp;</span><span class="ident">destination</span>, <span class="string">&quot;print.html&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">rendered</span>.<span class="ident">into_bytes</span>())<span class="question-mark">?</span>;
         <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;[*] Creating print.html ✓&quot;</span>);
 
         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[*] Copy static files&quot;</span>);
-        <span class="self">self</span>.<span class="ident">copy_static_files</span>(<span class="ident">book</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>, <span class="kw-2">&amp;</span><span class="ident">html_config</span>)
+        <span class="self">self</span>.<span class="ident">copy_static_files</span>(<span class="kw-2">&amp;</span><span class="ident">destination</span>, <span class="kw-2">&amp;</span><span class="ident">theme</span>, <span class="kw-2">&amp;</span><span class="ident">html_config</span>)
             .<span class="ident">chain_err</span>(<span class="op">||</span> <span class="string">&quot;Unable to copy across static files&quot;</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">copy_additional_css_and_js</span>(<span class="ident">book</span>)
+        <span class="self">self</span>.<span class="ident">copy_additional_css_and_js</span>(<span class="kw-2">&amp;</span><span class="ident">html_config</span>, <span class="kw-2">&amp;</span><span class="ident">destination</span>)
             .<span class="ident">chain_err</span>(<span class="op">||</span> <span class="string">&quot;Unable to copy across additional CSS and JS&quot;</span>)<span class="question-mark">?</span>;
 
         <span class="comment">// Copy all remaining files</span>
-        <span class="kw">let</span> <span class="ident">src</span> <span class="op">=</span> <span class="ident">book</span>.<span class="ident">source_dir</span>();
-        <span class="ident">utils</span>::<span class="ident">fs</span>::<span class="ident">copy_files_except_ext</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>, <span class="kw-2">&amp;</span><span class="ident">destination</span>, <span class="bool-val">true</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;md&quot;</span>])<span class="question-mark">?</span>;
+        <span class="ident">utils</span>::<span class="ident">fs</span>::<span class="ident">copy_files_except_ext</span>(<span class="kw-2">&amp;</span><span class="ident">src_dir</span>, <span class="kw-2">&amp;</span><span class="ident">destination</span>, <span class="bool-val">true</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;md&quot;</span>])<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">fn</span> <span class="ident">make_data</span>(<span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="ident">MDBook</span>, <span class="ident">config</span>: <span class="kw-2">&amp;</span><span class="ident">Config</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">serde_json</span>::<span class="ident">Map</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">serde_json</span>::<span class="ident">Value</span><span class="op">&gt;&gt;</span> {
+<span class="kw">fn</span> <span class="ident">make_data</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="ident">Book</span>, <span class="ident">config</span>: <span class="kw-2">&amp;</span><span class="ident">Config</span>, <span class="ident">html_config</span>: <span class="kw-2">&amp;</span><span class="ident">HtmlConfig</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">serde_json</span>::<span class="ident">Map</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">serde_json</span>::<span class="ident">Value</span><span class="op">&gt;&gt;</span> {
     <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;[fn]: make_data&quot;</span>);
     <span class="kw">let</span> <span class="ident">html</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">html_config</span>().<span class="ident">unwrap_or_default</span>();
 
@@ -1073,7 +1130,7 @@
     <span class="ident">data</span>.<span class="ident">insert</span>(<span class="string">&quot;book_title&quot;</span>.<span class="ident">to_owned</span>(), <span class="macro">json</span><span class="macro">!</span>(<span class="ident">config</span>.<span class="ident">book</span>.<span class="ident">title</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>()));
     <span class="ident">data</span>.<span class="ident">insert</span>(<span class="string">&quot;description&quot;</span>.<span class="ident">to_owned</span>(), <span class="macro">json</span><span class="macro">!</span>(<span class="ident">config</span>.<span class="ident">book</span>.<span class="ident">description</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>()));
     <span class="ident">data</span>.<span class="ident">insert</span>(<span class="string">&quot;favicon&quot;</span>.<span class="ident">to_owned</span>(), <span class="macro">json</span><span class="macro">!</span>(<span class="string">&quot;favicon.png&quot;</span>));
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">livereload</span>) <span class="op">=</span> <span class="ident">book</span>.<span class="ident">livereload</span> {
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">livereload</span>) <span class="op">=</span> <span class="ident">html_config</span>.<span class="ident">livereload_url</span> {
         <span class="ident">data</span>.<span class="ident">insert</span>(<span class="string">&quot;livereload&quot;</span>.<span class="ident">to_owned</span>(), <span class="macro">json</span><span class="macro">!</span>(<span class="ident">livereload</span>));
     }
 
@@ -1090,7 +1147,7 @@
     <span class="kw">if</span> <span class="op">!</span><span class="ident">html</span>.<span class="ident">additional_css</span>.<span class="ident">is_empty</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">css</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
         <span class="kw">for</span> <span class="ident">style</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">html</span>.<span class="ident">additional_css</span> {
-            <span class="kw">match</span> <span class="ident">style</span>.<span class="ident">strip_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">book</span>.<span class="ident">root</span>) {
+            <span class="kw">match</span> <span class="ident">style</span>.<span class="ident">strip_prefix</span>(<span class="ident">root</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="ident">css</span>.<span class="ident">push</span>(<span class="ident">p</span>.<span class="ident">to_str</span>().<span class="ident">expect</span>(<span class="string">&quot;Could not convert to str&quot;</span>)),
                 <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> {
                     <span class="ident">css</span>.<span class="ident">push</span>(<span class="ident">style</span>.<span class="ident">file_name</span>()
@@ -1107,7 +1164,7 @@
     <span class="kw">if</span> <span class="op">!</span><span class="ident">html</span>.<span class="ident">additional_js</span>.<span class="ident">is_empty</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">js</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
         <span class="kw">for</span> <span class="ident">script</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">html</span>.<span class="ident">additional_js</span> {
-            <span class="kw">match</span> <span class="ident">script</span>.<span class="ident">strip_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">book</span>.<span class="ident">root</span>) {
+            <span class="kw">match</span> <span class="ident">script</span>.<span class="ident">strip_prefix</span>(<span class="ident">root</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="ident">js</span>.<span class="ident">push</span>(<span class="ident">p</span>.<span class="ident">to_str</span>().<span class="ident">expect</span>(<span class="string">&quot;Could not convert to str&quot;</span>)),
                 <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> {
                     <span class="ident">js</span>.<span class="ident">push</span>(<span class="ident">script</span>.<span class="ident">file_name</span>()
@@ -1336,7 +1393,6 @@
 
 <span class="kw">struct</span> <span class="ident">RenderItemContext</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">handlebars</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Handlebars</span>,
-    <span class="ident">book</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">MDBook</span>,
     <span class="ident">destination</span>: <span class="ident">PathBuf</span>,
     <span class="ident">src_dir</span>: <span class="ident">PathBuf</span>,
     <span class="ident">data</span>: <span class="ident">serde_json</span>::<span class="ident">Map</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">serde_json</span>::<span class="ident">Value</span><span class="op">&gt;</span>,

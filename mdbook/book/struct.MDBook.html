@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'>Struct MDBook</p><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.root">root</a><a href="#structfield.config">config</a><a href="#structfield.livereload">livereload</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.load">load</a><a href="#method.load_with_config">load_with_config</a><a href="#method.iter">iter</a><a href="#method.init">init</a><a href="#method.build">build</a><a href="#method.set_renderer">set_renderer</a><a href="#method.test">test</a><a href="#method.source_dir">source_dir</a></div></div><p class='location'><a href='../index.html'>mdbook</a>::<wbr><a href='index.html'>book</a></p><script>window.sidebarCurrent = {name: 'MDBook', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct MDBook</p><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.root">root</a><a href="#structfield.config">config</a><a href="#structfield.book">book</a><a href="#structfield.livereload">livereload</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.load">load</a><a href="#method.load_with_config">load_with_config</a><a href="#method.iter">iter</a><a href="#method.init">init</a><a href="#method.build">build</a><a href="#method.with_renderer">with_renderer</a><a href="#method.test">test</a><a href="#method.build_dir_for">build_dir_for</a><a href="#method.source_dir">source_dir</a></div></div><p class='location'><a href='../index.html'>mdbook</a>::<wbr><a href='index.html'>book</a></p><script>window.sidebarCurrent = {name: 'MDBook', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -48,10 +48,11 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/mdbook/book/mod.rs.html#31-42' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/mdbook/book/mod.rs.html#32-43' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct MDBook {
     pub root: <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>,
     pub config: <a class="struct" href="../../mdbook/config/struct.Config.html" title="struct mdbook::config::Config">Config</a>,
+    pub book: <a class="struct" href="../../mdbook/book/struct.Book.html" title="struct mdbook::book::Book">Book</a>,
     pub livereload: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;,
     // some fields omitted
 }</pre><div class='docblock'><p>The object used to manage and build a book.</p>
@@ -66,6 +67,11 @@
                            <span id="config.v" class='invisible'>
                            <code>config: <a class="struct" href="../../mdbook/config/struct.Config.html" title="struct mdbook::config::Config">Config</a></code>
                            </span></span><div class='docblock'><p>The configuration used to tweak now a book is built.</p>
+</div><span id="structfield.book" class="structfield small-section-header">
+                           <a href="#structfield.book" class="anchor field"></a>
+                           <span id="book.v" class='invisible'>
+                           <code>book: <a class="struct" href="../../mdbook/book/struct.Book.html" title="struct mdbook::book::Book">Book</a></code>
+                           </span></span><div class='docblock'><p>A representation of the book&#39;s contents in memory.</p>
 </div><span id="structfield.livereload" class="structfield small-section-header">
                            <a href="#structfield.livereload" class="anchor field"></a>
                            <span id="livereload.v" class='invisible'>
@@ -75,12 +81,12 @@
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../mdbook/book/struct.MDBook.html" title="struct mdbook::book::MDBook">MDBook</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#44-237' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.load' class="method"><span id='load.v' class='invisible'><code>pub fn <a href='#method.load' class='fnname'>load</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;&gt;(book_root: P) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="struct" href="../../mdbook/book/struct.MDBook.html" title="struct mdbook::book::MDBook">MDBook</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#46-74' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../mdbook/book/struct.MDBook.html" title="struct mdbook::book::MDBook">MDBook</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#45-284' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.load' class="method"><span id='load.v' class='invisible'><code>pub fn <a href='#method.load' class='fnname'>load</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;&gt;(book_root: P) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="struct" href="../../mdbook/book/struct.MDBook.html" title="struct mdbook::book::MDBook">MDBook</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#47-75' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Load a book from its root directory on disk.</p>
-</div><h4 id='method.load_with_config' class="method"><span id='load_with_config.v' class='invisible'><code>pub fn <a href='#method.load_with_config' class='fnname'>load_with_config</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;book_root: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;config: <a class="struct" href="../../mdbook/config/struct.Config.html" title="struct mdbook::config::Config">Config</a><br>) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="struct" href="../../mdbook/book/struct.MDBook.html" title="struct mdbook::book::MDBook">MDBook</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#77-90' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.load_with_config' class="method"><span id='load_with_config.v' class='invisible'><code>pub fn <a href='#method.load_with_config' class='fnname'>load_with_config</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;book_root: P, <br>&nbsp;&nbsp;&nbsp;&nbsp;config: <a class="struct" href="../../mdbook/config/struct.Config.html" title="struct mdbook::config::Config">Config</a><br>) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="struct" href="../../mdbook/book/struct.MDBook.html" title="struct mdbook::book::MDBook">MDBook</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#78-94' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Load a book from its root directory using a custom config.</p>
-</div><h4 id='method.iter' class="method"><span id='iter.v' class='invisible'><code>pub fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class="struct" href="../../mdbook/book/struct.BookItems.html" title="struct mdbook::book::BookItems">BookItems</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#119-121' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.iter' class="method"><span id='iter.v' class='invisible'><code>pub fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class="struct" href="../../mdbook/book/struct.BookItems.html" title="struct mdbook::book::BookItems">BookItems</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#123-125' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a flat depth-first iterator over the elements of the book,
 it returns an <a href="bookitem.html">BookItem enum</a>:
 <code>(section: String, bookitem: &amp;BookItem)</code></p>
@@ -100,7 +106,7 @@ it returns an <a href="bookitem.html">BookItem enum</a>:
 <span class="comment">// 2. Chapter 2</span>
 <span class="comment">//</span>
 <span class="comment">// etc.</span></pre>
-</div><h4 id='method.init' class="method"><span id='init.v' class='invisible'><code>pub fn <a href='#method.init' class='fnname'>init</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;&gt;(book_root: P) -&gt; <a class="struct" href="../../mdbook/book/struct.BookBuilder.html" title="struct mdbook::book::BookBuilder">BookBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#140-142' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.init' class="method"><span id='init.v' class='invisible'><code>pub fn <a href='#method.init' class='fnname'>init</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;&gt;(book_root: P) -&gt; <a class="struct" href="../../mdbook/book/struct.BookBuilder.html" title="struct mdbook::book::BookBuilder">BookBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#144-146' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p><code>init()</code> gives you a <code>BookBuilder</code> which you can use to setup a new book
 and its accompanying directory structure.</p>
 
@@ -117,15 +123,49 @@ you started with your book.</p>
 <p>It uses the path provided as the root directory for your book, then adds
 in a <code>src/</code> directory containing a <code>SUMMARY.md</code> and <code>chapter_1.md</code> file
 to get you started.</p>
-</div><h4 id='method.build' class="method"><span id='build.v' class='invisible'><code>pub fn <a href='#method.build' class='fnname'>build</a>(&amp;mut self) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#145-154' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.build' class="method"><span id='build.v' class='invisible'><code>pub fn <a href='#method.build' class='fnname'>build</a>(&amp;self) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#149-157' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Tells the renderer to build our book and put it in the build directory.</p>
-</div><h4 id='method.set_renderer' class="method"><span id='set_renderer.v' class='invisible'><code>pub fn <a href='#method.set_renderer' class='fnname'>set_renderer</a>&lt;R:&nbsp;<a class="trait" href="../../mdbook/renderer/trait.Renderer.html" title="trait mdbook::renderer::Renderer">Renderer</a> + 'static&gt;(self, renderer: R) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#169-172' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.with_renderer' class="method"><span id='with_renderer.v' class='invisible'><code>pub fn <a href='#method.with_renderer' class='fnname'>with_renderer</a>&lt;R:&nbsp;<a class="trait" href="../../mdbook/renderer/trait.Renderer.html" title="trait mdbook::renderer::Renderer">Renderer</a> + 'static&gt;(&amp;mut self, renderer: R) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#188-191' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>You can change the default renderer to another one by using this method.
 The only requirement is for your renderer to implement the <a href="../../renderer/renderer/trait.Renderer.html">Renderer
 trait</a></p>
-</div><h4 id='method.test' class="method"><span id='test.v' class='invisible'><code>pub fn <a href='#method.test' class='fnname'>test</a>(&amp;mut self, library_paths: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#175-216' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.test' class="method"><span id='test.v' class='invisible'><code>pub fn <a href='#method.test' class='fnname'>test</a>(&amp;mut self, library_paths: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;) -&gt; <a class="type" href="../../mdbook/errors/type.Result.html" title="type mdbook::errors::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#194-235' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Run <code>rustdoc</code> tests on the book, linking against the provided libraries.</p>
-</div><h4 id='method.source_dir' class="method"><span id='source_dir.v' class='invisible'><code>pub fn <a href='#method.source_dir' class='fnname'>source_dir</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#225-227' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.build_dir_for' class="method"><span id='build_dir_for.v' class='invisible'><code>pub fn <a href='#method.build_dir_for' class='fnname'>build_dir_for</a>(&amp;self, backend_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#261-269' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>The logic for determining where a backend should put its build
+artefacts.</p>
+
+<p>If there is only 1 renderer, put it in the directory pointed to by the
+<code>build.build_dir</code> key in <code>Config</code>. If there is more than one then the
+renderer gets its own directory within the main build dir.</p>
+
+<p>i.e. If there were only one renderer (in this case, the HTML renderer):</p>
+
+<ul>
+<li>build/
+
+<ul>
+<li>index.html</li>
+<li>...</li>
+</ul></li>
+</ul>
+
+<p>Otherwise if there are multiple:</p>
+
+<ul>
+<li>build/
+
+<ul>
+<li>epub/</li>
+<li>my_awesome_book.epub</li>
+<li>html/</li>
+<li>index.html</li>
+<li>...</li>
+<li>latex/</li>
+<li>my_awesome_book.tex</li>
+</ul></li>
+</ul>
+</div><h4 id='method.source_dir' class="method"><span id='source_dir.v' class='invisible'><code>pub fn <a href='#method.source_dir' class='fnname'>source_dir</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/mdbook/book/mod.rs.html#272-274' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the directory containing this book&#39;s source files.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
