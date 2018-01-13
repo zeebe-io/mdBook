@@ -564,23 +564,158 @@
 <span id="519">519</span>
 <span id="520">520</span>
 <span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
 </pre><pre class="rust ">
+<span class="doccomment">//! Mdbook&#39;s configuration system.</span>
+
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">env</span>;
 <span class="kw">use</span> <span class="ident">toml</span>::{<span class="self">self</span>, <span class="ident">Value</span>};
 <span class="kw">use</span> <span class="ident">toml</span>::<span class="ident">value</span>::<span class="ident">Table</span>;
+<span class="kw">use</span> <span class="ident">toml_query</span>::<span class="ident">read</span>::<span class="ident">TomlValueReadExt</span>;
+<span class="kw">use</span> <span class="ident">toml_query</span>::<span class="ident">insert</span>::<span class="ident">TomlValueInsertExt</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Serialize</span>, <span class="ident">Serializer</span>};
+<span class="kw">use</span> <span class="ident">serde_json</span>;
 
 <span class="kw">use</span> <span class="ident">errors</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// The overall configuration object for MDBook.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Config</span> {
     <span class="doccomment">/// Metadata about the book.</span>
     <span class="kw">pub</span> <span class="ident">book</span>: <span class="ident">BookConfig</span>,
     <span class="kw">pub</span> <span class="ident">build</span>: <span class="ident">BuildConfig</span>,
-    <span class="ident">rest</span>: <span class="ident">Table</span>,
+    <span class="ident">rest</span>: <span class="ident">Value</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Config</span> {
@@ -600,20 +735,74 @@
         <span class="ident">Config</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">buffer</span>)
     }
 
+    <span class="doccomment">/// Updates the `Config` from the available environment variables.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Variables starting with `MDBOOK_` are used for configuration. The key is</span>
+    <span class="doccomment">/// created by removing the `MDBOOK_` prefix and turning the resulting</span>
+    <span class="doccomment">/// string into `kebab-case`. Double underscores (`__`) separate nested</span>
+    <span class="doccomment">/// keys, while a single underscore (`_`) is replaced with a dash (`-`).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For example:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// - `MDBOOK_foo` -&gt; `foo`</span>
+    <span class="doccomment">/// - `MDBOOK_FOO` -&gt; `foo`</span>
+    <span class="doccomment">/// - `MDBOOK_FOO__BAR` -&gt; `foo.bar`</span>
+    <span class="doccomment">/// - `MDBOOK_FOO_BAR` -&gt; `foo-bar`</span>
+    <span class="doccomment">/// - `MDBOOK_FOO_bar__baz` -&gt; `foo-bar.baz`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// So by setting the `MDBOOK_BOOK__TITLE` environment variable you can</span>
+    <span class="doccomment">/// override the book&#39;s title without needing to touch your `book.toml`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// &gt; **Note:** To facilitate setting more complex config items, the value</span>
+    <span class="doccomment">/// &gt; of an environment variable is first parsed as JSON, falling back to a</span>
+    <span class="doccomment">/// &gt; string if the parse fails.</span>
+    <span class="doccomment">/// &gt;</span>
+    <span class="doccomment">/// &gt; This means, if you so desired, you could override all book metadata</span>
+    <span class="doccomment">/// &gt; when building the book with something like</span>
+    <span class="doccomment">/// &gt;</span>
+    <span class="doccomment">/// &gt; ```text</span>
+    <span class="doccomment">/// &gt; $ export MDBOOK_BOOK=&quot;{&#39;title&#39;: &#39;My Awesome Book&#39;, authors: [&#39;Michael-F-Bryan&#39;]}&quot;</span>
+    <span class="doccomment">/// &gt; $ mdbook build</span>
+    <span class="doccomment">/// &gt; ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The latter case may be useful in situations where `mdbook` is invoked</span>
+    <span class="doccomment">/// from a script or CI, where it sometimes isn&#39;t possible to update the</span>
+    <span class="doccomment">/// `book.toml` before building.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_from_env</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Updating the config from environment variables&quot;</span>);
+
+        <span class="kw">let</span> <span class="ident">overrides</span> <span class="op">=</span> <span class="ident">env</span>::<span class="ident">vars</span>().<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">key</span>, <span class="ident">value</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">parse_env</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>((<span class="ident">index</span>, <span class="ident">value</span>)),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        });
+
+        <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">overrides</span> {
+            <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;{} =&gt; {}&quot;</span>, <span class="ident">key</span>, <span class="ident">value</span>);
+            <span class="kw">let</span> <span class="ident">parsed_value</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>)
+                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">serde_json</span>::<span class="ident">Value</span>::<span class="ident">String</span>(<span class="ident">value</span>.<span class="ident">to_string</span>()));
+
+            <span class="self">self</span>.<span class="ident">set</span>(<span class="ident">key</span>, <span class="ident">parsed_value</span>).<span class="ident">expect</span>(<span class="string">&quot;unreachable&quot;</span>);
+        }
+    }
+
     <span class="doccomment">/// Fetch an arbitrary item from the `Config` as a `toml::Value`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// You can use dotted indices to access nested items (e.g.</span>
     <span class="doccomment">/// `output.html.playpen` will fetch the &quot;playpen&quot; out of the html output</span>
     <span class="doccomment">/// table).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Value</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">pieces</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">split</span>(<span class="string">&quot;.&quot;</span>).<span class="ident">collect</span>();
-        <span class="ident">recursive_get</span>(<span class="kw-2">&amp;</span><span class="ident">pieces</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">rest</span>)
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">rest</span>.<span class="ident">read</span>(<span class="ident">key</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>,
+            <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        }
     }
 
     <span class="doccomment">/// Fetch a value from the `Config` so you can mutate it.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Value</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">pieces</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">split</span>(<span class="string">&quot;.&quot;</span>).<span class="ident">collect</span>();
-        <span class="ident">recursive_get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">pieces</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">rest</span>)
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">rest</span>.<span class="ident">read_mut</span>(<span class="ident">key</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>,
+            <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        }
     }
 
     <span class="doccomment">/// Convenience method for getting the html renderer&#39;s configuration.</span>
@@ -647,10 +836,18 @@
     <span class="doccomment">/// The only way this can fail is if we can&#39;t serialize `value` into a</span>
     <span class="doccomment">/// `toml::Value`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serialize</span>, <span class="ident">I</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">I</span>, <span class="ident">value</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">pieces</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">index</span>.<span class="ident">as_ref</span>().<span class="ident">split</span>(<span class="string">&quot;.&quot;</span>).<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span>.<span class="ident">as_ref</span>();
+
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span>
             <span class="ident">Value</span>::<span class="ident">try_from</span>(<span class="ident">value</span>).<span class="ident">chain_err</span>(<span class="op">||</span> <span class="string">&quot;Unable to represent the item as a JSON Value&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">recursive_set</span>(<span class="kw-2">&amp;</span><span class="ident">pieces</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">rest</span>, <span class="ident">value</span>);
+
+        <span class="kw">if</span> <span class="ident">index</span>.<span class="ident">starts_with</span>(<span class="string">&quot;book.&quot;</span>) {
+            <span class="self">self</span>.<span class="ident">book</span>.<span class="ident">update_value</span>(<span class="kw-2">&amp;</span><span class="ident">index</span>[<span class="number">5</span>..], <span class="ident">value</span>);
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">index</span>.<span class="ident">starts_with</span>(<span class="string">&quot;build.&quot;</span>) {
+            <span class="self">self</span>.<span class="ident">build</span>.<span class="ident">update_value</span>(<span class="kw-2">&amp;</span><span class="ident">index</span>[<span class="number">6</span>..], <span class="ident">value</span>);
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">rest</span>.<span class="ident">insert</span>(<span class="ident">index</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+        }
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -689,73 +886,20 @@
             <span class="ident">cfg</span>.<span class="ident">build</span>.<span class="ident">build_dir</span> <span class="op">=</span> <span class="ident">dest</span>;
         }
 
-        <span class="ident">cfg</span>.<span class="ident">rest</span> <span class="op">=</span> <span class="ident">table</span>;
+        <span class="ident">cfg</span>.<span class="ident">rest</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">Table</span>(<span class="ident">table</span>);
         <span class="ident">cfg</span>
     }
 }
 
-<span class="doccomment">/// Recursively walk down a table and try to set some `foo.bar.baz` value.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// If at any table along the way doesn&#39;t exist (or isn&#39;t itself a `Table`!) an</span>
-<span class="doccomment">/// empty `Table` will be inserted. e.g. if the `foo` table didn&#39;t contain a</span>
-<span class="doccomment">/// nested table called `bar`, we&#39;d insert one and then keep recursing.</span>
-<span class="kw">fn</span> <span class="ident">recursive_set</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>], <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Table</span>, <span class="ident">value</span>: <span class="ident">Value</span>) {
-    <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">is_empty</span>() {
-        <span class="macro">unreachable</span><span class="macro">!</span>();
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-        <span class="ident">table</span>.<span class="ident">insert</span>(<span class="ident">key</span>[<span class="number">0</span>].<span class="ident">to_string</span>(), <span class="ident">value</span>);
-    } <span class="kw">else</span> {
-        <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">key</span>[<span class="number">0</span>];
-        <span class="kw">let</span> <span class="ident">rest</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="number">1</span>..];
-
-        <span class="comment">// if `table[first]` isn&#39;t a table, replace whatever is there with a</span>
-        <span class="comment">// new table.</span>
-        <span class="kw">if</span> <span class="ident">table</span>.<span class="ident">get</span>(<span class="ident">first</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">as_table</span>()).<span class="ident">is_none</span>() {
-            <span class="ident">table</span>.<span class="ident">insert</span>(<span class="ident">first</span>.<span class="ident">to_string</span>(), <span class="ident">Value</span>::<span class="ident">Table</span>(<span class="ident">Table</span>::<span class="ident">new</span>()));
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Config</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Config</span> {
+        <span class="ident">Config</span> {
+            <span class="ident">book</span>: <span class="ident">BookConfig</span>::<span class="ident">default</span>(),
+            <span class="ident">build</span>: <span class="ident">BuildConfig</span>::<span class="ident">default</span>(),
+            <span class="ident">rest</span>: <span class="ident">Value</span>::<span class="ident">Table</span>(<span class="ident">Table</span>::<span class="ident">default</span>()),
         }
-
-        <span class="kw">let</span> <span class="ident">nested</span> <span class="op">=</span> <span class="ident">table</span>.<span class="ident">get_mut</span>(<span class="ident">first</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">as_table_mut</span>()).<span class="ident">unwrap</span>();
-        <span class="ident">recursive_set</span>(<span class="ident">rest</span>, <span class="ident">nested</span>, <span class="ident">value</span>);
     }
 }
-
-<span class="doccomment">/// The &quot;getter&quot; version of `recursive_set()`.</span>
-<span class="kw">fn</span> <span class="ident">recursive_get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>], <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Table</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Value</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="prelude-val">None</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-        <span class="kw">return</span> <span class="ident">table</span>.<span class="ident">get</span>(<span class="ident">key</span>[<span class="number">0</span>]);
-    }
-
-    <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">key</span>[<span class="number">0</span>];
-    <span class="kw">let</span> <span class="ident">rest</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="number">1</span>..];
-
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">Value</span>::<span class="ident">Table</span>(<span class="kw-2">ref</span> <span class="ident">nested</span>)) <span class="op">=</span> <span class="ident">table</span>.<span class="ident">get</span>(<span class="ident">first</span>) {
-        <span class="ident">recursive_get</span>(<span class="ident">rest</span>, <span class="ident">nested</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
-    }
-}
-
-<span class="doccomment">/// The mutable version of `recursive_get()`.</span>
-<span class="kw">fn</span> <span class="ident">recursive_get_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>], <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Table</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Value</span><span class="op">&gt;</span> {
-    <span class="comment">// TODO: Figure out how to abstract over mutability to reduce copy-pasta</span>
-    <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="prelude-val">None</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-        <span class="kw">return</span> <span class="ident">table</span>.<span class="ident">get_mut</span>(<span class="ident">key</span>[<span class="number">0</span>]);
-    }
-
-    <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">key</span>[<span class="number">0</span>];
-    <span class="kw">let</span> <span class="ident">rest</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="number">1</span>..];
-
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Value</span>::<span class="ident">Table</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">nested</span>)) <span class="op">=</span> <span class="ident">table</span>.<span class="ident">get_mut</span>(<span class="ident">first</span>) {
-        <span class="ident">recursive_get_mut</span>(<span class="ident">rest</span>, <span class="ident">nested</span>)
-    } <span class="kw">else</span> {
-        <span class="prelude-val">None</span>
-    }
-}
-
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Config</span> {
     <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>(<span class="ident">de</span>: <span class="ident">D</span>) <span class="op">-&gt;</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">deserialize</span>(<span class="ident">de</span>)<span class="question-mark">?</span>;
@@ -795,26 +939,38 @@
         <span class="prelude-val">Ok</span>(<span class="ident">Config</span> {
             <span class="ident">book</span>: <span class="ident">book</span>,
             <span class="ident">build</span>: <span class="ident">build</span>,
-            <span class="ident">rest</span>: <span class="ident">table</span>,
+            <span class="ident">rest</span>: <span class="ident">Value</span>::<span class="ident">Table</span>(<span class="ident">table</span>),
         })
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">Config</span> {
     <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">s</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="prelude-val">Ok</span>, <span class="ident">S</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">ser</span>::<span class="ident">Error</span>;
+
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">table</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rest</span>.<span class="ident">clone</span>();
 
         <span class="kw">let</span> <span class="ident">book_config</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">Value</span>::<span class="ident">try_from</span>(<span class="self">self</span>.<span class="ident">book</span>.<span class="ident">clone</span>()) {
             <span class="prelude-val">Ok</span>(<span class="ident">cfg</span>) <span class="op">=&gt;</span> <span class="ident">cfg</span>,
             <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> {
-                <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">ser</span>::<span class="ident">Error</span>;
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">S</span>::<span class="ident">Error</span>::<span class="ident">custom</span>(<span class="string">&quot;Unable to serialize the BookConfig&quot;</span>));
             }
         };
 
-        <span class="ident">table</span>.<span class="ident">insert</span>(<span class="string">&quot;book&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">book_config</span>);
+        <span class="ident">table</span>.<span class="ident">insert</span>(<span class="string">&quot;book&quot;</span>, <span class="ident">book_config</span>).<span class="ident">expect</span>(<span class="string">&quot;unreachable&quot;</span>);
+        <span class="ident">table</span>.<span class="ident">serialize</span>(<span class="ident">s</span>)
+    }
+}
 
-        <span class="ident">Value</span>::<span class="ident">Table</span>(<span class="ident">table</span>).<span class="ident">serialize</span>(<span class="ident">s</span>)
+<span class="kw">fn</span> <span class="ident">parse_env</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">const</span> <span class="ident">PREFIX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;MDBOOK_&quot;</span>;
+
+    <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">starts_with</span>(<span class="ident">PREFIX</span>) {
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="ident">PREFIX</span>.<span class="ident">len</span>()..];
+
+        <span class="prelude-val">Some</span>(<span class="ident">key</span>.<span class="ident">to_lowercase</span>().<span class="ident">replace</span>(<span class="string">&quot;__&quot;</span>, <span class="string">&quot;.&quot;</span>).<span class="ident">replace</span>(<span class="string">&quot;_&quot;</span>, <span class="string">&quot;-&quot;</span>))
+    } <span class="kw">else</span> {
+        <span class="prelude-val">None</span>
     }
 }
 
@@ -911,6 +1067,35 @@
             <span class="ident">editable</span>: <span class="bool-val">false</span>,
         }
     }
+}
+
+<span class="doccomment">/// Allows you to &quot;update&quot; any arbitrary field in a struct by round-tripping via</span>
+<span class="doccomment">/// a `toml::Value`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is definitely not the most performant way to do things, which means you</span>
+<span class="doccomment">/// should probably keep it away from tight loops...</span>
+<span class="kw">trait</span> <span class="ident">Updateable</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">update_value</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">value</span>: <span class="ident">S</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>).<span class="ident">expect</span>(<span class="string">&quot;unreachable&quot;</span>);
+
+        {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">Value</span>::<span class="ident">try_from</span>(<span class="ident">value</span>) {
+                <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">raw</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">value</span>);
+            } <span class="kw">else</span> {
+                <span class="kw">return</span>;
+            }
+        }
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">updated</span>) <span class="op">=</span> <span class="ident">raw</span>.<span class="ident">try_into</span>() {
+            <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="ident">updated</span>;
+        }
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Updateable</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+{
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -1084,6 +1269,79 @@
 
         <span class="kw">let</span> <span class="ident">got</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">cfg</span>.<span class="ident">get_deserialized</span>(<span class="ident">key</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, <span class="ident">value</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_env_vars</span>() {
+        <span class="kw">let</span> <span class="ident">inputs</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            (<span class="string">&quot;FOO&quot;</span>, <span class="prelude-val">None</span>),
+            (<span class="string">&quot;MDBOOK_foo&quot;</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>)),
+            (<span class="string">&quot;MDBOOK_FOO__bar__baz&quot;</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;foo.bar.baz&quot;</span>)),
+            (<span class="string">&quot;MDBOOK_FOO_bar__baz&quot;</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;foo-bar.baz&quot;</span>)),
+        ];
+
+        <span class="kw">for</span> (<span class="ident">src</span>, <span class="ident">should_be</span>) <span class="kw">in</span> <span class="ident">inputs</span> {
+            <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">parse_env</span>(<span class="ident">src</span>);
+            <span class="kw">let</span> <span class="ident">should_be</span> <span class="op">=</span> <span class="ident">should_be</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_string</span>());
+
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, <span class="ident">should_be</span>);
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">encode_env_var</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="macro">format</span><span class="macro">!</span>(
+            <span class="string">&quot;MDBOOK_{}&quot;</span>,
+            <span class="ident">key</span>.<span class="ident">to_uppercase</span>().<span class="ident">replace</span>(<span class="string">&#39;.&#39;</span>, <span class="string">&quot;__&quot;</span>).<span class="ident">replace</span>(<span class="string">&quot;-&quot;</span>, <span class="string">&quot;_&quot;</span>)
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">update_config_using_env_var</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cfg</span> <span class="op">=</span> <span class="ident">Config</span>::<span class="ident">default</span>();
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="string">&quot;foo.bar&quot;</span>;
+        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="string">&quot;baz&quot;</span>;
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">cfg</span>.<span class="ident">get</span>(<span class="ident">key</span>).<span class="ident">is_none</span>());
+
+        <span class="kw">let</span> <span class="ident">encoded_key</span> <span class="op">=</span> <span class="ident">encode_env_var</span>(<span class="ident">key</span>);
+        <span class="ident">env</span>::<span class="ident">set_var</span>(<span class="ident">encoded_key</span>, <span class="ident">value</span>);
+
+        <span class="ident">cfg</span>.<span class="ident">update_from_env</span>();
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cfg</span>.<span class="ident">get_deserialized</span>::<span class="op">&lt;</span><span class="ident">String</span>, _<span class="op">&gt;</span>(<span class="ident">key</span>).<span class="ident">unwrap</span>(), <span class="ident">value</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">update_config_using_env_var_and_complex_value</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cfg</span> <span class="op">=</span> <span class="ident">Config</span>::<span class="ident">default</span>();
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="string">&quot;foo-bar.baz&quot;</span>;
+        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="macro">json</span><span class="macro">!</span>({<span class="string">&quot;array&quot;</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="string">&quot;number&quot;</span>: <span class="number">3.14</span>});
+        <span class="kw">let</span> <span class="ident">value_str</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>).<span class="ident">unwrap</span>();
+
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">cfg</span>.<span class="ident">get</span>(<span class="ident">key</span>).<span class="ident">is_none</span>());
+
+        <span class="kw">let</span> <span class="ident">encoded_key</span> <span class="op">=</span> <span class="ident">encode_env_var</span>(<span class="ident">key</span>);
+        <span class="ident">env</span>::<span class="ident">set_var</span>(<span class="ident">encoded_key</span>, <span class="ident">value_str</span>);
+
+        <span class="ident">cfg</span>.<span class="ident">update_from_env</span>();
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">cfg</span>.<span class="ident">get_deserialized</span>::<span class="op">&lt;</span><span class="ident">serde_json</span>::<span class="ident">Value</span>, _<span class="op">&gt;</span>(<span class="ident">key</span>).<span class="ident">unwrap</span>(),
+            <span class="ident">value</span>
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">update_book_title_via_env</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cfg</span> <span class="op">=</span> <span class="ident">Config</span>::<span class="ident">default</span>();
+        <span class="kw">let</span> <span class="ident">should_be</span> <span class="op">=</span> <span class="string">&quot;Something else&quot;</span>.<span class="ident">to_string</span>();
+
+        <span class="macro">assert_ne</span><span class="macro">!</span>(<span class="ident">cfg</span>.<span class="ident">book</span>.<span class="ident">title</span>, <span class="prelude-val">Some</span>(<span class="ident">should_be</span>.<span class="ident">clone</span>()));
+
+        <span class="ident">env</span>::<span class="ident">set_var</span>(<span class="string">&quot;MDBOOK_BOOK__TITLE&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">should_be</span>);
+        <span class="ident">cfg</span>.<span class="ident">update_from_env</span>();
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cfg</span>.<span class="ident">book</span>.<span class="ident">title</span>, <span class="prelude-val">Some</span>(<span class="ident">should_be</span>));
     }
 }
 </pre>

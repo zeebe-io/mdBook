@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/itertools-0.7.5/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/itertools-0.7.6/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -1957,6 +1957,75 @@
 <span id="1912">1912</span>
 <span id="1913">1913</span>
 <span id="1914">1914</span>
+<span id="1915">1915</span>
+<span id="1916">1916</span>
+<span id="1917">1917</span>
+<span id="1918">1918</span>
+<span id="1919">1919</span>
+<span id="1920">1920</span>
+<span id="1921">1921</span>
+<span id="1922">1922</span>
+<span id="1923">1923</span>
+<span id="1924">1924</span>
+<span id="1925">1925</span>
+<span id="1926">1926</span>
+<span id="1927">1927</span>
+<span id="1928">1928</span>
+<span id="1929">1929</span>
+<span id="1930">1930</span>
+<span id="1931">1931</span>
+<span id="1932">1932</span>
+<span id="1933">1933</span>
+<span id="1934">1934</span>
+<span id="1935">1935</span>
+<span id="1936">1936</span>
+<span id="1937">1937</span>
+<span id="1938">1938</span>
+<span id="1939">1939</span>
+<span id="1940">1940</span>
+<span id="1941">1941</span>
+<span id="1942">1942</span>
+<span id="1943">1943</span>
+<span id="1944">1944</span>
+<span id="1945">1945</span>
+<span id="1946">1946</span>
+<span id="1947">1947</span>
+<span id="1948">1948</span>
+<span id="1949">1949</span>
+<span id="1950">1950</span>
+<span id="1951">1951</span>
+<span id="1952">1952</span>
+<span id="1953">1953</span>
+<span id="1954">1954</span>
+<span id="1955">1955</span>
+<span id="1956">1956</span>
+<span id="1957">1957</span>
+<span id="1958">1958</span>
+<span id="1959">1959</span>
+<span id="1960">1960</span>
+<span id="1961">1961</span>
+<span id="1962">1962</span>
+<span id="1963">1963</span>
+<span id="1964">1964</span>
+<span id="1965">1965</span>
+<span id="1966">1966</span>
+<span id="1967">1967</span>
+<span id="1968">1968</span>
+<span id="1969">1969</span>
+<span id="1970">1970</span>
+<span id="1971">1971</span>
+<span id="1972">1972</span>
+<span id="1973">1973</span>
+<span id="1974">1974</span>
+<span id="1975">1975</span>
+<span id="1976">1976</span>
+<span id="1977">1977</span>
+<span id="1978">1978</span>
+<span id="1979">1979</span>
+<span id="1980">1980</span>
+<span id="1981">1981</span>
+<span id="1982">1982</span>
+<span id="1983">1983</span>
 </pre><pre class="rust ">
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">crate_name</span><span class="op">=</span><span class="string">&quot;itertools&quot;</span>]</span>
@@ -2027,6 +2096,8 @@
         <span class="ident">Positions</span>,
         <span class="ident">Update</span>,
     };
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_std&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">adaptors</span>::<span class="ident">MultiProduct</span>;
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_std&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">combinations</span>::<span class="ident">Combinations</span>;
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">cons_tuples_impl</span>::<span class="ident">ConsTuples</span>;
@@ -2751,6 +2822,41 @@
         <span class="ident">adaptors</span>::<span class="ident">cartesian_product</span>(<span class="self">self</span>, <span class="ident">other</span>.<span class="ident">into_iter</span>())
     }
 
+    <span class="doccomment">/// Return an iterator adaptor that iterates over the cartesian product of</span>
+    <span class="doccomment">/// all subiterators returned by meta-iterator `self`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// All provided iterators must yield the same `Item` type. To generate</span>
+    <span class="doccomment">/// the product of iterators yielding multiple types, use the</span>
+    <span class="doccomment">/// [`iproduct`](macro.iproduct.html) macro instead.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The iterator element type is `Vec&lt;T&gt;`, where `T` is the iterator element</span>
+    <span class="doccomment">/// of the subiterators.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use itertools::Itertools;</span>
+    <span class="doccomment">/// let mut multi_prod = (0..3).map(|i| (i * 2)..(i * 2 + 2))</span>
+    <span class="doccomment">///     .multi_cartesian_product();</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![0, 2, 4]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![0, 2, 5]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![0, 3, 4]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![0, 3, 5]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![1, 2, 4]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![1, 2, 5]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![1, 3, 4]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), Some(vec![1, 3, 5]));</span>
+    <span class="doccomment">/// assert_eq!(multi_prod.next(), None);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_std&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">multi_cartesian_product</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">MultiProduct</span><span class="op">&lt;&lt;</span><span class="self">Self</span>::<span class="ident">Item</span> <span class="kw">as</span> <span class="ident">IntoIterator</span><span class="op">&gt;</span>::<span class="ident">IntoIter</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Iterator</span> <span class="op">+</span> <span class="ident">Sized</span>,
+              <span class="self">Self</span>::<span class="ident">Item</span>: <span class="ident">IntoIterator</span>,
+              <span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span> <span class="kw">as</span> <span class="ident">IntoIterator</span><span class="op">&gt;</span>::<span class="ident">IntoIter</span>: <span class="ident">Clone</span>,
+              <span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span> <span class="kw">as</span> <span class="ident">IntoIterator</span><span class="op">&gt;</span>::<span class="ident">Item</span>: <span class="ident">Clone</span>
+    {
+        <span class="ident">adaptors</span>::<span class="ident">multi_cartesian_product</span>(<span class="self">self</span>)
+    }
+
     <span class="doccomment">/// Return an iterator adaptor that uses the passed-in closure to</span>
     <span class="doccomment">/// optionally merge together consecutive elements.</span>
     <span class="doccomment">///</span>
@@ -3133,9 +3239,9 @@
               <span class="ident">T</span>: <span class="ident">tuple_impl</span>::<span class="ident">TupleCollect</span>
     {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">next_tuple</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">tuple</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">next</span>() {
+            <span class="ident">elt</span> @ <span class="prelude-val">Some</span>(_) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">next</span>() {
                 <span class="prelude-val">Some</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">tuple</span>),
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">elt</span>,
             },
             _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>
         }
@@ -3618,6 +3724,38 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">collect</span>();
 
         <span class="ident">v</span>.<span class="ident">sort_by</span>(<span class="ident">cmp</span>);
+        <span class="ident">v</span>
+    }
+
+    <span class="doccomment">/// Collect all iterator elements into a sorted vector.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **Note:** This consumes the entire iterator, uses the</span>
+    <span class="doccomment">/// `slice::sort_by_key()` method and returns the sorted vector.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use itertools::Itertools;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // sort people in descending order by age</span>
+    <span class="doccomment">/// let people = vec![(&quot;Jane&quot;, 20), (&quot;John&quot;, 18), (&quot;Jill&quot;, 30), (&quot;Jack&quot;, 27)];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let oldest_people_first = people</span>
+    <span class="doccomment">///     .into_iter()</span>
+    <span class="doccomment">///     .sorted_by_key(|x| -x.1)</span>
+    <span class="doccomment">///     .into_iter()</span>
+    <span class="doccomment">///     .map(|(person, _age)| person);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// itertools::assert_equal(oldest_people_first,</span>
+    <span class="doccomment">///                         vec![&quot;Jill&quot;, &quot;Jack&quot;, &quot;Jane&quot;, &quot;John&quot;]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;use_std&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">sorted_by_key</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span>,
+              <span class="ident">K</span>: <span class="ident">Ord</span>,
+              <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Item</span>) <span class="op">-&gt;</span> <span class="ident">K</span>,
+    {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">collect</span>();
+
+        <span class="ident">v</span>.<span class="ident">sort_by_key</span>(<span class="ident">f</span>);
         <span class="ident">v</span>
     }
 

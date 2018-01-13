@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         <a href='../env_logger/index.html'><img src='http://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
-        <p class='location'>Crate env_logger</p><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'env_logger', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate env_logger</p><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'env_logger', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/env_logger/lib.rs.html#11-582' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/env_logger/lib.rs.html#11-659' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>A simple logger configured via an environment variable which writes 
 to stdout or stderr, for use with the logging facade exposed by the
 <a href="https://docs.rs/log/"><code>log</code> crate</a>.</p>
@@ -161,7 +161,20 @@ message includes &#39;foofoo&#39; or &#39;fofoo&#39; or &#39;fooooooofoo&#39;, e
 warn for hello. In both cases the log message must include a single digit
 number followed by &#39;scopes&#39;.</li>
 </ul>
-</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+
+<h2 id='disabling-colors' class='section-header'><a href='#disabling-colors'>Disabling colors</a></h2>
+<p>Colors and other styles can be configured with the <code>RUST_LOG_STYLE</code>
+environment variable. It accepts the following values:</p>
+
+<ul>
+<li><code>auto</code> (default) will attempt to print style characters, but don&#39;t force the issue.
+If the console isn&#39;t available on Windows, or if TERM=dumb, for example, then don&#39;t print colors.</li>
+<li><code>always</code> will always print style characters even if they aren&#39;t supported by the terminal.
+This includes emitting ANSI colors on Windows if the console API is unavailable.</li>
+<li><code>never</code> will never print style characters.</li>
+</ul>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use self::<a class="mod" href="./fmt/index.html">fmt</a>::<a class="enum" href="../env_logger/fmt/enum.Target.html" title="enum env_logger::fmt::Target">Target</a>;</code></td></tr><tr><td><code>pub use self::<a class="mod" href="./fmt/index.html">fmt</a>::<a class="enum" href="../env_logger/fmt/enum.WriteStyle.html" title="enum env_logger::fmt::WriteStyle">WriteStyle</a>;</code></td></tr><tr><td><code>pub use self::<a class="mod" href="./fmt/index.html">fmt</a>::<a class="struct" href="../env_logger/fmt/struct.Formatter.html" title="struct env_logger::fmt::Formatter">Formatter</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class="mod" href="filter/index.html"
@@ -186,6 +199,13 @@ number followed by &#39;scopes&#39;.</li>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Env.html"
+                                  title='struct env_logger::Env'>Env</a></td>
+                           <td class='docblock-short'>
+                                <p>Set of environment variables to configure from.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="struct" href="struct.Logger.html"
                                   title='struct env_logger::Logger'>Logger</a></td>
                            <td class='docblock-short'>
@@ -194,10 +214,10 @@ number followed by &#39;scopes&#39;.</li>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Target.html"
-                                  title='enum env_logger::Target'>Target</a></td>
+                           <td><a class="enum" href="enum.Color.html"
+                                  title='enum env_logger::Color'>Color</a></td>
                            <td class='docblock-short'>
-                                <p>Log target, either stdout or stderr.</p>
+                                <p>The set of available English colors for the terminal foreground/background.</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -213,7 +233,7 @@ number followed by &#39;scopes&#39;.</li>
                                   title='fn env_logger::init_from_env'>init_from_env</a></td>
                            <td class='docblock-short'>
                                 <p>Initializes the global logger with an env logger from the given environment
-variable.</p>
+variables.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -228,7 +248,7 @@ variable.</p>
                                   title='fn env_logger::try_init_from_env'>try_init_from_env</a></td>
                            <td class='docblock-short'>
                                 <p>Attempts to initialize the global logger with an env logger from the given
-environment variable.</p>
+environment variables.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
