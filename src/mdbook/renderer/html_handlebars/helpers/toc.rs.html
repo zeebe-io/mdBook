@@ -211,7 +211,7 @@
                         .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Type error for `path`, string expected&quot;</span>))<span class="question-mark">?</span>
                         .<span class="ident">replace</span>(<span class="string">&quot;\&quot;&quot;</span>, <span class="string">&quot;&quot;</span>);
 
-        <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;ul class=\&quot;chapter\&quot;&gt;&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;ol class=\&quot;chapter\&quot;&gt;&quot;</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current_level</span> <span class="op">=</span> <span class="number">1</span>;
 
@@ -231,13 +231,13 @@
             <span class="kw">if</span> <span class="ident">level</span> <span class="op">&gt;</span> <span class="ident">current_level</span> {
                 <span class="kw">while</span> <span class="ident">level</span> <span class="op">&gt;</span> <span class="ident">current_level</span> {
                     <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;li&gt;&quot;</span>)<span class="question-mark">?</span>;
-                    <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;ul class=\&quot;section\&quot;&gt;&quot;</span>)<span class="question-mark">?</span>;
+                    <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;ol class=\&quot;section\&quot;&gt;&quot;</span>)<span class="question-mark">?</span>;
                     <span class="ident">current_level</span> <span class="op">+=</span> <span class="number">1</span>;
                 }
                 <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;li&gt;&quot;</span>)<span class="question-mark">?</span>;
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">level</span> <span class="op">&lt;</span> <span class="ident">current_level</span> {
                 <span class="kw">while</span> <span class="ident">level</span> <span class="op">&lt;</span> <span class="ident">current_level</span> {
-                    <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/ul&gt;&quot;</span>)<span class="question-mark">?</span>;
+                    <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/ol&gt;&quot;</span>)<span class="question-mark">?</span>;
                     <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/li&gt;&quot;</span>)<span class="question-mark">?</span>;
                     <span class="ident">current_level</span> <span class="op">-=</span> <span class="number">1</span>;
                 }
@@ -282,7 +282,7 @@
             <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_section_label</span> {
                 <span class="comment">// Section does not necessarily exist</span>
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">section</span>) <span class="op">=</span> <span class="ident">item</span>.<span class="ident">get</span>(<span class="string">&quot;section&quot;</span>) {
-                    <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;strong&gt;&quot;</span>)<span class="question-mark">?</span>;
+                    <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;strong aria-hidden=\&quot;true\&quot;&gt;&quot;</span>)<span class="question-mark">?</span>;
                     <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="ident">section</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
                     <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/strong&gt; &quot;</span>)<span class="question-mark">?</span>;
                 }
@@ -315,12 +315,12 @@
             <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/li&gt;&quot;</span>)<span class="question-mark">?</span>;
         }
         <span class="kw">while</span> <span class="ident">current_level</span> <span class="op">&gt;</span> <span class="number">1</span> {
-            <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/ul&gt;&quot;</span>)<span class="question-mark">?</span>;
+            <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/ol&gt;&quot;</span>)<span class="question-mark">?</span>;
             <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/li&gt;&quot;</span>)<span class="question-mark">?</span>;
             <span class="ident">current_level</span> <span class="op">-=</span> <span class="number">1</span>;
         }
 
-        <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/ul&gt;&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;/ol&gt;&quot;</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 }
