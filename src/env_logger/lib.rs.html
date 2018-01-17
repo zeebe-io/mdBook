@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.0-rc.2/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -702,6 +702,22 @@
 <span id="657">657</span>
 <span id="658">658</span>
 <span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2014-2015 The Rust Project Developers. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution and at</span>
@@ -713,7 +729,7 @@
 <span class="comment">// option. This file may not be copied, modified, or distributed</span>
 <span class="comment">// except according to those terms.</span>
 
-<span class="doccomment">//! A simple logger configured via an environment variable which writes </span>
+<span class="doccomment">//! A simple logger configured via environment variables which writes </span>
 <span class="doccomment">//! to stdout or stderr, for use with the logging facade exposed by the</span>
 <span class="doccomment">//! [`log` crate][log-crate-url].</span>
 <span class="doccomment">//!</span>
@@ -847,7 +863,7 @@
 
 <span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_logo_url</span> <span class="op">=</span> <span class="string">&quot;http://www.rust-lang.org/logos/rust-logo-128x128-blk-v2.png&quot;</span>,
        <span class="ident">html_favicon_url</span> <span class="op">=</span> <span class="string">&quot;http://www.rust-lang.org/favicon.ico&quot;</span>,
-       <span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/env_logger/0.5.0-rc.2&quot;</span>)]</span>
+       <span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/env_logger/0.5.1&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">deny</span>(<span class="ident">warnings</span>))]</span>
 
 <span class="comment">// When compiled for the rustc compiler itself we want to make sure that this is</span>
@@ -902,7 +918,7 @@
 <span class="doccomment">/// default global logger.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// If you&#39;d instead need access to the constructed `Logger`, you can use</span>
-<span class="doccomment">/// [`Logger::new()`] or the associated [`Builder`] and install it with the</span>
+<span class="doccomment">/// the associated [`Builder`] and install it with the</span>
 <span class="doccomment">/// [`log` crate][log-crate-url] directly.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [log-crate-url]: https://docs.rs/log/</span>
@@ -910,7 +926,6 @@
 <span class="doccomment">/// [`try_init()`]: fn.try_init.html</span>
 <span class="doccomment">/// [`Builder::init()`]: struct.Builder.html#method.init</span>
 <span class="doccomment">/// [`Builder::try_init()`]: struct.Builder.html#method.try_init</span>
-<span class="doccomment">/// [`Logger::new()`]: #method.new</span>
 <span class="doccomment">/// [`Builder`]: struct.Builder.html</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Logger</span> {
     <span class="ident">writer</span>: <span class="ident">fmt</span>::<span class="ident">Writer</span>,
@@ -1052,7 +1067,7 @@
     <span class="doccomment">/// to format and output without intermediate heap allocations. The default </span>
     <span class="doccomment">/// `env_logger` formatter takes advantage of this.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Formatter`]: struct.Formatter.html</span>
+    <span class="doccomment">/// [`Formatter`]: fmt/struct.Formatter.html</span>
     <span class="doccomment">/// [`String`]: https://doc.rust-lang.org/stable/std/string/struct.String.html</span>
     <span class="doccomment">/// [`std::fmt`]: https://doc.rust-lang.org/std/fmt/index.html</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">format</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>
@@ -1131,7 +1146,7 @@
     <span class="doccomment">/// This method is kept private because the only way we support building</span>
     <span class="doccomment">/// loggers is by installing them as the single global logger for the</span>
     <span class="doccomment">/// `log` crate.</span>
-    <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Logger</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Logger</span> {
         <span class="ident">Logger</span> {
             <span class="ident">writer</span>: <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">build</span>(),
             <span class="ident">filter</span>: <span class="self">self</span>.<span class="ident">filter</span>.<span class="ident">build</span>(),
@@ -1165,21 +1180,38 @@
             <span class="comment">// so will always at least have capacity for the largest log record formatted</span>
             <span class="comment">// on that thread.</span>
             <span class="comment">// </span>
-            <span class="comment">// Because these buffers are tied to a particular logger, we don&#39;t let callers</span>
-            <span class="comment">// create instances of `Logger` themselves, or they&#39;ll race to configure the</span>
-            <span class="comment">// thread local buffer with their own configuration. This is still potentially</span>
-            <span class="comment">// an issue if a caller attempts to set and use the global logger multiple times,</span>
-            <span class="comment">// but in that case it&#39;s clearer that there&#39;s shared state at play.</span>
+            <span class="comment">// If multiple `Logger`s are used by the same threads then the thread-local</span>
+            <span class="comment">// formatter might have different color support. If this is the case the</span>
+            <span class="comment">// formatter and its buffer are discarded and recreated.</span>
 
             <span class="macro">thread_local</span><span class="macro">!</span> {
                 <span class="kw">static</span> <span class="ident">FORMATTER</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Formatter</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>);
             }
 
             <span class="ident">FORMATTER</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">tl_buf</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tl_buf</span> <span class="op">=</span> <span class="ident">tl_buf</span>.<span class="ident">borrow_mut</span>();
+                <span class="comment">// It&#39;s possible for implementations to sometimes</span>
+                <span class="comment">// log-while-logging (e.g. a `std::fmt` implementation logs</span>
+                <span class="comment">// internally) but it&#39;s super rare. If this happens make sure we</span>
+                <span class="comment">// at least don&#39;t panic and ship some output to the screen.</span>
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                <span class="kw">let</span> <span class="ident">tl_buf</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">tl_buf</span>.<span class="ident">try_borrow_mut</span>() {
+                    <span class="prelude-val">Ok</span>(<span class="ident">f</span>) <span class="op">=&gt;</span> {
+                        <span class="ident">a</span> <span class="op">=</span> <span class="ident">f</span>;
+                        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">a</span>
+                    }
+                    <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">b</span>,
+                };
 
-                <span class="kw">if</span> <span class="ident">tl_buf</span>.<span class="ident">is_none</span>() {
-                    <span class="kw-2">*</span><span class="ident">tl_buf</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Formatter</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">writer</span>));
+                <span class="comment">// Check the buffer style. If it&#39;s different from the logger&#39;s </span>
+                <span class="comment">// style then drop the buffer and recreate it.</span>
+                <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">tl_buf</span> {
+                    <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">formatter</span>) <span class="op">=&gt;</span> {
+                        <span class="kw">if</span> <span class="ident">formatter</span>.<span class="ident">write_style</span>() <span class="op">!=</span> <span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_style</span>() {
+                            <span class="kw-2">*</span><span class="ident">formatter</span> <span class="op">=</span> <span class="ident">Formatter</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">writer</span>)
+                        }
+                    },
+                    <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">tl_buf</span> <span class="op">=&gt;</span> <span class="kw-2">*</span><span class="ident">tl_buf</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Formatter</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">writer</span>))
                 }
 
                 <span class="comment">// The format is guaranteed to be `Some` by this point</span>

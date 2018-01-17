@@ -698,6 +698,14 @@
 <span id="653">653</span>
 <span id="654">654</span>
 <span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Mdbook&#39;s configuration system.</span>
 
@@ -1030,6 +1038,9 @@
     <span class="doccomment">/// Should non-existent markdown files specified in `SETTINGS.md` be created</span>
     <span class="doccomment">/// if they don&#39;t exist?</span>
     <span class="kw">pub</span> <span class="ident">create_missing</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Which preprocessors should be applied</span>
+    <span class="kw">pub</span> <span class="ident">preprocess</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>,
+
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BuildConfig</span> {
@@ -1037,6 +1048,7 @@
         <span class="ident">BuildConfig</span> {
             <span class="ident">build_dir</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;book&quot;</span>),
             <span class="ident">create_missing</span>: <span class="bool-val">true</span>,
+            <span class="ident">preprocess</span>: <span class="prelude-val">None</span>,
         }
     }
 }
@@ -1123,6 +1135,7 @@
         [build]
         build-dir = &quot;outputs&quot;
         create-missing = false
+        preprocess = [&quot;first_preprocessor&quot;, &quot;second_preprocessor&quot;]
 
         [output.html]
         theme = &quot;./themedir&quot;
@@ -1150,6 +1163,8 @@
         <span class="kw">let</span> <span class="ident">build_should_be</span> <span class="op">=</span> <span class="ident">BuildConfig</span> {
             <span class="ident">build_dir</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;outputs&quot;</span>),
             <span class="ident">create_missing</span>: <span class="bool-val">false</span>,
+            <span class="ident">preprocess</span>: <span class="prelude-val">Some</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;first_preprocessor&quot;</span>.<span class="ident">to_string</span>(),
+                                  <span class="string">&quot;second_preprocessor&quot;</span>.<span class="ident">to_string</span>()]),
         };
         <span class="kw">let</span> <span class="ident">playpen_should_be</span> <span class="op">=</span> <span class="ident">Playpen</span> {
             <span class="ident">editable</span>: <span class="bool-val">true</span>,
@@ -1251,6 +1266,7 @@
         <span class="kw">let</span> <span class="ident">build_should_be</span> <span class="op">=</span> <span class="ident">BuildConfig</span> {
             <span class="ident">build_dir</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;my-book&quot;</span>),
             <span class="ident">create_missing</span>: <span class="bool-val">true</span>,
+            <span class="ident">preprocess</span>: <span class="prelude-val">None</span>,
         };
 
         <span class="kw">let</span> <span class="ident">html_should_be</span> <span class="op">=</span> <span class="ident">HtmlConfig</span> {
