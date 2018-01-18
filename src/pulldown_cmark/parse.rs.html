@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/git/checkouts/pulldown-cmark-fb4e4912891a85f5/c1ac912/src/parse.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/pulldown-cmark-0.1.0/src/parse.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>parse.rs.html -- source</title>
@@ -1766,15 +1766,6 @@
 <span id="1721">1721</span>
 <span id="1722">1722</span>
 <span id="1723">1723</span>
-<span id="1724">1724</span>
-<span id="1725">1725</span>
-<span id="1726">1726</span>
-<span id="1727">1727</span>
-<span id="1728">1728</span>
-<span id="1729">1729</span>
-<span id="1730">1730</span>
-<span id="1731">1731</span>
-<span id="1732">1732</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015 Google Inc. All rights reserved.</span>
 <span class="comment">//</span>
@@ -1857,19 +1848,14 @@
     <span class="kw">pub</span> <span class="ident">links</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, (<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Tag</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="comment">// block-level tags</span>
     <span class="ident">Paragraph</span>,
     <span class="ident">Rule</span>,
-
-    <span class="doccomment">/// A heading. The field indicates the level of the heading.</span>
     <span class="ident">Header</span>(<span class="ident">i32</span>),
-
     <span class="ident">BlockQuote</span>,
     <span class="ident">CodeBlock</span>(<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>),
-
-    <span class="doccomment">/// A list. If the list is ordered the field indicates the number of the first item.</span>
     <span class="ident">List</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>),  <span class="comment">// TODO: add delim and tight for ast (not needed for html)</span>
     <span class="ident">Item</span>,
     <span class="ident">FootnoteDefinition</span>(<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>),
@@ -1884,15 +1870,11 @@
     <span class="ident">Emphasis</span>,
     <span class="ident">Strong</span>,
     <span class="ident">Code</span>,
-
-    <span class="doccomment">/// A link. The first field is the destination URL, the second is a title</span>
     <span class="ident">Link</span>(<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>),
-
-    <span class="doccomment">/// An image. The first field is the destination URL, the second is a title</span>
     <span class="ident">Image</span>(<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span>),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">Start</span>(<span class="ident">Tag</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>),
     <span class="ident">End</span>(<span class="ident">Tag</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>),
@@ -1904,7 +1886,7 @@
     <span class="ident">HardBreak</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Alignment</span> {
     <span class="prelude-val">None</span>,
     <span class="ident">Left</span>,
