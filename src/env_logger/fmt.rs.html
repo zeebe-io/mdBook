@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.1/src/fmt.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.2/src/fmt.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>fmt.rs.html -- source</title>
@@ -645,6 +645,16 @@
 <span id="600">600</span>
 <span id="601">601</span>
 <span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Formatting for log records.</span>
 <span class="doccomment">//! </span>
@@ -690,6 +700,7 @@
 <span class="kw">use</span> <span class="ident">termcolor</span>::{<span class="ident">ColorSpec</span>, <span class="ident">ColorChoice</span>, <span class="ident">Buffer</span>, <span class="ident">BufferWriter</span>, <span class="ident">WriteColor</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">Utc</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">format</span>::<span class="ident">Item</span>;
+<span class="kw">use</span> <span class="ident">atty</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">termcolor</span>::<span class="ident">Color</span>;
 
@@ -880,7 +891,16 @@
     <span class="doccomment">/// Build a terminal writer.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Writer</span> {
         <span class="kw">let</span> <span class="ident">color_choice</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">write_style</span> {
-            <span class="ident">WriteStyle</span>::<span class="ident">Auto</span> <span class="op">=&gt;</span> <span class="ident">ColorChoice</span>::<span class="ident">Auto</span>,
+            <span class="ident">WriteStyle</span>::<span class="ident">Auto</span> <span class="op">=&gt;</span> {
+                <span class="kw">if</span> <span class="ident">atty</span>::<span class="ident">is</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">target</span> {
+                    <span class="ident">Target</span>::<span class="ident">Stderr</span> <span class="op">=&gt;</span> <span class="ident">atty</span>::<span class="ident">Stream</span>::<span class="ident">Stderr</span>,
+                    <span class="ident">Target</span>::<span class="ident">Stdout</span> <span class="op">=&gt;</span> <span class="ident">atty</span>::<span class="ident">Stream</span>::<span class="ident">Stdout</span>,
+                }) {
+                    <span class="ident">ColorChoice</span>::<span class="ident">Auto</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">ColorChoice</span>::<span class="ident">Never</span>
+                }
+            },
             <span class="ident">WriteStyle</span>::<span class="ident">Always</span> <span class="op">=&gt;</span> <span class="ident">ColorChoice</span>::<span class="ident">Always</span>,
             <span class="ident">WriteStyle</span>::<span class="ident">Never</span> <span class="op">=&gt;</span> <span class="ident">ColorChoice</span>::<span class="ident">Never</span>,
         };
