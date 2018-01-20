@@ -228,11 +228,6 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
 </pre><pre class="rust ">
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">playpen_editor</span>;
 
@@ -251,7 +246,6 @@
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">TOMORROW_NIGHT_CSS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;tomorrow-night.css&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">HIGHLIGHT_CSS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;highlight.css&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">AYU_HIGHLIGHT_CSS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;ayu-highlight.css&quot;</span>);
-<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">JQUERY</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;jquery.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">CLIPBOARD_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;clipboard.min.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">STORE_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;store.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">FONT_AWESOME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;_FontAwesome/css/font-awesome.min.css&quot;</span>);
@@ -287,7 +281,6 @@
     <span class="kw">pub</span> <span class="ident">highlight_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">clipboard_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">store_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">jquery</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Theme</span> {
@@ -314,7 +307,6 @@
                 (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;highlight.css&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">highlight_css</span>),
                 (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;tomorrow-night.css&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">tomorrow_night_css</span>),
                 (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;ayu-highlight.css&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">ayu_highlight_css</span>),
-                (<span class="ident">theme_dir</span>.<span class="ident">join</span>(<span class="string">&quot;jquery.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">theme</span>.<span class="ident">jquery</span>),
             ];
 
             <span class="kw">for</span> (<span class="ident">filename</span>, <span class="ident">dest</span>) <span class="kw">in</span> <span class="ident">files</span> {
@@ -346,7 +338,6 @@
             <span class="ident">highlight_js</span>: <span class="ident">HIGHLIGHT_JS</span>.<span class="ident">to_owned</span>(),
             <span class="ident">clipboard_js</span>: <span class="ident">CLIPBOARD_JS</span>.<span class="ident">to_owned</span>(),
             <span class="ident">store_js</span>: <span class="ident">STORE_JS</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">jquery</span>: <span class="ident">JQUERY</span>.<span class="ident">to_owned</span>(),
         }
     }
 }
@@ -418,7 +409,6 @@
             <span class="ident">highlight_js</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
             <span class="ident">clipboard_js</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
             <span class="ident">store_js</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">jquery</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
         };
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, <span class="ident">empty</span>);
