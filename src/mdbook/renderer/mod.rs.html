@@ -388,7 +388,7 @@
     }
 
     <span class="kw">fn</span> <span class="ident">render</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Invoking the \&quot;{}\&quot; renderer&quot;</span>, <span class="self">self</span>.<span class="ident">cmd</span>);
+        <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Invoking the \&quot;{}\&quot; renderer&quot;</span>, <span class="self">self</span>.<span class="ident">name</span>);
 
         <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">destination</span>);
 
@@ -420,7 +420,7 @@
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">status</span>.<span class="ident">success</span>() {
             <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Renderer exited with non-zero return code.&quot;</span>);
-            <span class="macro">bail</span><span class="macro">!</span>(<span class="string">&quot;The \&quot;{}\&quot; renderer failed&quot;</span>, <span class="self">self</span>.<span class="ident">cmd</span>);
+            <span class="macro">bail</span><span class="macro">!</span>(<span class="string">&quot;The \&quot;{}\&quot; renderer failed&quot;</span>, <span class="self">self</span>.<span class="ident">name</span>);
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(())
         }
