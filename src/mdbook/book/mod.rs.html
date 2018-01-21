@@ -511,13 +511,6 @@
 <span id="466">466</span>
 <span id="467">467</span>
 <span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! The internal representation of a book and infrastructure for loading it from</span>
 <span class="doccomment">//! disk and building it.</span>
@@ -525,8 +518,6 @@
 <span class="doccomment">//! For examples on using `MDBook`, consult the [top-level documentation][1].</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [1]: ../index.html</span>
-
-<span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 
 <span class="kw">mod</span> <span class="ident">summary</span>;
 <span class="kw">mod</span> <span class="ident">book</span>;
@@ -558,9 +549,6 @@
     <span class="doccomment">/// A representation of the book&#39;s contents in memory.</span>
     <span class="kw">pub</span> <span class="ident">book</span>: <span class="ident">Book</span>,
     <span class="ident">renderers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Renderer</span><span class="op">&gt;&gt;</span>,
-
-    <span class="doccomment">/// The URL used for live reloading when serving up the book.</span>
-    <span class="kw">pub</span> <span class="ident">livereload</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// List of pre-processors to be run on the book</span>
     <span class="ident">preprocessors</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Preprocessor</span><span class="op">&gt;&gt;</span>
@@ -606,7 +594,6 @@
 
         <span class="kw">let</span> <span class="ident">src_dir</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">join</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>.<span class="ident">book</span>.<span class="ident">src</span>);
         <span class="kw">let</span> <span class="ident">book</span> <span class="op">=</span> <span class="ident">book</span>::<span class="ident">load_book</span>(<span class="kw-2">&amp;</span><span class="ident">src_dir</span>, <span class="kw-2">&amp;</span><span class="ident">config</span>.<span class="ident">build</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">livereload</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
         <span class="kw">let</span> <span class="ident">renderers</span> <span class="op">=</span> <span class="ident">determine_renderers</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>);
         <span class="kw">let</span> <span class="ident">preprocessors</span> <span class="op">=</span> <span class="ident">determine_preprocessors</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>)<span class="question-mark">?</span>;
@@ -616,7 +603,6 @@
             <span class="ident">config</span>,
             <span class="ident">book</span>,
             <span class="ident">renderers</span>,
-            <span class="ident">livereload</span>,
             <span class="ident">preprocessors</span>,
         })
     }

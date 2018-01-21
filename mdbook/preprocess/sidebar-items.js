@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["LinkPreprocessor",""],["PreprocessorContext",""]],"trait":[["Preprocessor",""]]});
+initSidebarItems({"struct":[["LinkPreprocessor","A preprocessor for expanding the `{{# playpen}}` and `{{# include}}`  helpers in a chapter."],["PreprocessorContext","Extra information for a `Preprocessor` to give them more context when  processing a book."]],"trait":[["Preprocessor","An operation which is run immediately after loading a book into memory and  before it gets rendered."]]});

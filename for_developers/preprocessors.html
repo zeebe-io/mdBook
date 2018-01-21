@@ -2,13 +2,13 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>index.hbs - mdBook Documentation</title>
+        <title>Preprocessors - mdBook Documentation</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Create book from markdown files. Like Gitbook but implemented in Rust">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <base href="../../">
+        <base href="../">
 
         <link rel="stylesheet" href="book.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
@@ -60,7 +60,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="README.html"><strong aria-hidden="true">1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong aria-hidden="true">2.</strong> Command Line Tool</a></li><li><ol class="section"><li><a href="cli/init.html"><strong aria-hidden="true">2.1.</strong> init</a></li><li><a href="cli/build.html"><strong aria-hidden="true">2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong aria-hidden="true">2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong aria-hidden="true">2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong aria-hidden="true">2.5.</strong> test</a></li></ol></li><li><a href="format/format.html"><strong aria-hidden="true">3.</strong> Format</a></li><li><ol class="section"><li><a href="format/summary.html"><strong aria-hidden="true">3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong aria-hidden="true">3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong aria-hidden="true">3.3.</strong> Theme</a></li><li><ol class="section"><li><a href="format/theme/index-hbs.html" class="active"><strong aria-hidden="true">3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong aria-hidden="true">3.3.2.</strong> Syntax highlighting</a></li><li><a href="format/theme/editor.html"><strong aria-hidden="true">3.3.3.</strong> Editor</a></li></ol></li><li><a href="format/mathjax.html"><strong aria-hidden="true">3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong aria-hidden="true">3.5.</strong> Rust code specific features</a></li></ol></li><li><a href="for_developers/index.html"><strong aria-hidden="true">4.</strong> For Developers</a></li><li><ol class="section"><li><a href="for_developers/preprocessors.html"><strong aria-hidden="true">4.1.</strong> Preprocessors</a></li><li><a href="for_developers/backends.html"><strong aria-hidden="true">4.2.</strong> Alternate Backends</a></li><li class="spacer"></li></ol></li><li><a href="misc/contributors.html">Contributors</a></li></ol>
+            <ol class="chapter"><li><a href="README.html"><strong aria-hidden="true">1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong aria-hidden="true">2.</strong> Command Line Tool</a></li><li><ol class="section"><li><a href="cli/init.html"><strong aria-hidden="true">2.1.</strong> init</a></li><li><a href="cli/build.html"><strong aria-hidden="true">2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong aria-hidden="true">2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong aria-hidden="true">2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong aria-hidden="true">2.5.</strong> test</a></li></ol></li><li><a href="format/format.html"><strong aria-hidden="true">3.</strong> Format</a></li><li><ol class="section"><li><a href="format/summary.html"><strong aria-hidden="true">3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong aria-hidden="true">3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong aria-hidden="true">3.3.</strong> Theme</a></li><li><ol class="section"><li><a href="format/theme/index-hbs.html"><strong aria-hidden="true">3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong aria-hidden="true">3.3.2.</strong> Syntax highlighting</a></li><li><a href="format/theme/editor.html"><strong aria-hidden="true">3.3.3.</strong> Editor</a></li></ol></li><li><a href="format/mathjax.html"><strong aria-hidden="true">3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong aria-hidden="true">3.5.</strong> Rust code specific features</a></li></ol></li><li><a href="for_developers/index.html"><strong aria-hidden="true">4.</strong> For Developers</a></li><li><ol class="section"><li><a href="for_developers/preprocessors.html" class="active"><strong aria-hidden="true">4.1.</strong> Preprocessors</a></li><li><a href="for_developers/backends.html"><strong aria-hidden="true">4.2.</strong> Alternate Backends</a></li><li class="spacer"></li></ol></li><li><a href="misc/contributors.html">Contributors</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -106,101 +106,49 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="format/theme/index-hbs.html#indexhbs" id="indexhbs"><h1>index.hbs</h1></a>
-<p><code>index.hbs</code> is the handlebars template that is used to render the book.
-The markdown files are processed to html and then injected in that template.</p>
-<p>If you want to change the layout or style of your book, chances are that you will
-have to modify this template a little bit. Here is what you need to know.</p>
-<a class="header" href="format/theme/index-hbs.html#data" id="data"><h2>Data</h2></a>
-<p>A lot of data is exposed to the handlebars template with the &quot;context&quot;.
-In the handlebars template you can access this information by using</p>
-<pre><code class="language-handlebars">{{name_of_property}}
-</code></pre>
-<p>Here is a list of the properties that are exposed:</p>
+                        <a class="header" href="for_developers/preprocessors.html#preprocessors" id="preprocessors"><h1>Preprocessors</h1></a>
+<p>A <em>preprocessor</em> is simply a bit of code which gets run immediately after the
+book is loaded and before it gets rendered, allowing you to update and mutate
+the book. Possible use cases are:</p>
 <ul>
-<li>
-<p><strong><em>language</em></strong> Language of the book in the form <code>en</code>. To use in <code class="language-html">&lt;html lang=&quot;{{ language }}&quot;&gt;</code> for example.
-At the moment it is hardcoded.</p>
-</li>
-<li>
-<p><strong><em>title</em></strong> Title of the book, as specified in <code>book.toml</code></p>
-</li>
-<li>
-<p><strong><em>chapter_title</em></strong> Title of the current chapter, as listed in <code>SUMMARY.md</code></p>
-</li>
-<li>
-<p><strong><em>path</em></strong> Relative path to the original markdown file from the source directory</p>
-</li>
-<li>
-<p><strong><em>content</em></strong> This is the rendered markdown.</p>
-</li>
-<li>
-<p><strong><em>path_to_root</em></strong> This is a path containing exclusively <code>../</code>'s that points to the root of the book from the current file.
-Since the original directory structure is maintained, it is useful to prepend relative links with this <code>path_to_root</code>.</p>
-</li>
-<li>
-<p><strong><em>chapters</em></strong> Is an array of dictionaries of the form</p>
-<pre><code class="language-json">{&quot;section&quot;: &quot;1.2.1&quot;, &quot;name&quot;: &quot;name of this chapter&quot;, &quot;path&quot;: &quot;dir/markdown.md&quot;}
-</code></pre>
-<p>containing all the chapters of the book. It is used for example to construct the table of contents (sidebar).</p>
-</li>
+<li>Creating custom helpers like <code>{{#include /path/to/file.md}}</code></li>
+<li>Updating links so <code>[some chapter](some_chapter.md)</code> is automatically changed
+to <code>[some chapter](some_chapter.html)</code> for the HTML renderer</li>
+<li>Substituting in latex-style expressions (<code>$$ \frac{1}{3} $$</code>) with their
+mathjax equivalents</li>
 </ul>
-<a class="header" href="format/theme/index-hbs.html#handlebars-helpers" id="handlebars-helpers"><h2>Handlebars Helpers</h2></a>
-<p>In addition to the properties you can access, there are some handlebars helpers at your disposal.</p>
-<ol>
-<li>
-<a class="header" href="format/theme/index-hbs.html#toc" id="toc"><h3>toc</h3></a>
-<p>The toc helper is used like this</p>
-<pre><code class="language-handlebars">{{#toc}}{{/toc}}
-</code></pre>
-<p>and outputs something that looks like this, depending on the structure of your book</p>
-<pre><code class="language-html">&lt;ul class=&quot;chapter&quot;&gt;
-    &lt;li&gt;&lt;a href=&quot;link/to/file.html&quot;&gt;Some chapter&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;
-        &lt;ul class=&quot;section&quot;&gt;
-            &lt;li&gt;&lt;a href=&quot;link/to/other_file.html&quot;&gt;Some other Chapter&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-    &lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
-<p>If you would like to make a toc with another structure, you have access to the chapters property containing all the data.
-The only limitation at the moment is that you would have to do it with JavaScript instead of with a handlebars helper.</p>
-<pre><code class="language-html">&lt;script&gt;
-var chapters = {{chapters}};
-// Processing here
-&lt;/script&gt;
-</code></pre>
-</li>
-<li>
-<a class="header" href="format/theme/index-hbs.html#previous--next" id="previous--next"><h3>previous / next</h3></a>
-<p>The previous and next helpers expose a <code>link</code> and <code>name</code> property to the previous and next chapters.</p>
-<p>They are used like this</p>
-<pre><code class="language-handlebars">{{#previous}}
-    &lt;a href=&quot;{{link}}&quot; class=&quot;nav-chapters previous&quot;&gt;
-        &lt;i class=&quot;fa fa-angle-left&quot;&gt;&lt;/i&gt;
-    &lt;/a&gt;
-{{/previous}}
-</code></pre>
-<p>The inner html will only be rendered if the previous / next chapter exists.
-Of course the inner html can be changed to your liking.</p>
-</li>
-</ol>
-<hr />
-<p><em>If you would like me to expose other properties or helpers, please <a href="https://github.com/rust-lang-nursery/mdBook/issues">create a new issue</a>
-and I will consider it.</em></p>
+<a class="header" href="for_developers/preprocessors.html#implementing-a-preprocessor" id="implementing-a-preprocessor"><h2>Implementing a Preprocessor</h2></a>
+<p>A preprocessor is represented by the <code>Preprocessor</code> trait.</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+pub trait Preprocessor {
+    fn name(&amp;self) -&gt; &amp;str;
+    fn run(&amp;self, ctx: &amp;PreprocessorContext, book: &amp;mut Book) -&gt; Result&lt;()&gt;;
+}
+#}</code></pre></pre>
+<p>Where the <code>PreprocessorContext</code> is defined as</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+pub struct PreprocessorContext {
+    pub root: PathBuf,
+    pub config: Config,
+}
+#}</code></pre></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="format/theme/theme.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="for_developers/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="format/theme/syntax-highlighting.html" class="mobile-nav-chapters next" title="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="for_developers/backends.html" class="mobile-nav-chapters next" title="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -212,13 +160,13 @@ and I will consider it.</em></p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="format/theme/theme.html" class="nav-chapters previous" title="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="for_developers/index.html" class="nav-chapters previous" title="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="format/theme/syntax-highlighting.html" class="nav-chapters next" title="Next chapter" aria-keyshortcuts="Right">
+                    <a href="for_developers/backends.html" class="nav-chapters next" title="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

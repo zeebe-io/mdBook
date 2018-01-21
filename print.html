@@ -60,7 +60,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="README.html"><strong aria-hidden="true">1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong aria-hidden="true">2.</strong> Command Line Tool</a></li><li><ol class="section"><li><a href="cli/init.html"><strong aria-hidden="true">2.1.</strong> init</a></li><li><a href="cli/build.html"><strong aria-hidden="true">2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong aria-hidden="true">2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong aria-hidden="true">2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong aria-hidden="true">2.5.</strong> test</a></li></ol></li><li><a href="format/format.html"><strong aria-hidden="true">3.</strong> Format</a></li><li><ol class="section"><li><a href="format/summary.html"><strong aria-hidden="true">3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong aria-hidden="true">3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong aria-hidden="true">3.3.</strong> Theme</a></li><li><ol class="section"><li><a href="format/theme/index-hbs.html"><strong aria-hidden="true">3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong aria-hidden="true">3.3.2.</strong> Syntax highlighting</a></li><li><a href="format/theme/editor.html"><strong aria-hidden="true">3.3.3.</strong> Editor</a></li></ol></li><li><a href="format/mathjax.html"><strong aria-hidden="true">3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong aria-hidden="true">3.5.</strong> Rust code specific features</a></li></ol></li><li><a href="lib/index.html"><strong aria-hidden="true">4.</strong> For Developers</a></li><li class="spacer"></li><li class="affix"><a href="misc/contributors.html">Contributors</a></li></ol>
+            <ol class="chapter"><li><a href="README.html"><strong aria-hidden="true">1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong aria-hidden="true">2.</strong> Command Line Tool</a></li><li><ol class="section"><li><a href="cli/init.html"><strong aria-hidden="true">2.1.</strong> init</a></li><li><a href="cli/build.html"><strong aria-hidden="true">2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong aria-hidden="true">2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong aria-hidden="true">2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong aria-hidden="true">2.5.</strong> test</a></li></ol></li><li><a href="format/format.html"><strong aria-hidden="true">3.</strong> Format</a></li><li><ol class="section"><li><a href="format/summary.html"><strong aria-hidden="true">3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong aria-hidden="true">3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong aria-hidden="true">3.3.</strong> Theme</a></li><li><ol class="section"><li><a href="format/theme/index-hbs.html"><strong aria-hidden="true">3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong aria-hidden="true">3.3.2.</strong> Syntax highlighting</a></li><li><a href="format/theme/editor.html"><strong aria-hidden="true">3.3.3.</strong> Editor</a></li></ol></li><li><a href="format/mathjax.html"><strong aria-hidden="true">3.4.</strong> MathJax Support</a></li><li><a href="format/rust.html"><strong aria-hidden="true">3.5.</strong> Rust code specific features</a></li></ol></li><li><a href="for_developers/index.html"><strong aria-hidden="true">4.</strong> For Developers</a></li><li><ol class="section"><li><a href="for_developers/preprocessors.html"><strong aria-hidden="true">4.1.</strong> Preprocessors</a></li><li><a href="for_developers/backends.html"><strong aria-hidden="true">4.2.</strong> Alternate Backends</a></li><li class="spacer"></li></ol></li><li><a href="misc/contributors.html">Contributors</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -616,156 +616,353 @@ The usual delimiters MathJax uses are not yet supported. You can't currently use
 <pre><code class="language-hbs">\{{#playpen file.rs}}
 </code></pre>
 <p>The path to the Rust file has to be relative from the current source file.</p>
-<p>When play is clicked, the code snippet will be send to the <a href="">Rust Playpen</a> to be compiled and run. The result is send back and displayed directly underneath the code.</p>
+<p>When play is clicked, the code snippet will be send to the <a href="https://play.rust-lang.org/">Rust Playpen</a> to be compiled and run. The result is send back and displayed directly underneath the code.</p>
 <p>Here is what a rendered code snippet looks like:</p>
 <p>{{#playpen example.rs}}</p>
 <a class="header" href="print.html#for-developers" id="for-developers"><h1>For Developers</h1></a>
 <p>While <code>mdbook</code> is mainly used as a command line tool, you can also import the
-underlying library directly and use that to manage a book.</p>
+underlying library directly and use that to manage a book. It also has a fairly
+flexible plugin mechanism, allowing you to create your own custom tooling and
+consumers (often referred to as <em>backends</em>) if you need to do some analysis of
+the book or render it in a different format.</p>
+<p>The <em>For Developers</em> chapters are here to show you the more advanced usage of
+<code>mdbook</code>.</p>
+<p>The two main ways a developer can hook into the book's build process is via,</p>
 <ul>
-<li>Creating custom backends</li>
-<li>Automatically generating and reloading a book on the fly</li>
-<li>Integration with existing projects</li>
+<li><a href="for_developers/preprocessors.html">Preprocessors</a></li>
+<li><a href="for_developers/backends.html">Alternate Backends</a></li>
 </ul>
-<p>The best source for examples on using the <code>mdbook</code> crate from your own Rust
-programs is the <a href="https://docs.rs/mdbook">API Docs</a>.</p>
-<a class="header" href="print.html#configuration-1" id="configuration-1"><h2>Configuration</h2></a>
-<p>The mechanism for using alternative backends is very simple, you add an extra
-table to your <code>book.toml</code> and the <code>MDBook::load()</code> function will automatically
-detect the backends being used.</p>
-<p>For example, if you wanted to use a hypothetical <code>latex</code> backend you would add
-an empty <code>output.latex</code> table to <code>book.toml</code>.</p>
-<pre><code class="language-toml"># book.toml
-
-[book]
-...
-
-[output.latex]
-</code></pre>
-<p>And then during the rendering stage <code>mdbook</code> will run the <code>mdbook-latex</code>
-program, piping it a JSON serialized <a href="https://docs.rs/mdbook/*/mdbook/renderer/struct.RenderContext.html">RenderContext</a> via stdin.</p>
-<p>You can set the command used via the <code>command</code> key.</p>
-<pre><code class="language-toml"># book.toml
-
-[book]
-...
-
-[output.latex]
-command = &quot;python3 my_plugin.py&quot;
-</code></pre>
-<p>If no backend is supplied (i.e. there are no <code>output.*</code> tables), <code>mdbook</code> will
-fall back to the <code>html</code> backend.</p>
-<a class="header" href="print.html#the-config-struct" id="the-config-struct"><h3>The <code>Config</code> Struct</h3></a>
-<p>If you are developing a plugin or alternate backend then whenever your code is
-called you will almost certainly be passed a reference to the book's <code>Config</code>.
-This can be treated roughly as a nested hashmap which lets you call methods like
-<code>get()</code> and <code>get_mut()</code> to get access to the config's contents.</p>
-<p>By convention, plugin developers will have their settings as a subtable inside
-<code>plugins</code> (e.g. a link checker would put its settings in <code>plugins.link_check</code>)
-and backends should put their configuration under <code>output</code>, like the HTML
-renderer does in the previous examples.</p>
-<p>As an example, some hypothetical <code>random</code> renderer would typically want to load
-its settings from the <code>Config</code> at the very start of its rendering process. The
-author can take advantage of serde to deserialize the generic <code>toml::Value</code>
-object retrieved from <code>Config</code> into a struct specific to its use case.</p>
-<pre><pre class="playpen"><code class="language-rust">extern crate serde;
-#[macro_use]
-extern crate serde_derive;
-extern crate toml;
-extern crate mdbook;
-
-use toml::Value;
-use mdbook::config::Config;
-
-#[derive(Debug, Deserialize, PartialEq)]
-struct RandomOutput {
-    foo: u32,
-    bar: String,
-    baz: Vec&lt;bool&gt;,
-}
-
-# fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {
-let src = r#&quot;
-[output.random]
-foo = 5
-bar = &quot;Hello World&quot;
-baz = [true, true, false]
-&quot;#;
-
-let book_config = Config::from_str(src)?; // usually passed in via the RenderContext
-let random = book_config.get(&quot;output.random&quot;)
-  .cloned()
-  .ok_or(&quot;output.random not found&quot;)?;
-let got: RandomOutput = random.try_into()?; 
-
-let should_be = RandomOutput {
-  foo: 5,
-  bar: &quot;Hello World&quot;.to_string(),
-  baz: vec![true, true, false]
-};
-
-assert_eq!(got, should_be);
-
-let baz: Vec&lt;bool&gt; = book_config.get_deserialized(&quot;output.random.baz&quot;)?;
-println!(&quot;{:?}&quot;, baz); // prints [true, true, false]
-
-// do something interesting with baz
-# Ok(())
-# }
-# fn main() { run().unwrap() }
-</code></pre></pre>
-<a class="header" href="print.html#render-context" id="render-context"><h2>Render Context</h2></a>
-<p>The <code>RenderContext</code> encapsulates all the information a backend needs to know
-in order to generate output. Its Rust definition looks something like this:</p>
+<a class="header" href="print.html#the-build-process" id="the-build-process"><h2>The Build Process</h2></a>
+<p>The process of rendering a book project goes through several steps.</p>
+<ol>
+<li>Load the book
+<ul>
+<li>Parse the <code>book.toml</code>, falling back to the default <code>Config</code> if it doesn't
+exist.</li>
+<li>Load the book chapters into memory</li>
+<li>Discover which preprocessors/backends should be used</li>
+</ul>
+</li>
+<li>Run the preprocessors</li>
+<li>Call each backend in turn</li>
+</ol>
+<a class="header" href="print.html#using-mdbook-as-a-library" id="using-mdbook-as-a-library"><h2>Using <code>mdbook</code> as a Library</h2></a>
+<p>The <code>mdbook</code> binary is just a wrapper around the <code>mdbook</code> crate, exposing its
+functionality as a command-line program. As such it is quite easy to create your
+own programs which use <code>mdbook</code> internally, adding your own functionality (e.g.
+a custom preprocessor) or tweaking the build process.</p>
+<p>The easiest way to find out how to use the <code>mdbook</code> crate is by looking at the
+<a href="http://rust-lang-nursery.github.io/mdBook/mdbook/">API Docs</a>. The top level documentation explains how one would use the
+<a href="http://rust-lang-nursery.github.io/mdBook/mdbook/book/struct.MDBook.html"><code>MDBook</code></a> type to load and build a book, while the <a href="file:///home/michael/Documents/forks/mdBook/target/doc/mdbook/config/index.html">config</a> module gives a good
+explanation on the configuration system.</p>
+<a class="header" href="print.html#preprocessors" id="preprocessors"><h1>Preprocessors</h1></a>
+<p>A <em>preprocessor</em> is simply a bit of code which gets run immediately after the
+book is loaded and before it gets rendered, allowing you to update and mutate
+the book. Possible use cases are:</p>
+<ul>
+<li>Creating custom helpers like <code>{{#include /path/to/file.md}}</code></li>
+<li>Updating links so <code>[some chapter](some_chapter.md)</code> is automatically changed
+to <code>[some chapter](some_chapter.html)</code> for the HTML renderer</li>
+<li>Substituting in latex-style expressions (<code>$$ \frac{1}{3} $$</code>) with their
+mathjax equivalents</li>
+</ul>
+<a class="header" href="print.html#implementing-a-preprocessor" id="implementing-a-preprocessor"><h2>Implementing a Preprocessor</h2></a>
+<p>A preprocessor is represented by the <code>Preprocessor</code> trait.</p>
 <pre><pre class="playpen"><code class="language-rust">
 # #![allow(unused_variables)]
 #fn main() {
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct RenderContext {
-    pub version: String,
-    pub root: PathBuf,
-    pub book: Book,
-    pub config: Config,
-    pub destination: PathBuf,
+pub trait Preprocessor {
+    fn name(&amp;self) -&gt; &amp;str;
+    fn run(&amp;self, ctx: &amp;PreprocessorContext, book: &amp;mut Book) -&gt; Result&lt;()&gt;;
 }
 #}</code></pre></pre>
-<p>A backend will receive the <code>RenderContext</code> via <code>stdin</code> as one big JSON blob. If
-possible, it is recommended to import the <code>mdbook</code> crate and use the
-<code>RenderContext::from_json()</code> method. This way you should always be able to
-deserialize the <code>RenderContext</code>, and as a bonus will also have access to the
-methods already defined on the underlying types.</p>
-<p>Although backends are told the book's root directory on disk, it is <em>strongly
-discouraged</em> to load chapter content from the filesystem. The <code>root</code> key is
-provided as an escape hatch for certain plugins which may load additional,
-non-markdown, files.</p>
-<a class="header" href="print.html#output-directory" id="output-directory"><h2>Output Directory</h2></a>
-<p>To make things more deterministic, a backend will be told where it should place
-its generated artefacts.</p>
-<p>The general algorithm for deciding the output directory goes something like
-this:</p>
+<p>Where the <code>PreprocessorContext</code> is defined as</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+pub struct PreprocessorContext {
+    pub root: PathBuf,
+    pub config: Config,
+}
+#}</code></pre></pre>
+<a class="header" href="print.html#alternate-backends" id="alternate-backends"><h1>Alternate Backends</h1></a>
+<p>A &quot;backend&quot; is simply a program which <code>mdbook</code> will invoke during the book
+rendering process. This program is passed a JSON representation of the book and
+configuration information via <code>stdin</code>. Once the backend receives this
+information it is free to do whatever it wants.</p>
+<p>There are already several alternate backends on GitHub which can be used as a
+rough example of how this is accomplished in practice.</p>
 <ul>
-<li>If there is only one backend:
-<ul>
-<li><code>destination</code> is <code>config.build.build_dir</code> (usually <code>book/</code>)</li>
+<li><a href="https://github.com/Michael-F-Bryan/mdbook-linkcheck">mdbook-linkcheck</a> - a simple program for verifying the book doesn't contain
+any broken links</li>
+<li><a href="https://github.com/Michael-F-Bryan/mdbook-epub">mdbook-epub</a> - an EPUB renderer</li>
+<li><a href="https://github.com/Michael-F-Bryan/mdbook-test">mdbook-test</a> - a program to run the book's contents through <a href="https://github.com/budziq/rust-skeptic">rust-skeptic</a> to
+verify everything compiles and runs correctly (similar to <code>rustdoc --test</code>)</li>
 </ul>
-</li>
-<li>Otherwise:
-<ul>
-<li><code>destination</code> is <code>config.build.build_dir</code> joined with the backend's name
-(e.g. <code>build/latex/</code> for the &quot;latex&quot; backend)</li>
-</ul>
-</li>
-</ul>
+<p>This page will step you through creating your own alternate backend in the form
+of a simple word counting program. Although it will be written in Rust, there's
+no reason why it couldn't be accomplished using something like Python or Ruby.</p>
+<a class="header" href="print.html#setting-up" id="setting-up"><h2>Setting Up</h2></a>
+<p>First you'll want to create a new binary program and add <code>mdbook</code> as a
+dependency.</p>
+<pre><code>$ cargo new --bin mdbook-wordcount
+$ cd mdbook-wordcount 
+$ cargo add mdbook
+</code></pre>
+<p>When our <code>mdbook-wordcount</code> plugin is invoked, <code>mdbook</code> will send it a JSON
+version of <a href="http://rust-lang-nursery.github.io/mdBook/mdbook/renderer/struct.RenderContext.html"><code>RenderContext</code></a> via our plugin's <code>stdin</code>. For convenience, there's
+a <a href="http://rust-lang-nursery.github.io/mdBook/mdbook/renderer/struct.RenderContext.html#method.from_json"><code>RenderContext::from_json()</code></a> constructor which will load a <code>RenderContext</code>.</p>
+<p>This is all the boilerplate necessary for our backend to load the book.</p>
+<pre><pre class="playpen"><code class="language-rust">// src/main.rs
+extern crate mdbook;
+
+use std::io;
+use mdbook::renderer::RenderContext;
+
+fn main() {
+    let mut stdin = io::stdin();
+    let ctx = RenderContext::from_json(&amp;mut stdin).unwrap();
+}
+</code></pre></pre>
+<blockquote>
+<p><strong>Note:</strong> The <code>RenderContext</code> contains a <code>version</code> field. This lets backends
+figure out whether they are compatible with the version of <code>mdbook</code> it's being
+called by. This <code>version</code> comes directly from the corresponding field in
+<code>mdbook</code>'s <code>Cargo.toml</code>.</p>
+</blockquote>
+<p>It is recommended that backends use the <a href="https://crates.io/crates/semver"><code>semver</code></a> crate to inspect this field
+and emit a warning if there may be a compatibility issue.</p>
+<a class="header" href="print.html#inspecting-the-book" id="inspecting-the-book"><h2>Inspecting the Book</h2></a>
+<p>Now our backend has a copy of the book, lets count how many words are in each
+chapter!</p>
+<p>Because the <code>RenderContext</code> contains a <a href="http://rust-lang-nursery.github.io/mdBook/mdbook/book/struct.Book.html"><code>Book</code></a> field (<code>book</code>), and a <code>Book</code> has
+the <a href="http://rust-lang-nursery.github.io/mdBook/mdbook/book/struct.Book.html#method.iter"><code>Book::iter()</code></a> method for iterating over all items in a <code>Book</code>, this step
+turns out to be just as easy as the first.</p>
+<pre><pre class="playpen"><code class="language-rust">
+fn main() {
+    let mut stdin = io::stdin();
+    let ctx = RenderContext::from_json(&amp;mut stdin).unwrap();
+
+    for item in ctx.book.iter() {
+        if let BookItem::Chapter(ref ch) = *item {
+            let num_words = count_words(ch);
+            println!(&quot;{}: {}&quot;, ch.name, num_words);
+        }
+    }
+}
+
+fn count_words(ch: &amp;Chapter) -&gt; usize {
+    ch.content.split_whitespace().count()
+}
+</code></pre></pre>
+<a class="header" href="print.html#enabling-the-backend" id="enabling-the-backend"><h2>Enabling the Backend</h2></a>
+<p>Now we've got the basics running, we want to actually use it. First, install
+the program.</p>
+<pre><code>$ cargo install
+</code></pre>
+<p>Then <code>cd</code> to the particular book you'd like to count the words of and update its
+<code>book.toml</code> file.</p>
+<pre><code class="language-diff">  [book]
+  title = &quot;mdBook Documentation&quot;
+  description = &quot;Create book from markdown files. Like Gitbook but implemented in Rust&quot;
+  authors = [&quot;Mathieu David&quot;, &quot;Michael-F-Bryan&quot;]
+
++ [output.html]
+
++ [output.wordcount]
+</code></pre>
+<p>When it loads a book into memory, <code>mdbook</code> will inspect your <code>book.toml</code> file
+to try and figure out which backends to use by looking for all <code>output.*</code>
+tables. If none are provided it'll fall back to using the default HTML
+renderer.</p>
+<p>Notably, this means if you want to add your own custom backend you'll also
+need to make sure to add the HTML backend, even if its tabke just stays empty.</p>
+<p>Now you just need to build your book like normal, and everything should <em>Just
+Work</em>.</p>
+<pre><code>$ mdbook build
+...
+2018-01-16 07:31:15 [INFO] (mdbook::renderer): Invoking the &quot;mdbook-wordcount&quot; renderer
+mdBook: 126
+Command Line Tool: 224
+init: 283
+build: 145
+watch: 146
+serve: 292
+test: 139
+Format: 30
+SUMMARY.md: 259
+Configuration: 784
+Theme: 304
+index.hbs: 447
+Syntax highlighting: 314
+MathJax Support: 153
+Rust code specific features: 148
+For Developers: 788
+Alternate Backends: 710
+Contributors: 85
+</code></pre>
+<p>The reason we didn't need to specify the full name/path of our <code>wordcount</code>
+backend is because <code>mdbook</code> will try to <em>infer</em> the program's name via
+convention. The executable for the <code>foo</code> backend is typically called
+<code>mdbook-foo</code>, with an associated <code>[output.foo]</code> entry in the <code>book.toml</code>. To
+explicitly tell <code>mdbook</code> what command to invoke (it may require command line
+arguments or be an interpreted script), you can use the <code>command</code> field.</p>
+<pre><code class="language-diff">  [book]
+  title = &quot;mdBook Documentation&quot;
+  description = &quot;Create book from markdown files. Like Gitbook but implemented in Rust&quot;
+  authors = [&quot;Mathieu David&quot;, &quot;Michael-F-Bryan&quot;]
+
+  [output.html]
+
+  [output.wordcount]
++ command = &quot;python /path/to/wordcount.py&quot;
+</code></pre>
+<a class="header" href="print.html#configuration-1" id="configuration-1"><h2>Configuration</h2></a>
+<p>Now imagine you don't want to count the number of words on a particular chapter
+(it might be generated text/code, etc). The canonical way to do this is via
+the usual <code>book.toml</code> configuration file by adding items to your <code>[output.foo]</code>
+table.</p>
+<p>The <code>Config</code> can be treated roughly as a nested hashmap which lets you call
+methods like <code>get()</code> to access the config's contents, with a
+<code>get_deserialized()</code> convenience method for retrieving a value and
+automatically deserializing to some arbitrary type <code>T</code>.</p>
+<p>To implement this, we'll create our own serializable <code>WordcountConfig</code> struct
+which will encapsulate all configuration for this backend.</p>
+<p>First add <code>serde</code> and <code>serde_derive</code> to your <code>Cargo.toml</code>,</p>
+<pre><code>$ cargo add serde serde_derive
+</code></pre>
+<p>And then you can create the config struct,</p>
+<pre><pre class="playpen"><code class="language-rust">
+# #![allow(unused_variables)]
+#fn main() {
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+
+...
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(default, rename_all = &quot;kebab-case&quot;)]
+pub struct WordcountConfig {
+  pub ignores: Vec&lt;String&gt;,
+}
+#}</code></pre></pre>
+<p>Now we just need to deserialize the <code>WordcountConfig</code> from our <code>RenderContext</code>
+and then add a check to make sure we skip ignored chapters.</p>
+<pre><code class="language-diff">  fn main() {
+      let mut stdin = io::stdin();
+      let ctx = RenderContext::from_json(&amp;mut stdin).unwrap();
++     let cfg: WordcountConfig = ctx.config
++         .get_deserialized(&quot;output.wordcount&quot;)
++         .unwrap_or_default();
+  
+      for item in ctx.book.iter() {
+          if let BookItem::Chapter(ref ch) = *item {
++             if cfg.ignores.contains(&amp;ch.name) {
++                 continue;
++             }
++ 
+              let num_words = count_words(ch);
+              println!(&quot;{}: {}&quot;, ch.name, num_words);
+          }
+      }
+  }
+</code></pre>
 <a class="header" href="print.html#output-and-signalling-failure" id="output-and-signalling-failure"><h2>Output and Signalling Failure</h2></a>
-<p>To signal that the plugin failed it just needs to exit with a non-zero return
-code.</p>
-<p>All output from the plugin's subprocess is immediately passed through to the
-user, so it is encouraged for plugins to follow the <a href="http://www.linfo.org/rule_of_silence.html">&quot;rule of silence&quot;</a> and
-by default only tell the user about things they directly need to respond to
-(e.g. an error in generation or a warning).</p>
-<p>This &quot;silent by default&quot; behaviour can be overridden via the <code>RUST_LOG</code>
-environment variable (which <code>mdbook</code> will pass through to the backend if set)
-as is typical with Rust applications.</p>
+<p>While it's nice to print word counts to the terminal when a book is built, it
+might also be a good idea to output them to a file somewhere. <code>mdbook</code> tells a
+backend where it should place any generated output via the <code>destination</code> field
+in <a href="http://rust-lang-nursery.github.io/mdBook/mdbook/renderer/struct.RenderContext.html"><code>RenderContext</code></a>.</p>
+<pre><code class="language-diff">+ use std::fs::{self, File};
++ use std::io::{self, Write};
+- use std::io;
+  use mdbook::renderer::RenderContext;
+  use mdbook::book::{BookItem, Chapter};
+  
+  fn main() {
+    ...
+  
++     let _ = fs::create_dir_all(&amp;ctx.destination);
++     let mut f = File::create(ctx.destination.join(&quot;wordcounts.txt&quot;)).unwrap();
++ 
+      for item in ctx.book.iter() {
+          if let BookItem::Chapter(ref ch) = *item {
+              ...
+  
+              let num_words = count_words(ch);
+              println!(&quot;{}: {}&quot;, ch.name, num_words);
++             writeln!(f, &quot;{}: {}&quot;, ch.name, num_words).unwrap();
+          }
+      }
+  }
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> There is no guarantee that the destination directory exists or is
+empty (<code>mdbook</code> may leave the previous contents to let backends do caching),
+so it's always a good idea to create it with <code>fs::create_dir_all()</code>.</p>
+</blockquote>
+<p>There's always the possibility that an error will occur while processing a book
+(just look at all the <code>unwrap()</code>'s we've written already), so <code>mdbook</code> will
+interpret a non-zero exit code as a rendering failure.</p>
+<p>For example, if we wanted to make sure all chapters have an <em>even</em> number of
+words, erroring out if an odd number is encountered, then you may do something
+like this:</p>
+<pre><code class="language-diff">+ use std::process;
+  ...
+
+  fn main() {
+      ...
+  
+      for item in ctx.book.iter() {
+          if let BookItem::Chapter(ref ch) = *item {
+              ...
+  
+              let num_words = count_words(ch);
+              println!(&quot;{}: {}&quot;, ch.name, num_words);
+              writeln!(f, &quot;{}: {}&quot;, ch.name, num_words).unwrap();
+
++             if cfg.deny_odds &amp;&amp; num_words % 2 == 1 {
++               eprintln!(&quot;{} has an odd number of words!&quot;, ch.name);
++               process::exit(1);
+              }
+          }
+      }
+  }
+
+  #[derive(Debug, Default, Serialize, Deserialize)]
+  #[serde(default, rename_all = &quot;kebab-case&quot;)]
+  pub struct WordcountConfig {
+      pub ignores: Vec&lt;String&gt;,
++     pub deny_odds: bool,
+  }
+</code></pre>
+<p>Now, if we reinstall the backend and build a book,</p>
+<pre><code>$ cargo install --force
+$ mdbook build /path/to/book
+...
+2018-01-16 21:21:39 [INFO] (mdbook::renderer): Invoking the &quot;wordcount&quot; renderer
+mdBook: 126
+Command Line Tool: 224
+init: 283
+init has an odd number of words!
+2018-01-16 21:21:39 [ERROR] (mdbook::renderer): Renderer exited with non-zero return code.
+2018-01-16 21:21:39 [ERROR] (mdbook::utils): Error: Rendering failed
+2018-01-16 21:21:39 [ERROR] (mdbook::utils): 	Caused By: The &quot;mdbook-wordcount&quot; renderer failed
+</code></pre>
+<p>As you've probably already noticed, output from the plugin's subprocess is
+immediately passed through to the user. It is encouraged for plugins to
+follow the &quot;rule of silence&quot; and only generate output when necessary (e.g. an
+error in generation or a warning).</p>
+<p>All environment variables are passed through to the backend, allowing you to
+use the usual <code>RUST_LOG</code> to control logging verbosity.</p>
+<a class="header" href="print.html#wrapping-up" id="wrapping-up"><h2>Wrapping Up</h2></a>
+<p>Although contrived, hopefully this example was enough to show how you'd create
+an alternate backend for <code>mdbook</code>. If you feel it's missing something, don't
+hesitate to create an issue in the <a href="https://github.com/rust-lang-nursery/mdBook/issues">issue tracker</a> so we can improve the user
+guide.</p>
+<p>The existing backends mentioned towards the start of this chapter should serve
+as a good example of how it's done in real life, so feel free to skim through
+the source code or ask questions.</p>
 <a class="header" href="print.html#contributors" id="contributors"><h1>Contributors</h1></a>
 <p>Here is a list of the contributors who have helped improving mdBook. Big shout-out to them!</p>
 <p>If you have contributed to mdBook and I forgot to add you, don't hesitate to add yourself to the list. If you are in the list, feel free to add your real name &amp; contact information if you wish.</p>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.2/src/fmt.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.3/src/fmt.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>fmt.rs.html -- source</title>
@@ -655,6 +655,33 @@
 <span id="610">610</span>
 <span id="611">611</span>
 <span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Formatting for log records.</span>
 <span class="doccomment">//! </span>
@@ -973,6 +1000,33 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_bold</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">yes</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Style</span> {
         <span class="self">self</span>.<span class="ident">spec</span>.<span class="ident">set_bold</span>(<span class="ident">yes</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set the text intensity.</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// If `yes` is true then text will be written in a brighter color.</span>
+    <span class="doccomment">/// If `yes` is false then text will be written in the default color.</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// Create a style with intense text:</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use std::io::Write;</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// let mut builder = env_logger::Builder::new();</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// builder.format(|buf, record| {</span>
+    <span class="doccomment">///     let mut style = buf.style();</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">///     style.set_intense(true);</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">///     writeln!(buf, &quot;{}&quot;, style.value(record.args()))</span>
+    <span class="doccomment">/// });</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_intense</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">yes</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Style</span> {
+        <span class="self">self</span>.<span class="ident">spec</span>.<span class="ident">set_intense</span>(<span class="ident">yes</span>);
         <span class="self">self</span>
     }
 
