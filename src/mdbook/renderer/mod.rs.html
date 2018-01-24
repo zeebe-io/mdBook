@@ -234,6 +234,15 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! `mdbook`&#39;s low level rendering interface.</span>
 <span class="doccomment">//!</span>
@@ -253,7 +262,7 @@
 <span class="kw">mod</span> <span class="ident">html_handlebars</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Read</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">process</span>::{<span class="ident">Command</span>, <span class="ident">Stdio</span>};
 <span class="kw">use</span> <span class="ident">serde_json</span>;
@@ -392,13 +401,22 @@
 
         <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">destination</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">compose_command</span>()<span class="question-mark">?</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">compose_command</span>()<span class="question-mark">?</span>
             .<span class="ident">stdin</span>(<span class="ident">Stdio</span>::<span class="ident">piped</span>())
             .<span class="ident">stdout</span>(<span class="ident">Stdio</span>::<span class="ident">inherit</span>())
             .<span class="ident">stderr</span>(<span class="ident">Stdio</span>::<span class="ident">inherit</span>())
             .<span class="ident">current_dir</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>.<span class="ident">destination</span>)
-            .<span class="ident">spawn</span>()
-            .<span class="ident">chain_err</span>(<span class="op">||</span> <span class="string">&quot;Unable to start the renderer&quot;</span>)<span class="question-mark">?</span>;
+            .<span class="ident">spawn</span>() {
+                <span class="prelude-val">Ok</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">c</span>,
+                <span class="prelude-val">Err</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">NotFound</span> <span class="op">=&gt;</span> {
+                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;The command wasn&#39;t found, is the \&quot;{}\&quot; backend installed?&quot;</span>, <span class="self">self</span>.<span class="ident">name</span>);
+                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;\tCommand: {}&quot;</span>, <span class="self">self</span>.<span class="ident">cmd</span>);
+                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+                }
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>).<span class="ident">chain_err</span>(<span class="op">||</span> <span class="string">&quot;Unable to start the backend&quot;</span>)<span class="question-mark">?</span>;
+                }
+            };
 
         {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stdin</span> <span class="op">=</span> <span class="ident">child</span>.<span class="ident">stdin</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Child has stdin&quot;</span>);
