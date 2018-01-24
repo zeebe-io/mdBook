@@ -233,7 +233,7 @@ current working directory.</p>
 <a class="header" href="print.html#server-options" id="server-options"><h4>Server options</h4></a>
 <p><code>serve</code> has four options: the http port, the websocket port, the interface to serve on, and the public address of the server so that the browser may reach the websocket server.</p>
 <p>For example: suppose you had an nginx server for SSL termination which has a public address of 192.168.1.100 on port 80 and proxied that to 127.0.0.1 on port 8000. To run use the nginx proxy do:</p>
-<pre><code class="language-bash">mdbook server path/to/book -p 8000 -i 127.0.0.1 -a 192.168.1.100
+<pre><code class="language-bash">mdbook serve path/to/book -p 8000 -i 127.0.0.1 -a 192.168.1.100
 </code></pre>
 <p>If you were to want live reloading for this you would need to proxy the websocket calls through nginx as well from <code>192.168.1.100:&lt;WS_PORT&gt;</code> to <code>127.0.0.1:&lt;WS_PORT&gt;</code>. The <code>-w</code> flag allows for the websocket port to be configured.</p>
 <a class="header" href="print.html#--open-2" id="--open-2"><h4>--open</h4></a>
