@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/getopts-0.2.16/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/getopts-0.2.17/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -3023,11 +3023,11 @@
         <span class="ident">lim</span> <span class="op">=</span> <span class="ident">fake_i</span>;
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">machine</span> <span class="op">=</span> <span class="op">|</span><span class="ident">cont</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bool</span>, (<span class="ident">i</span>, <span class="ident">c</span>): (<span class="ident">usize</span>, <span class="ident">char</span>)<span class="op">|</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">machine</span> <span class="op">=</span> <span class="op">|</span><span class="ident">cont</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bool</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SplitWithinState</span>, (<span class="ident">i</span>, <span class="ident">c</span>): (<span class="ident">usize</span>, <span class="ident">char</span>)<span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">whitespace</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">c</span>.<span class="ident">is_whitespace</span>() { <span class="ident">Ws</span> }       <span class="kw">else</span> { <span class="ident">Cr</span> };
         <span class="kw">let</span> <span class="ident">limit</span>      <span class="op">=</span> <span class="kw">if</span> (<span class="ident">i</span> <span class="op">-</span> <span class="ident">slice_start</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">&lt;=</span> <span class="ident">lim</span>  { <span class="ident">UnderLim</span> } <span class="kw">else</span> { <span class="ident">OverLim</span> };
 
-        <span class="ident">state</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">state</span>, <span class="ident">whitespace</span>, <span class="ident">limit</span>) {
+        <span class="kw-2">*</span><span class="ident">state</span> <span class="op">=</span> <span class="kw">match</span> (<span class="kw-2">*</span><span class="ident">state</span>, <span class="ident">whitespace</span>, <span class="ident">limit</span>) {
             (<span class="ident">A</span>, <span class="ident">Ws</span>, _)        <span class="op">=&gt;</span> { <span class="ident">A</span> }
             (<span class="ident">A</span>, <span class="ident">Cr</span>, _)        <span class="op">=&gt;</span> { <span class="ident">slice_start</span> <span class="op">=</span> <span class="ident">i</span>; <span class="ident">last_start</span> <span class="op">=</span> <span class="ident">i</span>; <span class="ident">B</span> }
 
@@ -3075,11 +3075,11 @@
         <span class="kw-2">*</span><span class="ident">cont</span>
     };
 
-    <span class="ident">ss</span>.<span class="ident">char_indices</span>().<span class="ident">all</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">machine</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cont</span>, <span class="ident">x</span>));
+    <span class="ident">ss</span>.<span class="ident">char_indices</span>().<span class="ident">all</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">machine</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cont</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>, <span class="ident">x</span>));
 
     <span class="comment">// Let the automaton &#39;run out&#39; by supplying trailing whitespace</span>
     <span class="kw">while</span> <span class="ident">cont</span> <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="ident">state</span> { <span class="ident">B</span> <span class="op">|</span> <span class="ident">C</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>, <span class="ident">A</span> <span class="op">=&gt;</span> <span class="bool-val">false</span> } {
-        <span class="ident">machine</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cont</span>, (<span class="ident">fake_i</span>, <span class="string">&#39; &#39;</span>));
+        <span class="ident">machine</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cont</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>, (<span class="ident">fake_i</span>, <span class="string">&#39; &#39;</span>));
         <span class="ident">fake_i</span> <span class="op">+=</span> <span class="number">1</span>;
     }
     <span class="kw">return</span> <span class="ident">cont</span>;
