@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/tempdir/lib.rs.html#106-108' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/tempdir/lib.rs.html#115-117' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TempDir { /* fields omitted */ }</pre><div class='docblock'><p>A directory in the filesystem that is automatically deleted when
 it goes out of scope.</p>
 
@@ -85,8 +85,8 @@ will not be deleted.</p>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#119-306' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(prefix: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#146-148' title='goto source code'>[src]</a></span></h4>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#128-333' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(prefix: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#159-161' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Attempts to make a temporary directory inside of <code>env::temp_dir()</code> whose
 name will have the prefix, <code>prefix</code>. The directory and
 everything inside it will be automatically deleted once the
@@ -103,14 +103,14 @@ returned <code>TempDir</code> is destroyed.</p>
 
 <span class="comment">// Create a directory inside of `std::env::temp_dir()`, named with</span>
 <span class="comment">// the prefix, &quot;example&quot;.</span>
-<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp dir&quot;</span>);
+<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>)<span class="question-mark">?</span>;
 <span class="kw">let</span> <span class="ident">file_path</span> <span class="op">=</span> <span class="ident">tmp_dir</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;my-temporary-note.txt&quot;</span>);
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp_file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">file_path</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp file&quot;</span>);
-<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">tmp_file</span>, <span class="string">&quot;Brian was here. Briefly.&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;write temp file&quot;</span>);
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp_file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">file_path</span>)<span class="question-mark">?</span>;
+<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">tmp_file</span>, <span class="string">&quot;Brian was here. Briefly.&quot;</span>)<span class="question-mark">?</span>;
 
 <span class="comment">// `tmp_dir` goes out of scope, the directory as well as</span>
 <span class="comment">// `tmp_file` will be deleted here.</span></pre>
-</div><h4 id='method.new_in' class="method"><span id='new_in.v' class='invisible'><code>pub fn <a href='#method.new_in' class='fnname'>new_in</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(tmpdir: P, prefix: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#173-204' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.new_in' class="method"><span id='new_in.v' class='invisible'><code>pub fn <a href='#method.new_in' class='fnname'>new_in</a>&lt;P:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt;&gt;(tmpdir: P, prefix: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#190-221' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Attempts to make a temporary directory inside of <code>tmpdir</code>
 whose name will have the prefix <code>prefix</code>. The directory and
 everything inside it will be automatically deleted once the
@@ -127,11 +127,11 @@ returned <code>TempDir</code> is destroyed.</p>
 
 <span class="comment">// Create a directory inside of the current directory, named with</span>
 <span class="comment">// the prefix, &quot;example&quot;.</span>
-<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new_in</span>(<span class="string">&quot;.&quot;</span>, <span class="string">&quot;example&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp dir&quot;</span>);
+<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new_in</span>(<span class="string">&quot;.&quot;</span>, <span class="string">&quot;example&quot;</span>)<span class="question-mark">?</span>;
 <span class="kw">let</span> <span class="ident">file_path</span> <span class="op">=</span> <span class="ident">tmp_dir</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;my-temporary-note.txt&quot;</span>);
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp_file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">file_path</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp file&quot;</span>);
-<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">tmp_file</span>, <span class="string">&quot;Brian was here. Briefly.&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;write temp file&quot;</span>);</pre>
-</div><h4 id='method.path' class="method"><span id='path.v' class='invisible'><code>pub fn <a href='#method.path' class='fnname'>path</a>(&amp;self) -&gt; &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#230-232' title='goto source code'>[src]</a></span></h4>
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp_file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">file_path</span>)<span class="question-mark">?</span>;
+<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">tmp_file</span>, <span class="string">&quot;Brian was here. Briefly.&quot;</span>)<span class="question-mark">?</span>;</pre>
+</div><h4 id='method.path' class="method"><span id='path.v' class='invisible'><code>pub fn <a href='#method.path' class='fnname'>path</a>(&amp;self) -&gt; &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#251-253' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Accesses the <a href="http://doc.rust-lang.org/std/path/struct.Path.html"><code>Path</code></a> to the temporary directory.</p>
 
 <h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
@@ -141,7 +141,7 @@ returned <code>TempDir</code> is destroyed.</p>
 <span class="kw">let</span> <span class="ident">tmp_path</span>;
 
 {
-   <span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp dir&quot;</span>);
+   <span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>)<span class="question-mark">?</span>;
    <span class="ident">tmp_path</span> <span class="op">=</span> <span class="ident">tmp_dir</span>.<span class="ident">path</span>().<span class="ident">to_owned</span>();
 
    <span class="comment">// Check that the temp directory actually exists.</span>
@@ -152,7 +152,7 @@ returned <code>TempDir</code> is destroyed.</p>
 
 <span class="comment">// Temp directory should be deleted by now</span>
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">tmp_path</span>.<span class="ident">exists</span>(), <span class="bool-val">false</span>);</pre>
-</div><h4 id='method.into_path' class="method"><span id='into_path.v' class='invisible'><code>pub fn <a href='#method.into_path' class='fnname'>into_path</a>(self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#255-257' title='goto source code'>[src]</a></span></h4>
+</div><h4 id='method.into_path' class="method"><span id='into_path.v' class='invisible'><code>pub fn <a href='#method.into_path' class='fnname'>into_path</a>(self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#280-282' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Unwraps the <a href="http://doc.rust-lang.org/std/path/struct.Path.html"><code>Path</code></a> contained in the <code>TempDir</code> and
 returns it. This destroys the <code>TempDir</code> without deleting the
 directory represented by the returned <code>Path</code>.</p>
@@ -162,15 +162,15 @@ directory represented by the returned <code>Path</code>.</p>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
 <span class="kw">use</span> <span class="ident">tempdir</span>::<span class="ident">TempDir</span>;
 
-<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp dir&quot;</span>);
+<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>)<span class="question-mark">?</span>;
 
 <span class="comment">// Convert `tmp_dir` into a `Path`, destroying the `TempDir`</span>
 <span class="comment">// without deleting the directory.</span>
 <span class="kw">let</span> <span class="ident">tmp_path</span> <span class="op">=</span> <span class="ident">tmp_dir</span>.<span class="ident">into_path</span>();
 
 <span class="comment">// Delete the temporary directory ourselves.</span>
-<span class="ident">fs</span>::<span class="ident">remove_dir_all</span>(<span class="ident">tmp_path</span>).<span class="ident">expect</span>(<span class="string">&quot;remove temp dir&quot;</span>);</pre>
-</div><h4 id='method.close' class="method"><span id='close.v' class='invisible'><code>pub fn <a href='#method.close' class='fnname'>close</a>(self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#296-298' title='goto source code'>[src]</a></span></h4>
+<span class="ident">fs</span>::<span class="ident">remove_dir_all</span>(<span class="ident">tmp_path</span>)<span class="question-mark">?</span>;</pre>
+</div><h4 id='method.close' class="method"><span id='close.v' class='invisible'><code>pub fn <a href='#method.close' class='fnname'>close</a>(self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#325-332' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Closes and removes the temporary directory, returing a <code>Result</code>.</p>
 
 <p>Although <code>TempDir</code> removes the directory on drop, in the destructor
@@ -191,10 +191,10 @@ may be platform specific.</p>
 
 <span class="comment">// Create a directory inside of `std::env::temp_dir()`, named with</span>
 <span class="comment">// the prefix, &quot;example&quot;.</span>
-<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp dir&quot;</span>);
+<span class="kw">let</span> <span class="ident">tmp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;example&quot;</span>)<span class="question-mark">?</span>;
 <span class="kw">let</span> <span class="ident">file_path</span> <span class="op">=</span> <span class="ident">tmp_dir</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="string">&quot;my-temporary-note.txt&quot;</span>);
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp_file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">file_path</span>).<span class="ident">expect</span>(<span class="string">&quot;create temp file&quot;</span>);
-<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">tmp_file</span>, <span class="string">&quot;Brian was here. Briefly.&quot;</span>).<span class="ident">expect</span>(<span class="string">&quot;write temp file&quot;</span>);
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp_file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">file_path</span>)<span class="question-mark">?</span>;
+<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">tmp_file</span>, <span class="string">&quot;Brian was here. Briefly.&quot;</span>)<span class="question-mark">?</span>;
 
 <span class="comment">// By closing the `TempDir` explicitly we can check that it has</span>
 <span class="comment">// been deleted successfully. If we don&#39;t close it explicitly,</span>
@@ -202,19 +202,19 @@ may be platform specific.</p>
 <span class="comment">// of scope, but we won&#39;t know whether deleting the directory</span>
 <span class="comment">// succeeded.</span>
 <span class="ident">drop</span>(<span class="ident">tmp_file</span>);
-<span class="ident">tmp_dir</span>.<span class="ident">close</span>().<span class="ident">expect</span>(<span class="string">&quot;delete temp dir&quot;</span>);</pre>
+<span class="ident">tmp_dir</span>.<span class="ident">close</span>()<span class="question-mark">?</span>;</pre>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
-        <h3 id='impl-AsRef%3CPath%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt; for <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl-AsRef%3CPath%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#308-312' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.as_ref' class="method"><span id='as_ref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html#tymethod.as_ref' class='fnname'>as_ref</a>(&amp;self) -&gt; &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#309-311' title='goto source code'>[src]</a></span></h4>
+        <h3 id='impl-AsRef%3CPath%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a>&gt; for <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl-AsRef%3CPath%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#335-339' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_ref' class="method"><span id='as_ref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html#tymethod.as_ref' class='fnname'>as_ref</a>(&amp;self) -&gt; &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.Path.html" title="struct std::path::Path">Path</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#336-338' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs the conversion.</p>
-</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#314-320' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#315-319' title='goto source code'>[src]</a></span></h4>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#341-347' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#342-346' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
-</div></div><h3 id='impl-Drop' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html" title="trait core::ops::drop::Drop">Drop</a> for <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl-Drop' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#322-326' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#323-325' title='goto source code'>[src]</a></span></h4>
+</div></div><h3 id='impl-Drop' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html" title="trait core::ops::drop::Drop">Drop</a> for <a class="struct" href="../tempdir/struct.TempDir.html" title="struct tempdir::TempDir">TempDir</a></code><a href='#impl-Drop' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#349-356' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/tempdir/lib.rs.html#350-355' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Executes the destructor for this type. <a href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
