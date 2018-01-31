@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/walkdir-2.0.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/walkdir-2.1.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -1522,6 +1522,35 @@
 <span id="1477">1477</span>
 <span id="1478">1478</span>
 <span id="1479">1479</span>
+<span id="1480">1480</span>
+<span id="1481">1481</span>
+<span id="1482">1482</span>
+<span id="1483">1483</span>
+<span id="1484">1484</span>
+<span id="1485">1485</span>
+<span id="1486">1486</span>
+<span id="1487">1487</span>
+<span id="1488">1488</span>
+<span id="1489">1489</span>
+<span id="1490">1490</span>
+<span id="1491">1491</span>
+<span id="1492">1492</span>
+<span id="1493">1493</span>
+<span id="1494">1494</span>
+<span id="1495">1495</span>
+<span id="1496">1496</span>
+<span id="1497">1497</span>
+<span id="1498">1498</span>
+<span id="1499">1499</span>
+<span id="1500">1500</span>
+<span id="1501">1501</span>
+<span id="1502">1502</span>
+<span id="1503">1503</span>
+<span id="1504">1504</span>
+<span id="1505">1505</span>
+<span id="1506">1506</span>
+<span id="1507">1507</span>
+<span id="1508">1508</span>
 </pre><pre class="rust ">
 <span class="doccomment">/*!
 Crate `walkdir` provides an efficient and cross platform implementation
@@ -1545,7 +1574,7 @@ yielded by the iterator. Finally, the [`Error`] type is a small wrapper around
 [`std::io::Error`] with additional information, such as if a loop was detected
 while following symbolic links (not enabled by default).
 
-[`WalkDir`]: struct.Walkdir.html
+[`WalkDir`]: struct.WalkDir.html
 [`DirEntry`]: struct.DirEntry.html
 [`Error`]: struct.Error.html
 [`std::io::Error`]: https://doc.rust-lang.org/stable/std/io/struct.Error.html
@@ -1598,7 +1627,7 @@ for entry in WalkDir::new(&quot;foo&quot;).follow_links(true) {
 # }
 ```
 
-[`follow_links`]: struct.Walkdir.html#method.follow_links
+[`follow_links`]: struct.WalkDir.html#method.follow_links
 
 # Example: skip hidden files and directories on unix
 
@@ -2807,12 +2836,13 @@ for entry in walker.filter_entry(|e| !is_hidden(e)) {
 <span class="doccomment">/// case, there is no underlying IO error.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// To maintain good ergonomics, this type has a</span>
-<span class="doccomment">/// `impl From&lt;Error&gt; for std::io::Error` defined so that you may use an</span>
-<span class="doccomment">/// [`io::Result`] with methods in this crate if you don&#39;t care about accessing</span>
-<span class="doccomment">/// the underlying error data in a structured form.</span>
+<span class="doccomment">/// [`impl From&lt;Error&gt; for std::io::Error`][impl] defined which preserves the original context.</span>
+<span class="doccomment">/// This allows you to use an [`io::Result`] with methods in this crate if you don&#39;t care about</span>
+<span class="doccomment">/// accessing the underlying error data in a structured form.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`std::io::Error`]: https://doc.rust-lang.org/stable/std/io/struct.Error.html</span>
 <span class="doccomment">/// [`io::Result`]: https://doc.rust-lang.org/stable/std/io/type.Result.html</span>
+<span class="doccomment">/// [impl]: struct.Error.html#impl-From%3CError%3E</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
     <span class="ident">depth</span>: <span class="ident">usize</span>,
@@ -2871,17 +2901,19 @@ for entry in walker.filter_entry(|e| !is_hidden(e)) {
         <span class="self">self</span>.<span class="ident">depth</span>
     }
 
-    <span class="doccomment">/// Inspect the underlying [`io::Error`] if there is one.</span>
+    <span class="doccomment">/// Inspect the original [`io::Error`] if there is one.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`None`] is returned if the [`Error`] doesn&#39;t correspond to an</span>
     <span class="doccomment">/// [`io::Error`]. This might happen, for example, when the error was</span>
     <span class="doccomment">/// produced because a cycle was found in the directory tree while</span>
     <span class="doccomment">/// following symbolic links.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method returns a borrowed value that is bound to the lifetime of</span>
-    <span class="doccomment">/// the [`Error`]. To obtain an owned value, the [`From`] trait can be used</span>
-    <span class="doccomment">/// instead, in which case if the [`Error`] being being converted doesn&#39;t</span>
-    <span class="doccomment">/// correspond to an [`io::Error`], a new one will be created.</span>
+    <span class="doccomment">/// This method returns a borrowed value that is bound to the lifetime of the [`Error`]. To</span>
+    <span class="doccomment">/// obtain an owned value, the [`into_io_error`] can be used instead.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// &gt; This is the original [`io::Error`] and is _not_ the same as</span>
+    <span class="doccomment">/// &gt; [`impl From&lt;Error&gt; for std::io::Error`][impl] which contains additional context about the</span>
+    <span class="doccomment">/// error.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2925,9 +2957,23 @@ for entry in walker.filter_entry(|e| !is_hidden(e)) {
     <span class="doccomment">/// [`io::Error`]: https://doc.rust-lang.org/stable/std/io/struct.Error.html</span>
     <span class="doccomment">/// [`From`]: https://doc.rust-lang.org/stable/std/convert/trait.From.html</span>
     <span class="doccomment">/// [`Error`]: struct.Error.html</span>
+    <span class="doccomment">/// [`into_io_error`]: struct.Error.html#method.into_io_error</span>
+    <span class="doccomment">/// [impl]: struct.Error.html#impl-From%3CError%3E</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">io_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
             <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="kw-2">ref</span> <span class="ident">err</span>, .. } <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>),
+            <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { .. } <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+       }
+    }
+
+    <span class="doccomment">/// Similar to [`io_error`] except consumes self to convert to the original</span>
+    <span class="doccomment">/// [`io::Error`] if one exists.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`io_error`]: struct.Error.html#method.io_error</span>
+    <span class="doccomment">/// [`io::Error`]: https://doc.rust-lang.org/stable/std/io/struct.Error.html</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_io_error</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+       <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">err</span>, .. } <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>),
             <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { .. } <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
        }
     }
@@ -2993,13 +3039,25 @@ for entry in walker.filter_entry(|e| !is_hidden(e)) {
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">io</span>::<span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="ident">Error</span> {
-        <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">Error</span> { <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="ident">err</span>, .. }, .. } <span class="op">=&gt;</span> <span class="ident">err</span>,
-            <span class="ident">err</span> @ <span class="ident">Error</span> { <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { .. }, .. } <span class="op">=&gt;</span> {
-                <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">err</span>)
+    <span class="doccomment">/// Convert the [`Error`] to an [`io::Error`], preserving the original [`Error`] as the [&quot;inner</span>
+    <span class="doccomment">/// error&quot;]. Note that this also makes the display of the error include the context.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is different from [`into_io_error`] which returns the original [`io::Error`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Error`]: struct.Error.html</span>
+    <span class="doccomment">/// [`io::Error`]: https://doc.rust-lang.org/stable/std/io/struct.Error.html</span>
+    <span class="doccomment">/// [&quot;inner error&quot;]: https://doc.rust-lang.org/std/io/struct.Error.html#method.into_inner</span>
+    <span class="doccomment">/// [`into_io_error`]: struct.WalkDir.html#method.into_io_error</span>
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">walk_err</span>: <span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="ident">Error</span> {
+        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">walk_err</span> {
+            <span class="ident">Error</span> { <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Io</span> { <span class="kw-2">ref</span> <span class="ident">err</span>, .. }, .. } <span class="op">=&gt;</span> {
+                <span class="ident">err</span>.<span class="ident">kind</span>()
             }
-        }
+            <span class="ident">Error</span> { <span class="ident">inner</span>: <span class="ident">ErrorInner</span>::<span class="ident">Loop</span> { .. }, .. } <span class="op">=&gt;</span> {
+                <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>
+            }
+        };
+        <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">kind</span>, <span class="ident">walk_err</span>)
     }
 }
 </pre>

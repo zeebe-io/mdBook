@@ -491,6 +491,40 @@
 <span id="446">446</span>
 <span id="447">447</span>
 <span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Range</span>, <span class="ident">RangeFrom</span>, <span class="ident">RangeFull</span>, <span class="ident">RangeTo</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
@@ -504,7 +538,7 @@
 
 <span class="kw">const</span> <span class="ident">ESCAPE_CHAR</span>: <span class="ident">char</span> <span class="op">=</span> <span class="string">&#39;\\&#39;</span>;
 
-<span class="doccomment">/// A preprocessor for expanding the `{{# playpen}}` and `{{# include}}` </span>
+<span class="doccomment">/// A preprocessor for expanding the `{{# playpen}}` and `{{# include}}`</span>
 <span class="doccomment">/// helpers in a chapter.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LinkPreprocessor</span>;
 
@@ -581,8 +615,14 @@
 <span class="kw">fn</span> <span class="ident">parse_include_path</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">LinkType</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parts</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">split</span>(<span class="string">&#39;:&#39;</span>);
     <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">parts</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>();
-    <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">parts</span>.<span class="ident">next</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>().<span class="ident">ok</span>());
-    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">parts</span>.<span class="ident">next</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>().<span class="ident">ok</span>());
+    <span class="comment">// subtract 1 since line numbers usually begin with 1</span>
+    <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">parts</span>
+        .<span class="ident">next</span>()
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>().<span class="ident">ok</span>())
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="ident">val</span>.<span class="ident">checked_sub</span>(<span class="number">1</span>).<span class="ident">unwrap_or</span>(<span class="number">0</span>));
+    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">parts</span>.<span class="ident">next</span>();
+    <span class="kw">let</span> <span class="ident">has_end</span> <span class="op">=</span> <span class="ident">end</span>.<span class="ident">is_some</span>();
+    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">end</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>().<span class="ident">ok</span>());
     <span class="kw">match</span> <span class="ident">start</span> {
         <span class="prelude-val">Some</span>(<span class="ident">start</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">end</span> {
             <span class="prelude-val">Some</span>(<span class="ident">end</span>) <span class="op">=&gt;</span> <span class="ident">LinkType</span>::<span class="ident">IncludeRange</span>(
@@ -592,7 +632,17 @@
                     <span class="ident">end</span>: <span class="ident">end</span>,
                 },
             ),
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">LinkType</span>::<span class="ident">IncludeRangeFrom</span>(<span class="ident">path</span>, <span class="ident">RangeFrom</span> { <span class="ident">start</span>: <span class="ident">start</span> }),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">has_end</span> {
+                <span class="ident">LinkType</span>::<span class="ident">IncludeRangeFrom</span>(<span class="ident">path</span>, <span class="ident">RangeFrom</span> { <span class="ident">start</span>: <span class="ident">start</span> })
+            } <span class="kw">else</span> {
+                <span class="ident">LinkType</span>::<span class="ident">IncludeRange</span>(
+                    <span class="ident">path</span>,
+                    <span class="ident">Range</span> {
+                        <span class="ident">start</span>: <span class="ident">start</span>,
+                        <span class="ident">end</span>: <span class="ident">start</span> <span class="op">+</span> <span class="number">1</span>,
+                    },
+                )
+            },
         },
         <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">end</span> {
             <span class="prelude-val">Some</span>(<span class="ident">end</span>) <span class="op">=&gt;</span> <span class="ident">LinkType</span>::<span class="ident">IncludeRangeTo</span>(<span class="ident">path</span>, <span class="ident">RangeTo</span> { <span class="ident">end</span>: <span class="ident">end</span> }),
@@ -770,8 +820,26 @@
                 <span class="ident">Link</span> {
                     <span class="ident">start_index</span>: <span class="number">22</span>,
                     <span class="ident">end_index</span>: <span class="number">48</span>,
-                    <span class="ident">link</span>: <span class="ident">LinkType</span>::<span class="ident">IncludeRange</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;file.rs&quot;</span>), <span class="number">10</span>..<span class="number">20</span>),
+                    <span class="ident">link</span>: <span class="ident">LinkType</span>::<span class="ident">IncludeRange</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;file.rs&quot;</span>), <span class="number">9</span>..<span class="number">20</span>),
                     <span class="ident">link_text</span>: <span class="string">&quot;{{#include file.rs:10:20}}&quot;</span>,
+                },
+            ]
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_find_links_with_line_number</span>() {
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Some random text with {{#include file.rs:10}}...&quot;</span>;
+        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">find_links</span>(<span class="ident">s</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>();
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;\nOUTPUT: {:?}\n&quot;</span>, <span class="ident">res</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">res</span>,
+            <span class="macro">vec</span><span class="macro">!</span>[
+                <span class="ident">Link</span> {
+                    <span class="ident">start_index</span>: <span class="number">22</span>,
+                    <span class="ident">end_index</span>: <span class="number">45</span>,
+                    <span class="ident">link</span>: <span class="ident">LinkType</span>::<span class="ident">IncludeRange</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;file.rs&quot;</span>), <span class="number">9</span>..<span class="number">10</span>),
+                    <span class="ident">link_text</span>: <span class="string">&quot;{{#include file.rs:10}}&quot;</span>,
                 },
             ]
         );
@@ -788,7 +856,7 @@
                 <span class="ident">Link</span> {
                     <span class="ident">start_index</span>: <span class="number">22</span>,
                     <span class="ident">end_index</span>: <span class="number">46</span>,
-                    <span class="ident">link</span>: <span class="ident">LinkType</span>::<span class="ident">IncludeRangeFrom</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;file.rs&quot;</span>), <span class="number">10</span>..),
+                    <span class="ident">link</span>: <span class="ident">LinkType</span>::<span class="ident">IncludeRangeFrom</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;file.rs&quot;</span>), <span class="number">9</span>..),
                     <span class="ident">link_text</span>: <span class="string">&quot;{{#include file.rs:10:}}&quot;</span>,
                 },
             ]
