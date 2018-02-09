@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.29.3/src/args/arg.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.29.4/src/args/arg.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>arg.rs.html -- source</title>
@@ -5040,7 +5040,7 @@
     <span class="doccomment">/// assert!(m.is_present(&quot;flag&quot;));</span>
     <span class="doccomment">/// assert_eq!(m.occurrences_of(&quot;flag&quot;), 1);</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// Making a flag `multiple(true)` and override itself is essentially meaningless. Therefore</span>
+    <span class="doccomment">/// Making a arg `multiple(true)` and override itself is essentially meaningless. Therefore</span>
     <span class="doccomment">/// clap ignores an override of self if it&#39;s a flag and it already accepts multiple occurrences.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
@@ -5051,7 +5051,8 @@
     <span class="doccomment">/// assert!(m.is_present(&quot;flag&quot;));</span>
     <span class="doccomment">/// assert_eq!(m.occurrences_of(&quot;flag&quot;), 4);</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// Now notice with options, it&#39;s as if only the last occurrence mattered</span>
+    <span class="doccomment">/// Now notice with options (which *do not* set `multiple(true)`), it&#39;s as if only the last</span>
+    <span class="doccomment">/// occurrence happened.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use clap::{App, Arg};</span>
@@ -5063,8 +5064,7 @@
     <span class="doccomment">/// assert_eq!(m.value_of(&quot;opt&quot;), Some(&quot;other&quot;));</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Here is where it gets interesting. If an option is declared as `multiple(true)` and it also</span>
-    <span class="doccomment">/// overrides with itself, only the last *set* of values will be saved.</span>
+    <span class="doccomment">/// Just like flags, options with `multiple(true)` set, will ignore the &quot;override self&quot; setting.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use clap::{App, Arg};</span>
@@ -5073,24 +5073,24 @@
     <span class="doccomment">///                 .overrides_with(&quot;opt&quot;))</span>
     <span class="doccomment">///             .get_matches_from(vec![&quot;&quot;, &quot;--opt&quot;, &quot;first&quot;, &quot;over&quot;, &quot;--opt&quot;, &quot;other&quot;, &quot;val&quot;]);</span>
     <span class="doccomment">/// assert!(m.is_present(&quot;opt&quot;));</span>
-    <span class="doccomment">/// assert_eq!(m.occurrences_of(&quot;opt&quot;), 1);</span>
-    <span class="doccomment">/// assert_eq!(m.values_of(&quot;opt&quot;).unwrap().collect::&lt;Vec&lt;_&gt;&gt;(), &amp;[&quot;other&quot;, &quot;val&quot;]);</span>
+    <span class="doccomment">/// assert_eq!(m.occurrences_of(&quot;opt&quot;), 2);</span>
+    <span class="doccomment">/// assert_eq!(m.values_of(&quot;opt&quot;).unwrap().collect::&lt;Vec&lt;_&gt;&gt;(), &amp;[&quot;first&quot;, &quot;over&quot;, &quot;other&quot;, &quot;val&quot;]);</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// A safe thing to do, to ensure there is no confusion is to require an argument delimiter and</span>
-    <span class="doccomment">/// and only one &quot;value set&quot; per instance of the option.</span>
+    <span class="doccomment">/// A safe thing to do if you&#39;d like to support an option which supports multiple values, but</span>
+    <span class="doccomment">/// also is &quot;overridable&quot; by itself, is to use `use_delimiter(false)` and *not* use </span>
+    <span class="doccomment">/// `multiple(true)` while telling users to seperate values with a comma (i.e. `val1,val2`)</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use clap::{App, Arg};</span>
     <span class="doccomment">/// let m = App::new(&quot;posix&quot;)</span>
-    <span class="doccomment">///             .arg(Arg::from_usage(&quot;--opt [val]... &#39;some option&#39;&quot;)</span>
+    <span class="doccomment">///             .arg(Arg::from_usage(&quot;--opt [val] &#39;some option&#39;&quot;)</span>
     <span class="doccomment">///                 .overrides_with(&quot;opt&quot;)</span>
-    <span class="doccomment">///                 .number_of_values(1)</span>
-    <span class="doccomment">///                 .require_delimiter(true))</span>
+    <span class="doccomment">///                 .use_delimiter(false))</span>
     <span class="doccomment">///             .get_matches_from(vec![&quot;&quot;, &quot;--opt=some,other&quot;, &quot;--opt=one,two&quot;]);</span>
     <span class="doccomment">/// assert!(m.is_present(&quot;opt&quot;));</span>
     <span class="doccomment">/// assert_eq!(m.occurrences_of(&quot;opt&quot;), 1);</span>
-    <span class="doccomment">/// assert_eq!(m.values_of(&quot;opt&quot;).unwrap().collect::&lt;Vec&lt;_&gt;&gt;(), &amp;[&quot;one&quot;, &quot;two&quot;]);</span>
+    <span class="doccomment">/// assert_eq!(m.values_of(&quot;opt&quot;).unwrap().collect::&lt;Vec&lt;_&gt;&gt;(), &amp;[&quot;one,two&quot;]);</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">overrides_with</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">vec</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">b</span>.<span class="ident">overrides</span> {

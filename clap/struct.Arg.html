@@ -880,7 +880,7 @@ preventing a &quot;Unexpected multiple usage&quot; error):</p>
 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">is_present</span>(<span class="string">&quot;flag&quot;</span>));
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">occurrences_of</span>(<span class="string">&quot;flag&quot;</span>), <span class="number">1</span>);</pre>
 
-<p>Making a flag <code>multiple(true)</code> and override itself is essentially meaningless. Therefore
+<p>Making a arg <code>multiple(true)</code> and override itself is essentially meaningless. Therefore
 clap ignores an override of self if it&#39;s a flag and it already accepts multiple occurrences.</p>
 
 <pre class="rust rust-example-rendered">
@@ -890,7 +890,8 @@ clap ignores an override of self if it&#39;s a flag and it already accepts multi
 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">is_present</span>(<span class="string">&quot;flag&quot;</span>));
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">occurrences_of</span>(<span class="string">&quot;flag&quot;</span>), <span class="number">4</span>);</pre>
 
-<p>Now notice with options, it&#39;s as if only the last occurrence mattered</p>
+<p>Now notice with options (which <em>do not</em> set <code>multiple(true)</code>), it&#39;s as if only the last
+occurrence happened.</p>
 
 <pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">App</span>::<span class="ident">new</span>(<span class="string">&quot;posix&quot;</span>)
@@ -900,8 +901,7 @@ clap ignores an override of self if it&#39;s a flag and it already accepts multi
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">occurrences_of</span>(<span class="string">&quot;opt&quot;</span>), <span class="number">1</span>);
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">value_of</span>(<span class="string">&quot;opt&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;other&quot;</span>));</pre>
 
-<p>Here is where it gets interesting. If an option is declared as <code>multiple(true)</code> and it also
-overrides with itself, only the last <em>set</em> of values will be saved.</p>
+<p>Just like flags, options with <code>multiple(true)</code> set, will ignore the &quot;override self&quot; setting.</p>
 
 <pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">App</span>::<span class="ident">new</span>(<span class="string">&quot;posix&quot;</span>)
@@ -909,22 +909,22 @@ overrides with itself, only the last <em>set</em> of values will be saved.</p>
                 .<span class="ident">overrides_with</span>(<span class="string">&quot;opt&quot;</span>))
             .<span class="ident">get_matches_from</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;--opt&quot;</span>, <span class="string">&quot;first&quot;</span>, <span class="string">&quot;over&quot;</span>, <span class="string">&quot;--opt&quot;</span>, <span class="string">&quot;other&quot;</span>, <span class="string">&quot;val&quot;</span>]);
 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">is_present</span>(<span class="string">&quot;opt&quot;</span>));
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">occurrences_of</span>(<span class="string">&quot;opt&quot;</span>), <span class="number">1</span>);
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">values_of</span>(<span class="string">&quot;opt&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>(), <span class="kw-2">&amp;</span>[<span class="string">&quot;other&quot;</span>, <span class="string">&quot;val&quot;</span>]);</pre>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">occurrences_of</span>(<span class="string">&quot;opt&quot;</span>), <span class="number">2</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">values_of</span>(<span class="string">&quot;opt&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>(), <span class="kw-2">&amp;</span>[<span class="string">&quot;first&quot;</span>, <span class="string">&quot;over&quot;</span>, <span class="string">&quot;other&quot;</span>, <span class="string">&quot;val&quot;</span>]);</pre>
 
-<p>A safe thing to do, to ensure there is no confusion is to require an argument delimiter and
-and only one &quot;value set&quot; per instance of the option.</p>
+<p>A safe thing to do if you&#39;d like to support an option which supports multiple values, but
+also is &quot;overridable&quot; by itself, is to use <code>use_delimiter(false)</code> and <em>not</em> use 
+<code>multiple(true)</code> while telling users to seperate values with a comma (i.e. <code>val1,val2</code>)</p>
 
 <pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">App</span>::<span class="ident">new</span>(<span class="string">&quot;posix&quot;</span>)
-            .<span class="ident">arg</span>(<span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;--opt [val]... &#39;some option&#39;&quot;</span>)
+            .<span class="ident">arg</span>(<span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;--opt [val] &#39;some option&#39;&quot;</span>)
                 .<span class="ident">overrides_with</span>(<span class="string">&quot;opt&quot;</span>)
-                .<span class="ident">number_of_values</span>(<span class="number">1</span>)
-                .<span class="ident">require_delimiter</span>(<span class="bool-val">true</span>))
+                .<span class="ident">use_delimiter</span>(<span class="bool-val">false</span>))
             .<span class="ident">get_matches_from</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;&quot;</span>, <span class="string">&quot;--opt=some,other&quot;</span>, <span class="string">&quot;--opt=one,two&quot;</span>]);
 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">is_present</span>(<span class="string">&quot;opt&quot;</span>));
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">occurrences_of</span>(<span class="string">&quot;opt&quot;</span>), <span class="number">1</span>);
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">values_of</span>(<span class="string">&quot;opt&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>(), <span class="kw-2">&amp;</span>[<span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]);</pre>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">values_of</span>(<span class="string">&quot;opt&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>(), <span class="kw-2">&amp;</span>[<span class="string">&quot;one,two&quot;</span>]);</pre>
 </div><h4 id='method.overrides_with_all' class="method"><span id='overrides_with_all.v' class='invisible'><code>pub fn <a href='#method.overrides_with_all' class='fnname'>overrides_with_all</a>(self, names: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a>&amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/clap/args/arg.rs.html#1333-1342' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Sets multiple mutually overridable arguments by name. I.e. this argument and the following
 argument will override each other in POSIX style (whichever argument was specified at
