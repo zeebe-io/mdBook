@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>build - mdBook Documentation</title>
+        <title>clean - mdBook Documentation</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="Create book from markdown files. Like Gitbook but implemented in Rust">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,7 +77,7 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <ol class="chapter"><li><a href="README.html"><strong aria-hidden="true">1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong aria-hidden="true">2.</strong> Command Line Tool</a></li><li><ol class="section"><li><a href="cli/init.html"><strong aria-hidden="true">2.1.</strong> init</a></li><li><a href="cli/build.html" class="active"><strong aria-hidden="true">2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong aria-hidden="true">2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong aria-hidden="true">2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong aria-hidden="true">2.5.</strong> test</a></li><li><a href="cli/clean.html"><strong aria-hidden="true">2.6.</strong> clean</a></li></ol></li><li><a href="format/format.html"><strong aria-hidden="true">3.</strong> Format</a></li><li><ol class="section"><li><a href="format/summary.html"><strong aria-hidden="true">3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong aria-hidden="true">3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong aria-hidden="true">3.3.</strong> Theme</a></li><li><ol class="section"><li><a href="format/theme/index-hbs.html"><strong aria-hidden="true">3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong aria-hidden="true">3.3.2.</strong> Syntax highlighting</a></li><li><a href="format/theme/editor.html"><strong aria-hidden="true">3.3.3.</strong> Editor</a></li></ol></li><li><a href="format/mathjax.html"><strong aria-hidden="true">3.4.</strong> MathJax Support</a></li><li><a href="format/mdbook.html"><strong aria-hidden="true">3.5.</strong> mdBook specific features</a></li></ol></li><li><a href="for_developers/index.html"><strong aria-hidden="true">4.</strong> For Developers</a></li><li><ol class="section"><li><a href="for_developers/preprocessors.html"><strong aria-hidden="true">4.1.</strong> Preprocessors</a></li><li><a href="for_developers/backends.html"><strong aria-hidden="true">4.2.</strong> Alternate Backends</a></li><li class="spacer"></li></ol></li><li><a href="misc/contributors.html">Contributors</a></li></ol>
+            <ol class="chapter"><li><a href="README.html"><strong aria-hidden="true">1.</strong> mdBook</a></li><li><a href="cli/cli-tool.html"><strong aria-hidden="true">2.</strong> Command Line Tool</a></li><li><ol class="section"><li><a href="cli/init.html"><strong aria-hidden="true">2.1.</strong> init</a></li><li><a href="cli/build.html"><strong aria-hidden="true">2.2.</strong> build</a></li><li><a href="cli/watch.html"><strong aria-hidden="true">2.3.</strong> watch</a></li><li><a href="cli/serve.html"><strong aria-hidden="true">2.4.</strong> serve</a></li><li><a href="cli/test.html"><strong aria-hidden="true">2.5.</strong> test</a></li><li><a href="cli/clean.html" class="active"><strong aria-hidden="true">2.6.</strong> clean</a></li></ol></li><li><a href="format/format.html"><strong aria-hidden="true">3.</strong> Format</a></li><li><ol class="section"><li><a href="format/summary.html"><strong aria-hidden="true">3.1.</strong> SUMMARY.md</a></li><li><a href="format/config.html"><strong aria-hidden="true">3.2.</strong> Configuration</a></li><li><a href="format/theme/theme.html"><strong aria-hidden="true">3.3.</strong> Theme</a></li><li><ol class="section"><li><a href="format/theme/index-hbs.html"><strong aria-hidden="true">3.3.1.</strong> index.hbs</a></li><li><a href="format/theme/syntax-highlighting.html"><strong aria-hidden="true">3.3.2.</strong> Syntax highlighting</a></li><li><a href="format/theme/editor.html"><strong aria-hidden="true">3.3.3.</strong> Editor</a></li></ol></li><li><a href="format/mathjax.html"><strong aria-hidden="true">3.4.</strong> MathJax Support</a></li><li><a href="format/mdbook.html"><strong aria-hidden="true">3.5.</strong> mdBook specific features</a></li></ol></li><li><a href="for_developers/index.html"><strong aria-hidden="true">4.</strong> For Developers</a></li><li><ol class="section"><li><a href="for_developers/preprocessors.html"><strong aria-hidden="true">4.1.</strong> Preprocessors</a></li><li><a href="for_developers/backends.html"><strong aria-hidden="true">4.2.</strong> Alternate Backends</a></li><li class="spacer"></li></ol></li><li><a href="misc/contributors.html">Contributors</a></li></ol>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
@@ -123,39 +123,31 @@
 
                 <div id="content" class="content">
                     <main>
-                        <a class="header" href="cli/build.html#the-build-command" id="the-build-command"><h1>The build command</h1></a>
-<p>The build command is used to render your book:</p>
-<pre><code class="language-bash">mdbook build
+                        <a class="header" href="cli/clean.html#the-clean-command" id="the-clean-command"><h1>The clean command</h1></a>
+<p>The clean command is used to delete the generated book and any other build
+artifacts.</p>
+<pre><code class="language-bash">mdbook clean
 </code></pre>
-<p>It will try to parse your <code>SUMMARY.md</code> file to understand the structure of your book
-and fetch the corresponding files.</p>
-<p>The rendered output will maintain the same directory structure as the source for
-convenience. Large books will therefore remain structured when rendered.</p>
-<a class="header" href="cli/build.html#specify-a-directory" id="specify-a-directory"><h4>Specify a directory</h4></a>
-<p>Like <code>init</code>, the <code>build</code> command can take a directory as an argument to use
-instead of the current working directory.</p>
-<pre><code class="language-bash">mdbook build path/to/book
+<p>It will try to delete the built book. If a path is provided, it will be used.</p>
+<a class="header" href="cli/clean.html#specify-a-directory" id="specify-a-directory"><h4>Specify a directory</h4></a>
+<p>Like <code>init</code>, the <code>clean</code> command can take a directory as an argument to use
+instead of the normal build directory.</p>
+<pre><code class="language-bash">mdbook clean --dest-dir=path/to/book
 </code></pre>
-<a class="header" href="cli/build.html#--open" id="--open"><h4>--open</h4></a>
-<p>When you use the <code>--open</code> (<code>-o</code>) option, mdbook will open the rendered book in
-your default web browser after building it.</p>
-<a class="header" href="cli/build.html#--dest-dir" id="--dest-dir"><h4>--dest-dir</h4></a>
-<p>The <code>--dest-dir</code> (<code>-d</code>) option allows you to change the output directory for your book.</p>
-<hr />
-<p><strong><em>note:</em></strong> <em>make sure to run the build command in the root directory and not in the source directory</em></p>
+<p><code>path/to/book</code> could be absolute or relative.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="cli/init.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="cli/test.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="cli/watch.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="format/format.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -167,13 +159,13 @@ your default web browser after building it.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="cli/init.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a href="cli/test.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="cli/watch.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a href="format/format.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
