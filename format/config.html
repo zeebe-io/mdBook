@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en" class="sidebar-visible">
     <head>
+        <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Configuration - mdBook Documentation</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -110,9 +111,14 @@
                                 <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
                         </div>
 
-                        <h1 class="menu-title">mdBook Documentation</h1>
+                        <h1 class="menu-title">mdBook Documentation</h1> 
 
                         <div class="right-buttons">
                             <a href="print.html" title="Print this book" aria-label="Print this book">
@@ -121,6 +127,17 @@
                         </div>
                     </div>
                 </div>
+
+                
+                <div id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </div>
+                <div id="searchresults-outer" class="searchresults-outer">
+                    <div class="searchresults-header" id="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+                
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script type="text/javascript">
@@ -147,6 +164,9 @@ create-missing = false
 
 [output.html]
 additional-css = [&quot;custom.css&quot;]
+
+[output.html.search]
+limit-results = 15
 </code></pre>
 <a class="header" href="format/config.html#supported-configuration-options" id="supported-configuration-options"><h2>Supported configuration options</h2></a>
 <p>It is important to note that <strong>any</strong> relative path specified in the in the configuration will
@@ -201,14 +221,46 @@ book without overwriting the whole style, you can specify a set of
 stylesheets that will be loaded after the default ones where you can
 surgically change the style.</li>
 <li><strong>additional-js:</strong> If you need to add some behaviour to your book without
-removing the current behaviour, you can specify a set of javascript files
+removing the current behaviour, you can specify a set of JavaScript files
 that will be loaded alongside the default one.</li>
-<li><strong>playpen:</strong> A subtable for configuring various playpen settings.</li>
-<li><strong>no-section-label</strong>: mdBook by defaults adds section label in table of
+<li><strong>no-section-label:</strong> mdBook by defaults adds section label in table of
 contents column. For example, &quot;1.&quot;, &quot;2.1&quot;. Set this option to true to
 disable those labels. Defaults to <code>false</code>.</li>
+<li><strong>playpen:</strong> A subtable for configuring various playpen settings.</li>
+<li><strong>search:</strong> A subtable for configuring the in-browser search
+functionality. mdBook must be compiled with the <code>search</code> feature enabled
+(on by default).</li>
 </ul>
-<p><strong>book.toml</strong></p>
+<p>Available configuration options for the <code>[output.html.playpen]</code> table:</p>
+<ul>
+<li><strong>editable:</strong> Allow editing the source code. Defaults to <code>false</code>.</li>
+<li><strong>copy-js:</strong> Copy JavaScript files for the editor to the output directory.
+Defaults to <code>true</code>.</li>
+</ul>
+<p>Available configuration options for the <code>[output.html.search]</code> table:</p>
+<ul>
+<li><strong>limit-results:</strong> The maximum number of search results. Defaults to <code>30</code>.</li>
+<li><strong>teaser-word-count:</strong> The number of words used for a search result teaser.
+Defaults to <code>30</code>.</li>
+<li><strong>use-boolean-and:</strong> Define the logical link between multiple search words.
+If true, all search words must appear in each result. Defaults to <code>true</code>.</li>
+<li><strong>boost-title:</strong> Boost factor for the search result score if a search word
+appears in the header. Defaults to <code>2</code>.</li>
+<li><strong>boost-hierarchy:</strong> Boost factor for the search result score if a search
+word appears in the hierarchy. The hierarchy contains all titles of the
+parent documents and all parent headings. Defaults to <code>1</code>.</li>
+<li><strong>boost-paragraph:</strong> Boost factor for the search result score if a search
+word appears in the text. Defaults to <code>1</code>.</li>
+<li><strong>expand:</strong> True if search should match longer results e.g. search <code>micro</code>
+should match <code>microwave</code>. Defaults to <code>true</code>.</li>
+<li><strong>heading-split-level:</strong> Search results will link to a section of the document
+which contains the result. Documents are split into sections by headings
+this level or less.
+Defaults to <code>3</code>. (<code>### This is a level 3 heading</code>)</li>
+<li><strong>copy-js:</strong> Copy JavaScript files for the search implementation to the
+output directory. Defaults to <code>true</code>.</li>
+</ul>
+<p>This shows all available options in the <strong>book.toml</strong>:</p>
 <pre><code class="language-toml">[book]
 title = &quot;Example book&quot;
 authors = [&quot;John Doe&quot;, &quot;Jane Doe&quot;]
@@ -224,6 +276,18 @@ additional-js = [&quot;custom.js&quot;]
 [output.html.playpen]
 editor = &quot;./path/to/editor&quot;
 editable = false
+
+[output.html.search]
+enable = true
+searcher = &quot;./path/to/searcher&quot;
+limit-results = 30
+teaser-word-count = 30
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 1
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
 </code></pre>
 <a class="header" href="format/config.html#environment-variables" id="environment-variables"><h2>Environment Variables</h2></a>
 <p>All configuration values can be overridden from the command line by setting the
@@ -317,6 +381,15 @@ from a script or CI, where it sometimes isn't possible to update the
         <script src="mode-rust.js" type="text/javascript" charset="utf-8"></script>
         <script src="theme-dawn.js" type="text/javascript" charset="utf-8"></script>
         <script src="theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        
+        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
+        
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
         
 
         

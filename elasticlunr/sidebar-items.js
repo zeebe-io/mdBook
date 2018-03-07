@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["ELASTICLUNR_VERSION","The version of elasticlunr.js this library was designed for."]],"struct":[["Index","An elasticlunr search index."],["IndexBuilder","A builder for an `Index` with custom parameters."]]});

@@ -49,7 +49,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/mdbook/lib.rs.html#1-158' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/mdbook/lib.rs.html#1-159' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='mdbook' class='section-header'><a href='#mdbook'>mdBook</a></h1>
 <p><strong>mdBook</strong> is similar to GitBook but implemented in Rust.
@@ -102,20 +102,20 @@ the <code>MDBook::init()</code> method.</p>
 <span class="ident">md</span>.<span class="ident">build</span>().<span class="ident">expect</span>(<span class="string">&quot;Building failed&quot;</span>);</pre>
 
 <h2 id='implementing-a-new-backend' class='section-header'><a href='#implementing-a-new-backend'>Implementing a new Backend</a></h2>
-<p><code>mdbook</code> has a fairly flexible mechanism for creating additional backends 
+<p><code>mdbook</code> has a fairly flexible mechanism for creating additional backends
 for your book. The general idea is you&#39;ll add an extra table in the book&#39;s
 <code>book.toml</code> which specifies an executable to be invoked by <code>mdbook</code>. This
-executable will then be called during a build, with an in-memory 
+executable will then be called during a build, with an in-memory
 representation (<a href="renderer/struct.RenderContext.html"><code>RenderContext</code></a>) of the book being passed to the
-subprocess via <code>stdin</code>. </p>
+subprocess via <code>stdin</code>.</p>
 
-<p>The <a href="renderer/struct.RenderContext.html"><code>RenderContext</code></a> gives the backend access to the contents of 
+<p>The <a href="renderer/struct.RenderContext.html"><code>RenderContext</code></a> gives the backend access to the contents of
 <code>book.toml</code> and lets it know which directory all generated artefacts should
 be placed in. For a much more in-depth explanation, consult the <a href="https://rust-lang-nursery.github.io/mdBook/for_developers/backends.html">relevant
 chapter</a> in the <em>For Developers</em> section of the user guide.</p>
 
-<p>To make creating a backend easier, the <code>mdbook</code> crate can be imported 
-directly, making deserializing the <code>RenderContext</code> easy and giving you 
+<p>To make creating a backend easier, the <code>mdbook</code> crate can be imported
+directly, making deserializing the <code>RenderContext</code> easy and giving you
 access to the various methods for working with the <a href="config/struct.Config.html"><code>Config</code></a>.</p>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use book::<a class="struct" href="../mdbook/book/struct.MDBook.html" title="struct mdbook::book::MDBook">MDBook</a>;</code></td></tr><tr><td><code>pub use renderer::<a class="trait" href="../mdbook/renderer/trait.Renderer.html" title="trait mdbook::renderer::Renderer">Renderer</a>;</code></td></tr><tr><td><code>pub use config::<a class="struct" href="../mdbook/config/struct.Config.html" title="struct mdbook::config::Config">Config</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>

@@ -575,6 +575,27 @@
 <span id="529">529</span>
 <span id="530">530</span>
 <span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Display</span>, <span class="ident">Formatter</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>};
@@ -730,15 +751,20 @@
     <span class="kw">pub</span> <span class="ident">sub_items</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BookItem</span><span class="op">&gt;</span>,
     <span class="doccomment">/// The chapter&#39;s location, relative to the `SUMMARY.md` file.</span>
     <span class="kw">pub</span> <span class="ident">path</span>: <span class="ident">PathBuf</span>,
+    <span class="doccomment">/// An ordered list of the names of each chapter above this one, in the hierarchy.</span>
+    <span class="kw">pub</span> <span class="ident">parent_names</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Chapter</span> {
     <span class="doccomment">/// Create a new chapter with the provided content.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">content</span>: <span class="ident">String</span>, <span class="ident">path</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">Chapter</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">content</span>: <span class="ident">String</span>, <span class="ident">path</span>: <span class="ident">P</span>, <span class="ident">parent_names</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) 
+        <span class="op">-&gt;</span> <span class="ident">Chapter</span> 
+    {
         <span class="ident">Chapter</span> {
             <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
             <span class="ident">content</span>: <span class="ident">content</span>,
             <span class="ident">path</span>: <span class="ident">path</span>.<span class="ident">into</span>(),
+            <span class="ident">parent_names</span>: <span class="ident">parent_names</span>,
             ..<span class="ident">Default</span>::<span class="ident">default</span>()
         }
     }
@@ -761,21 +787,27 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chapters</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
 
     <span class="kw">for</span> <span class="ident">summary_item</span> <span class="kw">in</span> <span class="ident">summary_items</span> {
-        <span class="kw">let</span> <span class="ident">chapter</span> <span class="op">=</span> <span class="ident">load_summary_item</span>(<span class="ident">summary_item</span>, <span class="ident">src_dir</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">chapter</span> <span class="op">=</span> <span class="ident">load_summary_item</span>(<span class="ident">summary_item</span>, <span class="ident">src_dir</span>, <span class="ident">Vec</span>::<span class="ident">new</span>())<span class="question-mark">?</span>;
         <span class="ident">chapters</span>.<span class="ident">push</span>(<span class="ident">chapter</span>);
     }
 
     <span class="prelude-val">Ok</span>(<span class="ident">Book</span> { <span class="ident">sections</span>: <span class="ident">chapters</span> })
 }
 
-<span class="kw">fn</span> <span class="ident">load_summary_item</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">item</span>: <span class="kw-2">&amp;</span><span class="ident">SummaryItem</span>, <span class="ident">src_dir</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BookItem</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">load_summary_item</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">item</span>: <span class="kw-2">&amp;</span><span class="ident">SummaryItem</span>, <span class="ident">src_dir</span>: <span class="ident">P</span>, <span class="ident">parent_names</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) 
+    <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BookItem</span><span class="op">&gt;</span> 
+{
     <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">item</span> {
         <span class="ident">SummaryItem</span>::<span class="ident">Separator</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">BookItem</span>::<span class="ident">Separator</span>),
-        <span class="ident">SummaryItem</span>::<span class="ident">Link</span>(<span class="kw-2">ref</span> <span class="ident">link</span>) <span class="op">=&gt;</span> <span class="ident">load_chapter</span>(<span class="ident">link</span>, <span class="ident">src_dir</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">c</span>)),
+        <span class="ident">SummaryItem</span>::<span class="ident">Link</span>(<span class="kw-2">ref</span> <span class="ident">link</span>) <span class="op">=&gt;</span> {
+            <span class="ident">load_chapter</span>(<span class="ident">link</span>, <span class="ident">src_dir</span>, <span class="ident">parent_names</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">c</span>))
+        },
     }
 }
 
-<span class="kw">fn</span> <span class="ident">load_chapter</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">link</span>: <span class="kw-2">&amp;</span><span class="ident">Link</span>, <span class="ident">src_dir</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chapter</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">load_chapter</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">link</span>: <span class="kw-2">&amp;</span><span class="ident">Link</span>, <span class="ident">src_dir</span>: <span class="ident">P</span>, <span class="ident">parent_names</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) 
+    <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chapter</span><span class="op">&gt;</span> 
+{
     <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Loading {} ({})&quot;</span>, <span class="ident">link</span>.<span class="ident">name</span>, <span class="ident">link</span>.<span class="ident">location</span>.<span class="ident">display</span>());
     <span class="kw">let</span> <span class="ident">src_dir</span> <span class="op">=</span> <span class="ident">src_dir</span>.<span class="ident">as_ref</span>();
 
@@ -796,12 +828,14 @@
         .<span class="ident">strip_prefix</span>(<span class="kw-2">&amp;</span><span class="ident">src_dir</span>)
         .<span class="ident">expect</span>(<span class="string">&quot;Chapters are always inside a book&quot;</span>);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ch</span> <span class="op">=</span> <span class="ident">Chapter</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">link</span>.<span class="ident">name</span>, <span class="ident">content</span>, <span class="ident">stripped</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sub_item_parents</span> <span class="op">=</span> <span class="ident">parent_names</span>.<span class="ident">clone</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ch</span> <span class="op">=</span> <span class="ident">Chapter</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">link</span>.<span class="ident">name</span>, <span class="ident">content</span>, <span class="ident">stripped</span>, <span class="ident">parent_names</span>);
     <span class="ident">ch</span>.<span class="ident">number</span> <span class="op">=</span> <span class="ident">link</span>.<span class="ident">number</span>.<span class="ident">clone</span>();
 
+    <span class="ident">sub_item_parents</span>.<span class="ident">push</span>(<span class="ident">link</span>.<span class="ident">name</span>.<span class="ident">clone</span>());
     <span class="kw">let</span> <span class="ident">sub_items</span> <span class="op">=</span> <span class="ident">link</span>.<span class="ident">nested_items</span>
         .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">load_summary_item</span>(<span class="ident">i</span>, <span class="ident">src_dir</span>))
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">load_summary_item</span>(<span class="ident">i</span>, <span class="ident">src_dir</span>, <span class="ident">sub_item_parents</span>.<span class="ident">clone</span>()))
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
     <span class="ident">ch</span>.<span class="ident">sub_items</span> <span class="op">=</span> <span class="ident">sub_items</span>;
@@ -902,9 +936,9 @@ And here is some \
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">load_a_single_chapter_from_disk</span>() {
         <span class="kw">let</span> (<span class="ident">link</span>, <span class="ident">temp_dir</span>) <span class="op">=</span> <span class="ident">dummy_link</span>();
-        <span class="kw">let</span> <span class="ident">should_be</span> <span class="op">=</span> <span class="ident">Chapter</span>::<span class="ident">new</span>(<span class="string">&quot;Chapter 1&quot;</span>, <span class="ident">DUMMY_SRC</span>.<span class="ident">to_string</span>(), <span class="string">&quot;chapter_1.md&quot;</span>);
+        <span class="kw">let</span> <span class="ident">should_be</span> <span class="op">=</span> <span class="ident">Chapter</span>::<span class="ident">new</span>(<span class="string">&quot;Chapter 1&quot;</span>, <span class="ident">DUMMY_SRC</span>.<span class="ident">to_string</span>(), <span class="string">&quot;chapter_1.md&quot;</span>, <span class="ident">Vec</span>::<span class="ident">new</span>());
 
-        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">load_chapter</span>(<span class="kw-2">&amp;</span><span class="ident">link</span>, <span class="ident">temp_dir</span>.<span class="ident">path</span>()).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">load_chapter</span>(<span class="kw-2">&amp;</span><span class="ident">link</span>, <span class="ident">temp_dir</span>.<span class="ident">path</span>(), <span class="ident">Vec</span>::<span class="ident">new</span>()).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, <span class="ident">should_be</span>);
     }
 
@@ -912,7 +946,7 @@ And here is some \
     <span class="kw">fn</span> <span class="ident">cant_load_a_nonexistent_chapter</span>() {
         <span class="kw">let</span> <span class="ident">link</span> <span class="op">=</span> <span class="ident">Link</span>::<span class="ident">new</span>(<span class="string">&quot;Chapter 1&quot;</span>, <span class="string">&quot;/foo/bar/baz.md&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">load_chapter</span>(<span class="kw-2">&amp;</span><span class="ident">link</span>, <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">load_chapter</span>(<span class="kw-2">&amp;</span><span class="ident">link</span>, <span class="string">&quot;&quot;</span>, <span class="ident">Vec</span>::<span class="ident">new</span>());
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">got</span>.<span class="ident">is_err</span>());
     }
 
@@ -925,6 +959,7 @@ And here is some \
             <span class="ident">content</span>: <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;Hello World!&quot;</span>),
             <span class="ident">number</span>: <span class="prelude-val">Some</span>(<span class="ident">SectionNumber</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">1</span>, <span class="number">2</span>])),
             <span class="ident">path</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;second.md&quot;</span>),
+            <span class="ident">parent_names</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;Chapter 1&quot;</span>)],
             <span class="ident">sub_items</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
         };
         <span class="kw">let</span> <span class="ident">should_be</span> <span class="op">=</span> <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">Chapter</span> {
@@ -932,6 +967,7 @@ And here is some \
             <span class="ident">content</span>: <span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">DUMMY_SRC</span>),
             <span class="ident">number</span>: <span class="prelude-val">None</span>,
             <span class="ident">path</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;chapter_1.md&quot;</span>),
+            <span class="ident">parent_names</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
             <span class="ident">sub_items</span>: <span class="macro">vec</span><span class="macro">!</span>[
                 <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">nested</span>.<span class="ident">clone</span>()),
                 <span class="ident">BookItem</span>::<span class="ident">Separator</span>,
@@ -939,7 +975,7 @@ And here is some \
             ],
         });
 
-        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">load_summary_item</span>(<span class="kw-2">&amp;</span><span class="ident">SummaryItem</span>::<span class="ident">Link</span>(<span class="ident">root</span>), <span class="ident">temp</span>.<span class="ident">path</span>()).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">load_summary_item</span>(<span class="kw-2">&amp;</span><span class="ident">SummaryItem</span>::<span class="ident">Link</span>(<span class="ident">root</span>), <span class="ident">temp</span>.<span class="ident">path</span>(), <span class="ident">Vec</span>::<span class="ident">new</span>()).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">got</span>, <span class="ident">should_be</span>);
     }
 
@@ -995,17 +1031,20 @@ And here is some \
                     <span class="ident">content</span>: <span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">DUMMY_SRC</span>),
                     <span class="ident">number</span>: <span class="prelude-val">None</span>,
                     <span class="ident">path</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;Chapter_1/index.md&quot;</span>),
+                    <span class="ident">parent_names</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
                     <span class="ident">sub_items</span>: <span class="macro">vec</span><span class="macro">!</span>[
                         <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">Chapter</span>::<span class="ident">new</span>(
                             <span class="string">&quot;Hello World&quot;</span>,
                             <span class="ident">String</span>::<span class="ident">new</span>(),
                             <span class="string">&quot;Chapter_1/hello.md&quot;</span>,
+                            <span class="ident">Vec</span>::<span class="ident">new</span>(),
                         )),
                         <span class="ident">BookItem</span>::<span class="ident">Separator</span>,
                         <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">Chapter</span>::<span class="ident">new</span>(
                             <span class="string">&quot;Goodbye World&quot;</span>,
                             <span class="ident">String</span>::<span class="ident">new</span>(),
                             <span class="string">&quot;Chapter_1/goodbye.md&quot;</span>,
+                            <span class="ident">Vec</span>::<span class="ident">new</span>(),
                         )),
                     ],
                 }),
@@ -1042,17 +1081,20 @@ And here is some \
                     <span class="ident">content</span>: <span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">DUMMY_SRC</span>),
                     <span class="ident">number</span>: <span class="prelude-val">None</span>,
                     <span class="ident">path</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;Chapter_1/index.md&quot;</span>),
+                    <span class="ident">parent_names</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
                     <span class="ident">sub_items</span>: <span class="macro">vec</span><span class="macro">!</span>[
                         <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">Chapter</span>::<span class="ident">new</span>(
                             <span class="string">&quot;Hello World&quot;</span>,
                             <span class="ident">String</span>::<span class="ident">new</span>(),
                             <span class="string">&quot;Chapter_1/hello.md&quot;</span>,
+                            <span class="ident">Vec</span>::<span class="ident">new</span>(),
                         )),
                         <span class="ident">BookItem</span>::<span class="ident">Separator</span>,
                         <span class="ident">BookItem</span>::<span class="ident">Chapter</span>(<span class="ident">Chapter</span>::<span class="ident">new</span>(
                             <span class="string">&quot;Goodbye World&quot;</span>,
                             <span class="ident">String</span>::<span class="ident">new</span>(),
                             <span class="string">&quot;Chapter_1/goodbye.md&quot;</span>,
+                            <span class="ident">Vec</span>::<span class="ident">new</span>(),
                         )),
                     ],
                 }),

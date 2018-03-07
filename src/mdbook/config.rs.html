@@ -773,17 +773,67 @@
 <span id="727">727</span>
 <span id="728">728</span>
 <span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Mdbook&#39;s configuration system.</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! The main entrypoint of the `config` module is the `Config` struct. This acts</span>
 <span class="doccomment">//! essentially as a bag of configuration information, with a couple</span>
-<span class="doccomment">//! pre-determined tables (`BookConfig` and `BuildConfig`) as well as support </span>
+<span class="doccomment">//! pre-determined tables (`BookConfig` and `BuildConfig`) as well as support</span>
 <span class="doccomment">//! for arbitrary data which is exposed to plugins and alternate backends.</span>
-<span class="doccomment">//! </span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! ```rust</span>
 <span class="doccomment">//! # extern crate mdbook;</span>
 <span class="doccomment">//! # use mdbook::errors::*;</span>
@@ -791,31 +841,31 @@
 <span class="doccomment">//! use std::path::PathBuf;</span>
 <span class="doccomment">//! use mdbook::Config;</span>
 <span class="doccomment">//! use toml::Value;</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! # fn run() -&gt; Result&lt;()&gt; {</span>
 <span class="doccomment">//! let src = r#&quot;</span>
 <span class="doccomment">//! [book]</span>
 <span class="doccomment">//! title = &quot;My Book&quot;</span>
 <span class="doccomment">//! authors = [&quot;Michael-F-Bryan&quot;]</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! [build]</span>
 <span class="doccomment">//! src = &quot;out&quot;</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! [other-table.foo]</span>
 <span class="doccomment">//! bar = 123</span>
 <span class="doccomment">//! &quot;#;</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! // load the `Config` from a toml string</span>
 <span class="doccomment">//! let mut cfg = Config::from_str(src)?;</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! // retrieve a nested value</span>
 <span class="doccomment">//! let bar = cfg.get(&quot;other-table.foo.bar&quot;).cloned();</span>
 <span class="doccomment">//! assert_eq!(bar, Some(Value::Integer(123)));</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! // Set the `output.html.theme` directory</span>
 <span class="doccomment">//! assert!(cfg.get(&quot;output.html&quot;).is_none());</span>
 <span class="doccomment">//! cfg.set(&quot;output.html.theme&quot;, &quot;./themes&quot;);</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! // then load it again, automatically deserializing to a `PathBuf`.</span>
 <span class="doccomment">//! let got: PathBuf = cfg.get_deserialized(&quot;output.html.theme&quot;)?;</span>
 <span class="doccomment">//! assert_eq!(got, PathBuf::from(&quot;./themes&quot;));</span>
@@ -1186,7 +1236,7 @@
     <span class="kw">pub</span> <span class="ident">google_analytics</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Additional CSS stylesheets to include in the rendered page&#39;s `&lt;head&gt;`.</span>
     <span class="kw">pub</span> <span class="ident">additional_css</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Additional JS scripts to include at the bottom of the rendered page&#39;s </span>
+    <span class="doccomment">/// Additional JS scripts to include at the bottom of the rendered page&#39;s</span>
     <span class="doccomment">/// `&lt;body&gt;`.</span>
     <span class="kw">pub</span> <span class="ident">additional_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Playpen settings.</span>
@@ -1201,28 +1251,78 @@
     <span class="kw">pub</span> <span class="ident">livereload_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Should section labels be rendered?</span>
     <span class="kw">pub</span> <span class="ident">no_section_label</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Search settings. If `None`, the default will be used.</span>
+    <span class="kw">pub</span> <span class="ident">search</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Search</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Configuration for tweaking how the the HTML renderer handles the playpen.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Playpen</span> {
-    <span class="doccomment">/// The path to the editor to use. Defaults to the [Ace Editor].</span>
-    <span class="doccomment">/// </span>
-    <span class="doccomment">/// [Ace Editor]: https://ace.c9.io/</span>
-    <span class="kw">pub</span> <span class="ident">editor</span>: <span class="ident">PathBuf</span>,
-    <span class="doccomment">/// Should playpen snippets be editable? Defaults to `false`.</span>
+    <span class="doccomment">/// Should playpen snippets be editable? Default: `false`.</span>
     <span class="kw">pub</span> <span class="ident">editable</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Copy JavaScript files for the editor to the output directory?</span>
+    <span class="doccomment">/// Default: `true`.</span>
+    <span class="kw">pub</span> <span class="ident">copy_js</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Playpen</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Playpen</span> {
         <span class="ident">Playpen</span> {
-            <span class="ident">editor</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;ace&quot;</span>),
             <span class="ident">editable</span>: <span class="bool-val">false</span>,
+            <span class="ident">copy_js</span>: <span class="bool-val">true</span>,
         }
     }
 }
+
+<span class="doccomment">/// Configuration of the search functionality of the HTML renderer.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Search</span> {
+    <span class="doccomment">/// Maximum number of visible results. Default: `30`.</span>
+    <span class="kw">pub</span> <span class="ident">limit_results</span>: <span class="ident">u32</span>,
+    <span class="doccomment">/// The number of words used for a search result teaser. Default: `30`,</span>
+    <span class="kw">pub</span> <span class="ident">teaser_word_count</span>: <span class="ident">u32</span>,
+    <span class="doccomment">/// Define the logical link between multiple search words.</span>
+    <span class="doccomment">/// If true, all search words must appear in each result. Default: `true`.</span>
+    <span class="kw">pub</span> <span class="ident">use_boolean_and</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Boost factor for the search result score if a search word appears in the header.</span>
+    <span class="doccomment">/// Default: `2`.</span>
+    <span class="kw">pub</span> <span class="ident">boost_title</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// Boost factor for the search result score if a search word appears in the hierarchy.</span>
+    <span class="doccomment">/// The hierarchy contains all titles of the parent documents and all parent headings.</span>
+    <span class="doccomment">/// Default: `1`.</span>
+    <span class="kw">pub</span> <span class="ident">boost_hierarchy</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// Boost factor for the search result score if a search word appears in the text.</span>
+    <span class="doccomment">/// Default: `1`.</span>
+    <span class="kw">pub</span> <span class="ident">boost_paragraph</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// True if the searchword `micro` should match `microwave`. Default: `true`.</span>
+    <span class="kw">pub</span> <span class="ident">expand</span> : <span class="ident">bool</span>,
+    <span class="doccomment">/// Documents are split into smaller parts, seperated by headings. This defines, until which</span>
+    <span class="doccomment">/// level of heading documents should be split. Default: `3`. (`### This is a level 3 heading`)</span>
+    <span class="kw">pub</span> <span class="ident">heading_split_level</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// Copy JavaScript files for the search functionality to the output directory?</span>
+    <span class="doccomment">/// Default: `true`.</span>
+    <span class="kw">pub</span> <span class="ident">copy_js</span>: <span class="ident">bool</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Search</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Search</span> {
+        <span class="comment">// Please update the documentation of `Search` when changing values!</span>
+        <span class="ident">Search</span> {
+            <span class="ident">limit_results</span>: <span class="number">30</span>,
+            <span class="ident">teaser_word_count</span>: <span class="number">30</span>,
+            <span class="ident">use_boolean_and</span>: <span class="bool-val">false</span>,
+            <span class="ident">boost_title</span>: <span class="number">2</span>,
+            <span class="ident">boost_hierarchy</span>: <span class="number">1</span>,
+            <span class="ident">boost_paragraph</span>: <span class="number">1</span>,
+            <span class="ident">expand</span>: <span class="bool-val">true</span>,
+            <span class="ident">heading_split_level</span>: <span class="number">3</span>,
+            <span class="ident">copy_js</span>: <span class="bool-val">true</span>,
+        }
+    }
+}
+
 
 <span class="doccomment">/// Allows you to &quot;update&quot; any arbitrary field in a struct by round-tripping via</span>
 <span class="doccomment">/// a `toml::Value`.</span>
@@ -1301,7 +1401,7 @@
         };
         <span class="kw">let</span> <span class="ident">playpen_should_be</span> <span class="op">=</span> <span class="ident">Playpen</span> {
             <span class="ident">editable</span>: <span class="bool-val">true</span>,
-            <span class="ident">editor</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;ace&quot;</span>),
+            <span class="ident">copy_js</span>: <span class="bool-val">true</span>,
         };
         <span class="kw">let</span> <span class="ident">html_should_be</span> <span class="op">=</span> <span class="ident">HtmlConfig</span> {
             <span class="ident">curly_quotes</span>: <span class="bool-val">true</span>,

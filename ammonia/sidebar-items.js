@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["UrlRelative","Policy for [relative URLs], that is, URLs that do not specify the scheme in full."]],"fn":[["clean","Clean HTML with a conservative set of defaults."]],"struct":[["Builder","An HTML sanitizer."],["Document","A sanitized HTML document."],["Url","A parsed URL record."]],"trait":[["UrlRelativeEvaluate",""]]});

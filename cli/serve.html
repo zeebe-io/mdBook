@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en" class="sidebar-visible">
     <head>
+        <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>serve - mdBook Documentation</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -110,9 +111,14 @@
                                 <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                                 <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                             </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
                         </div>
 
-                        <h1 class="menu-title">mdBook Documentation</h1>
+                        <h1 class="menu-title">mdBook Documentation</h1> 
 
                         <div class="right-buttons">
                             <a href="print.html" title="Print this book" aria-label="Print this book">
@@ -121,6 +127,17 @@
                         </div>
                     </div>
                 </div>
+
+                
+                <div id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </div>
+                <div id="searchresults-outer" class="searchresults-outer">
+                    <div class="searchresults-header" id="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+                
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script type="text/javascript">
@@ -148,10 +165,10 @@ the current working directory.</p>
 <pre><code class="language-bash">mdbook serve path/to/book -p 8000 -i 127.0.0.1 -a 192.168.1.100
 </code></pre>
 <p>If you were to want live reloading for this you would need to proxy the websocket calls through nginx as well from <code>192.168.1.100:&lt;WS_PORT&gt;</code> to <code>127.0.0.1:&lt;WS_PORT&gt;</code>. The <code>-w</code> flag allows for the websocket port to be configured.</p>
-<a class="header" href="cli/serve.html#--open" id="--open"><h4>--open</h4></a>
+<a class="header" href="cli/serve.html#a--open" id="a--open"><h4>--open</h4></a>
 <p>When you use the <code>--open</code> (<code>-o</code>) option, mdbook will open the book in your
 your default web browser after starting the server.</p>
-<a class="header" href="cli/serve.html#--dest-dir" id="--dest-dir"><h4>--dest-dir</h4></a>
+<a class="header" href="cli/serve.html#a--dest-dir" id="a--dest-dir"><h4>--dest-dir</h4></a>
 <p>The <code>--dest-dir</code> (<code>-d</code>) option allows you to change the output directory for your book.</p>
 <hr />
 <p><strong><em>note:</em></strong> <em>the <code>serve</code> command has not gotten a lot of testing yet, there could be some rough edges. If you discover a problem, please report it <a href="https://github.com/rust-lang-nursery/mdBook/issues">on Github</a></em></p>
@@ -215,6 +232,15 @@ your default web browser after starting the server.</p>
         <script src="mode-rust.js" type="text/javascript" charset="utf-8"></script>
         <script src="theme-dawn.js" type="text/javascript" charset="utf-8"></script>
         <script src="theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        
+        <script src="searchindex.js" type="text/javascript" charset="utf-8"></script>
+        
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
         
 
         

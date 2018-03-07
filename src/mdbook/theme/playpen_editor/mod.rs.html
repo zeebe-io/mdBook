@@ -44,147 +44,21 @@
         </form>
     </nav>
 
-    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
-<span id="2"> 2</span>
-<span id="3"> 3</span>
-<span id="4"> 4</span>
-<span id="5"> 5</span>
-<span id="6"> 6</span>
-<span id="7"> 7</span>
-<span id="8"> 8</span>
-<span id="9"> 9</span>
-<span id="10">10</span>
-<span id="11">11</span>
-<span id="12">12</span>
-<span id="13">13</span>
-<span id="14">14</span>
-<span id="15">15</span>
-<span id="16">16</span>
-<span id="17">17</span>
-<span id="18">18</span>
-<span id="19">19</span>
-<span id="20">20</span>
-<span id="21">21</span>
-<span id="22">22</span>
-<span id="23">23</span>
-<span id="24">24</span>
-<span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
-<span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
-<span id="35">35</span>
-<span id="36">36</span>
-<span id="37">37</span>
-<span id="38">38</span>
-<span id="39">39</span>
-<span id="40">40</span>
-<span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
-<span id="51">51</span>
-<span id="52">52</span>
-<span id="53">53</span>
-<span id="54">54</span>
-<span id="55">55</span>
-<span id="56">56</span>
-<span id="57">57</span>
-<span id="58">58</span>
-<span id="59">59</span>
-<span id="60">60</span>
-<span id="61">61</span>
-<span id="62">62</span>
-<span id="63">63</span>
-<span id="64">64</span>
-<span id="65">65</span>
-<span id="66">66</span>
-<span id="67">67</span>
-<span id="68">68</span>
-<span id="69">69</span>
-<span id="70">70</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
 </pre><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
-
-<span class="kw">use</span> <span class="ident">theme</span>::<span class="ident">load_file_contents</span>;
+<span class="doccomment">//! Theme dependencies for the playpen editor.</span>
 
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;editor.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">ACE_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;ace.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">MODE_RUST_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;mode-rust.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">THEME_DAWN_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;theme-dawn.js&quot;</span>);
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">THEME_TOMORROW_NIGHT_JS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;theme-tomorrow_night.js&quot;</span>);
-
-<span class="doccomment">/// Integration of a JavaScript editor for playpens.</span>
-<span class="doccomment">/// Uses the Ace editor: https://ace.c9.io/.</span>
-<span class="doccomment">/// The Ace editor itself, the mode, and the theme files are the</span>
-<span class="doccomment">/// generated minified no conflict versions.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The `PlaypenEditor` struct should be used instead of the static variables because</span>
-<span class="doccomment">/// the `new()` method</span>
-<span class="doccomment">/// will look if the user has an editor directory in his source folder and use</span>
-<span class="doccomment">/// the users editor instead</span>
-<span class="doccomment">/// of the default.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// You should exceptionnaly use the static variables only if you need the</span>
-<span class="doccomment">/// default editor even if the</span>
-<span class="doccomment">/// user has specified another editor.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PlaypenEditor</span> {
-    <span class="kw">pub</span> <span class="ident">js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">ace_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">mode_rust_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">theme_dawn_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">theme_tomorrow_night_js</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">PlaypenEditor</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">editor</span> <span class="op">=</span> <span class="ident">PlaypenEditor</span> {
-            <span class="ident">js</span>: <span class="ident">JS</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">ace_js</span>: <span class="ident">ACE_JS</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">mode_rust_js</span>: <span class="ident">MODE_RUST_JS</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">theme_dawn_js</span>: <span class="ident">THEME_DAWN_JS</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">theme_tomorrow_night_js</span>: <span class="ident">THEME_TOMORROW_NIGHT_JS</span>.<span class="ident">to_owned</span>(),
-        };
-
-        <span class="comment">// Check if the given path exists</span>
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">src</span>.<span class="ident">exists</span>() <span class="op">||</span> <span class="op">!</span><span class="ident">src</span>.<span class="ident">is_dir</span>() {
-            <span class="kw">return</span> <span class="ident">editor</span>;
-        }
-
-        <span class="comment">// Check for individual files if they exist</span>
-        {
-            <span class="kw">let</span> <span class="ident">files</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[(<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;editor.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">js</span>),
-                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;ace.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">ace_js</span>),
-                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;mode-rust.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">mode_rust_js</span>),
-                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;theme-dawn.js&quot;</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">theme_dawn_js</span>),
-                             (<span class="ident">src</span>.<span class="ident">join</span>(<span class="string">&quot;theme-tomorrow_night.js&quot;</span>),
-                             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">editor</span>.<span class="ident">theme_tomorrow_night_js</span>)];
-
-            <span class="kw">for</span> (<span class="ident">filename</span>, <span class="ident">dest</span>) <span class="kw">in</span> <span class="ident">files</span> {
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">filename</span>.<span class="ident">exists</span>() {
-                    <span class="kw">continue</span>;
-                }
-
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">load_file_contents</span>(<span class="kw-2">&amp;</span><span class="ident">filename</span>, <span class="ident">dest</span>) {
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Couldn&#39;t load custom file, {}: {}&quot;</span>, <span class="ident">filename</span>.<span class="ident">display</span>(), <span class="ident">e</span>);
-                }
-            }
-        }
-
-        <span class="ident">editor</span>
-    }
-}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
