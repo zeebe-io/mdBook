@@ -49,8 +49,8 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/env_logger/lib.rs.html#11-676' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>A simple logger configured via environment variables which writes 
+               </span><a class='srclink' href='../src/env_logger/lib.rs.html#11-877' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>A simple logger configured via environment variables which writes
 to stdout or stderr, for use with the logging facade exposed by the
 <a href="https://docs.rs/log/"><code>log</code> crate</a>.</p>
 
@@ -174,6 +174,30 @@ If the console isn&#39;t available on Windows, or if TERM=dumb, for example, the
 This includes emitting ANSI colors on Windows if the console API is unavailable.</li>
 <li><code>never</code> will never print style characters.</li>
 </ul>
+
+<h2 id='tweaking-the-default-format' class='section-header'><a href='#tweaking-the-default-format'>Tweaking the default format</a></h2>
+<p>Parts of the default format can be excluded from the log output using the <a href="struct.Builder.html"><code>Builder</code></a>.
+The following example excluding the timestamp from the log output:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">env_logger</span>;
+
+<span class="kw">use</span> <span class="ident">log</span>::<span class="ident">Level</span>;
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="ident">env_logger</span>::<span class="ident">Builder</span>::<span class="ident">from_default_env</span>()
+        .<span class="ident">default_format_timestamp</span>(<span class="bool-val">false</span>)
+        .<span class="ident">init</span>();
+
+    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;this is a debug {}&quot;</span>, <span class="string">&quot;message&quot;</span>);
+    <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;this is printed by default&quot;</span>);
+
+    <span class="kw">if</span> <span class="macro">log_enabled</span><span class="macro">!</span>(<span class="ident">Level</span>::<span class="ident">Info</span>) {
+        <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">3</span> <span class="op">*</span> <span class="number">4</span>; <span class="comment">// expensive computation</span>
+        <span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;the answer was: {}&quot;</span>, <span class="ident">x</span>);
+    }
+}</pre>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use self::fmt::<a class="enum" href="../env_logger/fmt/enum.Target.html" title="enum env_logger::fmt::Target">Target</a>;</code></td></tr><tr><td><code>pub use self::fmt::<a class="enum" href="../env_logger/fmt/enum.WriteStyle.html" title="enum env_logger::fmt::WriteStyle">WriteStyle</a>;</code></td></tr><tr><td><code>pub use self::fmt::<a class="struct" href="../env_logger/fmt/struct.Formatter.html" title="struct env_logger::fmt::Formatter">Formatter</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
