@@ -823,6 +823,17 @@
 <span id="777">777</span>
 <span id="778">778</span>
 <span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Mdbook&#39;s configuration system.</span>
 <span class="doccomment">//!</span>
@@ -1209,7 +1220,6 @@
     <span class="kw">pub</span> <span class="ident">create_missing</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// Which preprocessors should be applied</span>
     <span class="kw">pub</span> <span class="ident">preprocess</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>,
-
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BuildConfig</span> {
@@ -1255,6 +1265,17 @@
     <span class="kw">pub</span> <span class="ident">search</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Search</span><span class="op">&gt;</span>,
 }
 
+<span class="kw">impl</span> <span class="ident">HtmlConfig</span> {
+    <span class="doccomment">/// Returns the directory of theme from the provided root directory. If the</span>
+    <span class="doccomment">/// directory is not present it will append the default directory of &quot;theme&quot;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">theme_dir</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">PathBuf</span>) <span class="op">-&gt;</span> <span class="ident">PathBuf</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">theme</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">d</span>) <span class="op">=&gt;</span> <span class="ident">root</span>.<span class="ident">join</span>(<span class="ident">d</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;theme&quot;</span>),
+        }
+    }
+}
+
 <span class="doccomment">/// Configuration for tweaking how the the HTML renderer handles the playpen.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
@@ -1297,7 +1318,7 @@
     <span class="doccomment">/// Default: `1`.</span>
     <span class="kw">pub</span> <span class="ident">boost_paragraph</span>: <span class="ident">u8</span>,
     <span class="doccomment">/// True if the searchword `micro` should match `microwave`. Default: `true`.</span>
-    <span class="kw">pub</span> <span class="ident">expand</span> : <span class="ident">bool</span>,
+    <span class="kw">pub</span> <span class="ident">expand</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// Documents are split into smaller parts, seperated by headings. This defines, until which</span>
     <span class="doccomment">/// level of heading documents should be split. Default: `3`. (`### This is a level 3 heading`)</span>
     <span class="kw">pub</span> <span class="ident">heading_split_level</span>: <span class="ident">u8</span>,
@@ -1322,7 +1343,6 @@
         }
     }
 }
-
 
 <span class="doccomment">/// Allows you to &quot;update&quot; any arbitrary field in a struct by round-tripping via</span>
 <span class="doccomment">/// a `toml::Value`.</span>
@@ -1396,8 +1416,10 @@
         <span class="kw">let</span> <span class="ident">build_should_be</span> <span class="op">=</span> <span class="ident">BuildConfig</span> {
             <span class="ident">build_dir</span>: <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;outputs&quot;</span>),
             <span class="ident">create_missing</span>: <span class="bool-val">false</span>,
-            <span class="ident">preprocess</span>: <span class="prelude-val">Some</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;first_preprocessor&quot;</span>.<span class="ident">to_string</span>(),
-                                  <span class="string">&quot;second_preprocessor&quot;</span>.<span class="ident">to_string</span>()]),
+            <span class="ident">preprocess</span>: <span class="prelude-val">Some</span>(<span class="macro">vec</span><span class="macro">!</span>[
+                <span class="string">&quot;first_preprocessor&quot;</span>.<span class="ident">to_string</span>(),
+                <span class="string">&quot;second_preprocessor&quot;</span>.<span class="ident">to_string</span>(),
+            ]),
         };
         <span class="kw">let</span> <span class="ident">playpen_should_be</span> <span class="op">=</span> <span class="ident">Playpen</span> {
             <span class="ident">editable</span>: <span class="bool-val">true</span>,
