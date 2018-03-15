@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/helpers/helper_each.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.32.0/src/helpers/helper_each.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>helper_each.rs.html -- source</title>
@@ -438,38 +438,35 @@
 <span id="392">392</span>
 <span id="393">393</span>
 <span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
 <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">value</span>::<span class="ident">Value</span> <span class="kw">as</span> <span class="ident">Json</span>;
 
-<span class="kw">use</span> <span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
+<span class="kw">use</span> <span class="ident">helpers</span>::{<span class="ident">HelperDef</span>, <span class="ident">HelperResult</span>};
 <span class="kw">use</span> <span class="ident">registry</span>::<span class="ident">Registry</span>;
-<span class="kw">use</span> <span class="ident">context</span>::{<span class="ident">JsonTruthy</span>, <span class="ident">to_json</span>};
-<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>};
+<span class="kw">use</span> <span class="ident">context</span>::{<span class="ident">to_json</span>, <span class="ident">JsonTruthy</span>};
+<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Helper</span>, <span class="ident">RenderContext</span>, <span class="ident">Renderable</span>};
 <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">RenderError</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EachHelper</span>;
 
 <span class="kw">impl</span> <span class="ident">HelperDef</span> <span class="kw">for</span> <span class="ident">EachHelper</span> {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, <span class="ident">r</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>).<span class="ident">ok_or_else</span>(<span class="op">||</span> {
-            <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Param not found for helper \&quot;each\&quot;&quot;</span>)
-        }));
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, <span class="ident">r</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="ident">HelperResult</span> {
+        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(
+            <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>)
+                .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Param not found for helper \&quot;each\&quot;&quot;</span>))
+        );
 
         <span class="kw">let</span> <span class="ident">template</span> <span class="op">=</span> <span class="ident">h</span>.<span class="ident">template</span>();
 
         <span class="kw">match</span> <span class="ident">template</span> {
             <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=&gt;</span> {
                 <span class="ident">rc</span>.<span class="ident">promote_local_vars</span>();
-                <span class="kw">let</span> <span class="ident">local_path_root</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">path_root</span>().<span class="ident">map</span>(
-                    <span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}/{}&quot;</span>, <span class="ident">rc</span>.<span class="ident">get_path</span>(), <span class="ident">p</span>),
-                );
+                <span class="kw">let</span> <span class="ident">local_path_root</span> <span class="op">=</span> <span class="ident">value</span>
+                    .<span class="ident">path_root</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}/{}&quot;</span>, <span class="ident">rc</span>.<span class="ident">get_path</span>(), <span class="ident">p</span>));
 
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;each value {:?}&quot;</span>, <span class="ident">value</span>.<span class="ident">value</span>());
                 <span class="kw">let</span> <span class="ident">rendered</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">value</span>.<span class="ident">value</span>().<span class="ident">is_truthy</span>(), <span class="ident">value</span>.<span class="ident">value</span>()) {
@@ -556,11 +553,10 @@
                         }
                         <span class="prelude-val">Ok</span>(())
                     }
-                    _ <span class="op">=&gt;</span> {
-                        <span class="prelude-val">Err</span>(<span class="ident">RenderError</span>::<span class="ident">new</span>(
-                            <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Param type is not iterable: {:?}&quot;</span>, <span class="ident">template</span>),
-                        ))
-                    }
+                    _ <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(
+                        <span class="string">&quot;Param type is not iterable: {:?}&quot;</span>,
+                        <span class="ident">template</span>
+                    ))),
                 };
 
                 <span class="ident">rc</span>.<span class="ident">demote_local_vars</span>();
@@ -589,7 +585,7 @@
             <span class="ident">handlebars</span>
                 .<span class="ident">register_template_string</span>(
                     <span class="string">&quot;t0&quot;</span>,
-                    <span class="string">&quot;{{#each this}}{{@first}}|{{@last}}|{{@index}}:{{this}}|{{/each}}&quot;</span>,
+                    <span class="string">&quot;{{#each this}}{{@first}}|{{@last}}|{{@index}}:{{this}}|{{/each}}&quot;</span>
                 )
                 .<span class="ident">is_ok</span>()
         );
@@ -597,7 +593,7 @@
             <span class="ident">handlebars</span>
                 .<span class="ident">register_template_string</span>(
                     <span class="string">&quot;t1&quot;</span>,
-                    <span class="string">&quot;{{#each this}}{{@first}}|{{@key}}:{{this}}|{{/each}}&quot;</span>,
+                    <span class="string">&quot;{{#each this}}{{@first}}|{{@key}}:{{this}}|{{/each}}&quot;</span>
                 )
                 .<span class="ident">is_ok</span>()
         );
@@ -617,7 +613,6 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_each_with_parent</span>() {
-
         <span class="kw">let</span> <span class="ident">json_str</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;a&quot;:{&quot;a&quot;:99,&quot;c&quot;:[{&quot;d&quot;:100},{&quot;d&quot;:200}]}}&quot;#</span>;
 
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Json</span>::<span class="ident">from_str</span>(<span class="ident">json_str</span>).<span class="ident">unwrap</span>();
@@ -639,7 +634,6 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_nested_each_with_parent</span>() {
-
         <span class="kw">let</span> <span class="ident">json_str</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;a&quot;: [{&quot;b&quot;: [{&quot;d&quot;: 100}], &quot;c&quot;: 200}]}&quot;#</span>;
 
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Json</span>::<span class="ident">from_str</span>(<span class="ident">json_str</span>).<span class="ident">unwrap</span>();
@@ -648,7 +642,7 @@
             <span class="ident">handlebars</span>
                 .<span class="ident">register_template_string</span>(
                     <span class="string">&quot;t0&quot;</span>,
-                    <span class="string">&quot;{{#each a}}{{#each b}}{{d}}:{{../c}}{{/each}}{{/each}}&quot;</span>,
+                    <span class="string">&quot;{{#each a}}{{#each b}}{{d}}:{{../c}}{{/each}}{{/each}}&quot;</span>
                 )
                 .<span class="ident">is_ok</span>()
         );
@@ -659,7 +653,6 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_nested_each</span>() {
-
         <span class="kw">let</span> <span class="ident">json_str</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;a&quot;: [{&quot;b&quot;: true}], &quot;b&quot;: [[1, 2, 3],[4, 5]]}&quot;#</span>;
 
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Json</span>::<span class="ident">from_str</span>(<span class="ident">json_str</span>).<span class="ident">unwrap</span>();
@@ -669,7 +662,7 @@
             <span class="ident">handlebars</span>
                 .<span class="ident">register_template_string</span>(
                     <span class="string">&quot;t0&quot;</span>,
-                    <span class="string">&quot;{{#each b}}{{#if ../a}}{{#each this}}{{this}}{{/each}}{{/if}}{{/each}}&quot;</span>,
+                    <span class="string">&quot;{{#each b}}{{#if ../a}}{{#each this}}{{this}}{{/each}}{{/if}}{{/each}}&quot;</span>
                 )
                 .<span class="ident">is_ok</span>()
         );
@@ -677,7 +670,6 @@
         <span class="kw">let</span> <span class="ident">r1</span> <span class="op">=</span> <span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;t0&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">r1</span>.<span class="ident">ok</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;12345&quot;</span>.<span class="ident">to_string</span>());
     }
-
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_nested_array</span>() {
@@ -706,19 +698,19 @@
             .<span class="ident">render</span>(
                 <span class="string">&quot;t0&quot;</span>,
                 <span class="kw-2">&amp;</span>({
-                      <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rv</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
-                      <span class="ident">rv</span>.<span class="ident">insert</span>(<span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>(), {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rv</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
+                    <span class="ident">rv</span>.<span class="ident">insert</span>(<span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>(), {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rv</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
                         <span class="ident">rv</span>.<span class="ident">insert</span>(<span class="string">&quot;value&quot;</span>.<span class="ident">to_owned</span>(), <span class="string">&quot;bar&quot;</span>.<span class="ident">to_owned</span>());
                         <span class="ident">rv</span>
                     });
-                      <span class="ident">rv</span>.<span class="ident">insert</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_owned</span>(), {
+                    <span class="ident">rv</span>.<span class="ident">insert</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_owned</span>(), {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rv</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
                         <span class="ident">rv</span>.<span class="ident">insert</span>(<span class="string">&quot;value&quot;</span>.<span class="ident">to_owned</span>(), <span class="string">&quot;baz&quot;</span>.<span class="ident">to_owned</span>());
                         <span class="ident">rv</span>
                     });
-                      <span class="ident">rv</span>
-                  }),
+                    <span class="ident">rv</span>
+                }),
             )
             .<span class="ident">unwrap</span>();
 
@@ -736,15 +728,13 @@
                 .<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="string">&quot;{{#each a}}1{{else}}empty{{/each}}&quot;</span>)
                 .<span class="ident">is_ok</span>()
         );
-        <span class="kw">let</span> <span class="ident">m1</span> <span class="op">=</span>
-            <span class="macro">btreemap</span><span class="macro">!</span> {
+        <span class="kw">let</span> <span class="ident">m1</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span> {
             <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>::<span class="ident">new</span>(),
         };
         <span class="kw">let</span> <span class="ident">r0</span> <span class="op">=</span> <span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;t0&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">m1</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">r0</span>, <span class="string">&quot;empty&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">m2</span> <span class="op">=</span>
-            <span class="macro">btreemap</span><span class="macro">!</span>{
+        <span class="kw">let</span> <span class="ident">m2</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span>{
             <span class="string">&quot;b&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>::<span class="ident">new</span>()
         };
         <span class="kw">let</span> <span class="ident">r1</span> <span class="op">=</span> <span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;t0&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">m2</span>).<span class="ident">unwrap</span>();
@@ -759,8 +749,7 @@
                 .<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="string">&quot;{{#each a as |i|}}{{i}}{{/each}}&quot;</span>)
                 .<span class="ident">is_ok</span>()
         );
-        <span class="kw">let</span> <span class="ident">m1</span> <span class="op">=</span>
-            <span class="macro">btreemap</span><span class="macro">!</span> {
+        <span class="kw">let</span> <span class="ident">m1</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span> {
             <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]
         };
         <span class="kw">let</span> <span class="ident">r0</span> <span class="op">=</span> <span class="ident">handlebars</span>.<span class="ident">render</span>(<span class="string">&quot;t0&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">m1</span>).<span class="ident">unwrap</span>();
@@ -770,10 +759,12 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_each_object_block_param</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="string">&quot;{{#each this as |k v|}}{{#with k as |inner_k|}}{{inner_k}}{{/with}}:{{v}}|{{/each}}&quot;</span>).<span class="ident">is_ok</span>());
+        <span class="kw">let</span> <span class="ident">template</span> <span class="op">=</span> <span class="string">&quot;{{#each this as |k v|}}\
+                        {{#with k as |inner_k|}}{{inner_k}}{{/with}}:{{v}}|\
+                        {{/each}}&quot;</span>;
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="ident">template</span>).<span class="ident">is_ok</span>());
 
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span>
-            <span class="macro">btreemap</span><span class="macro">!</span>{
+        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span>{
             <span class="string">&quot;ftp&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="number">21</span>,
             <span class="string">&quot;http&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="number">80</span>
         };
@@ -788,13 +779,12 @@
             <span class="ident">handlebars</span>
                 .<span class="ident">register_template_string</span>(
                     <span class="string">&quot;t0&quot;</span>,
-                    <span class="string">&quot;{{#each a.b}}{{#each c}}{{../../d}}{{/each}}{{/each}}&quot;</span>,
+                    <span class="string">&quot;{{#each a.b}}{{#each c}}{{../../d}}{{/each}}{{/each}}&quot;</span>
                 )
                 .<span class="ident">is_ok</span>()
         );
 
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span>
-            <span class="macro">btreemap</span><span class="macro">!</span> {
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span> {
             <span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="macro">btreemap</span><span class="macro">!</span> {
                 <span class="string">&quot;b&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="macro">btreemap</span><span class="macro">!</span>{<span class="string">&quot;c&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">1</span>]}]
             }),
@@ -808,9 +798,11 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_nested_each_with_path_up_this</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handlebars</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="string">&quot;{{#each variant}}{{#each ../typearg}}{{#if @first}}template&lt;{{/if}}{{this}}{{#if @last}}&gt;{{else}},{{/if}}{{/each}}{{/each}}&quot;</span>).<span class="ident">is_ok</span>());
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span>
-            <span class="macro">btreemap</span><span class="macro">!</span> {
+        <span class="kw">let</span> <span class="ident">template</span> <span class="op">=</span> <span class="string">&quot;{{#each variant}}{{#each ../typearg}}\
+                        {{#if @first}}template&lt;{{/if}}{{this}}{{#if @last}}&gt;{{else}},{{/if}}\
+                        {{/each}}{{/each}}&quot;</span>;
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">handlebars</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;t0&quot;</span>, <span class="ident">template</span>).<span class="ident">is_ok</span>());
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span> {
             <span class="string">&quot;typearg&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;T&quot;</span>.<span class="ident">to_string</span>()],
             <span class="string">&quot;variant&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;1&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;2&quot;</span>.<span class="ident">to_string</span>()]
         };

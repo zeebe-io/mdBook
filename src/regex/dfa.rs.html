@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-0.2.7/src/dfa.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-0.2.9/src/dfa.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dfa.rs.html -- source</title>
@@ -1928,6 +1928,16 @@
 <span id="1882">1882</span>
 <span id="1883">1883</span>
 <span id="1884">1884</span>
+<span id="1885">1885</span>
+<span id="1886">1886</span>
+<span id="1887">1887</span>
+<span id="1888">1888</span>
+<span id="1889">1889</span>
+<span id="1890">1890</span>
+<span id="1891">1891</span>
+<span id="1892">1892</span>
+<span id="1893">1893</span>
+<span id="1894">1894</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2014-2016 The Rust Project Developers. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution and at</span>
@@ -3013,52 +3023,62 @@ implementation.)
         <span class="comment">// We need to traverse the NFA to follow epsilon transitions, so avoid</span>
         <span class="comment">// recursion with an explicit stack.</span>
         <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">ip</span>);
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ip</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">pop</span>() {
-            <span class="comment">// Don&#39;t visit states we&#39;ve already added.</span>
-            <span class="kw">if</span> <span class="ident">q</span>.<span class="ident">contains</span>(<span class="ident">ip</span> <span class="kw">as</span> <span class="ident">usize</span>) {
-                <span class="kw">continue</span>;
-            }
-            <span class="ident">q</span>.<span class="ident">insert</span>(<span class="ident">ip</span> <span class="kw">as</span> <span class="ident">usize</span>);
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">prog</span>[<span class="ident">ip</span> <span class="kw">as</span> <span class="ident">usize</span>] {
-                <span class="ident">Char</span>(_) <span class="op">|</span> <span class="ident">Ranges</span>(_) <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
-                <span class="ident">Match</span>(_) <span class="op">|</span> <span class="ident">Bytes</span>(_) <span class="op">=&gt;</span> {}
-                <span class="ident">EmptyLook</span>(<span class="kw-2">ref</span> <span class="ident">inst</span>) <span class="op">=&gt;</span> {
-                    <span class="comment">// Only follow empty assertion states if our flags satisfy</span>
-                    <span class="comment">// the assertion.</span>
-                    <span class="kw">match</span> <span class="ident">inst</span>.<span class="ident">look</span> {
-                        <span class="ident">StartLine</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">start_line</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">EndLine</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">end_line</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">StartText</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">start</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">EndText</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">end</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">WordBoundaryAscii</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">word_boundary</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">NotWordBoundaryAscii</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">not_word_boundary</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">WordBoundary</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">word_boundary</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">NotWordBoundary</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">not_word_boundary</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                        }
-                        <span class="ident">StartLine</span> <span class="op">|</span> <span class="ident">EndLine</span> <span class="op">|</span> <span class="ident">StartText</span> <span class="op">|</span> <span class="ident">EndText</span>
-                        <span class="op">|</span> <span class="ident">WordBoundaryAscii</span> <span class="op">|</span> <span class="ident">NotWordBoundaryAscii</span>
-                        <span class="op">|</span> <span class="ident">WordBoundary</span> <span class="op">|</span> <span class="ident">NotWordBoundary</span> <span class="op">=&gt;</span> {}
-                    }
+        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">ip</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">pop</span>() {
+            <span class="comment">// Try to munch through as many states as possible without</span>
+            <span class="comment">// pushes/pops to the stack.</span>
+            <span class="kw">loop</span> {
+                <span class="comment">// Don&#39;t visit states we&#39;ve already added.</span>
+                <span class="kw">if</span> <span class="ident">q</span>.<span class="ident">contains</span>(<span class="ident">ip</span> <span class="kw">as</span> <span class="ident">usize</span>) {
+                    <span class="kw">break</span>;
                 }
-                <span class="ident">Save</span>(<span class="kw-2">ref</span> <span class="ident">inst</span>) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>),
-                <span class="ident">Split</span>(<span class="kw-2">ref</span> <span class="ident">inst</span>) <span class="op">=&gt;</span> {
-                    <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto2</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
-                    <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto1</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
+                <span class="ident">q</span>.<span class="ident">insert</span>(<span class="ident">ip</span> <span class="kw">as</span> <span class="ident">usize</span>);
+                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">prog</span>[<span class="ident">ip</span> <span class="kw">as</span> <span class="ident">usize</span>] {
+                    <span class="ident">Char</span>(_) <span class="op">|</span> <span class="ident">Ranges</span>(_) <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+                    <span class="ident">Match</span>(_) <span class="op">|</span> <span class="ident">Bytes</span>(_) <span class="op">=&gt;</span> {
+                        <span class="kw">break</span>;
+                    }
+                    <span class="ident">EmptyLook</span>(<span class="kw-2">ref</span> <span class="ident">inst</span>) <span class="op">=&gt;</span> {
+                        <span class="comment">// Only follow empty assertion states if our flags</span>
+                        <span class="comment">// satisfy the assertion.</span>
+                        <span class="kw">match</span> <span class="ident">inst</span>.<span class="ident">look</span> {
+                            <span class="ident">StartLine</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">start_line</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">EndLine</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">end_line</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">StartText</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">start</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">EndText</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">end</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">WordBoundaryAscii</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">word_boundary</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">NotWordBoundaryAscii</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">not_word_boundary</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">WordBoundary</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">word_boundary</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">NotWordBoundary</span> <span class="kw">if</span> <span class="ident">flags</span>.<span class="ident">not_word_boundary</span> <span class="op">=&gt;</span> {
+                                <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                            }
+                            <span class="ident">StartLine</span> <span class="op">|</span> <span class="ident">EndLine</span> <span class="op">|</span> <span class="ident">StartText</span> <span class="op">|</span> <span class="ident">EndText</span>
+                            <span class="op">|</span> <span class="ident">WordBoundaryAscii</span> <span class="op">|</span> <span class="ident">NotWordBoundaryAscii</span>
+                            <span class="op">|</span> <span class="ident">WordBoundary</span> <span class="op">|</span> <span class="ident">NotWordBoundary</span> <span class="op">=&gt;</span> {
+                                <span class="kw">break</span>;
+                            }
+                        }
+                    }
+                    <span class="ident">Save</span>(<span class="kw-2">ref</span> <span class="ident">inst</span>) <span class="op">=&gt;</span> {
+                        <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                    }
+                    <span class="ident">Split</span>(<span class="kw-2">ref</span> <span class="ident">inst</span>) <span class="op">=&gt;</span> {
+                        <span class="self">self</span>.<span class="ident">cache</span>.<span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">inst</span>.<span class="ident">goto2</span> <span class="kw">as</span> <span class="ident">InstPtr</span>);
+                        <span class="ident">ip</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">goto1</span> <span class="kw">as</span> <span class="ident">InstPtr</span>;
+                    }
                 }
             }
         }

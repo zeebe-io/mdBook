@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-0.2.7/src/exec.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-0.2.9/src/exec.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>exec.rs.html -- source</title>
@@ -1331,6 +1331,7 @@
 <span id="1285">1285</span>
 <span id="1286">1286</span>
 <span id="1287">1287</span>
+<span id="1288">1288</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2014-2015 The Rust Project Developers. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution and at</span>
@@ -1357,7 +1358,7 @@
 <span class="kw">use</span> <span class="ident">dfa</span>;
 <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">input</span>::{<span class="ident">ByteInput</span>, <span class="ident">CharInput</span>};
-<span class="kw">use</span> <span class="ident">literals</span>::<span class="ident">LiteralSearcher</span>;
+<span class="kw">use</span> <span class="ident">literal</span>::<span class="ident">LiteralSearcher</span>;
 <span class="kw">use</span> <span class="ident">pikevm</span>;
 <span class="kw">use</span> <span class="ident">prog</span>::<span class="ident">Program</span>;
 <span class="kw">use</span> <span class="ident">re_builder</span>::<span class="ident">RegexOptions</span>;
@@ -1564,6 +1565,7 @@
                     .<span class="ident">ignore_whitespace</span>(<span class="self">self</span>.<span class="ident">options</span>.<span class="ident">ignore_whitespace</span>)
                     .<span class="ident">unicode</span>(<span class="self">self</span>.<span class="ident">options</span>.<span class="ident">unicode</span>)
                     .<span class="ident">allow_invalid_utf8</span>(<span class="op">!</span><span class="self">self</span>.<span class="ident">only_utf8</span>)
+                    .<span class="ident">nest_limit</span>(<span class="self">self</span>.<span class="ident">options</span>.<span class="ident">nest_limit</span>)
                     .<span class="ident">build</span>();
             <span class="kw">let</span> <span class="ident">expr</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">parser</span>.<span class="ident">parse</span>(<span class="ident">pat</span>));
             <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">bytes</span> <span class="op">||</span> <span class="op">!</span><span class="ident">expr</span>.<span class="ident">is_always_utf8</span>();

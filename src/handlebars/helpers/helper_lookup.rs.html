@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/helpers/helper_lookup.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.32.0/src/helpers/helper_lookup.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>helper_lookup.rs.html -- source</title>
@@ -132,43 +132,42 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
-<span id="89">89</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">value</span>::<span class="ident">Value</span> <span class="kw">as</span> <span class="ident">Json</span>;
 
-<span class="kw">use</span> <span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
+<span class="kw">use</span> <span class="ident">helpers</span>::{<span class="ident">HelperDef</span>, <span class="ident">HelperResult</span>};
 <span class="kw">use</span> <span class="ident">registry</span>::<span class="ident">Registry</span>;
 <span class="kw">use</span> <span class="ident">context</span>::<span class="ident">JsonRender</span>;
-<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">RenderContext</span>, <span class="ident">Helper</span>};
+<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Helper</span>, <span class="ident">RenderContext</span>};
 <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">RenderError</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LookupHelper</span>;
 
 <span class="kw">impl</span> <span class="ident">HelperDef</span> <span class="kw">for</span> <span class="ident">LookupHelper</span> {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, _: <span class="kw-2">&amp;</span><span class="ident">Registry</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">collection_value</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>).<span class="ident">ok_or_else</span>(<span class="op">||</span> {
-            <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Param not found for helper \&quot;lookup\&quot;&quot;</span>)
-        }));
-        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">h</span>.<span class="ident">param</span>(<span class="number">1</span>).<span class="ident">ok_or_else</span>(<span class="op">||</span> {
-            <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Insufficient params for helper \&quot;lookup\&quot;&quot;</span>)
-        }));
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">h</span>: <span class="kw-2">&amp;</span><span class="ident">Helper</span>, _: <span class="kw-2">&amp;</span><span class="ident">Registry</span>, <span class="ident">rc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RenderContext</span>) <span class="op">-&gt;</span> <span class="ident">HelperResult</span> {
+        <span class="kw">let</span> <span class="ident">collection_value</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(
+            <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">0</span>)
+                .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Param not found for helper \&quot;lookup\&quot;&quot;</span>))
+        );
+        <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(
+            <span class="ident">h</span>.<span class="ident">param</span>(<span class="number">1</span>)
+                .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Insufficient params for helper \&quot;lookup\&quot;&quot;</span>))
+        );
 
         <span class="kw">let</span> <span class="ident">null</span> <span class="op">=</span> <span class="ident">Json</span>::<span class="ident">Null</span>;
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">collection_value</span>.<span class="ident">value</span>() {
-            <span class="kw-2">&amp;</span><span class="ident">Json</span>::<span class="ident">Array</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
-                <span class="ident">index</span>
-                    .<span class="ident">value</span>()
-                    .<span class="ident">as_u64</span>()
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">u</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">u</span> <span class="kw">as</span> <span class="ident">usize</span>))
-                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">u</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">get</span>(<span class="ident">u</span>))
-                    .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">null</span>)
-            }
-            <span class="kw-2">&amp;</span><span class="ident">Json</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">m</span>) <span class="op">=&gt;</span> {
-                <span class="ident">index</span>.<span class="ident">value</span>().<span class="ident">as_str</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">k</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">get</span>(<span class="ident">k</span>)).<span class="ident">unwrap_or</span>(
-                    <span class="kw-2">&amp;</span><span class="ident">null</span>,
-                )
-            }
+            <span class="kw-2">&amp;</span><span class="ident">Json</span>::<span class="ident">Array</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">index</span>
+                .<span class="ident">value</span>()
+                .<span class="ident">as_u64</span>()
+                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">u</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">u</span> <span class="kw">as</span> <span class="ident">usize</span>))
+                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">u</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">get</span>(<span class="ident">u</span>))
+                .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">null</span>),
+            <span class="kw-2">&amp;</span><span class="ident">Json</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">m</span>) <span class="op">=&gt;</span> <span class="ident">index</span>
+                .<span class="ident">value</span>()
+                .<span class="ident">as_str</span>()
+                .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">k</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">get</span>(<span class="ident">k</span>))
+                .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">null</span>),
             _ <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">null</span>,
         };
         <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">render</span>();
@@ -208,8 +207,7 @@
         <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;v1&quot;</span>.<span class="ident">to_string</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="number">1u16</span>, <span class="number">2u16</span>, <span class="number">3u16</span>]);
         <span class="ident">m</span>.<span class="ident">insert</span>(<span class="string">&quot;v2&quot;</span>.<span class="ident">to_string</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="number">9u16</span>, <span class="number">8u16</span>, <span class="number">7u16</span>]);
 
-        <span class="kw">let</span> <span class="ident">m2</span> <span class="op">=</span>
-            <span class="macro">btreemap</span><span class="macro">!</span>{
+        <span class="kw">let</span> <span class="ident">m2</span> <span class="op">=</span> <span class="macro">btreemap</span><span class="macro">!</span>{
             <span class="string">&quot;kk&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="macro">btreemap</span><span class="macro">!</span>{<span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>() <span class="op">=&gt;</span> <span class="string">&quot;world&quot;</span>.<span class="ident">to_string</span>()}
         };
 

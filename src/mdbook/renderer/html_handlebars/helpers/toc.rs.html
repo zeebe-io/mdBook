@@ -195,7 +195,7 @@
 <span class="comment">// Handlebars helper to construct TOC</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RenderToc</span> {
-    <span class="kw">pub</span> <span class="ident">no_section_label</span>: <span class="ident">bool</span>
+    <span class="kw">pub</span> <span class="ident">no_section_label</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">HelperDef</span> <span class="kw">for</span> <span class="ident">RenderToc</span> {
@@ -203,14 +203,14 @@
         <span class="comment">// get value from context data</span>
         <span class="comment">// rc.get_path() is current json parent path, you should always use it like this</span>
         <span class="comment">// param is the key of value you want to display</span>
-        <span class="kw">let</span> <span class="ident">chapters</span> <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">evaluate_absolute</span>(<span class="string">&quot;chapters&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">chapters</span> <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">evaluate_absolute</span>(<span class="string">&quot;chapters&quot;</span>, <span class="bool-val">true</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> {
             <span class="ident">serde_json</span>::<span class="ident">value</span>::<span class="ident">from_value</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">c</span>.<span class="ident">clone</span>())
                 .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Could not decode the JSON data&quot;</span>))
         })<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">evaluate_absolute</span>(<span class="string">&quot;path&quot;</span>)<span class="question-mark">?</span>
-                        .<span class="ident">as_str</span>()
-                        .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Type error for `path`, string expected&quot;</span>))<span class="question-mark">?</span>
-                        .<span class="ident">replace</span>(<span class="string">&quot;\&quot;&quot;</span>, <span class="string">&quot;&quot;</span>);
+        <span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">evaluate_absolute</span>(<span class="string">&quot;path&quot;</span>, <span class="bool-val">true</span>)<span class="question-mark">?</span>
+            .<span class="ident">as_str</span>()
+            .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="string">&quot;Type error for `path`, string expected&quot;</span>))<span class="question-mark">?</span>
+            .<span class="ident">replace</span>(<span class="string">&quot;\&quot;&quot;</span>, <span class="string">&quot;&quot;</span>);
 
         <span class="ident">rc</span>.<span class="ident">writer</span>.<span class="ident">write_all</span>(<span class="string">b&quot;&lt;ol class=\&quot;chapter\&quot;&gt;&quot;</span>)<span class="question-mark">?</span>;
 
@@ -294,12 +294,12 @@
 
                 <span class="comment">// filter all events that are not inline code blocks</span>
                 <span class="kw">let</span> <span class="ident">parser</span> <span class="op">=</span> <span class="ident">Parser</span>::<span class="ident">new</span>(<span class="ident">name</span>).<span class="ident">filter</span>(<span class="op">|</span><span class="ident">event</span><span class="op">|</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">event</span> {
-                                                          <span class="ident">Event</span>::<span class="ident">Start</span>(<span class="ident">Tag</span>::<span class="ident">Code</span>) <span class="op">|</span>
-                                                          <span class="ident">Event</span>::<span class="ident">End</span>(<span class="ident">Tag</span>::<span class="ident">Code</span>) <span class="op">|</span>
-                                                          <span class="ident">Event</span>::<span class="ident">InlineHtml</span>(_) <span class="op">|</span>
-                                                          <span class="ident">Event</span>::<span class="ident">Text</span>(_) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-                                                          _ <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-                                                      });
+                    <span class="ident">Event</span>::<span class="ident">Start</span>(<span class="ident">Tag</span>::<span class="ident">Code</span>)
+                    <span class="op">|</span> <span class="ident">Event</span>::<span class="ident">End</span>(<span class="ident">Tag</span>::<span class="ident">Code</span>)
+                    <span class="op">|</span> <span class="ident">Event</span>::<span class="ident">InlineHtml</span>(_)
+                    <span class="op">|</span> <span class="ident">Event</span>::<span class="ident">Text</span>(_) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+                    _ <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                });
 
                 <span class="comment">// render markdown to html</span>
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">markdown_parsed_name</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">with_capacity</span>(<span class="ident">name</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="number">3</span> <span class="op">/</span> <span class="number">2</span>);

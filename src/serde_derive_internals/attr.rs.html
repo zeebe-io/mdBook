@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.20.0/src/attr.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.20.1/src/attr.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>attr.rs.html -- source</title>
@@ -2368,7 +2368,7 @@
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_rptr</span>(<span class="kw-2">&amp;</span><span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">is_str</span>) <span class="op">||</span> <span class="ident">is_rptr</span>(<span class="kw-2">&amp;</span><span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">is_slice_u8</span>) {
             <span class="comment">// Types &amp;str and &amp;[u8] are always implicitly borrowed. No need for</span>
             <span class="comment">// a #[serde(borrow)].</span>
-            <span class="ident">borrowed_lifetimes</span> <span class="op">=</span> <span class="ident">borrowable_lifetimes</span>(<span class="ident">cx</span>, <span class="kw-2">&amp;</span><span class="ident">ident</span>, <span class="kw-2">&amp;</span><span class="ident">field</span>.<span class="ident">ty</span>).<span class="ident">unwrap</span>();
+            <span class="ident">collect_lifetimes</span>(<span class="kw-2">&amp;</span><span class="ident">field</span>.<span class="ident">ty</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">borrowed_lifetimes</span>);
         }
 
         <span class="kw">let</span> <span class="ident">ser_name</span> <span class="op">=</span> <span class="ident">ser_name</span>.<span class="ident">get</span>();

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/registry.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.32.0/src/registry.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>registry.rs.html -- source</title>
@@ -445,24 +445,159 @@
 <span id="399">399</span>
 <span id="400">400</span>
 <span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Debug</span>, <span class="ident">Formatter</span>};
 
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">Serialize</span>;
 
-<span class="kw">use</span> <span class="ident">regex</span>::{<span class="ident">Regex</span>, <span class="ident">Captures</span>};
+<span class="kw">use</span> <span class="ident">regex</span>::{<span class="ident">Captures</span>, <span class="ident">Regex</span>};
 
 <span class="kw">use</span> <span class="ident">template</span>::<span class="ident">Template</span>;
-<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">RenderContext</span>};
+<span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">RenderContext</span>, <span class="ident">Renderable</span>};
 <span class="kw">use</span> <span class="ident">context</span>::<span class="ident">Context</span>;
 <span class="kw">use</span> <span class="ident">helpers</span>::{<span class="self">self</span>, <span class="ident">HelperDef</span>};
 <span class="kw">use</span> <span class="ident">directives</span>::{<span class="self">self</span>, <span class="ident">DirectiveDef</span>};
 <span class="kw">use</span> <span class="ident">support</span>::<span class="ident">str</span>::<span class="ident">StringWriter</span>;
 <span class="kw">use</span> <span class="ident">error</span>::{<span class="ident">RenderError</span>, <span class="ident">TemplateError</span>, <span class="ident">TemplateFileError</span>, <span class="ident">TemplateRenderError</span>};
-
 
 <span class="macro">lazy_static</span><span class="macro">!</span>{
     <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">DEFAULT_REPLACE</span>: <span class="ident">Regex</span> <span class="op">=</span> <span class="ident">Regex</span>::<span class="ident">new</span>(<span class="string">&quot;&gt;|&lt;|\&quot;|&amp;&quot;</span>).<span class="ident">unwrap</span>();
@@ -506,6 +641,18 @@
     <span class="ident">directives</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">DirectiveDef</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;&gt;</span>,
     <span class="ident">escape_fn</span>: <span class="ident">EscapeFn</span>,
     <span class="ident">source_map</span>: <span class="ident">bool</span>,
+    <span class="ident">strict_mode</span>: <span class="ident">bool</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Registry</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Handlebars&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;templates&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">templates</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;helpers&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">helpers</span>.<span class="ident">keys</span>())
+            .<span class="ident">field</span>(<span class="string">&quot;directives&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">directives</span>.<span class="ident">keys</span>())
+            .<span class="ident">field</span>(<span class="string">&quot;source_map&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source_map</span>)
+            .<span class="ident">finish</span>()
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Registry</span> {
@@ -516,6 +663,7 @@
             <span class="ident">directives</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>(),
             <span class="ident">escape_fn</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">html_escape</span>),
             <span class="ident">source_map</span>: <span class="bool-val">true</span>,
+            <span class="ident">strict_mode</span>: <span class="bool-val">false</span>,
         };
 
         <span class="ident">r</span>.<span class="ident">setup_builtins</span>()
@@ -540,8 +688,30 @@
     <span class="doccomment">/// more memory to maintain the data.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is true.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source_map_enable</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enable</span>: <span class="ident">bool</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">source_map_enabled</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enable</span>: <span class="ident">bool</span>) {
         <span class="self">self</span>.<span class="ident">source_map</span> <span class="op">=</span> <span class="ident">enable</span>;
+    }
+
+    <span class="doccomment">/// Enable handlebars strict mode</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// By default, handlebars renders empty string for value that</span>
+    <span class="doccomment">/// undefined or never exists. Since rust is a static type</span>
+    <span class="doccomment">/// language, we offer strict mode in handlebars-rust.  In strict</span>
+    <span class="doccomment">/// mode, if you were access a value that doesn&#39;t exist, a</span>
+    <span class="doccomment">/// `RenderError` will be raised.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_strict_mode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enable</span>: <span class="ident">bool</span>) {
+        <span class="self">self</span>.<span class="ident">strict_mode</span> <span class="op">=</span> <span class="ident">enable</span>;
+    }
+
+    <span class="doccomment">/// Return strict mode state, default is false.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// By default, handlebars renders empty string for value that</span>
+    <span class="doccomment">/// undefined or never exists. Since rust is a static type</span>
+    <span class="doccomment">/// language, we offer strict mode in handlebars-rust.  In strict</span>
+    <span class="doccomment">/// mode, if you were access a value that doesn&#39;t exist, a</span>
+    <span class="doccomment">/// `RenderError` will be raised.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strict_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">strict_mode</span>
     }
 
     <span class="doccomment">/// Register a template string</span>
@@ -582,9 +752,8 @@
     <span class="kw">where</span>
         <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">file</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">tpl_path</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-            <span class="ident">TemplateFileError</span>::<span class="ident">IOError</span>(<span class="ident">e</span>, <span class="ident">name</span>.<span class="ident">to_owned</span>())
-        }));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">file</span> <span class="op">=</span>
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">tpl_path</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">TemplateFileError</span>::<span class="ident">IOError</span>(<span class="ident">e</span>, <span class="ident">name</span>.<span class="ident">to_owned</span>())));
         <span class="self">self</span>.<span class="ident">register_template_source</span>(<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">file</span>)
     }
 
@@ -595,9 +764,11 @@
         <span class="ident">tpl_source</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>,
     ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TemplateFileError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">tpl_source</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-            <span class="ident">TemplateFileError</span>::<span class="ident">IOError</span>(<span class="ident">e</span>, <span class="ident">name</span>.<span class="ident">to_owned</span>())
-        }));
+        <span class="macro">try</span><span class="macro">!</span>(
+            <span class="ident">tpl_source</span>
+                .<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">TemplateFileError</span>::<span class="ident">IOError</span>(<span class="ident">e</span>, <span class="ident">name</span>.<span class="ident">to_owned</span>()))
+        );
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">register_template_string</span>(<span class="ident">name</span>, <span class="ident">buf</span>));
         <span class="prelude-val">Ok</span>(())
     }
@@ -668,11 +839,10 @@
         <span class="self">self</span>.<span class="ident">templates</span>.<span class="ident">clear</span>();
     }
 
-
     <span class="doccomment">/// Render a registered template with some data into a string</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `name` is the template name you registred previously</span>
-    <span class="doccomment">/// * `ctx` is the data that implements `serde::Serialize``</span>
+    <span class="doccomment">/// * `ctx` is the data that implements `serde::Serialize`</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns rendered string or an struct with error information</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">RenderError</span><span class="op">&gt;</span>
@@ -681,14 +851,18 @@
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">StringWriter</span>::<span class="ident">new</span>();
         {
-            <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">renderw</span>(<span class="ident">name</span>, <span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">writer</span>));
+            <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">render_to_write</span>(<span class="ident">name</span>, <span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">writer</span>));
         }
         <span class="prelude-val">Ok</span>(<span class="ident">writer</span>.<span class="ident">to_string</span>())
     }
 
-
     <span class="doccomment">/// Render a registered template and write some data to the `std::io::Write`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">renderw</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render_to_write</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
+        <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">Serialize</span>,
     {
@@ -704,7 +878,7 @@
     }
 
     <span class="doccomment">/// render a template string using current registry without register it</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">template_render</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render_template</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">template_string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
@@ -714,13 +888,13 @@
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">StringWriter</span>::<span class="ident">new</span>();
         {
-            <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">template_renderw</span>(<span class="ident">template_string</span>, <span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">writer</span>));
+            <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">render_template_to_write</span>(<span class="ident">template_string</span>, <span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">writer</span>));
         }
         <span class="prelude-val">Ok</span>(<span class="ident">writer</span>.<span class="ident">to_string</span>())
     }
 
     <span class="doccomment">/// render a template string using current registry without register it</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">template_renderw</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render_template_to_write</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">template_string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
@@ -729,17 +903,16 @@
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">Serialize</span>,
     {
-        <span class="kw">let</span> <span class="ident">tpl</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Template</span>::<span class="ident">compile</span>(<span class="ident">template_string</span>));
+        <span class="kw">let</span> <span class="ident">tpl</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Template</span>::<span class="ident">compile2</span>(<span class="ident">template_string</span>, <span class="self">self</span>.<span class="ident">source_map</span>));
         <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Context</span>::<span class="ident">wraps</span>(<span class="ident">data</span>));
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">local_helpers</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">render_context</span> <span class="op">=</span> <span class="ident">RenderContext</span>::<span class="ident">new</span>(<span class="ident">ctx</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">local_helpers</span>, <span class="ident">writer</span>);
-        <span class="ident">tpl</span>.<span class="ident">render</span>(<span class="self">self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">render_context</span>).<span class="ident">map_err</span>(
-            <span class="ident">TemplateRenderError</span>::<span class="ident">from</span>,
-        )
+        <span class="ident">tpl</span>.<span class="ident">render</span>(<span class="self">self</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">render_context</span>)
+            .<span class="ident">map_err</span>(<span class="ident">TemplateRenderError</span>::<span class="ident">from</span>)
     }
 
     <span class="doccomment">/// render a template source using current registry without register it</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">template_renderw2</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render_template_source_to_write</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">template_source</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>,
         <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
@@ -749,17 +922,65 @@
         <span class="ident">T</span>: <span class="ident">Serialize</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tpl_str</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">template_source</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">tpl_str</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-            <span class="ident">TemplateRenderError</span>::<span class="ident">IOError</span>(<span class="ident">e</span>, <span class="string">&quot;Unamed template source&quot;</span>.<span class="ident">to_owned</span>())
-        }));
-        <span class="self">self</span>.<span class="ident">template_renderw</span>(<span class="kw-2">&amp;</span><span class="ident">tpl_str</span>, <span class="ident">data</span>, <span class="ident">writer</span>)
+        <span class="macro">try</span><span class="macro">!</span>(
+            <span class="ident">template_source</span>
+                .<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">tpl_str</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">TemplateRenderError</span>::<span class="ident">IOError</span>(<span class="ident">e</span>, <span class="string">&quot;Unamed template source&quot;</span>.<span class="ident">to_owned</span>()))
+        );
+        <span class="self">self</span>.<span class="ident">render_template_to_write</span>(<span class="kw-2">&amp;</span><span class="ident">tpl_str</span>, <span class="ident">data</span>, <span class="ident">writer</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please use render_to_write instead.&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">renderw</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RenderError</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Serialize</span>,
+    {
+        <span class="self">self</span>.<span class="ident">render_to_write</span>(<span class="ident">name</span>, <span class="ident">data</span>, <span class="ident">writer</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please use render_template instead.&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">template_render</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">template_string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">TemplateRenderError</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Serialize</span>,
+    {
+        <span class="self">self</span>.<span class="ident">render_template</span>(<span class="ident">template_string</span>, <span class="ident">data</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please use render_template_to_write instead.&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">template_renderw</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">template_string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
+        <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TemplateRenderError</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Serialize</span>,
+    {
+        <span class="self">self</span>.<span class="ident">render_template_to_write</span>(<span class="ident">template_string</span>, <span class="ident">data</span>, <span class="ident">writer</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.30.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please use render_template_source_to_write instead.&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">template_renderw2</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">template_source</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Read</span>,
+        <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
+        <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TemplateRenderError</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Serialize</span>,
+    {
+        <span class="self">self</span>.<span class="ident">render_template_source_to_write</span>(<span class="ident">template_source</span>, <span class="ident">data</span>, <span class="ident">writer</span>)
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="ident">registry</span>::<span class="ident">Registry</span>;
-    <span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">RenderContext</span>, <span class="ident">Renderable</span>, <span class="ident">Helper</span>};
+    <span class="kw">use</span> <span class="ident">render</span>::{<span class="ident">Helper</span>, <span class="ident">RenderContext</span>, <span class="ident">Renderable</span>};
     <span class="kw">use</span> <span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
     <span class="kw">use</span> <span class="ident">support</span>::<span class="ident">str</span>::<span class="ident">StringWriter</span>;
     <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">RenderError</span>;
@@ -803,18 +1024,17 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_renderw</span>() {
+    <span class="kw">fn</span> <span class="ident">test_render_to_write</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
 
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">register_template_string</span>(<span class="string">&quot;index&quot;</span>, <span class="string">&quot;&lt;h1&gt;&lt;/h1&gt;&quot;</span>).<span class="ident">is_ok</span>());
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sw</span> <span class="op">=</span> <span class="ident">StringWriter</span>::<span class="ident">new</span>();
         {
-            <span class="ident">r</span>.<span class="ident">renderw</span>(<span class="string">&quot;index&quot;</span>, <span class="kw-2">&amp;</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sw</span>).<span class="ident">ok</span>().<span class="ident">unwrap</span>();
+            <span class="ident">r</span>.<span class="ident">render_to_write</span>(<span class="string">&quot;index&quot;</span>, <span class="kw-2">&amp;</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sw</span>).<span class="ident">ok</span>().<span class="ident">unwrap</span>();
         }
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;&lt;h1&gt;&lt;/h1&gt;&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">sw</span>.<span class="ident">to_string</span>());
-
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -844,7 +1064,57 @@
             <span class="string">&quot;hello&quot;</span>: <span class="string">&quot;world&quot;</span>
         });
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;{{hello}}&quot;</span>, <span class="ident">r</span>.<span class="ident">template_render</span>(<span class="string">r&quot;\\{{hello}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="string">&quot;{{hello}}&quot;</span>,
+            <span class="ident">r</span>.<span class="ident">render_template</span>(<span class="string">r&quot;\\{{hello}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>).<span class="ident">unwrap</span>()
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_strict_mode</span>() {
+        <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">TemplateRenderError</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">Registry</span>::<span class="ident">new</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">r</span>.<span class="ident">strict_mode</span>());
+
+        <span class="ident">r</span>.<span class="ident">set_strict_mode</span>(<span class="bool-val">true</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">r</span>.<span class="ident">strict_mode</span>());
+
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">json</span><span class="macro">!</span>({
+            <span class="string">&quot;the_only_key&quot;</span>: <span class="string">&quot;the_only_value&quot;</span>
+        });
+
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">r</span>.<span class="ident">render_template</span>(<span class="string">&quot;accessing the_only_key {{the_only_key}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>)
+                .<span class="ident">is_ok</span>()
+        );
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">r</span>.<span class="ident">render_template</span>(<span class="string">&quot;accessing non-exists key {{the_key_never_exists}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>)
+                .<span class="ident">is_err</span>()
+        );
+
+        <span class="kw">let</span> <span class="ident">render_error</span> <span class="op">=</span>
+            <span class="ident">r</span>.<span class="ident">render_template</span>(<span class="string">&quot;accessing non-exists key {{the_key_never_exists}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>)
+                .<span class="ident">unwrap_err</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">render_error</span>.<span class="ident">as_render_error</span>().<span class="ident">unwrap</span>().<span class="ident">column_no</span>.<span class="ident">unwrap</span>(),
+            <span class="number">26</span>
+        );
+
+        <span class="kw">let</span> <span class="ident">data2</span> <span class="op">=</span> <span class="macro">json</span><span class="macro">!</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">r</span>.<span class="ident">render_template</span>(<span class="string">&quot;accessing valid array index {{this.[2]}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data2</span>)
+                .<span class="ident">is_ok</span>()
+        );
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">r</span>.<span class="ident">render_template</span>(<span class="string">&quot;accessing invalid array index {{this.[3]}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data2</span>)
+                .<span class="ident">is_err</span>()
+        );
+        <span class="kw">let</span> <span class="ident">render_error2</span> <span class="op">=</span> <span class="ident">r</span>.<span class="ident">render_template</span>(<span class="string">&quot;accessing invalid array index {{this.[3]}}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">data2</span>)
+            .<span class="ident">unwrap_err</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">render_error2</span>.<span class="ident">as_render_error</span>().<span class="ident">unwrap</span>().<span class="ident">column_no</span>.<span class="ident">unwrap</span>(),
+            <span class="number">31</span>
+        );
     }
 }
 </pre>

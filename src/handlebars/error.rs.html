@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/error.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.32.0/src/error.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>error.rs.html -- source</title>
@@ -252,6 +252,42 @@
 <span id="206">206</span>
 <span id="207">207</span>
 <span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IOError</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
@@ -268,27 +304,24 @@
     <span class="kw">pub</span> <span class="ident">template_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">line_no</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">column_no</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">RenderError</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">line_no</span>, <span class="self">self</span>.<span class="ident">column_no</span>) {
-            (<span class="prelude-val">Some</span>(<span class="ident">line</span>), <span class="prelude-val">Some</span>(<span class="ident">col</span>)) <span class="op">=&gt;</span> {
-                <span class="macro">write</span><span class="macro">!</span>(
-                    <span class="ident">f</span>,
-                    <span class="string">&quot;Error rendering \&quot;{}\&quot; line {}, col {}: {}&quot;</span>,
-                    <span class="self">self</span>.<span class="ident">template_name</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(
-                        <span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>(),
-                    ),
-                    <span class="ident">line</span>,
-                    <span class="ident">col</span>,
-                    <span class="self">self</span>.<span class="ident">desc</span>
-                )
-            }
+            (<span class="prelude-val">Some</span>(<span class="ident">line</span>), <span class="prelude-val">Some</span>(<span class="ident">col</span>)) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(
+                <span class="ident">f</span>,
+                <span class="string">&quot;Error rendering \&quot;{}\&quot; line {}, col {}: {}&quot;</span>,
+                <span class="self">self</span>.<span class="ident">template_name</span>
+                    .<span class="ident">as_ref</span>()
+                    .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>(),),
+                <span class="ident">line</span>,
+                <span class="ident">col</span>,
+                <span class="self">self</span>.<span class="ident">desc</span>
+            ),
             _ <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">desc</span>),
         }
-
     }
 }
 
@@ -327,7 +360,7 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">RenderError</span>
     <span class="kw">where</span>
-        <span class="ident">E</span>: <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="ident">E</span>: <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e</span> <span class="op">=</span> <span class="ident">RenderError</span>::<span class="ident">new</span>(<span class="ident">cause</span>.<span class="ident">description</span>());
         <span class="ident">e</span>.<span class="ident">cause</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">cause</span>));
@@ -371,7 +404,8 @@
     <span class="kw">pub</span> <span class="ident">reason</span>: <span class="ident">TemplateErrorReason</span>,
     <span class="kw">pub</span> <span class="ident">template_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">line_no</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">column_no</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="comment">// template segment</span>
+    <span class="kw">pub</span> <span class="ident">column_no</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="ident">segment</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">TemplateError</span> {
@@ -381,12 +415,14 @@
             <span class="ident">template_name</span>: <span class="prelude-val">None</span>,
             <span class="ident">line_no</span>: <span class="prelude-val">None</span>,
             <span class="ident">column_no</span>: <span class="prelude-val">None</span>,
+            <span class="ident">segment</span>: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">at</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line_no</span>: <span class="ident">usize</span>, <span class="ident">column_no</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">TemplateError</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">at</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">template_str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">line_no</span>: <span class="ident">usize</span>, <span class="ident">column_no</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">TemplateError</span> {
         <span class="self">self</span>.<span class="ident">line_no</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">line_no</span>);
         <span class="self">self</span>.<span class="ident">column_no</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">column_no</span>);
+        <span class="self">self</span>.<span class="ident">segment</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">template_segment</span>(<span class="ident">template_str</span>, <span class="ident">line_no</span>, <span class="ident">column_no</span>));
         <span class="self">self</span>
     }
 
@@ -402,21 +438,47 @@
     }
 }
 
+<span class="kw">fn</span> <span class="ident">template_segment</span>(<span class="ident">template_str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">line</span>: <span class="ident">usize</span>, <span class="ident">col</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="number">3</span>;
+    <span class="kw">let</span> <span class="ident">line_start</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">line</span> <span class="op">&gt;=</span> <span class="ident">range</span> { <span class="ident">line</span> <span class="op">-</span> <span class="ident">range</span> } <span class="kw">else</span> { <span class="number">0</span> };
+    <span class="kw">let</span> <span class="ident">line_end</span> <span class="op">=</span> <span class="ident">line</span> <span class="op">+</span> <span class="ident">range</span>;
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+    <span class="kw">for</span> (<span class="ident">line_count</span>, <span class="ident">line_content</span>) <span class="kw">in</span> <span class="ident">template_str</span>.<span class="ident">lines</span>().<span class="ident">enumerate</span>() {
+        <span class="kw">if</span> <span class="ident">line_count</span> <span class="op">&gt;=</span> <span class="ident">line_start</span> <span class="op">&amp;&amp;</span> <span class="ident">line_count</span> <span class="op">&lt;=</span> <span class="ident">line_end</span> {
+            <span class="ident">buf</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:4} | {}\n&quot;</span>, <span class="ident">line_count</span>, <span class="ident">line_content</span>));
+            <span class="kw">if</span> <span class="ident">line_count</span> <span class="op">==</span> <span class="ident">line</span> <span class="op">-</span> <span class="number">1</span> {
+                <span class="ident">buf</span>.<span class="ident">push_str</span>(<span class="string">&quot;     |&quot;</span>);
+                <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">line_content</span>.<span class="ident">len</span>() {
+                    <span class="kw">if</span> <span class="ident">c</span> <span class="op">!=</span> <span class="ident">col</span> {
+                        <span class="ident">buf</span>.<span class="ident">push_str</span>(<span class="string">&quot;-&quot;</span>);
+                    } <span class="kw">else</span> {
+                        <span class="ident">buf</span>.<span class="ident">push_str</span>(<span class="string">&quot;^&quot;</span>);
+                    }
+                }
+                <span class="ident">buf</span>.<span class="ident">push_str</span>(<span class="string">&quot;\n&quot;</span>);
+            }
+        }
+    }
+
+    <span class="ident">buf</span>
+}
+
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">TemplateError</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">line_no</span>, <span class="self">self</span>.<span class="ident">column_no</span>) {
-            (<span class="prelude-val">Some</span>(<span class="ident">line</span>), <span class="prelude-val">Some</span>(<span class="ident">col</span>)) <span class="op">=&gt;</span> {
-                <span class="macro">write</span><span class="macro">!</span>(
-                    <span class="ident">f</span>,
-                    <span class="string">&quot;Template \&quot;{}\&quot; line {}, col {}: {}&quot;</span>,
-                    <span class="self">self</span>.<span class="ident">template_name</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(
-                        <span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>(),
-                    ),
-                    <span class="ident">line</span>,
-                    <span class="ident">col</span>,
-                    <span class="self">self</span>.<span class="ident">reason</span>
-                )
-            }
+        <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">line_no</span>, <span class="self">self</span>.<span class="ident">column_no</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">segment</span>) {
+            (<span class="prelude-val">Some</span>(<span class="ident">line</span>), <span class="prelude-val">Some</span>(<span class="ident">col</span>), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">seg</span>)) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(
+                <span class="ident">f</span>,
+                <span class="string">&quot;Template error: {}\n    --&gt; Template error in \&quot;{}\&quot;:{}:{}\n     |\n{}     |\n     = reason: {}\n&quot;</span>,
+                <span class="self">self</span>.<span class="ident">reason</span>,
+                <span class="self">self</span>.<span class="ident">template_name</span>
+                    .<span class="ident">as_ref</span>()
+                    .<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="string">&quot;Unnamed template&quot;</span>.<span class="ident">to_owned</span>()),
+                <span class="ident">line</span>,
+                <span class="ident">col</span>,
+                <span class="ident">seg</span>,
+                <span class="self">self</span>.<span class="ident">reason</span>
+            ),
             _ <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">reason</span>),
         }
     }
@@ -458,6 +520,16 @@
             <span class="ident">cause</span>(<span class="ident">err</span>)
             <span class="ident">description</span>(<span class="ident">err</span>.<span class="ident">description</span>())
             <span class="ident">display</span>(<span class="string">&quot;Template \&quot;{}\&quot;: {}&quot;</span>, <span class="ident">name</span>, <span class="ident">err</span>)
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">TemplateRenderError</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_render_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">RenderError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="kw-2">&amp;</span><span class="ident">TemplateRenderError</span>::<span class="ident">RenderError</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="self">self</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         }
     }
 }

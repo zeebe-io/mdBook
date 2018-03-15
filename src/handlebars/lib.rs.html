@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.32.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -358,6 +358,23 @@
 <span id="312">312</span>
 <span id="313">313</span>
 <span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # Handlebars</span>
 <span class="doccomment">//!</span>
@@ -422,9 +439,9 @@
 <span class="doccomment">//! #### Template inheritance</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Every time I look into a templating system, I will investigate its</span>
-<span class="doccomment">//! support for [template</span>
-<span class="doccomment">//! inheritance](https://docs.djangoproject.com/en/1.9/ref/templates/language/#template-inh</span>
-<span class="doccomment">//! eritance).</span>
+<span class="doccomment">//! support for [template inheritance][t].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [t]: https://docs.djangoproject.com/en/1.9/ref/templates/language/#template-inheritance</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Template include is not enough. In most case you will need a skeleton</span>
 <span class="doccomment">//! of page as parent (header, footer, etc.), and embed you page into this</span>
@@ -432,6 +449,23 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! You can find a real example for template inheritance in</span>
 <span class="doccomment">//! `examples/partials.rs`, and templates used by this file.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### Strict mode</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Handlebars, the language designed to work with JavaScript, has no</span>
+<span class="doccomment">//! strict restriction on accessing non-existed fields or index. It</span>
+<span class="doccomment">//! generates empty string for such case. However, in Rust we want a</span>
+<span class="doccomment">//! little bit strict sometime.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! By enabling `strcit_mode` on handlebars:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! # use handlebars::Handlebars;</span>
+<span class="doccomment">//! # let mut handlebars = Handlebars::new();</span>
+<span class="doccomment">//! handlebars.set_strict_mode(true);</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! You will get a `RenderError` when accessing fields that not exists.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Limitations</span>
 <span class="doccomment">//!</span>
@@ -464,7 +498,6 @@
 <span class="doccomment">//! Templates are created from String and registered to `Handlebars` with a name.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
 <span class="doccomment">//! extern crate handlebars;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! use handlebars::Handlebars;</span>
@@ -482,7 +515,7 @@
 <span class="doccomment">//! that involves template reference requires you to register those template first with</span>
 <span class="doccomment">//! a name so the registry can find it.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! If you template is small or just to expirement, you can use `template_render` API</span>
+<span class="doccomment">//! If you template is small or just to expirement, you can use `render_template` API</span>
 <span class="doccomment">//! without registration.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
@@ -495,7 +528,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//!   let mut data = BTreeMap::new();</span>
 <span class="doccomment">//!   data.insert(&quot;world&quot;.to_string(), &quot;世界!&quot;.to_string());</span>
-<span class="doccomment">//!   assert_eq!(handlebars.template_render(source, &amp;data).unwrap(),&quot;hello 世界!&quot;.to_owned());</span>
+<span class="doccomment">//!   assert_eq!(handlebars.render_template(source, &amp;data).unwrap(),&quot;hello 世界!&quot;.to_owned());</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -546,7 +579,7 @@
 <span class="doccomment">//!       name: &quot;Ning Sun&quot;.to_string(),</span>
 <span class="doccomment">//!       age: 27</span>
 <span class="doccomment">//!   };</span>
-<span class="doccomment">//!   assert_eq!(handlebars.template_render(&quot;Hello, {{name}}&quot;, &amp;data).unwrap(),</span>
+<span class="doccomment">//!   assert_eq!(handlebars.render_template(&quot;Hello, {{name}}&quot;, &amp;data).unwrap(),</span>
 <span class="doccomment">//!       &quot;Hello, Ning Sun&quot;.to_owned());</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
@@ -561,14 +594,14 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! use std::io::Write;</span>
-<span class="doccomment">//! use handlebars::{Handlebars, HelperDef, RenderError, RenderContext, Helper, Context, JsonRender};</span>
+<span class="doccomment">//! use handlebars::{Handlebars, HelperDef, RenderContext, Helper, Context, JsonRender, HelperResult};</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // implement by a structure impls HelperDef</span>
 <span class="doccomment">//! #[derive(Clone, Copy)]</span>
 <span class="doccomment">//! struct SimpleHelper;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! impl HelperDef for SimpleHelper {</span>
-<span class="doccomment">//!   fn call(&amp;self, h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
+<span class="doccomment">//!   fn call(&amp;self, h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; HelperResult {</span>
 <span class="doccomment">//!     let param = h.param(0).unwrap();</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!     try!(rc.writer.write(&quot;1st helper: &quot;.as_bytes()));</span>
@@ -578,7 +611,7 @@
 <span class="doccomment">//! }</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // implement via bare function</span>
-<span class="doccomment">//! fn another_simple_helper (h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; Result&lt;(), RenderError&gt; {</span>
+<span class="doccomment">//! fn another_simple_helper (h: &amp;Helper, _: &amp;Handlebars, rc: &amp;mut RenderContext) -&gt; HelperResult {</span>
 <span class="doccomment">//!     let param = h.param(0).unwrap();</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!     try!(rc.writer.write(&quot;2nd helper: &quot;.as_bytes()));</span>
@@ -593,7 +626,7 @@
 <span class="doccomment">//!   handlebars.register_helper(&quot;another-simple-helper&quot;, Box::new(another_simple_helper));</span>
 <span class="doccomment">//!   // via closure</span>
 <span class="doccomment">//!   handlebars.register_helper(&quot;closure-helper&quot;,</span>
-<span class="doccomment">//!       Box::new(|h: &amp;Helper, r: &amp;Handlebars, rc: &amp;mut RenderContext| -&gt; Result&lt;(), RenderError&gt;{</span>
+<span class="doccomment">//!       Box::new(|h: &amp;Helper, r: &amp;Handlebars, rc: &amp;mut RenderContext| -&gt; HelperResult {</span>
 <span class="doccomment">//!           let param = h.param(0).unwrap();</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!           try!(rc.writer.write(&quot;3rd helper: &quot;.as_bytes()));</span>
@@ -602,7 +635,7 @@
 <span class="doccomment">//!       }));</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!   let tpl = &quot;{{simple-helper 1}}\n{{another-simple-helper 2}}\n{{closure-helper 3}}&quot;;</span>
-<span class="doccomment">//!   assert_eq!(handlebars.template_render(tpl, &amp;()).unwrap(),</span>
+<span class="doccomment">//!   assert_eq!(handlebars.render_template(tpl, &amp;()).unwrap(),</span>
 <span class="doccomment">//!       &quot;1st helper: 1\n2nd helper: 2\n3rd helper: 3&quot;.to_owned());</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
@@ -613,7 +646,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! #### Built-in Helpers</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! * `{{#raw}} ... {{/raw}}` escape handlebars expression within the block</span>
+<span class="doccomment">//! * `{{{{#raw}}}} ... {{{{/raw}}}}` escape handlebars expression within the block</span>
 <span class="doccomment">//! * `{{#if ...}} ... {{else}} ... {{/if}}` if-else block</span>
 <span class="doccomment">//! * `{{#unless ...}} ... {{else}} .. {{/unless}}` if-not-else block</span>
 <span class="doccomment">//! * `{{#each ...}} ... {{/each}}` iterates over an array or object. Handlebar-rust doesn&#39;t support mustach iteration syntax so use this instead.</span>
@@ -633,17 +666,17 @@
 <span class="attribute">#![<span class="ident">recursion_limit</span> <span class="op">=</span> <span class="string">&quot;200&quot;</span>]</span>
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quick_error</span>;
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pest</span>;
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">lazy_static</span>;
-
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">maplit</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pest</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pest_derive</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quick_error</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_derive</span>;
@@ -656,12 +689,13 @@
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">template</span>::<span class="ident">Template</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">error</span>::{<span class="ident">RenderError</span>, <span class="ident">TemplateError</span>, <span class="ident">TemplateFileError</span>, <span class="ident">TemplateRenderError</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">registry</span>::{<span class="ident">EscapeFn</span>, <span class="ident">no_escape</span>, <span class="ident">html_escape</span>, <span class="ident">Registry</span> <span class="kw">as</span> <span class="ident">Handlebars</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">render</span>::{<span class="ident">Renderable</span>, <span class="ident">Evaluable</span>, <span class="ident">RenderContext</span>, <span class="ident">Helper</span>, <span class="ident">ContextJson</span>,
-                       <span class="ident">Directive</span> <span class="kw">as</span> <span class="ident">Decorator</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">helpers</span>::<span class="ident">HelperDef</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">registry</span>::{<span class="ident">html_escape</span>, <span class="ident">no_escape</span>, <span class="ident">EscapeFn</span>, <span class="ident">Registry</span> <span class="kw">as</span> <span class="ident">Handlebars</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">render</span>::{<span class="ident">ContextJson</span>, <span class="ident">Directive</span> <span class="kw">as</span> <span class="ident">Decorator</span>, <span class="ident">Evaluable</span>, <span class="ident">Helper</span>, <span class="ident">RenderContext</span>,
+                       <span class="ident">Renderable</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">helpers</span>::{<span class="ident">HelperDef</span>, <span class="ident">HelperResult</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">directives</span>::<span class="ident">DirectiveDef</span> <span class="kw">as</span> <span class="ident">DecoratorDef</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">context</span>::{<span class="ident">Context</span>, <span class="ident">JsonRender</span>, <span class="ident">to_json</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">context</span>::{<span class="ident">to_json</span>, <span class="ident">Context</span>, <span class="ident">JsonRender</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">support</span>::<span class="ident">str</span>::<span class="ident">StringWriter</span>;
 
 <span class="kw">mod</span> <span class="ident">grammar</span>;
 <span class="kw">mod</span> <span class="ident">template</span>;

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.29.1/src/support.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/handlebars-0.32.0/src/support.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>support.rs.html -- source</title>
@@ -95,17 +95,23 @@
 <span id="49">49</span>
 <span id="50">50</span>
 <span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
 </pre><pre class="rust ">
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">str</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">Write</span>, <span class="prelude-ty">Result</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="prelude-ty">Result</span>, <span class="ident">Write</span>};
 
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StringWriter</span> {
         <span class="ident">buf</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     }
 
     <span class="kw">impl</span> <span class="ident">StringWriter</span> {
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">StringWriter</span> {
-            <span class="ident">StringWriter</span> { <span class="ident">buf</span>: <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">8</span> <span class="op">*</span> <span class="number">1024</span>) }
+            <span class="ident">StringWriter</span> {
+                <span class="ident">buf</span>: <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">8</span> <span class="op">*</span> <span class="number">1024</span>),
+            }
         }
 
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
