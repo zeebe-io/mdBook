@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Language","Used to configure the `Index` for a specific lanugage."]],"mod":[["da",""],["de",""],["du",""],["en",""],["es",""],["fi",""],["fr",""],["it",""],["pt",""],["ro",""],["ru",""],["sv",""],["tr",""]],"struct":[["LanguageIter",""]]});

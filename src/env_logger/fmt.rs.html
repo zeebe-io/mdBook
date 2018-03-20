@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.5/src/fmt.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/env_logger-0.5.6/src/fmt.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>fmt.rs.html -- source</title>
@@ -661,6 +661,204 @@
 <span id="615">615</span>
 <span id="616">616</span>
 <span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
+<span id="710">710</span>
+<span id="711">711</span>
+<span id="712">712</span>
+<span id="713">713</span>
+<span id="714">714</span>
+<span id="715">715</span>
+<span id="716">716</span>
+<span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Formatting for log records.</span>
 <span class="doccomment">//!</span>
@@ -701,14 +899,14 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">fmt</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">RefCell</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">SystemTime</span>;
 
-<span class="kw">use</span> <span class="ident">termcolor</span>::{<span class="ident">ColorSpec</span>, <span class="ident">ColorChoice</span>, <span class="ident">Buffer</span>, <span class="ident">BufferWriter</span>, <span class="ident">WriteColor</span>};
+<span class="kw">use</span> <span class="ident">termcolor</span>::{<span class="self">self</span>, <span class="ident">ColorSpec</span>, <span class="ident">ColorChoice</span>, <span class="ident">Buffer</span>, <span class="ident">BufferWriter</span>, <span class="ident">WriteColor</span>};
 <span class="kw">use</span> <span class="ident">atty</span>;
 <span class="kw">use</span> <span class="ident">humantime</span>::<span class="ident">format_rfc3339_seconds</span>;
-
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">termcolor</span>::<span class="ident">Color</span>;
 
 <span class="doccomment">/// A formatter to write logs into.</span>
 <span class="doccomment">///</span>
@@ -951,7 +1149,7 @@
     <span class="doccomment">/// });</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">color</span>: <span class="ident">Color</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Style</span> {
-        <span class="self">self</span>.<span class="ident">spec</span>.<span class="ident">set_fg</span>(<span class="prelude-val">Some</span>(<span class="ident">color</span>));
+        <span class="self">self</span>.<span class="ident">spec</span>.<span class="ident">set_fg</span>(<span class="ident">color</span>.<span class="ident">to_termcolor</span>());
         <span class="self">self</span>
     }
 
@@ -1030,7 +1228,7 @@
     <span class="doccomment">/// });</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_bg</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">color</span>: <span class="ident">Color</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Style</span> {
-        <span class="self">self</span>.<span class="ident">spec</span>.<span class="ident">set_bg</span>(<span class="prelude-val">Some</span>(<span class="ident">color</span>));
+        <span class="self">self</span>.<span class="ident">spec</span>.<span class="ident">set_bg</span>(<span class="ident">color</span>.<span class="ident">to_termcolor</span>());
         <span class="self">self</span>
     }
 
@@ -1239,6 +1437,144 @@
     }
 }
 
+<span class="comment">// The `Color` type is copied from https://github.com/BurntSushi/ripgrep/tree/master/termcolor</span>
+
+<span class="doccomment">/// The set of available colors for the terminal foreground/background.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `Ansi256` and `Rgb` colors will only output the correct codes when</span>
+<span class="doccomment">/// paired with the `Ansi` `WriteColor` implementation.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `Ansi256` and `Rgb` color types are not supported when writing colors</span>
+<span class="doccomment">/// on Windows using the console. If they are used on Windows, then they are</span>
+<span class="doccomment">/// silently ignored and no colors will be emitted.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This set may expand over time.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This type has a `FromStr` impl that can parse colors from their human</span>
+<span class="doccomment">/// readable form. The format is as follows:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// 1. Any of the explicitly listed colors in English. They are matched</span>
+<span class="doccomment">///    case insensitively.</span>
+<span class="doccomment">/// 2. A single 8-bit integer, in either decimal or hexadecimal format.</span>
+<span class="doccomment">/// 3. A triple of 8-bit integers separated by a comma, where each integer is</span>
+<span class="doccomment">///    in decimal or hexadecimal format.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Hexadecimal numbers are written with a `0x` prefix.</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Color</span> {
+    <span class="ident">Black</span>,
+    <span class="ident">Blue</span>,
+    <span class="ident">Green</span>,
+    <span class="ident">Red</span>,
+    <span class="ident">Cyan</span>,
+    <span class="ident">Magenta</span>,
+    <span class="ident">Yellow</span>,
+    <span class="ident">White</span>,
+    <span class="ident">Ansi256</span>(<span class="ident">u8</span>),
+    <span class="ident">Rgb</span>(<span class="ident">u8</span>, <span class="ident">u8</span>, <span class="ident">u8</span>),
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="ident">__Nonexhaustive</span>,
+}
+
+<span class="doccomment">/// An error from parsing an invalid color specification.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ParseColorError</span>(<span class="ident">ParseColorErrorKind</span>);
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">enum</span> <span class="ident">ParseColorErrorKind</span> {
+    <span class="doccomment">/// An error originating from `termcolor`.</span>
+    <span class="ident">TermColor</span>(<span class="ident">termcolor</span>::<span class="ident">ParseColorError</span>),
+    <span class="doccomment">/// An error converting the `termcolor` color to a `env_logger::Color`.</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// This variant should only get reached if a user uses a new spec that&#39;s</span>
+    <span class="doccomment">/// valid for `termcolor`, but not recognised in `env_logger` yet.</span>
+    <span class="ident">Unrecognized</span> {
+        <span class="ident">given</span>: <span class="ident">String</span>,
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">ParseColorError</span> {
+    <span class="kw">fn</span> <span class="ident">termcolor</span>(<span class="ident">err</span>: <span class="ident">termcolor</span>::<span class="ident">ParseColorError</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">ParseColorError</span>(<span class="ident">ParseColorErrorKind</span>::<span class="ident">TermColor</span>(<span class="ident">err</span>))
+    }
+
+    <span class="kw">fn</span> <span class="ident">unrecognized</span>(<span class="ident">given</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">ParseColorError</span>(<span class="ident">ParseColorErrorKind</span>::<span class="ident">Unrecognized</span> { <span class="ident">given</span> })
+    }
+
+    <span class="doccomment">/// Return the string that couldn&#39;t be parsed as a valid color.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invalid</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
+            <span class="ident">ParseColorErrorKind</span>::<span class="ident">TermColor</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">invalid</span>(),
+            <span class="ident">ParseColorErrorKind</span>::<span class="ident">Unrecognized</span> { <span class="kw-2">ref</span> <span class="ident">given</span>, .. } <span class="op">=&gt;</span> <span class="ident">given</span>,
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ParseColorError</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
+            <span class="ident">ParseColorErrorKind</span>::<span class="ident">TermColor</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">err</span>.<span class="ident">description</span>(),
+            <span class="ident">ParseColorErrorKind</span>::<span class="ident">Unrecognized</span> { .. } <span class="op">=&gt;</span> <span class="string">&quot;unrecognized color value&quot;</span>,
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ParseColorError</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
+            <span class="ident">ParseColorErrorKind</span>::<span class="ident">TermColor</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">err</span>, <span class="ident">f</span>),
+            <span class="ident">ParseColorErrorKind</span>::<span class="ident">Unrecognized</span> { <span class="kw-2">ref</span> <span class="ident">given</span>, .. } <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;unrecognized color value &#39;{}&#39;&quot;</span>, <span class="ident">given</span>)
+            } 
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Color</span> {
+    <span class="kw">fn</span> <span class="ident">to_termcolor</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">termcolor</span>::<span class="ident">Color</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">Color</span>::<span class="ident">Black</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Black</span>),
+            <span class="ident">Color</span>::<span class="ident">Blue</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Blue</span>),
+            <span class="ident">Color</span>::<span class="ident">Green</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Green</span>),
+            <span class="ident">Color</span>::<span class="ident">Red</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Red</span>),
+            <span class="ident">Color</span>::<span class="ident">Cyan</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Cyan</span>),
+            <span class="ident">Color</span>::<span class="ident">Magenta</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Magenta</span>),
+            <span class="ident">Color</span>::<span class="ident">Yellow</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Yellow</span>),
+            <span class="ident">Color</span>::<span class="ident">White</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">White</span>),
+            <span class="ident">Color</span>::<span class="ident">Ansi256</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Ansi256</span>(<span class="ident">value</span>)),
+            <span class="ident">Color</span>::<span class="ident">Rgb</span>(<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Rgb</span>(<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>)),
+            _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">from_termcolor</span>(<span class="ident">color</span>: <span class="ident">termcolor</span>::<span class="ident">Color</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Color</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="ident">color</span> {
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Black</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Black</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Blue</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Blue</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Green</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Green</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Red</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Red</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Cyan</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Cyan</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Magenta</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Magenta</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Yellow</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Yellow</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">White</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">White</span>),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Ansi256</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Ansi256</span>(<span class="ident">value</span>)),
+            <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">Rgb</span>(<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Color</span>::<span class="ident">Rgb</span>(<span class="ident">r</span>, <span class="ident">g</span>, <span class="ident">b</span>)),
+            _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Color</span> {
+    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident">ParseColorError</span>;
+
+    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Color</span>, <span class="ident">ParseColorError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">tc</span> <span class="op">=</span> <span class="ident">termcolor</span>::<span class="ident">Color</span>::<span class="ident">from_str</span>(<span class="ident">s</span>).<span class="ident">map_err</span>(<span class="ident">ParseColorError</span>::<span class="ident">termcolor</span>)<span class="question-mark">?</span>;
+        <span class="ident">Color</span>::<span class="ident">from_termcolor</span>(<span class="ident">tc</span>).<span class="ident">ok_or</span>(<span class="ident">ParseColorError</span>::<span class="ident">unrecognized</span>(<span class="ident">s</span>.<span class="ident">to_owned</span>()))
+    }
+}
+
 <span class="kw">fn</span> <span class="ident">parse_write_style</span>(<span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">WriteStyle</span> {
     <span class="kw">match</span> <span class="ident">spec</span> {
         <span class="string">&quot;auto&quot;</span> <span class="op">=&gt;</span> <span class="ident">WriteStyle</span>::<span class="ident">Auto</span>,
@@ -1276,6 +1612,66 @@
 
         <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">inputs</span> {
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">WriteStyle</span>::<span class="ident">Auto</span>, <span class="ident">parse_write_style</span>(<span class="ident">input</span>));
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_color_name_valid</span>() {
+        <span class="kw">let</span> <span class="ident">inputs</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="string">&quot;black&quot;</span>,
+            <span class="string">&quot;blue&quot;</span>,
+            <span class="string">&quot;green&quot;</span>,
+            <span class="string">&quot;red&quot;</span>,
+            <span class="string">&quot;cyan&quot;</span>,
+            <span class="string">&quot;magenta&quot;</span>,
+            <span class="string">&quot;yellow&quot;</span>,
+            <span class="string">&quot;white&quot;</span>,
+        ];
+
+        <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">inputs</span> {
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Color</span>::<span class="ident">from_str</span>(<span class="ident">input</span>).<span class="ident">is_ok</span>());
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_color_ansi_valid</span>() {
+        <span class="kw">let</span> <span class="ident">inputs</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="string">&quot;7&quot;</span>,
+            <span class="string">&quot;32&quot;</span>,
+            <span class="string">&quot;0xFF&quot;</span>,
+        ];
+
+        <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">inputs</span> {
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Color</span>::<span class="ident">from_str</span>(<span class="ident">input</span>).<span class="ident">is_ok</span>());
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_color_rgb_valid</span>() {
+        <span class="kw">let</span> <span class="ident">inputs</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="string">&quot;0,0,0&quot;</span>,
+            <span class="string">&quot;0,128,255&quot;</span>,
+            <span class="string">&quot;0x0,0x0,0x0&quot;</span>,
+            <span class="string">&quot;0x33,0x66,0xFF&quot;</span>,
+        ];
+
+        <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">inputs</span> {
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">Color</span>::<span class="ident">from_str</span>(<span class="ident">input</span>).<span class="ident">is_ok</span>());
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_color_invalid</span>() {
+        <span class="kw">let</span> <span class="ident">inputs</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[
+            <span class="string">&quot;not_a_color&quot;</span>,
+            <span class="string">&quot;256&quot;</span>,
+            <span class="string">&quot;0,0&quot;</span>,
+            <span class="string">&quot;0,0,256&quot;</span>,
+        ];
+
+        <span class="kw">for</span> <span class="ident">input</span> <span class="kw">in</span> <span class="ident">inputs</span> {
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">Color</span>::<span class="ident">from_str</span>(<span class="ident">input</span>).<span class="ident">unwrap_err</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">input</span>, <span class="ident">err</span>.<span class="ident">invalid</span>());
         }
     }
 }

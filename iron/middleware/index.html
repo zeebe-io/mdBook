@@ -49,10 +49,76 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/iron/middleware/mod.rs.html#1-384' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>Iron&#39;s Middleware and Handler System</p>
+               </span><a class='srclink' href='../../src/iron/middleware/mod.rs.html#1-461' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>This module contains Iron&#39;s middleware and handler system, the fundamental
+building blocks for handling HTTP requests and generating responses.</p>
 
-<p>Iron&#39;s Middleware system is best modeled with a diagram.</p>
+<h1 id='handlers' class='section-header'><a href='#handlers'>Handlers</a></h1>
+<p>A <code>Handler</code> will produce a <code>Response</code> given a <code>Request</code>. Most handlers are
+functions or closures that accept a <code>&amp;mut Request</code> as an argument and return
+an <code>IronResult</code> containing a <code>Response</code>. An <code>IronResult</code> is returned instead of
+directly returning a <code>Response</code> in order to indicate a possibility of
+failure (e.g. database timeout).</p>
+
+<p>Here&#39;s an example of a <code>Handler</code>:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">Handler</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">status</span>;
+
+<span class="kw">fn</span> <span class="ident">hello_handler</span>(<span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+    <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">with</span>((<span class="ident">status</span>::<span class="prelude-val">Ok</span>, <span class="string">&quot;Hello world!&quot;</span>)))
+};</pre>
+
+<h1 id='middleware' class='section-header'><a href='#middleware'>Middleware</a></h1>
+<p>In situations involving more complex logic, it may be desirable to transform
+<code>Request</code>s passed to a <code>Handler</code> or altering <code>Response</code>s sent to the
+clients. For example, an authorization step could only allow requests sent
+by authorized users to be passed to a <code>Handler</code> and respond to all other
+requests with a 403 status code. To faciliate such use cases, Iron&#39;s
+middleware system allows <code>Handler</code>s to be extended by defining middleware,
+which will perform transformations.</p>
+
+<p>There are three types of middleware:</p>
+
+<ul>
+<li>A <code>BeforeMiddleware</code> alters a <code>Request</code>. It can be useful for handling
+control flow (e.g. routing and authorization).</li>
+<li>An <code>AroundMiddleware</code> wraps a <code>Handler</code>, changing both the <code>Response</code>
+passed to the <code>Handler</code> and the returned <code>Response</code>.</li>
+<li>An <code>AfterMiddleware</code> performs <code>Response</code> post-processing. It can be used
+for editing headers or logging <code>Response</code>s, but it should <em>not</em> be used for
+changing the body of a <code>Response</code>.</li>
+</ul>
+
+<p>See the documentation for each middleware for more details.</p>
+
+<h2 id='defining-the-middleware-pipeline' class='section-header'><a href='#defining-the-middleware-pipeline'>Defining the middleware pipeline</a></h2>
+<p>A <code>Chain</code> is a <code>Handler</code> that wraps another <code>Handler</code>. It is used to attach
+middleware to the wrapped <code>Handler</code> using a <code>link</code> method corresponding to
+each type of middleware. A sample middleware pipeline is shown below:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">iron</span>::<span class="ident">middleware</span>::<span class="kw-2">*</span>;
+
+
+<span class="kw">struct</span> <span class="ident">RequestLoggingMiddleware</span>;
+<span class="kw">impl</span> <span class="ident">BeforeMiddleware</span> <span class="kw">for</span> <span class="ident">RequestLoggingMiddleware</span> {
+    <span class="kw">fn</span> <span class="ident">before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">IronResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">req</span>);
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chain</span> <span class="op">=</span> <span class="ident">Chain</span>::<span class="ident">new</span>(<span class="ident">hello_handler</span>);
+<span class="ident">chain</span>.<span class="ident">link_before</span>(<span class="ident">RequestLoggingMiddleware</span> {});
+<span class="comment">// Since a Chain is a Handler, chain can be passed to Iron::new without any problems.</span>
+<span class="comment">// Iron::new(chain).http(&quot;localhost:3000&quot;).unwrap();</span></pre>
+
+<h1 id='the-request-handling-flow' class='section-header'><a href='#the-request-handling-flow'>The Request Handling Flow</a></h1>
+<p>A diagram modeling the entire middleware system process is shown below:</p>
 
 <pre><code class="language-plain">[b] = BeforeMiddleware
 [a] = AfterMiddleware
@@ -65,10 +131,11 @@
 <pre><code class="language-plain">[b] -&gt; [b] -&gt; [b] -&gt; [[[[h]]]] -&gt; [a] -&gt; [a] -&gt; [a] -&gt; [a]
 </code></pre>
 
-<p>A request first travels through all BeforeMiddleware, then a Response is generated
-by the Handler, which can be an arbitrary nesting of AroundMiddleware, then all
-AfterMiddleware are called with both the Request and Response. After all AfterMiddleware
-have been fired, the response is written back to the client.</p>
+<p>A request first travels through all <code>BeforeMiddleware</code>, then a <code>Response</code> is
+generated by the <code>Handler</code>, which can be an arbitrary nesting of
+<code>AroundMiddleware</code>, then all <code>AfterMiddleware</code> are called with both the
+<code>Request</code> and <code>Response</code>. After all <code>AfterMiddleware</code> have been fired, the
+response is written back to the client.</p>
 
 <p>Iron&#39;s error handling system is pragmatic and focuses on tracking two pieces
 of information for error receivers (other middleware):</p>
@@ -78,29 +145,32 @@ of information for error receivers (other middleware):</p>
 <li>The result (what to do about) the error.</li>
 </ul>
 
-<p>The cause of the error is represented simply by the error itself, and the result
-of the error, representing the action to take in response to the error, is a complete
-Response, which will be sent at the end of the error flow.</p>
+<p>The cause of the error is represented simply by the error itself, and the
+result of the error, representing the action to take in response to the
+error, is a complete Response, which will be sent at the end of the error
+flow.</p>
 
-<p>When an error is thrown in Iron by any middleware or handler returning an <code>Err</code>
-variant with an <code>IronError</code>, the flow of the Request switches to the error flow,
-which proceeds to just call the <code>catch</code> method of middleware and sidesteps the
-<code>Handler</code> entirely, since there is already a Response in the error.</p>
+<p>When an error is thrown in Iron by any middleware or handler returning an
+<code>Err</code> variant with an <code>IronError</code>, the flow of the <code>Request</code> switches to the
+error flow, which proceeds to just call the <code>catch</code> method of middleware and
+sidesteps the <code>Handler</code> entirely, since there is already a <code>Response</code> in the
+error.</p>
 
-<p>A Request can exit the error flow by returning an Ok from any of the catch methods.
-This resumes the flow at the middleware immediately following the middleware which
-handled the error. It is impossible to &quot;go back&quot; to an earlier middleware that was
-skipped.</p>
+<p>A <code>Request</code> can exit the error flow by returning an Ok from any of the catch
+methods. This resumes the flow at the middleware immediately following the
+middleware which handled the error. It is impossible to &quot;go back&quot; to an
+earlier middleware that was skipped.</p>
 
-<p>Generally speaking, returning a 5XX error code means that the error flow should be
-entered by raising an explicit error. Dealing with 4XX errors is trickier, since
-the server may not want to recognize an error that is entirely the clients fault;
-handling of 4XX error codes is up to to each application and middleware author.</p>
+<p>Generally speaking, returning a 5XX error code means that the error flow
+should be entered by raising an explicit error. Dealing with 4XX errors is
+trickier, since the server may not want to recognize an error that is
+entirely the clients fault; handling of 4XX error codes is up to to each
+application and middleware author.</p>
 
-<p>Middleware authors should be cognizant that their middleware may be skipped during
-the error flow. Anything that <em>must</em> be done to each Request or Response should
-be run during both the normal and error flow by implementing the <code>catch</code> method to
-also do the necessary action.</p>
+<p>Middleware authors should be cognizant that their middleware may be skipped
+during the error flow. Anything that <em>must</em> be done to each <code>Request</code> or
+<code>Response</code> should be run during both the normal and error flow by
+implementing the <code>catch</code> method to also do the necessary action.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -122,7 +192,7 @@ also do the necessary action.</p>
                            <td><a class="trait" href="trait.AroundMiddleware.html"
                                   title='trait iron::middleware::AroundMiddleware'>AroundMiddleware</a></td>
                            <td class='docblock-short'>
-                                <p>AroundMiddleware are used to wrap and replace the <code>Handler</code> in a <code>Chain</code>.</p>
+                                <p><code>AroundMiddleware</code> are used to wrap and replace the <code>Handler</code> in a <code>Chain</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

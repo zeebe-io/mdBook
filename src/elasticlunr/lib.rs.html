@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/elasticlunr-rs-1.0.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/elasticlunr-rs-2.0.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -285,39 +285,124 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
 </pre><pre class="rust ">
 <span class="doccomment">//!# elasticlunr-rs</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//![![Build Status](https://travis-ci.org/mattico/elasticlunr-rs.svg?branch=master)](https://travis-ci.org/mattico/elasticlunr-rs)</span>
-<span class="doccomment">//![![Documentation](https://docs.rs/elasticlunr-rs/badge.svg)](https://docs.rs/elasticlunr-rs)</span>
-<span class="doccomment">//![![Crates.io](https://img.shields.io/crates/v/elasticlunr-rs.svg)](https://crates.io/crates/elasticlunr-rs)</span>
+<span class="doccomment">//! [![Build Status](https://travis-ci.org/mattico/elasticlunr-rs.svg?branch=master)](https://travis-ci.org/mattico/elasticlunr-rs)</span>
+<span class="doccomment">//! [![Documentation](https://docs.rs/elasticlunr-rs/badge.svg)](https://docs.rs/elasticlunr-rs)</span>
+<span class="doccomment">//! [![Crates.io](https://img.shields.io/crates/v/elasticlunr-rs.svg)](https://crates.io/crates/elasticlunr-rs)</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!A partial port of [elasticlunr](https://github.com/weixsong/elasticlunr.js) to Rust. Intended to be used for generating compatible search indices.</span>
+<span class="doccomment">//! A partial port of [elasticlunr](https://github.com/weixsong/elasticlunr.js) to Rust. Intended to </span>
+<span class="doccomment">//! be used for generating compatible search indices.</span>
+<span class="doccomment">//! </span>
+<span class="doccomment">//! Access to all index-generating functionality is provided. Most users will only need to use the</span>
+<span class="doccomment">//! [`Index`](struct.Index.html) or [`IndexBuilder`](struct.IndexBuilder.html) types.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!## Usage</span>
+<span class="doccomment">//! ## Example</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!```</span>
-<span class="doccomment">//!use std::fs::File;</span>
-<span class="doccomment">//!use std::io::Write;</span>
-<span class="doccomment">//!use elasticlunr::Index;</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use std::fs::File;</span>
+<span class="doccomment">//! use std::io::Write;</span>
+<span class="doccomment">//! use elasticlunr::Index;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!let mut index = Index::new(&amp;[&quot;title&quot;, &quot;body&quot;]);</span>
-<span class="doccomment">//!index.add_doc(&quot;1&quot;, &amp;[&quot;This is a title&quot;, &quot;This is body text!&quot;]);</span>
-<span class="doccomment">//!// Add more docs...</span>
-<span class="doccomment">//!let mut file = File::create(&quot;out.json&quot;).unwrap();</span>
-<span class="doccomment">//!file.write_all(index.to_json_pretty().as_bytes());</span>
-<span class="doccomment">//!```</span>
+<span class="doccomment">//! let mut index = Index::new(&amp;[&quot;title&quot;, &quot;body&quot;]);</span>
+<span class="doccomment">//! index.add_doc(&quot;1&quot;, &amp;[&quot;This is a title&quot;, &quot;This is body text!&quot;]);</span>
+<span class="doccomment">//! // Add more docs...</span>
+<span class="doccomment">//! let mut file = File::create(&quot;out.json&quot;).unwrap();</span>
+<span class="doccomment">//! file.write_all(index.to_json_pretty().as_bytes());</span>
+<span class="doccomment">//! ```</span>
 
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">test</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bench&quot;</span>), <span class="ident">feature</span>(<span class="ident">test</span>))]</span>
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">lazy_static</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">phf</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">regex</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rust_stemmers</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_derive</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">strum</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">strum_macros</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
@@ -326,22 +411,37 @@
 <span class="doccomment">/// The version of elasticlunr.js this library was designed for.</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ELASTICLUNR_VERSION</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;0.9.5&quot;</span>;
 
-<span class="kw">mod</span> <span class="ident">document_store</span>;
-<span class="kw">mod</span> <span class="ident">inverted_index</span>;
-<span class="kw">mod</span> <span class="ident">pipeline</span>;
-<span class="kw">mod</span> <span class="ident">stemmer</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">config</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">lang</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">document_store</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">inverted_index</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pipeline</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 
-<span class="kw">use</span> <span class="ident">pipeline</span>::<span class="ident">Pipeline</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">lang</span>::<span class="ident">Language</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pipeline</span>::<span class="ident">Pipeline</span>;
 <span class="kw">use</span> <span class="ident">inverted_index</span>::<span class="ident">InvertedIndex</span>;
 <span class="kw">use</span> <span class="ident">document_store</span>::<span class="ident">DocumentStore</span>;
 
 <span class="doccomment">/// A builder for an `Index` with custom parameters.</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// # Example</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use elasticlunr::{Index, IndexBuilder, Language, Pipeline};</span>
+<span class="doccomment">/// let mut index = IndexBuilder::new()</span>
+<span class="doccomment">///     .save_docs(false)</span>
+<span class="doccomment">///     .add_fields(&amp;[&quot;title&quot;, &quot;subtitle&quot;, &quot;body&quot;])</span>
+<span class="doccomment">///     .set_pipeline(Pipeline::for_language(Language::Danish))</span>
+<span class="doccomment">///     .set_ref(&quot;doc_id&quot;)</span>
+<span class="doccomment">///     .build();</span>
+<span class="doccomment">/// index.add_doc(&quot;doc_a&quot;, &amp;[&quot;Kapitel 1&quot;, &quot;Velkommen til København&quot;, &quot;...&quot;]);</span>
+<span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IndexBuilder</span> {
     <span class="ident">save</span>: <span class="ident">bool</span>,
     <span class="ident">fields</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">ref_field</span>: <span class="ident">String</span>,
+    <span class="ident">pipeline</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Pipeline</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">IndexBuilder</span> {
@@ -350,10 +450,11 @@
             <span class="ident">save</span>: <span class="bool-val">true</span>,
             <span class="ident">fields</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
             <span class="ident">ref_field</span>: <span class="string">&quot;id&quot;</span>.<span class="ident">into</span>(),
+            <span class="ident">pipeline</span>: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Set whether or not documents should be saved in the `Index`.</span>
+    <span class="doccomment">/// Set whether or not documents should be saved in the `Index`&#39;s document store.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">save_docs</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">save</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">save</span> <span class="op">=</span> <span class="ident">save</span>;
         <span class="self">self</span>
@@ -365,9 +466,25 @@
         <span class="self">self</span>
     }
 
+    <span class="doccomment">/// Add the document fields to the `Index`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_fields</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fields</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">I</span>: <span class="ident">IntoIterator</span>,
+        <span class="ident">I</span>::<span class="ident">Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
+    {
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">extend</span>(<span class="ident">fields</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">f</span>.<span class="ident">as_ref</span>().<span class="ident">into</span>()));
+        <span class="self">self</span>
+    }
+
     <span class="doccomment">/// Set the key used to store the document reference field.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_ref</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ref_field</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">ref_field</span> <span class="op">=</span> <span class="ident">ref_field</span>.<span class="ident">into</span>();
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set the pipeline used by the `Index`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_pipeline</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">pipeline</span>: <span class="ident">Pipeline</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">pipeline</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">pipeline</span>);
         <span class="self">self</span>
     }
 
@@ -383,7 +500,7 @@
             <span class="ident">fields</span>: <span class="self">self</span>.<span class="ident">fields</span>,
             <span class="ident">ref_field</span>: <span class="self">self</span>.<span class="ident">ref_field</span>,
             <span class="ident">document_store</span>: <span class="ident">DocumentStore</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">save</span>),
-            <span class="ident">pipeline</span>: <span class="ident">Pipeline</span>::<span class="ident">default</span>(),
+            <span class="ident">pipeline</span>: <span class="self">self</span>.<span class="ident">pipeline</span>.<span class="ident">unwrap_or_default</span>(),
             <span class="ident">version</span>: ::<span class="ident">ELASTICLUNR_VERSION</span>,
         }
     }
@@ -404,6 +521,13 @@
 
 <span class="kw">impl</span> <span class="ident">Index</span> {
     <span class="doccomment">/// Create a new index with the provided fields.</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use elasticlunr::Index;</span>
+    <span class="doccomment">/// let mut index = Index::new(&amp;[&quot;title&quot;, &quot;body&quot;, &quot;breadcrumbs&quot;]);</span>
+    <span class="doccomment">/// index.add_doc(&quot;1&quot;, &amp;[&quot;How to Foo&quot;, &quot;First, you need to `bar`.&quot;, &quot;Chapter 1 &gt; How to Foo&quot;]);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">fields</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
     <span class="kw">where</span>
         <span class="ident">I</span>: <span class="ident">IntoIterator</span>,
@@ -427,6 +551,38 @@
         }
     }
 
+    <span class="doccomment">/// Create a new index with the provided fields for the given</span>
+    <span class="doccomment">/// [`Language`](lang/enum.Language.html).</span>
+    <span class="doccomment">/// </span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use elasticlunr::{Index, Language};</span>
+    <span class="doccomment">/// let mut index = Index::with_language(Language::English, &amp;[&quot;title&quot;, &quot;body&quot;]);</span>
+    <span class="doccomment">/// index.add_doc(&quot;1&quot;, &amp;[&quot;this is a title&quot;, &quot;this is body text&quot;]);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_language</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">lang</span>: <span class="ident">Language</span>, <span class="ident">fields</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">I</span>: <span class="ident">IntoIterator</span>,
+        <span class="ident">I</span>::<span class="ident">Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
+    {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">indices</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_vec</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">for</span> <span class="ident">field</span> <span class="kw">in</span> <span class="ident">fields</span> {
+            <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="ident">field</span>.<span class="ident">as_ref</span>().<span class="ident">to_string</span>();
+            <span class="ident">field_vec</span>.<span class="ident">push</span>(<span class="ident">field</span>.<span class="ident">clone</span>());
+            <span class="ident">indices</span>.<span class="ident">insert</span>(<span class="ident">field</span>, <span class="ident">InvertedIndex</span>::<span class="ident">new</span>());
+        }
+
+        <span class="ident">Index</span> {
+            <span class="ident">fields</span>: <span class="ident">field_vec</span>,
+            <span class="ident">index</span>: <span class="ident">indices</span>,
+            <span class="ident">pipeline</span>: <span class="ident">Pipeline</span>::<span class="ident">for_language</span>(<span class="ident">lang</span>),
+            <span class="ident">ref_field</span>: <span class="string">&quot;id&quot;</span>.<span class="ident">into</span>(),
+            <span class="ident">version</span>: ::<span class="ident">ELASTICLUNR_VERSION</span>,
+            <span class="ident">document_store</span>: <span class="ident">DocumentStore</span>::<span class="ident">new</span>(<span class="bool-val">true</span>),
+        }
+    }
+
     <span class="doccomment">/// Add the data from a document to the index.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// *NOTE: The elements of `data` should be provided in the same order as</span>
@@ -434,7 +590,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use elasticlunr::Index;</span>
+    <span class="doccomment">/// # use elasticlunr::Index;</span>
     <span class="doccomment">/// let mut index = Index::new(&amp;[&quot;title&quot;, &quot;body&quot;]);</span>
     <span class="doccomment">/// index.add_doc(&quot;1&quot;, &amp;[&quot;this is a title&quot;, &quot;this is body text&quot;]);</span>
     <span class="doccomment">/// ```</span>
@@ -483,12 +639,12 @@
 
     <span class="doccomment">/// Returns the index, serialized to pretty-printed JSON.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_json_pretty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
-        <span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">index</span>).<span class="ident">unwrap</span>()
+        <span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>).<span class="ident">unwrap</span>()
     }
 
     <span class="doccomment">/// Returns the index, serialized to JSON.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_json</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
-        <span class="ident">serde_json</span>::<span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">index</span>).<span class="ident">unwrap</span>()
+        <span class="ident">serde_json</span>::<span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>).<span class="ident">unwrap</span>()
     }
 }
 

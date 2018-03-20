@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/iron-0.5.1/src/iron.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/iron-0.6.0/src/iron.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>iron.rs.html -- source</title>
@@ -416,7 +416,7 @@
         <span class="kw-2">*</span><span class="ident">http_res</span>.<span class="ident">status_mut</span>() <span class="op">=</span> <span class="ident">status</span>::<span class="ident">InternalServerError</span>;
 
         <span class="comment">// Create `Request` wrapper.</span>
-        <span class="kw">match</span> <span class="ident">Request</span>::<span class="ident">from_http</span>(<span class="ident">http_req</span>, <span class="self">self</span>.<span class="ident">addr</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">protocol</span>) {
+        <span class="kw">match</span> <span class="ident">Request</span>::<span class="ident">from_http</span>(<span class="ident">http_req</span>, <span class="self">self</span>.<span class="ident">addr</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">protocol</span>) {
             <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">req</span>) <span class="op">=&gt;</span> {
                 <span class="comment">// Dispatch the request, write the response back to http_res</span>
                 <span class="self">self</span>.<span class="ident">handler</span>.<span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">req</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
