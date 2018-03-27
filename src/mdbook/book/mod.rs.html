@@ -526,7 +526,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">process</span>::<span class="ident">Command</span>;
-<span class="kw">use</span> <span class="ident">tempdir</span>::<span class="ident">TempDir</span>;
+<span class="kw">use</span> <span class="ident">tempfile</span>::<span class="ident">Builder</span> <span class="kw">as</span> <span class="ident">TempFileBuilder</span>;
 <span class="kw">use</span> <span class="ident">toml</span>::<span class="ident">Value</span>;
 
 <span class="kw">use</span> <span class="ident">utils</span>;
@@ -723,7 +723,7 @@
             .<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">x</span>.<span class="number">0</span>, <span class="ident">x</span>.<span class="number">1</span>])
             .<span class="ident">collect</span>();
 
-        <span class="kw">let</span> <span class="ident">temp_dir</span> <span class="op">=</span> <span class="ident">TempDir</span>::<span class="ident">new</span>(<span class="string">&quot;mdbook&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">temp_dir</span> <span class="op">=</span> <span class="ident">TempFileBuilder</span>::<span class="ident">new</span>().<span class="ident">prefix</span>(<span class="string">&quot;mdbook&quot;</span>).<span class="ident">tempdir</span>()<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">preprocess_context</span> <span class="op">=</span> <span class="ident">PreprocessorContext</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">root</span>.<span class="ident">clone</span>(), <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">clone</span>());
 
