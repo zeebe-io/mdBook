@@ -13,6 +13,7 @@ use pulldown_cmark_to_cmark::fmt::cmark;
 use std::ffi::OsString;
 use std::env::{args, args_os};
 use std::process;
+use std::cell::RefCell;
 
 struct Deemphasize;
 
@@ -21,36 +22,27 @@ impl Preprocessor for Deemphasize {
         "md-links-to-html-links"
     }
 
-    fn run(&self, _ctx: &PreprocessorContext, book: &mut Book) -> Result<()> {
+    fn run(&self, _ctx: &PreprocessorContext, mut book: Book) -> Result<Book> {
         eprintln!("Running '{}' preprocessor", self.name());
-        let mut res: Option<_> = None;
-        let mut num_removed_items = 0;
-        book.for_each_mut(|item: &mut BookItem| {
-            if let Some(Err(_)) = res {
-                return;
+        let mut total_removed = 0;
+
+        for section in &mut book.sections {
+            if let BookItem::Chapter(ref mut ch) = *section {
+                eprintln!("{}: processing chapter '{}'", self.name(), ch.name);
+                let (num_removed, new_content) = Deemphasize::remove_emphasis(ch)?;
+
+                ch.content = new_content;
+                total_removed += num_removed;
             }
-            if let BookItem::Chapter(ref mut chapter) = *item {
-                eprintln!("{}: processing chapter '{}'", self.name(), chapter.name);
-                res = Some(
-                    match Deemphasize::remove_emphasis(&mut num_removed_items, chapter) {
-                        Ok(md) => {
-                            chapter.content = md;
-                            Ok(())
-                        }
-                        Err(err) => Err(err),
-                    },
-                );
-            }
-        });
+        }
+
         eprintln!(
             "{}: removed {} events from markdown stream.",
             self.name(),
-            num_removed_items
+            total_removed
         );
-        match res {
-            Some(res) => res,
-            None => Ok(()),
-        }
+
+        Ok(book)
     }
 }
 
@@ -72,23 +64,30 @@ fn main() {
 }
 
 impl Deemphasize {
-    fn remove_emphasis(num_removed_items: &mut i32, chapter: &mut Chapter) -> Result<String> {
+    fn remove_emphasis(chapter: &Chapter) -> Result<(usize, String)> {
+        let mut num_removed = 0;
         let mut buf = String::with_capacity(chapter.content.len());
-        let events = Parser::new(&chapter.content).filter(|e| {
-            let should_keep = match *e {
-                Event::Start(Tag::Emphasis)
-                | Event::Start(Tag::Strong)
-                | Event::End(Tag::Emphasis)
-                | Event::End(Tag::Strong) => false,
-                _ => true,
-            };
-            if !should_keep {
-                *num_removed_items += 1;
-            }
-            should_keep
-        });
-        cmark(events, &mut buf, None)
-            .map(|_| buf)
-            .map_err(|err| Error::from(format!("Markdown serialization failed: {}", err)))
+
+        {
+            // new scope so we don't borrow num_removed for too long
+            let events = Parser::new(&chapter.content).filter(|e| {
+                let should_keep = match *e {
+                    Event::Start(Tag::Emphasis)
+                    | Event::Start(Tag::Strong)
+                    | Event::End(Tag::Emphasis)
+                    | Event::End(Tag::Strong) => false,
+                    _ => true,
+                };
+                if !should_keep {
+                    num_removed += 1;
+                }
+                should_keep
+            });
+
+            cmark(events, &mut buf, None)
+                .map_err(|err| Error::from(format!("Markdown serialization failed: {}", err)))?;
+        }
+
+        Ok((num_removed, buf))
     }
 }
