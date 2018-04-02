@@ -26,7 +26,7 @@ impl Preprocessor for LinkPreprocessor {
         "links"
     }
 
-    fn run(&self, ctx: &PreprocessorContext, book: &mut Book) -> Result<()> {
+    fn run(&self, ctx: &PreprocessorContext, mut book: Book) -> Result<Book> {
         let src_dir = ctx.root.join(&ctx.config.book.src);
 
         book.for_each_mut(|section: &mut BookItem| {
@@ -41,7 +41,7 @@ impl Preprocessor for LinkPreprocessor {
             }
         });
 
-        Ok(())
+        Ok(book)
     }
 }
 

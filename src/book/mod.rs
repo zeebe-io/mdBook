@@ -5,24 +5,24 @@
 //!
 //! [1]: ../index.html
 
-mod summary;
 mod book;
 mod init;
+mod summary;
 
 pub use self::book::{load_book, Book, BookItem, BookItems, Chapter};
-pub use self::summary::{parse_summary, Link, SectionNumber, Summary, SummaryItem};
 pub use self::init::BookBuilder;
+pub use self::summary::{parse_summary, Link, SectionNumber, Summary, SummaryItem};
 
-use std::path::PathBuf;
 use std::io::Write;
+use std::path::PathBuf;
 use std::process::Command;
 use tempfile::Builder as TempFileBuilder;
 use toml::Value;
 
-use utils;
-use renderer::{CmdRenderer, HtmlHandlebars, RenderContext, Renderer};
-use preprocess::{LinkPreprocessor, Preprocessor, PreprocessorContext};
 use errors::*;
+use preprocess::{LinkPreprocessor, Preprocessor, PreprocessorContext};
+use renderer::{CmdRenderer, HtmlHandlebars, RenderContext, Renderer};
+use utils;
 
 use config::Config;
 
@@ -149,24 +149,18 @@ impl MDBook {
     pub fn build(&self) -> Result<()> {
         info!("Book building has started");
 
-        let mut preprocessed_book = self.book.clone();
-        let preprocess_ctx = PreprocessorContext::new(self.root.clone(), self.config.clone());
-
-        for preprocessor in &self.preprocessors {
-            debug!("Running the {} preprocessor.", preprocessor.name());
-            preprocessor.run(&preprocess_ctx, &mut preprocessed_book)?;
-        }
-
         for renderer in &self.renderers {
             info!("Running the {} backend", renderer.name());
-            self.run_renderer(&preprocessed_book, renderer.as_ref())?;
+            self.run_renderer(&self.book, &**renderer)?;
         }
 
         Ok(())
     }
 
-    fn run_renderer(&self, preprocessed_book: &Book, renderer: &Renderer) -> Result<()> {
+    fn run_renderer(&self, raw_book: &Book, renderer: &Renderer) -> Result<()> {
         let name = renderer.name();
+        let book = self.run_preprocessors(name, raw_book.clone())?;
+
         let build_dir = self.build_dir_for(name);
         if build_dir.exists() {
             debug!(
@@ -181,7 +175,7 @@ impl MDBook {
 
         let render_context = RenderContext::new(
             self.root.clone(),
-            preprocessed_book.clone(),
+            book,
             self.config.clone(),
             build_dir,
         );
@@ -189,6 +183,23 @@ impl MDBook {
         renderer
             .render(&render_context)
             .chain_err(|| "Rendering failed")
+    }
+
+    fn run_preprocessors(&self, renderer: &str, mut book: Book) -> Result<Book> {
+        let preprocess_ctx =
+            PreprocessorContext::new(self.root.clone(), self.config.clone(), renderer);
+
+        for preprocessor in &self.preprocessors {
+            debug!(
+                "Running the {} preprocessor for {}.",
+                preprocessor.name(),
+                renderer
+            );
+            book = preprocessor.run(&preprocess_ctx, book) 
+                .chain_err(|| format!("The {} preprocessor failed", preprocessor.name()))?;
+        }
+
+        Ok(book)
     }
 
     /// You can change the default renderer to another one by using this method.
@@ -207,6 +218,7 @@ impl MDBook {
 
     /// Run `rustdoc` tests on the book, linking against the provided libraries.
     pub fn test(&mut self, library_paths: Vec<&str>) -> Result<()> {
+        // FIXME: This should really be pulled out into its own backend
         let library_args: Vec<&str> = (0..library_paths.len())
             .map(|_| "-L")
             .zip(library_paths.into_iter())
@@ -215,11 +227,11 @@ impl MDBook {
 
         let temp_dir = TempFileBuilder::new().prefix("mdbook").tempdir()?;
 
-        let preprocess_context = PreprocessorContext::new(self.root.clone(), self.config.clone());
+        let preprocess_context = PreprocessorContext::new(self.root.clone(), self.config.clone(), "test");
 
-        LinkPreprocessor::new().run(&preprocess_context, &mut self.book)?;
+        let book = LinkPreprocessor::new().run(&preprocess_context, self.book.clone())?;
 
-        for item in self.iter() {
+        for item in book.iter() {
             if let BookItem::Chapter(ref ch) = *item {
                 if !ch.path.as_os_str().is_empty() {
                     let path = self.source_dir().join(&ch.path);

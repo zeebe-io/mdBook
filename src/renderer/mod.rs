@@ -200,3 +200,21 @@ impl Renderer for CmdRenderer {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct R;
+    impl Renderer for R {
+    fn name(&self) -> &str { "R" }
+
+    fn render(&self, ctx: &RenderContext) -> Result<()> { unimplemented!() }
+
+    }
+
+    #[test]
+    fn renderer_is_object_safe() {
+        let _: Box<Renderer> = Box::new(R);
+    }
+}
