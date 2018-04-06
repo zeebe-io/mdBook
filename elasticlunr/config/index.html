@@ -10,8 +10,11 @@
     <title>elasticlunr::config - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Module config</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></div><p class='location'><a href='../index.html'>elasticlunr</a></p><script>window.sidebarCurrent = {name: 'config', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -53,7 +63,6 @@
 <div class='docblock'><p>These types are not used for generating <code>Index</code>es. They are provided to help with
 creating compatible JSON structures for configuring the JavaScript search
 function.</p>
-
 <p><em>Reference:</em>
 <a href="http://elasticlunr.com/docs/configuration.js.html">http://elasticlunr.com/docs/configuration.js.html</a></p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -62,8 +71,9 @@ function.</p>
                            <td><a class="struct" href="struct.SearchOptions.html"
                                   title='struct elasticlunr::config::SearchOptions'>SearchOptions</a></td>
                            <td class='docblock-short'>
-                                <p>The search configuration map which is passed to the 
+                                <p>The search configuration map which is passed to the
 elasticlunr.js <code>Index.search()</code> function.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -74,6 +84,7 @@ elasticlunr.js <code>Index.search()</code> function.</p>
 When <code>expand</code> or <code>bool</code> is <code>None</code>, elasticlunr.js will use the value from
 the global configuration. The <code>boost</code> field, if present,
 increases the importance of this field when ordering search results.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -83,6 +94,7 @@ increases the importance of this field when ordering search results.</p>
                            <td class='docblock-short'>
                                 <p>Sets which boolean model is used for searching with
 multiple terms. Defaults to <code>Or</code>.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -97,20 +109,22 @@ multiple terms. Defaults to <code>Or</code>.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

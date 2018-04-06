@@ -10,8 +10,11 @@
     <title>iron::middleware::BeforeMiddleware - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     <link rel="shortcut icon" href="https://avatars0.githubusercontent.com/u/7853871?s=256">
@@ -33,6 +36,13 @@
         <p class='location'>Trait BeforeMiddleware</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.before">before</a><a href="#method.catch">catch</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-BeforeMiddleware">Box&lt;BeforeMiddleware&gt;</a><a href="#impl-BeforeMiddleware">Arc&lt;T&gt;</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../index.html'>iron</a>::<wbr><a href='index.html'>middleware</a></p><script>window.sidebarCurrent = {name: 'BeforeMiddleware', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -54,11 +64,9 @@
     fn <a href='#method.before' class='fnname'>before</a>(&amp;self, _: &amp;mut <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>) -&gt; <a class="type" href="../../iron/type.IronResult.html" title="type iron::IronResult">IronResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; { ... }
 <div class='item-spacer'></div>    fn <a href='#method.catch' class='fnname'>catch</a>(&amp;self, _: &amp;mut <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>, err: <a class="struct" href="../../iron/error/struct.IronError.html" title="struct iron::error::IronError">IronError</a>) -&gt; <a class="type" href="../../iron/type.IronResult.html" title="type iron::IronResult">IronResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; { ... }
 }</pre><div class='docblock'><p><code>BeforeMiddleware</code> are fired before a <code>Handler</code> is called inside of a Chain.</p>
-
 <p><code>BeforeMiddleware</code> are responsible for doing request pre-processing that requires
 the ability to change control-flow, such as authorization middleware, or for editing
 the request by modifying the headers.</p>
-
 <p><code>BeforeMiddleware</code> only have access to the Request, if you need to modify or read
 a Response, you will need <code>AfterMiddleware</code>. Middleware which wishes to send an
 early response that is not an error cannot be <code>BeforeMiddleware</code>, but should
@@ -70,7 +78,6 @@ instead be <code>AroundMiddleware</code>.</p>
             <div class='methods'>
         <h3 id='method.before' class='method'><span id='before.v' class='invisible'><code>fn <a href='#method.before' class='fnname'>before</a>(&amp;self, _: &amp;mut <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>) -&gt; <a class="type" href="../../iron/type.IronResult.html" title="type iron::IronResult">IronResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span></h3><div class='docblock'><p>Do whatever work this middleware should do with a <code>Request</code> object.</p>
 </div><h3 id='method.catch' class='method'><span id='catch.v' class='invisible'><code>fn <a href='#method.catch' class='fnname'>catch</a>(&amp;self, _: &amp;mut <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>, err: <a class="struct" href="../../iron/error/struct.IronError.html" title="struct iron::error::IronError">IronError</a>) -&gt; <a class="type" href="../../iron/type.IronResult.html" title="type iron::IronResult">IronResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span></h3><div class='docblock'><p>Respond to an error thrown by a previous <code>BeforeMiddleware</code>.</p>
-
 <p>Returning a <code>Ok</code> will cause the request to resume the normal flow at the
 next <code>BeforeMiddleware</code>, or if this was the last <code>BeforeMiddleware</code>,
 at the <code>Handler</code>.</p>
@@ -89,7 +96,7 @@ at the <code>Handler</code>.</p>
           Implementors<a href='#implementors' class='anchor'></a>
         </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;F&gt; BeforeMiddleware for F <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + 'static + <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(&amp;mut <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>) -&gt; <a class="type" href="../../iron/type.IronResult.html" title="type iron::IronResult">IronResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;,&nbsp;</span></code></li>
+    <li><div class='out-of-band'><a class='srclink' href='../../src/iron/middleware/mod.rs.html#399-404' title='goto source code'>[src]</a></div><code>impl&lt;F&gt; BeforeMiddleware for F <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + 'static + <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(&amp;mut <a class="struct" href="../../iron/request/struct.Request.html" title="struct iron::request::Request">Request</a>) -&gt; <a class="type" href="../../iron/type.IronResult.html" title="type iron::IronResult">IronResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;,&nbsp;</span></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/iron/middleware/trait.BeforeMiddleware.js">
                  </script></section>
@@ -105,20 +112,22 @@ at the <code>Handler</code>.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>plugin::Plugin - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Trait Plugin</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#associated-types">Associated Types</a><div class="sidebar-links"><a href="#associatedtype.Error">Error</a></div><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.eval">eval</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>plugin</a></p><script>window.sidebarCurrent = {name: 'Plugin', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -54,7 +64,6 @@
     type <a href='#associatedtype.Error' class="type">Error</a>;
     fn <a href='#tymethod.eval' class='fnname'>eval</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>E) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self::<a class="type" href="../typemap/trait.Key.html#associatedtype.Value" title="type typemap::Key::Value">Value</a>, Self::<a class="type" href="../plugin/trait.Plugin.html#associatedtype.Error" title="type plugin::Plugin::Error">Error</a>&gt;;
 }</pre><div class='docblock'><p>Implementers of this trait can act as plugins for other types, via <code>OtherType::get&lt;P&gt;()</code>.</p>
-
 <p>To create a plugin, implement this trait and provide an empty implementation
 of <code>Key</code> to associate the plugin with its return type, <code>Key::Value</code>.</p>
 </div>
@@ -69,7 +78,6 @@ of <code>Key</code> to associate the plugin with its return type, <code>Key::Val
             </h2>
             <div class='methods'>
         <h3 id='tymethod.eval' class='method'><span id='eval.v' class='invisible'><code>fn <a href='#tymethod.eval' class='fnname'>eval</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>E) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self::<a class="type" href="../typemap/trait.Key.html#associatedtype.Value" title="type typemap::Key::Value">Value</a>, Self::<a class="type" href="../plugin/trait.Plugin.html#associatedtype.Error" title="type plugin::Plugin::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>Create the plugin from an instance of the extended type.</p>
-
 <p>While <code>eval</code> is given a mutable reference to the extended
 type, it is important for implementers to remember that
 the result of <code>eval</code> is usually cached, so care should
@@ -94,20 +102,22 @@ be taken when doing mutation on the extended type.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

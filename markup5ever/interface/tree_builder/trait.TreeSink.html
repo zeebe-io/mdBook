@@ -10,8 +10,11 @@
     <title>markup5ever::interface::tree_builder::TreeSink - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Trait TreeSink</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#associated-types">Associated Types</a><div class="sidebar-links"><a href="#associatedtype.Handle">Handle</a><a href="#associatedtype.Output">Output</a></div><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.finish">finish</a><a href="#tymethod.parse_error">parse_error</a><a href="#tymethod.get_document">get_document</a><a href="#tymethod.elem_name">elem_name</a><a href="#tymethod.create_element">create_element</a><a href="#tymethod.create_comment">create_comment</a><a href="#tymethod.create_pi">create_pi</a><a href="#tymethod.append">append</a><a href="#tymethod.append_based_on_parent_node">append_based_on_parent_node</a><a href="#tymethod.append_doctype_to_document">append_doctype_to_document</a><a href="#tymethod.get_template_contents">get_template_contents</a><a href="#tymethod.same_node">same_node</a><a href="#tymethod.set_quirks_mode">set_quirks_mode</a><a href="#tymethod.append_before_sibling">append_before_sibling</a><a href="#tymethod.add_attrs_if_missing">add_attrs_if_missing</a><a href="#tymethod.remove_from_parent">remove_from_parent</a><a href="#tymethod.reparent_children">reparent_children</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.mark_script_already_started">mark_script_already_started</a><a href="#method.pop">pop</a><a href="#method.associate_with_form">associate_with_form</a><a href="#method.is_mathml_annotation_xml_integration_point">is_mathml_annotation_xml_integration_point</a><a href="#method.set_current_line">set_current_line</a><a href="#method.complete_script">complete_script</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../../index.html'>markup5ever</a>::<wbr><a href='../index.html'>interface</a>::<wbr><a href='index.html'>tree_builder</a></p><script>window.sidebarCurrent = {name: 'TreeSink', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -86,55 +96,48 @@
 that a <code>Handle</code> implements <code>Clone</code> to get another reference to
 the same node.</p>
 </div><h3 id='associatedtype.Output' class='method'><span id='Output.t' class='invisible'><code>type <a href='#associatedtype.Output' class="type">Output</a></code></span></h3><div class='docblock'><p>The overall result of parsing.</p>
-
 <p>This should default to Self, but default associated types are not stable yet.
-(<a href="https://github.com/rust-lang/rust/issues/29661">https://github.com/rust-lang/rust/issues/29661</a>)</p>
+(https://github.com/rust-lang/rust/issues/29661)</p>
 </div></div>
             <h2 id='required-methods' class='small-section-header'>
               Required Methods<a href='#required-methods' class='anchor'></a>
             </h2>
             <div class='methods'>
         <h3 id='tymethod.finish' class='method'><span id='finish.v' class='invisible'><code>fn <a href='#tymethod.finish' class='fnname'>finish</a>(self) -&gt; Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Output" title="type markup5ever::interface::tree_builder::TreeSink::Output">Output</a></code></span></h3><div class='docblock'><p>Consume this sink and return the overall result of parsing.</p>
-
 <p>TODO:This should default to <code>fn finish(self) -&gt; Self::Output { self }</code>,
 but default associated types are not stable yet.
-(<a href="https://github.com/rust-lang/rust/issues/29661">https://github.com/rust-lang/rust/issues/29661</a>)</p>
+(https://github.com/rust-lang/rust/issues/29661)</p>
 </div><h3 id='tymethod.parse_error' class='method'><span id='parse_error.v' class='invisible'><code>fn <a href='#tymethod.parse_error' class='fnname'>parse_error</a>(&amp;mut self, msg: <a class="enum" href="https://doc.rust-lang.org/nightly/alloc/borrow/enum.Cow.html" title="enum alloc::borrow::Cow">Cow</a>&lt;'static, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;)</code></span></h3><div class='docblock'><p>Signal a parse error.</p>
 </div><h3 id='tymethod.get_document' class='method'><span id='get_document.v' class='invisible'><code>fn <a href='#tymethod.get_document' class='fnname'>get_document</a>(&amp;mut self) -&gt; Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a></code></span></h3><div class='docblock'><p>Get a handle to the <code>Document</code> node.</p>
 </div><h3 id='tymethod.elem_name' class='method'><span id='elem_name.v' class='invisible'><code>fn <a href='#tymethod.elem_name' class='fnname'>elem_name</a>&lt;'a&gt;(&amp;'a self, target: &amp;'a Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>) -&gt; <a class="struct" href="../../../markup5ever/interface/struct.ExpandedName.html" title="struct markup5ever::interface::ExpandedName">ExpandedName</a>&lt;'a&gt;</code></span></h3><div class='docblock'><p>What is the name of this element?</p>
-
 <p>Should never be called on a non-element node;
 feel free to <code>panic!</code>.</p>
 </div><h3 id='tymethod.create_element' class='method'><span id='create_element.v' class='invisible'><code>fn <a href='#tymethod.create_element' class='fnname'>create_element</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: <a class="struct" href="../../../markup5ever/interface/struct.QualName.html" title="struct markup5ever::interface::QualName">QualName</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;attrs: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../../../markup5ever/interface/struct.Attribute.html" title="struct markup5ever::interface::Attribute">Attribute</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;flags: <a class="struct" href="../../../markup5ever/interface/tree_builder/struct.ElementFlags.html" title="struct markup5ever::interface::tree_builder::ElementFlags">ElementFlags</a><br>) -&gt; Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a></code></span></h3><div class='docblock'><p>Create an element.</p>
-
 <p>When creating a template element (<code>name.ns.expanded() == expanded_name!(html &quot;template&quot;)</code>),
 an associated document fragment called the &quot;template contents&quot; should
 also be created. Later calls to self.get_template_contents() with that
 given element return it.
-<a href="https://html.spec.whatwg.org/multipage/#the-template-element">https://html.spec.whatwg.org/multipage/#the-template-element</a></p>
+https://html.spec.whatwg.org/multipage/#the-template-element</p>
 </div><h3 id='tymethod.create_comment' class='method'><span id='create_comment.v' class='invisible'><code>fn <a href='#tymethod.create_comment' class='fnname'>create_comment</a>(&amp;mut self, text: <a class="type" href="../../../tendril/tendril/type.StrTendril.html" title="type tendril::tendril::StrTendril">StrTendril</a>) -&gt; Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a></code></span></h3><div class='docblock'><p>Create a comment node.</p>
 </div><h3 id='tymethod.create_pi' class='method'><span id='create_pi.v' class='invisible'><code>fn <a href='#tymethod.create_pi' class='fnname'>create_pi</a>(&amp;mut self, target: <a class="type" href="../../../tendril/tendril/type.StrTendril.html" title="type tendril::tendril::StrTendril">StrTendril</a>, data: <a class="type" href="../../../tendril/tendril/type.StrTendril.html" title="type tendril::tendril::StrTendril">StrTendril</a>) -&gt; Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a></code></span></h3><div class='docblock'><p>Create a Processing Instruction node.</p>
 </div><h3 id='tymethod.append' class='method'><span id='append.v' class='invisible'><code>fn <a href='#tymethod.append' class='fnname'>append</a>(&amp;mut self, parent: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>, child: <a class="enum" href="../../../markup5ever/interface/tree_builder/enum.NodeOrText.html" title="enum markup5ever::interface::tree_builder::NodeOrText">NodeOrText</a>&lt;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>&gt;)</code></span></h3><div class='docblock'><p>Append a node as the last child of the given node.  If this would
 produce adjacent sibling text nodes, it should concatenate the text
 instead.</p>
-
 <p>The child node will not already have a parent.</p>
 </div><h3 id='tymethod.append_based_on_parent_node' class='method'><span id='append_based_on_parent_node.v' class='invisible'><code>fn <a href='#tymethod.append_based_on_parent_node' class='fnname'>append_based_on_parent_node</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;element: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;prev_element: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;child: <a class="enum" href="../../../markup5ever/interface/tree_builder/enum.NodeOrText.html" title="enum markup5ever::interface::tree_builder::NodeOrText">NodeOrText</a>&lt;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>&gt;<br>)</code></span></h3><div class='docblock'><p>When the insertion point is decided by the existence of a parent node of the
 element, we consider both possibilities and send the element which will be used
-if a parent node exists, along with the element to be used if there isn&#39;t one.</p>
+if a parent node exists, along with the element to be used if there isn't one.</p>
 </div><h3 id='tymethod.append_doctype_to_document' class='method'><span id='append_doctype_to_document.v' class='invisible'><code>fn <a href='#tymethod.append_doctype_to_document' class='fnname'>append_doctype_to_document</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: <a class="type" href="../../../tendril/tendril/type.StrTendril.html" title="type tendril::tendril::StrTendril">StrTendril</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;public_id: <a class="type" href="../../../tendril/tendril/type.StrTendril.html" title="type tendril::tendril::StrTendril">StrTendril</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;system_id: <a class="type" href="../../../tendril/tendril/type.StrTendril.html" title="type tendril::tendril::StrTendril">StrTendril</a><br>)</code></span></h3><div class='docblock'><p>Append a <code>DOCTYPE</code> element to the <code>Document</code> node.</p>
-</div><h3 id='tymethod.get_template_contents' class='method'><span id='get_template_contents.v' class='invisible'><code>fn <a href='#tymethod.get_template_contents' class='fnname'>get_template_contents</a>(&amp;mut self, target: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>) -&gt; Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a></code></span></h3><div class='docblock'><p>Get a handle to a template&#39;s template contents. The tree builder
+</div><h3 id='tymethod.get_template_contents' class='method'><span id='get_template_contents.v' class='invisible'><code>fn <a href='#tymethod.get_template_contents' class='fnname'>get_template_contents</a>(&amp;mut self, target: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>) -&gt; Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a></code></span></h3><div class='docblock'><p>Get a handle to a template's template contents. The tree builder
 promises this will never be called with something else than
 a template element.</p>
 </div><h3 id='tymethod.same_node' class='method'><span id='same_node.v' class='invisible'><code>fn <a href='#tymethod.same_node' class='fnname'>same_node</a>(&amp;self, x: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>, y: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h3><div class='docblock'><p>Do two handles refer to the same node?</p>
-</div><h3 id='tymethod.set_quirks_mode' class='method'><span id='set_quirks_mode.v' class='invisible'><code>fn <a href='#tymethod.set_quirks_mode' class='fnname'>set_quirks_mode</a>(&amp;mut self, mode: <a class="enum" href="../../../markup5ever/interface/tree_builder/enum.QuirksMode.html" title="enum markup5ever::interface::tree_builder::QuirksMode">QuirksMode</a>)</code></span></h3><div class='docblock'><p>Set the document&#39;s quirks mode.</p>
+</div><h3 id='tymethod.set_quirks_mode' class='method'><span id='set_quirks_mode.v' class='invisible'><code>fn <a href='#tymethod.set_quirks_mode' class='fnname'>set_quirks_mode</a>(&amp;mut self, mode: <a class="enum" href="../../../markup5ever/interface/tree_builder/enum.QuirksMode.html" title="enum markup5ever::interface::tree_builder::QuirksMode">QuirksMode</a>)</code></span></h3><div class='docblock'><p>Set the document's quirks mode.</p>
 </div><h3 id='tymethod.append_before_sibling' class='method'><span id='append_before_sibling.v' class='invisible'><code>fn <a href='#tymethod.append_before_sibling' class='fnname'>append_before_sibling</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;sibling: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;new_node: <a class="enum" href="../../../markup5ever/interface/tree_builder/enum.NodeOrText.html" title="enum markup5ever::interface::tree_builder::NodeOrText">NodeOrText</a>&lt;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>&gt;<br>)</code></span></h3><div class='docblock'><p>Append a node as the sibling immediately before the given node.</p>
-
 <p>The tree builder promises that <code>sibling</code> is not a text node.  However its
-old previous sibling, which would become the new node&#39;s previous sibling,
+old previous sibling, which would become the new node's previous sibling,
 could be a text node.  If the new node is also a text node, the two should
 be merged, as in the behavior of <code>append</code>.</p>
-
 <p>NB: <code>new_node</code> may have an old parent, from which it should be removed.</p>
 </div><h3 id='tymethod.add_attrs_if_missing' class='method'><span id='add_attrs_if_missing.v' class='invisible'><code>fn <a href='#tymethod.add_attrs_if_missing' class='fnname'>add_attrs_if_missing</a>(&amp;mut self, target: &amp;Self::<a class="type" href="../../../markup5ever/interface/tree_builder/trait.TreeSink.html#associatedtype.Handle" title="type markup5ever::interface::tree_builder::TreeSink::Handle">Handle</a>, attrs: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../../../markup5ever/interface/struct.Attribute.html" title="struct markup5ever::interface::Attribute">Attribute</a>&gt;)</code></span></h3><div class='docblock'><p>Add each attribute to the given element, if no attribute with that name
 already exists. The tree builder promises this will never be called
@@ -174,20 +177,22 @@ and the token is a start tag.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

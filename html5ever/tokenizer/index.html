@@ -10,8 +10,11 @@
     <title>html5ever::tokenizer - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -30,9 +33,16 @@
     <nav class="sidebar">
         <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Module tokenizer</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'><a href='../index.html'>html5ever</a></p><script>window.sidebarCurrent = {name: 'tokenizer', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+        <p class='location'>Module tokenizer</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'><a href='../index.html'>html5ever</a></p><script>window.sidebarCurrent = {name: 'tokenizer', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,7 +61,7 @@
                    </a>
                </span><a class='srclink' href='../../src/html5ever/tokenizer/mod.rs.html#10-1565' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>The HTML5 tokenizer.</p>
-</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.TagKind.html" title="enum html5ever::tokenizer::TagKind">StartTag</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.TagKind.html" title="enum html5ever::tokenizer::TagKind">EndTag</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.Token.html" title="enum html5ever::tokenizer::Token">DoctypeToken</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.Token.html" title="enum html5ever::tokenizer::Token">TagToken</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.Token.html" title="enum html5ever::tokenizer::Token">CommentToken</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.Token.html" title="enum html5ever::tokenizer::Token">CharacterTokens</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.Token.html" title="enum html5ever::tokenizer::Token">NullCharacterToken</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.Token.html" title="enum html5ever::tokenizer::Token">EOFToken</a>;</code></td></tr><tr><td><code>pub use self::interface::<a class="enum" href="../../html5ever/tokenizer/enum.Token.html" title="enum html5ever::tokenizer::Token">ParseError</a>;</code></td></tr><tr><td><code>pub use buffer_queue::<a class="enum" href="../../html5ever/tokenizer/enum.SetResult.html" title="enum html5ever::tokenizer::SetResult">FromSet</a>;</code></td></tr><tr><td><code>pub use buffer_queue::<a class="enum" href="../../html5ever/tokenizer/enum.SetResult.html" title="enum html5ever::tokenizer::SetResult">NotFromSet</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -59,6 +69,7 @@
                                   title='mod html5ever::tokenizer::states'>states</a></td>
                            <td class='docblock-short'>
                                 <p>Tokenizer states.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -67,6 +78,7 @@
                                   title='struct html5ever::tokenizer::BufferQueue'>BufferQueue</a></td>
                            <td class='docblock-short'>
                                 <p>A queue of owned string buffers, which supports incrementally consuming characters.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -74,6 +86,7 @@
                                   title='struct html5ever::tokenizer::Doctype'>Doctype</a></td>
                            <td class='docblock-short'>
                                 <p>A <code>DOCTYPE</code> token.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -81,6 +94,7 @@
                                   title='struct html5ever::tokenizer::Tag'>Tag</a></td>
                            <td class='docblock-short'>
                                 <p>A tag token.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -88,6 +102,7 @@
                                   title='struct html5ever::tokenizer::Tokenizer'>Tokenizer</a></td>
                            <td class='docblock-short'>
                                 <p>The HTML tokenizer.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -95,6 +110,7 @@
                                   title='struct html5ever::tokenizer::TokenizerOpts'>TokenizerOpts</a></td>
                            <td class='docblock-short'>
                                 <p>Tokenizer options, with an impl for <code>Default</code>.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -111,6 +127,7 @@
                            <td class='docblock-short'>
                                 <p>Result from <a href="struct.BufferQueue.html#method.pop_except_from"><code>pop_except_from</code></a> containing either a character from a <a href="../struct.SmallCharSet.html"><code>SmallCharSet</code></a>, or a
 string buffer of characters not from the set.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -147,6 +164,7 @@ string buffer of characters not from the set.</p>
                                   title='trait html5ever::tokenizer::TokenSink'>TokenSink</a></td>
                            <td class='docblock-short'>
                                 <p>Types which can receive tokens from the tokenizer.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -161,20 +179,22 @@ string buffer of characters not from the set.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

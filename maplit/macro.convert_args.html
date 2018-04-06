@@ -10,8 +10,11 @@
     <title>maplit::convert_args - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'><a href='index.html'>maplit</a></p><script>window.sidebarCurrent = {name: 'convert_args', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -62,16 +72,12 @@
 <div class='docblock'><p>Macro that converts the keys or key-value pairs passed to another maplit
 macro. The default conversion is to use the <a href="https://doc.rust-lang.org/std/convert/trait.Into.html"><code>Into</code></a> trait, if no
 custom conversion is passed.</p>
-
 <p>The syntax is:</p>
-
 <p><code>convert_args!(</code> <code>keys=</code> <em>function</em> <code>,</code> <code>values=</code> <em>function</em> <code>,</code>
-    <em>macro_name</em> <code>!(</code> [ <em>key</em> =&gt; <em>value</em> [, <em>key</em> =&gt; <em>value</em> ... ] ] <code>))</code></p>
-
+<em>macro_name</em> <code>!(</code> [ <em>key</em> =&gt; <em>value</em> [, <em>key</em> =&gt; <em>value</em> ... ] ] <code>))</code></p>
 <p>Here <em>macro_name</em> is any other maplit macro and either or both of the
 explicit <code>keys=</code> and <code>values=</code> parameters can be omitted.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">maplit</span>;
 
@@ -121,20 +127,22 @@ explicit <code>keys=</code> and <code>values=</code> parameters can be omitted.<
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

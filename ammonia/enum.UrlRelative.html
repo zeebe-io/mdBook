@@ -10,8 +10,11 @@
     <title>ammonia::UrlRelative - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Enum UrlRelative</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.Deny">Deny</a><a href="#variant.PassThrough">PassThrough</a><a href="#variant.RewriteWithBase">RewriteWithBase</a><a href="#variant.Custom">Custom</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a></div></div><p class='location'><a href='index.html'>ammonia</a></p><script>window.sidebarCurrent = {name: 'UrlRelative', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -57,33 +67,26 @@
     Custom(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="trait" href="../ammonia/trait.UrlRelativeEvaluate.html" title="trait ammonia::UrlRelativeEvaluate">UrlRelativeEvaluate</a>&gt;),
     // some variants omitted
 }</pre><div class='docblock'><p>Policy for <a href="struct.Builder.html#method.url_relative">relative URLs</a>, that is, URLs that do not specify the scheme in full.</p>
-
 <p>This policy kicks in, if set, for any attribute named <code>src</code> or <code>href</code>,
 as well as the <code>data</code> attribute of an <code>object</code> tag.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
-<h2 id='deny' class='section-header'><a href='#deny'><code>Deny</code></a></h2>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1><h2 id="deny" class="section-header"><a href="#deny"><code>Deny</code></a></h2>
 <ul>
 <li><code>&lt;a href=&quot;test&quot;&gt;</code> is a file-relative URL, and will be removed</li>
 <li><code>&lt;a href=&quot;/test&quot;&gt;</code> is a domain-relative URL, and will be removed</li>
 <li><code>&lt;a href=&quot;//example.com/test&quot;&gt;</code> is a scheme-relative URL, and will be removed</li>
 <li><code>&lt;a href=&quot;http://example.com/test&quot;&gt;</code> is an absolute URL, and will be kept</li>
 </ul>
-
-<h2 id='passthrough' class='section-header'><a href='#passthrough'><code>PassThrough</code></a></h2>
+<h2 id="passthrough" class="section-header"><a href="#passthrough"><code>PassThrough</code></a></h2>
 <p>No changes will be made to any URLs, except if a disallowed scheme is used.</p>
-
-<h2 id='rewritewithbase' class='section-header'><a href='#rewritewithbase'><code>RewriteWithBase</code></a></h2>
+<h2 id="rewritewithbase" class="section-header"><a href="#rewritewithbase"><code>RewriteWithBase</code></a></h2>
 <p>If the base is set to <code>http://notriddle.com/some-directory/some-file</code></p>
-
 <ul>
 <li><code>&lt;a href=&quot;test&quot;&gt;</code> will be rewritten to <code>&lt;a href=&quot;http://notriddle.com/some-directory/test&quot;&gt;</code></li>
 <li><code>&lt;a href=&quot;/test&quot;&gt;</code> will be rewritten to <code>&lt;a href=&quot;http://notriddle.com/test&quot;&gt;</code></li>
 <li><code>&lt;a href=&quot;//example.com/test&quot;&gt;</code> will be rewritten to <code>&lt;a href=&quot;http://example.com/test&quot;&gt;</code></li>
 <li><code>&lt;a href=&quot;http://example.com/test&quot;&gt;</code> is an absolute URL, so it will be kept as-is</li>
 </ul>
-
-<h2 id='custom' class='section-header'><a href='#custom'><code>Custom</code></a></h2>
+<h2 id="custom" class="section-header"><a href="#custom"><code>Custom</code></a></h2>
 <p>Pass the relative URL to a function.
 If it returns <code>Some(string)</code>, then that one gets used.
 Otherwise, it will remove the attribute (like <code>Deny</code> does).</p>
@@ -110,7 +113,6 @@ Otherwise, it will remove the attribute (like <code>Deny</code> does).</p>
         .<span class="ident">to_string</span>();
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">a</span>, <span class="string">&quot;&lt;a href=\&quot;/root/test/path\&quot; rel=\&quot;noopener noreferrer\&quot;&gt;fixed&lt;/a&gt;&lt;a href=\&quot;path\&quot; rel=\&quot;noopener noreferrer\&quot;&gt;passed&lt;/a&gt;&lt;a href=\&quot;http://google.com/\&quot; rel=\&quot;noopener noreferrer\&quot;&gt;skipped&lt;/a&gt;&quot;</span>);
 }</pre>
-
 <p>This function is only applied to relative URLs.
 To filter all of the URLs,
 use the not-yet-implemented Content Security Policy.</p>
@@ -140,20 +142,22 @@ use the not-yet-implemented Content Security Policy.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>ws::WebSocket - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Struct WebSocket</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.bind">bind</a><a href="#method.listen">listen</a><a href="#method.connect">connect</a><a href="#method.run">run</a><a href="#method.broadcaster">broadcaster</a><a href="#method.local_addr">local_addr</a></div></div><p class='location'><a href='index.html'>ws</a></p><script>window.sidebarCurrent = {name: 'WebSocket', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -66,8 +76,7 @@ address it ended up binding to.
 After the server is succesfully bound you should start it using <code>run</code>.</p>
 </div><h4 id='method.listen' class="method"><span id='listen.v' class='invisible'><code>pub fn <a href='#method.listen' class='fnname'>listen</a>&lt;A&gt;(self, addr_spec: A) -&gt; <a class="type" href="../ws/type.Result.html" title="type ws::Result">Result</a>&lt;<a class="struct" href="../ws/struct.WebSocket.html" title="struct ws::WebSocket">WebSocket</a>&lt;F&gt;&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;A: <a class="trait" href="https://doc.rust-lang.org/nightly/std/net/addr/trait.ToSocketAddrs.html" title="trait std::net::addr::ToSocketAddrs">ToSocketAddrs</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/lib.rs.html#313-317' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Consume the WebSocket and listen for new connections on the specified address.</p>
-
-<h1 id='safety' class='section-header'><a href='#safety'>Safety</a></h1>
+<h1 id="safety" class="section-header"><a href="#safety">Safety</a></h1>
 <p>This method will block until the event loop finishes running.</p>
 </div><h4 id='method.connect' class="method"><span id='connect.v' class='invisible'><code>pub fn <a href='#method.connect' class='fnname'>connect</a>(&amp;mut self, url: <a class="struct" href="../url/struct.Url.html" title="struct url::Url">Url</a>) -&gt; <a class="type" href="../ws/type.Result.html" title="type ws::Result">Result</a>&lt;&amp;mut <a class="struct" href="../ws/struct.WebSocket.html" title="struct ws::WebSocket">WebSocket</a>&lt;F&gt;&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/ws/lib.rs.html#321-326' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Queue an outgoing connection on this WebSocket. This method may be called multiple times,
@@ -97,20 +106,22 @@ this WebSocket is not a listening socket.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

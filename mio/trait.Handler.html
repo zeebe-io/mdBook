@@ -10,8 +10,11 @@
     <title>mio::Handler - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Trait Handler</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#associated-types">Associated Types</a><div class="sidebar-links"><a href="#associatedtype.Timeout">Timeout</a><a href="#associatedtype.Message">Message</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.ready">ready</a><a href="#method.notify">notify</a><a href="#method.timeout">timeout</a><a href="#method.interrupted">interrupted</a><a href="#method.tick">tick</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>mio</a></p><script>window.sidebarCurrent = {name: 'Handler', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -71,14 +81,12 @@
         <h3 id='method.ready' class='method'><span id='ready.v' class='invisible'><code>fn <a href='#method.ready' class='fnname'>ready</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;event_loop: &amp;mut <a class="struct" href="../mio/struct.EventLoop.html" title="struct mio::EventLoop">EventLoop</a>&lt;Self&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;token: <a class="struct" href="../mio/struct.Token.html" title="struct mio::Token">Token</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;events: <a class="struct" href="../mio/struct.EventSet.html" title="struct mio::EventSet">EventSet</a><br>)</code></span></h3><div class='docblock'><p>Invoked when the socket represented by <code>token</code> is ready to be operated
 on. <code>events</code> indicates the specific operations that are
 ready to be performed.</p>
-
 <p>For example, when a TCP socket is ready to be read from, <code>events</code> will
 have <code>readable</code> set. When the socket is ready to be written to,
 <code>events</code> will have <code>writable</code> set.</p>
-
 <p>This function will only be invoked a single time per socket per event
 loop tick.</p>
-</div><h3 id='method.notify' class='method'><span id='notify.v' class='invisible'><code>fn <a href='#method.notify' class='fnname'>notify</a>(&amp;mut self, event_loop: &amp;mut <a class="struct" href="../mio/struct.EventLoop.html" title="struct mio::EventLoop">EventLoop</a>&lt;Self&gt;, msg: Self::<a class="type" href="../mio/trait.Handler.html#associatedtype.Message" title="type mio::Handler::Message">Message</a>)</code></span></h3><div class='docblock'><p>Invoked when a message has been received via the event loop&#39;s channel.</p>
+</div><h3 id='method.notify' class='method'><span id='notify.v' class='invisible'><code>fn <a href='#method.notify' class='fnname'>notify</a>(&amp;mut self, event_loop: &amp;mut <a class="struct" href="../mio/struct.EventLoop.html" title="struct mio::EventLoop">EventLoop</a>&lt;Self&gt;, msg: Self::<a class="type" href="../mio/trait.Handler.html#associatedtype.Message" title="type mio::Handler::Message">Message</a>)</code></span></h3><div class='docblock'><p>Invoked when a message has been received via the event loop's channel.</p>
 </div><h3 id='method.timeout' class='method'><span id='timeout.v' class='invisible'><code>fn <a href='#method.timeout' class='fnname'>timeout</a>(&amp;mut self, event_loop: &amp;mut <a class="struct" href="../mio/struct.EventLoop.html" title="struct mio::EventLoop">EventLoop</a>&lt;Self&gt;, timeout: Self::<a class="type" href="../mio/trait.Handler.html#associatedtype.Timeout" title="type mio::Handler::Timeout">Timeout</a>)</code></span></h3><div class='docblock'><p>Invoked when a timeout has completed.</p>
 </div><h3 id='method.interrupted' class='method'><span id='interrupted.v' class='invisible'><code>fn <a href='#method.interrupted' class='fnname'>interrupted</a>(&amp;mut self, event_loop: &amp;mut <a class="struct" href="../mio/struct.EventLoop.html" title="struct mio::EventLoop">EventLoop</a>&lt;Self&gt;)</code></span></h3><div class='docblock'><p>Invoked when <code>EventLoop</code> has been interrupted by a signal interrupt.</p>
 </div><h3 id='method.tick' class='method'><span id='tick.v' class='invisible'><code>fn <a href='#method.tick' class='fnname'>tick</a>(&amp;mut self, event_loop: &amp;mut <a class="struct" href="../mio/struct.EventLoop.html" title="struct mio::EventLoop">EventLoop</a>&lt;Self&gt;)</code></span></h3><div class='docblock'><p>Invoked at the end of an event loop tick.</p>
@@ -102,20 +110,22 @@ loop tick.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

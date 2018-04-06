@@ -10,8 +10,11 @@
     <title>tendril - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -30,9 +33,16 @@
     <nav class="sidebar">
         <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Crate tendril</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'tendril', ty: 'mod', relpath: '../'};</script></div>
+        <p class='location'>Crate tendril</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'tendril', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -50,7 +60,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../src/tendril/lib.rs.html#7-30' title='goto source code'>[src]</a></span></h1>
-<h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use fmt::<a class="trait" href="../tendril/fmt/trait.Format.html" title="trait tendril::fmt::Format">Format</a>;</code></td></tr><tr><td><code>pub use stream::<a class="trait" href="../tendril/stream/trait.TendrilSink.html" title="trait tendril::stream::TendrilSink">TendrilSink</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -58,6 +68,7 @@
                                   title='mod tendril::fmt'>fmt</a></td>
                            <td class='docblock-short'>
                                 <p>Marker types for formats.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -65,6 +76,7 @@
                                   title='mod tendril::stream'>stream</a></td>
                            <td class='docblock-short'>
                                 <p>Streams of tendrils.</p>
+
                            </td>
                        </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
@@ -73,6 +85,7 @@
                                   title='macro tendril::format_tendril'>format_tendril</a></td>
                            <td class='docblock-short'>
                                 <p>Create a <code>StrTendril</code> through string formatting.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -81,6 +94,7 @@
                                   title='struct tendril::Atomic'>Atomic</a></td>
                            <td class='docblock-short'>
                                 <p>A marker of an atomic (and hence concurrent) tendril.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -95,6 +109,7 @@
                                   title='struct tendril::NonAtomic'>NonAtomic</a></td>
                            <td class='docblock-short'>
                                 <p>A marker of a non-atomic tendril.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -102,6 +117,7 @@
                                   title='struct tendril::SendTendril'>SendTendril</a></td>
                            <td class='docblock-short'>
                                 <p>A simple wrapper to make <code>Tendril</code> <code>Send</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -109,6 +125,7 @@
                                   title='struct tendril::Tendril'>Tendril</a></td>
                            <td class='docblock-short'>
                                 <p>Compact string type for zero-copy parsing.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -117,6 +134,7 @@
                                   title='enum tendril::SubtendrilError'>SubtendrilError</a></td>
                            <td class='docblock-short'>
                                 <p>Errors that can occur when slicing a <code>Tendril</code>.</p>
+
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -125,6 +143,7 @@
                                   title='trait tendril::Atomicity'>Atomicity</a></td>
                            <td class='docblock-short'>
                                 <p>The multithreadedness of a tendril.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -132,6 +151,7 @@
                                   title='trait tendril::ReadExt'>ReadExt</a></td>
                            <td class='docblock-short'>
                                 <p>Extension trait for <code>io::Read</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -139,6 +159,7 @@
                                   title='trait tendril::SliceExt'>SliceExt</a></td>
                            <td class='docblock-short'>
                                 <p><code>Tendril</code>-related methods for Rust slices.</p>
+
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
@@ -147,6 +168,7 @@
                                   title='type tendril::ByteTendril'>ByteTendril</a></td>
                            <td class='docblock-short'>
                                 <p><code>Tendril</code> for storing binary data.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -154,6 +176,7 @@
                                   title='type tendril::StrTendril'>StrTendril</a></td>
                            <td class='docblock-short'>
                                 <p><code>Tendril</code> for storing native Rust strings.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -168,20 +191,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>tendril::fmt::Format - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Trait Format</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.validate">validate</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.validate_prefix">validate_prefix</a><a href="#method.validate_suffix">validate_suffix</a><a href="#method.validate_subseq">validate_subseq</a><a href="#method.fixup">fixup</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../index.html'>tendril</a>::<wbr><a href='index.html'>fmt</a></p><script>window.sidebarCurrent = {name: 'Format', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -58,9 +68,8 @@
 <div class='item-spacer'></div>    fn <a href='#method.validate_subseq' class='fnname'>validate_subseq</a>(buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> { ... }
 <div class='item-spacer'></div>    unsafe fn <a href='#method.fixup' class='fnname'>fixup</a>(_lhs: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, _rhs: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="struct" href="../../tendril/fmt/imp/struct.Fixup.html" title="struct tendril::fmt::imp::Fixup">Fixup</a> { ... }
 }</pre><div class='docblock'><p>Trait for format marker types.</p>
-
 <p>The type implementing this trait is usually not instantiated.
-It&#39;s used with a phantom type parameter of <code>Tendril</code>.</p>
+It's used with a phantom type parameter of <code>Tendril</code>.</p>
 </div>
             <h2 id='required-methods' class='small-section-header'>
               Required Methods<a href='#required-methods' class='anchor'></a>
@@ -73,20 +82,15 @@ It&#39;s used with a phantom type parameter of <code>Tendril</code>.</p>
             </h2>
             <div class='methods'>
         <h3 id='method.validate_prefix' class='method'><span id='validate_prefix.v' class='invisible'><code>fn <a href='#method.validate_prefix' class='fnname'>validate_prefix</a>(buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h3><div class='docblock'><p>Check whether the buffer is valid for this format.</p>
-
 <p>You may assume the buffer is a prefix of a valid buffer.</p>
 </div><h3 id='method.validate_suffix' class='method'><span id='validate_suffix.v' class='invisible'><code>fn <a href='#method.validate_suffix' class='fnname'>validate_suffix</a>(buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h3><div class='docblock'><p>Check whether the buffer is valid for this format.</p>
-
 <p>You may assume the buffer is a suffix of a valid buffer.</p>
 </div><h3 id='method.validate_subseq' class='method'><span id='validate_subseq.v' class='invisible'><code>fn <a href='#method.validate_subseq' class='fnname'>validate_subseq</a>(buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h3><div class='docblock'><p>Check whether the buffer is valid for this format.</p>
-
 <p>You may assume the buffer is a contiguous subsequence
 of a valid buffer, but not necessarily a prefix or
 a suffix.</p>
 </div><h3 id='method.fixup' class='method'><span id='fixup.v' class='invisible'><code>unsafe fn <a href='#method.fixup' class='fnname'>fixup</a>(_lhs: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, _rhs: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="struct" href="../../tendril/fmt/imp/struct.Fixup.html" title="struct tendril::fmt::imp::Fixup">Fixup</a></code></span></h3><div class='docblock'><p>Compute any fixup needed when concatenating buffers.</p>
-
 <p>The default is to do nothing.</p>
-
 <p>The function is <code>unsafe</code> because it may assume the input
 buffers are already valid for the format. Also, no
 bounds-checking is performed on the return value!</p>
@@ -115,20 +119,22 @@ bounds-checking is performed on the return value!</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

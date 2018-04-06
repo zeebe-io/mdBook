@@ -10,8 +10,11 @@
     <title>unsafe_any::UnsafeAny - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Trait UnsafeAny</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#implementors">Implementors</a><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.downcast_ref_unchecked">downcast_ref_unchecked</a><a href="#method.downcast_mut_unchecked">downcast_mut_unchecked</a><a href="#method.downcast_unchecked">downcast_unchecked</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-UnsafeAnyExt">UnsafeAnyExt</a></div></div><p class='location'><a href='index.html'>unsafe_any</a></p><script>window.sidebarCurrent = {name: 'UnsafeAny', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -59,18 +69,15 @@ in a trait object.</p>
                 <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="trait" href="../unsafe_any/trait.UnsafeAny.html" title="trait unsafe_any::UnsafeAny">UnsafeAny</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/unsafe_any/lib.rs.html#20-48' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.downcast_ref_unchecked' class="method"><span id='downcast_ref_unchecked.v' class='invisible'><code>pub unsafe fn <a href='#method.downcast_ref_unchecked' class='fnname'>downcast_ref_unchecked</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>&gt;(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/unsafe_any/lib.rs.html#26-28' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a reference to the contained value, assuming that it is of type <code>T</code>.</p>
-
-<h2 id='warning' class='section-header'><a href='#warning'>Warning</a></h2>
+<h2 id="warning" class="section-header"><a href="#warning">Warning</a></h2>
 <p>If you are not <em>absolutely certain</em> of <code>T</code> you should <em>not</em> call this!</p>
 </div><h4 id='method.downcast_mut_unchecked' class="method"><span id='downcast_mut_unchecked.v' class='invisible'><code>pub unsafe fn <a href='#method.downcast_mut_unchecked' class='fnname'>downcast_mut_unchecked</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>&gt;(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>T</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/unsafe_any/lib.rs.html#35-37' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a mutable reference to the contained value, assuming that it is of type <code>T</code>.</p>
-
-<h2 id='warning-1' class='section-header'><a href='#warning-1'>Warning</a></h2>
+<h2 id="warning-1" class="section-header"><a href="#warning-1">Warning</a></h2>
 <p>If you are not <em>absolutely certain</em> of <code>T</code> you should <em>not</em> call this!</p>
 </div><h4 id='method.downcast_unchecked' class="method"><span id='downcast_unchecked.v' class='invisible'><code>pub unsafe fn <a href='#method.downcast_unchecked' class='fnname'>downcast_unchecked</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>&gt;(self: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="trait" href="../unsafe_any/trait.UnsafeAny.html" title="trait unsafe_any::UnsafeAny">UnsafeAny</a>&gt;) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/unsafe_any/lib.rs.html#44-47' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a the contained value, assuming that it is of type <code>T</code>.</p>
-
-<h2 id='warning-2' class='section-header'><a href='#warning-2'>Warning</a></h2>
+<h2 id="warning-2" class="section-header"><a href="#warning-2">Warning</a></h2>
 <p>If you are not <em>absolutely certain</em> of <code>T</code> you should <em>not</em> call this!</p>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
@@ -109,7 +116,7 @@ in a trait object.</p>
           Implementors<a href='#implementors' class='anchor'></a>
         </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>&gt; UnsafeAny for T</code></li>
+    <li><div class='out-of-band'><a class='srclink' href='../src/unsafe_any/lib.rs.html#18' title='goto source code'>[src]</a></div><code>impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a>&gt; UnsafeAny for T</code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/unsafe_any/trait.UnsafeAny.js">
                  </script></section>
@@ -125,20 +132,22 @@ in a trait object.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,11 @@
     <title>tendril::fmt - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Module fmt</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'><a href='../index.html'>tendril</a></p><script>window.sidebarCurrent = {name: 'fmt', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,16 +61,13 @@
                    </a>
                </span><a class='srclink' href='../../src/tendril/fmt.rs.html#7-516' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Marker types for formats.</p>
-
 <p>This module defines the types and traits used to mark a <code>Tendril</code>
 with the format of data it contains. It includes those formats
 for which <code>Tendril</code> supports at least some operations without
 conversion.</p>
-
 <p>To convert a string tendril to/from a byte tendril in an arbitrary
 character encoding, see the <code>encode</code> and <code>decode</code> methods on
 <code>Tendril</code>.</p>
-
 <p><code>Tendril</code> operations may become memory-unsafe if data invalid for
 the format sneaks in. For that reason, these traits require
 <code>unsafe impl</code>.</p>
@@ -71,6 +78,7 @@ the format sneaks in. For that reason, these traits require
                                   title='mod tendril::fmt::imp'>imp</a></td>
                            <td class='docblock-short'>
                                 <p>Implementation details.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -79,6 +87,7 @@ the format sneaks in. For that reason, these traits require
                                   title='struct tendril::fmt::ASCII'>ASCII</a></td>
                            <td class='docblock-short'>
                                 <p>Marker type for ASCII text.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -86,6 +95,7 @@ the format sneaks in. For that reason, these traits require
                                   title='struct tendril::fmt::Bytes'>Bytes</a></td>
                            <td class='docblock-short'>
                                 <p>Marker type for uninterpreted bytes.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -93,6 +103,7 @@ the format sneaks in. For that reason, these traits require
                                   title='struct tendril::fmt::Latin1'>Latin1</a></td>
                            <td class='docblock-short'>
                                 <p>Marker type for the single-byte encoding of the first 256 Unicode codepoints.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -100,6 +111,7 @@ the format sneaks in. For that reason, these traits require
                                   title='struct tendril::fmt::UTF8'>UTF8</a></td>
                            <td class='docblock-short'>
                                 <p>Marker type for UTF-8 text.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -107,6 +119,7 @@ the format sneaks in. For that reason, these traits require
                                   title='struct tendril::fmt::WTF8'>WTF8</a></td>
                            <td class='docblock-short'>
                                 <p>Marker type for WTF-8 text.</p>
+
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -116,6 +129,7 @@ the format sneaks in. For that reason, these traits require
                            <td class='docblock-short'>
                                 <p>Indicates a format which contains characters from Unicode
 (all of it, or some proper subset).</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -123,6 +137,7 @@ the format sneaks in. For that reason, these traits require
                                   title='trait tendril::fmt::Format'>Format</a></td>
                            <td class='docblock-short'>
                                 <p>Trait for format marker types.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -130,6 +145,7 @@ the format sneaks in. For that reason, these traits require
                                   title='trait tendril::fmt::Slice'>Slice</a></td>
                            <td class='docblock-short'>
                                 <p>Indicates a Rust slice type that is represented in memory as bytes.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -138,6 +154,7 @@ the format sneaks in. For that reason, these traits require
                            <td class='docblock-short'>
                                 <p>Indicates a format which corresponds to a Rust slice type,
 representing exactly the same invariants.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -145,6 +162,7 @@ representing exactly the same invariants.</p>
                                   title='trait tendril::fmt::SubsetOf'>SubsetOf</a></td>
                            <td class='docblock-short'>
                                 <p>Indicates that one format is a subset of another.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -159,20 +177,22 @@ representing exactly the same invariants.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

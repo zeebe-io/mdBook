@@ -10,8 +10,11 @@
     <title>ws - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Crate ws</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'ws', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -58,6 +68,7 @@
                                   title='mod ws::util'>util</a></td>
                            <td class='docblock-short'>
                                 <p>The util module rexports some tools from mio in order to facilitate handling timeouts.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -66,6 +77,7 @@
                                   title='struct ws::Builder'>Builder</a></td>
                            <td class='docblock-short'>
                                 <p>Utility for constructing a WebSocket from various settings.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -73,6 +85,7 @@
                                   title='struct ws::Error'>Error</a></td>
                            <td class='docblock-short'>
                                 <p>A struct indicating the kind of error that has occured and any precise details of that error.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -80,6 +93,7 @@
                                   title='struct ws::Frame'>Frame</a></td>
                            <td class='docblock-short'>
                                 <p>A struct representing a WebSocket frame.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -87,6 +101,7 @@
                                   title='struct ws::Handshake'>Handshake</a></td>
                            <td class='docblock-short'>
                                 <p>A struct representing the two halves of the WebSocket handshake.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -94,6 +109,7 @@
                                   title='struct ws::Request'>Request</a></td>
                            <td class='docblock-short'>
                                 <p>The handshake request.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -101,6 +117,7 @@
                                   title='struct ws::Response'>Response</a></td>
                            <td class='docblock-short'>
                                 <p>The handshake response.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -109,6 +126,7 @@
                            <td class='docblock-short'>
                                 <p>A representation of the output of the WebSocket connection. Use this to send messages to the
 other endpoint.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -116,6 +134,7 @@ other endpoint.</p>
                                   title='struct ws::Settings'>Settings</a></td>
                            <td class='docblock-short'>
                                 <p>WebSocket settings</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -123,6 +142,7 @@ other endpoint.</p>
                                   title='struct ws::WebSocket'>WebSocket</a></td>
                            <td class='docblock-short'>
                                 <p>The WebSocket struct. A WebSocket can support multiple incoming and outgoing connections.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -131,6 +151,7 @@ other endpoint.</p>
                                   title='enum ws::CloseCode'>CloseCode</a></td>
                            <td class='docblock-short'>
                                 <p>Status code used to indicate why an endpoint is closing the WebSocket connection.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -138,6 +159,7 @@ other endpoint.</p>
                                   title='enum ws::ErrorKind'>ErrorKind</a></td>
                            <td class='docblock-short'>
                                 <p>The type of an error, which may indicate other kinds of errors as the underlying cause.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -145,6 +167,7 @@ other endpoint.</p>
                                   title='enum ws::Message'>Message</a></td>
                            <td class='docblock-short'>
                                 <p>An enum representing the various forms of a WebSocket message.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -152,6 +175,7 @@ other endpoint.</p>
                                   title='enum ws::OpCode'>OpCode</a></td>
                            <td class='docblock-short'>
                                 <p>Operation codes as part of rfc6455.</p>
+
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -160,6 +184,7 @@ other endpoint.</p>
                                   title='trait ws::Factory'>Factory</a></td>
                            <td class='docblock-short'>
                                 <p>A trait for creating new WebSocket handlers.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -168,6 +193,7 @@ other endpoint.</p>
                            <td class='docblock-short'>
                                 <p>The core trait of this library.
 Implementing this trait provides the business logic of the WebSocket application.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -176,6 +202,7 @@ Implementing this trait provides the business logic of the WebSocket application
                                   title='fn ws::connect'>connect</a></td>
                            <td class='docblock-short'>
                                 <p>A utility function for setting up a WebSocket client.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -183,6 +210,7 @@ Implementing this trait provides the business logic of the WebSocket application
                                   title='fn ws::listen'>listen</a></td>
                            <td class='docblock-short'>
                                 <p>A utility function for setting up a WebSocket server.</p>
+
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
@@ -205,20 +233,22 @@ Implementing this trait provides the business logic of the WebSocket application
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

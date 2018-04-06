@@ -10,8 +10,11 @@
     <title>mdbook::book - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Module book</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>mdbook</a></p><script>window.sidebarCurrent = {name: 'book', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -52,7 +62,6 @@
                </span><a class='srclink' href='../../src/mdbook/book/mod.rs.html#1-463' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>The internal representation of a book and infrastructure for loading it from
 disk and building it.</p>
-
 <p>For examples on using <code>MDBook</code>, consult the <a href="../index.html">top-level documentation</a>.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -61,6 +70,7 @@ disk and building it.</p>
                                   title='struct mdbook::book::Book'>Book</a></td>
                            <td class='docblock-short'>
                                 <p>A dumb tree structure representing a book.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -68,6 +78,7 @@ disk and building it.</p>
                                   title='struct mdbook::book::BookBuilder'>BookBuilder</a></td>
                            <td class='docblock-short'>
                                 <p>A helper for setting up a new book and its directory structure.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -75,6 +86,7 @@ disk and building it.</p>
                                   title='struct mdbook::book::BookItems'>BookItems</a></td>
                            <td class='docblock-short'>
                                 <p>A depth-first iterator over the items in a book.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -83,6 +95,7 @@ disk and building it.</p>
                            <td class='docblock-short'>
                                 <p>The representation of a &quot;chapter&quot;, usually mapping to a single file on
 disk however it may contain multiple sub-chapters.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -91,6 +104,7 @@ disk however it may contain multiple sub-chapters.</p>
                            <td class='docblock-short'>
                                 <p>A struct representing an entry in the <code>SUMMARY.md</code>, possibly with nested
 entries.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -98,14 +112,16 @@ entries.</p>
                                   title='struct mdbook::book::MDBook'>MDBook</a></td>
                            <td class='docblock-short'>
                                 <p>The object used to manage and build a book.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="struct" href="struct.SectionNumber.html"
                                   title='struct mdbook::book::SectionNumber'>SectionNumber</a></td>
                            <td class='docblock-short'>
-                                <p>A section number like &quot;1.2.3&quot;, basically just a newtype&#39;d <code>Vec&lt;u32&gt;</code> with
+                                <p>A section number like &quot;1.2.3&quot;, basically just a newtype'd <code>Vec&lt;u32&gt;</code> with
 a pretty <code>Display</code> impl.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -113,6 +129,7 @@ a pretty <code>Display</code> impl.</p>
                                   title='struct mdbook::book::Summary'>Summary</a></td>
                            <td class='docblock-short'>
                                 <p>The parsed <code>SUMMARY.md</code>, specifying how the book should be laid out.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -121,6 +138,7 @@ a pretty <code>Display</code> impl.</p>
                                   title='enum mdbook::book::BookItem'>BookItem</a></td>
                            <td class='docblock-short'>
                                 <p>Enum representing any type of item which can be added to a book.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -128,6 +146,7 @@ a pretty <code>Display</code> impl.</p>
                                   title='enum mdbook::book::SummaryItem'>SummaryItem</a></td>
                            <td class='docblock-short'>
                                 <p>An item in <code>SUMMARY.md</code> which could be either a separator or a <code>Link</code>.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -136,6 +155,7 @@ a pretty <code>Display</code> impl.</p>
                                   title='fn mdbook::book::load_book'>load_book</a></td>
                            <td class='docblock-short'>
                                 <p>Load a book into memory from its <code>src/</code> directory.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -144,6 +164,7 @@ a pretty <code>Display</code> impl.</p>
                            <td class='docblock-short'>
                                 <p>Parse the text from a <code>SUMMARY.md</code> file into a sort of &quot;recipe&quot; to be
 used when loading a book from disk.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -158,20 +179,22 @@ used when loading a book from disk.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

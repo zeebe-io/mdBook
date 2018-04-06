@@ -10,8 +10,11 @@
     <title>bytes::str::ByteStr - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Trait ByteStr</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#associated-types">Associated Types</a><div class="sidebar-links"><a href="#associatedtype.Buf">Buf</a></div><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.buf">buf</a><a href="#tymethod.concat">concat</a><a href="#tymethod.len">len</a><a href="#tymethod.slice">slice</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.is_empty">is_empty</a><a href="#method.slice_from">slice_from</a><a href="#method.slice_to">slice_to</a><a href="#method.split_at">split_at</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../index.html'>bytes</a>::<wbr><a href='index.html'>str</a></p><script>window.sidebarCurrent = {name: 'ByteStr', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -89,18 +99,14 @@ with the given <code>Bytes</code>.</p>
         <h3 id='method.is_empty' class='method'><span id='is_empty.v' class='invisible'><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h3><div class='docblock'><p>Returns true if the length of the <code>ByteStr</code> is 0</p>
 </div><h3 id='method.slice_from' class='method'><span id='slice_from.v' class='invisible'><code>fn <a href='#method.slice_from' class='fnname'>slice_from</a>(&amp;self, begin: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../bytes/struct.Bytes.html" title="struct bytes::Bytes">Bytes</a></code></span></h3><div class='docblock'><p>Returns a new ByteStr value containing the byte range starting from
 <code>begin</code> (inclusive) to the end of the byte str.</p>
-
 <p>Equivalent to <code>bytes.slice(begin, bytes.len())</code></p>
 </div><h3 id='method.slice_to' class='method'><span id='slice_to.v' class='invisible'><code>fn <a href='#method.slice_to' class='fnname'>slice_to</a>(&amp;self, end: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../../bytes/struct.Bytes.html" title="struct bytes::Bytes">Bytes</a></code></span></h3><div class='docblock'><p>Returns a new ByteStr value containing the byte range from the start up
 to <code>end</code> (exclusive).</p>
-
 <p>Equivalent to <code>bytes.slice(0, end)</code></p>
 </div><h3 id='method.split_at' class='method'><span id='split_at.v' class='invisible'><code>fn <a href='#method.split_at' class='fnname'>split_at</a>(&amp;self, mid: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="../../bytes/struct.Bytes.html" title="struct bytes::Bytes">Bytes</a>, <a class="struct" href="../../bytes/struct.Bytes.html" title="struct bytes::Bytes">Bytes</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span></h3><div class='docblock'><p>Divides the value into two <code>Bytes</code> at the given index.</p>
-
 <p>The first will contain all bytes from <code>[0, mid]</code> (excluding the index
 <code>mid</code> itself) and the second will contain all indices from <code>[mid, len)</code>
 (excluding the index <code>len</code> itself).</p>
-
 <p>Panics if <code>mid &gt; len</code>.</p>
 </div></div>
         <h2 id='implementors' class='small-section-header'>
@@ -126,20 +132,22 @@ to <code>end</code> (exclusive).</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
