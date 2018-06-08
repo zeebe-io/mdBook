@@ -1,8 +1,10 @@
 //! Book preprocessing.
 
 pub use self::links::LinkPreprocessor;
+pub use self::commit::CommitHashPreprocessor;
 
 mod links;
+mod commit;
 
 use book::Book;
 use config::Config;

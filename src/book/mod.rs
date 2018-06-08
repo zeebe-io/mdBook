@@ -21,7 +21,7 @@ use toml::Value;
 
 use utils;
 use renderer::{CmdRenderer, HtmlHandlebars, RenderContext, Renderer};
-use preprocess::{LinkPreprocessor, Preprocessor, PreprocessorContext};
+use preprocess::{LinkPreprocessor, Preprocessor, PreprocessorContext, CommitHashPreprocessor};
 use errors::*;
 
 use config::Config;
@@ -322,7 +322,7 @@ fn determine_renderers(config: &Config) -> Vec<Box<Renderer>> {
 }
 
 fn default_preprocessors() -> Vec<Box<Preprocessor>> {
-    vec![Box::new(LinkPreprocessor::new())]
+    vec![Box::new(LinkPreprocessor::new()), Box::new(CommitHashPreprocessor::new())]
 }
 
 /// Look at the `MDBook` and try to figure out what preprocessors to run.
@@ -339,6 +339,7 @@ fn determine_preprocessors(config: &Config) -> Result<Vec<Box<Preprocessor>>> {
     for key in preprocess_list {
         match key.as_ref() {
             "links" => preprocessors.push(Box::new(LinkPreprocessor::new())),
+            "commit-hash" => preprocessors.push(Box::new(CommitHashPreprocessor::new())),
             _ => bail!("{:?} is not a recognised preprocessor", key),
         }
     }

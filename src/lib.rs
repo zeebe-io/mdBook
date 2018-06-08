@@ -103,6 +103,8 @@ extern crate tempfile;
 extern crate toml;
 extern crate toml_query;
 
+extern crate git2;
+
 #[cfg(test)]
 #[macro_use]
 extern crate pretty_assertions;
